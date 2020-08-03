@@ -1,11 +1,9 @@
-![Python Template - Hello World Banner](https://raw.githubusercontent.com/linz/template-python-hello-world/master/docs/_static/banner.png)
+# Aerial Imagery Processing 
 
-### _A minimal template for Python development_
-
-[![GitHub Actions Status](https://github.com/linz/template-python-hello-world/workflows/Build/badge.svg)](https://github.com/linz/template-python-hello-world/actions)
-[![Alerts](https://badgen.net/lgtm/alerts/g/linz/template-python-hello-world?icon=lgtm&labelColor=2e3a44&label=Alerts&color=3dc64b)](https://lgtm.com/projects/g/linz/template-python-hello-world/context:python)
-[![Dependabot Status](https://badgen.net/dependabot/linz/template-python-hello-world?icon=dependabot&labelColor=2e3a44&color=blue)](https://dependabot.com)
-[![License](https://badgen.net/github/license/linz/template-python-hello-world?labelColor=2e3a44&label=License)](https://github.com/linz/template-python-hello-world/blob/master/LICENSE)
+[![GitHub Actions Status](https://github.com/linz/processor-aerial-imagery/workflows/Build/badge.svg)](https://github.com/linz/processor-aerial-imagery/actions)
+[![Alerts](https://badgen.net/lgtm/alerts/g/linz/processor-aerial-imagery?icon=lgtm&labelColor=2e3a44&label=Alerts&color=3dc64b)](https://lgtm.com/projects/g/linz/processor-aerial-imagery/context:python)
+[![Dependabot Status](https://badgen.net/dependabot/linz/processor-aerial-imagery?icon=dependabot&labelColor=2e3a44&color=blue)](https://dependabot.com)
+[![License](https://badgen.net/github/license/linz/processor-aerial-imagery?labelColor=2e3a44&label=License)](https://github.com/linz/processor-aerial-imagery/blob/master/LICENSE)
 [![Conventional Commits](https://badgen.net/badge/Commits/conventional?labelColor=2e3a44&color=EC5772)](https://conventionalcommits.org)
 [![Code Style](https://badgen.net/badge/Code%20Style/black?labelColor=2e3a44&color=000000)](https://github.com/psf/black)
 
