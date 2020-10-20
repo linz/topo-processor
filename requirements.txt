@@ -1,0 +1,2 @@
+linz-logger==0.2.0
+pystac==0.5.2

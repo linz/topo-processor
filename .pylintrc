@@ -1,7 +1,10 @@
 [MASTER]
 disable =
         bad-continuation,
-        invalid-name
+        invalid-name,
+        missing-class-docstring,
+        missing-module-docstring,
+        missing-function-docstring
 [FORMAT]
 max-line-length=127
 [MISCELLANEOUS]
