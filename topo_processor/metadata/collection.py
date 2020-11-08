@@ -27,6 +27,7 @@ class Collection:
         self.description = description
         self.license = licence
         self.data_type = data_type
+        self.items = []
         self.providers = GLOBAL_PROVIDERS
 
     def stac_collection(self) -> stac.Collection:

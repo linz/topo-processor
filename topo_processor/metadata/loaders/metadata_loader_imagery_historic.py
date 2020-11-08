@@ -20,7 +20,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_metadata(self, item: Item) -> None:
         file_name = os.path.splitext(os.path.basename(item.path))[0]
-        csv_path = os.path.join(os.getcwd(), "historical_aerial_photos_metadata.csv")
+        csv_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
 
         if not os.path.isfile(csv_path):
             raise Exception('Missing "historical_aerial_photos_metadata.csv"')
