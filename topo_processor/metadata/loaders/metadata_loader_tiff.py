@@ -3,8 +3,8 @@ import os
 import pystac as stac
 
 from topo_processor.metadata.item import Item
-from topo_processor.util.tiff import is_tiff
 from topo_processor.util.checksum import multihash_as_hex
+from topo_processor.util.tiff import is_tiff
 
 from .metadata_loader import MetadataLoader
 
