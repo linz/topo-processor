@@ -19,10 +19,10 @@ class Item:
         self.collection = collection
         self.stac_item = stac.Item(
             # TODO edit these item fields, add collection back to the constuctor:stac_item after collection.stac_collection is implemented
-            stac_extensions=["checksum"],
             id="hash",
             geometry=None,
             bbox=None,
             datetime=datetime.now(),
             properties={},
+            stac_extensions=[],
         )
