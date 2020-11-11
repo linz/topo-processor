@@ -1,7 +1,14 @@
+import hashlib
+
 import multihash
 
 
-def multihash_as_hex(file_path: str) -> str:
-    with open(file_path, "rb") as f:  # "rb" mode opens the file in binary format for reading
-        contents = f.read()
-        return multihash.digest(contents, "sha2-256").encode("hex").decode("UTF-8")
+def multihash_as_hex(file_path, hash_method: str = "sha2-256") -> str:
+    BLOCK_SIZE = 65536  # 64kb
+    file_hash = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        data = f.read(BLOCK_SIZE)
+        while len(data) > 0:
+            file_hash.update(data)
+            data = f.read(BLOCK_SIZE)
+    return multihash.to_hex_string(multihash.encode(file_hash.digest(), hash_method))
