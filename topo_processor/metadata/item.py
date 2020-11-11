@@ -24,4 +24,5 @@ class Item:
             bbox=None,
             datetime=datetime.now(),
             properties={},
+            stac_extensions=[],
         )
