@@ -18,7 +18,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    def add_metadata(self, item: Item) -> None:
+    async def add_metadata(self, item: Item) -> None:
         file_name = os.path.splitext(os.path.basename(item.path))[0]
         csv_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
 

@@ -9,6 +9,7 @@ python = "^3.8"
 linz-logger= "^0.2.0"
 pystac= "^0.5.2"
 py-multihash = "^0.2.3"
+aiocogeo = {extras = ["s3"], version = "^0.1.7"}
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
