@@ -19,6 +19,4 @@ class MetadataLoaderRepository:
             if loader.is_applicable(item):
                 start_time = time_in_ms()
                 loader.add_metadata(item)
-                get_log().debug(
-                    "MetadataLoaderRepository.add_metadata", loader=loader.name, duration=time_in_ms() - start_time
-                )
+                get_log().debug("Metadata added", loader=loader.name, duration=time_in_ms() - start_time, path=item.path)

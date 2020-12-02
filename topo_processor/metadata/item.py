@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 
 import pystac as stac
+from linz_logger import get_log
 
 from .collection import Collection
 

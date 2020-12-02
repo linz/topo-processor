@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List
 
 import pystac as stac
+from linz_logger import get_log
 
 from .data_type import DataType
 
