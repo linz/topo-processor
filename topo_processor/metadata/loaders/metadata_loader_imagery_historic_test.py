@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 from topo_processor.metadata.collection import Collection
@@ -33,8 +35,8 @@ def test_is_not_applicable_wrong_data_type():
 
 def test_item_not_found_in_csv():
     tiff_path = "test_path.tiff"
-    collection = Collection("title", "description", "license", DataType.LidarPointCloud)
+    collection = Collection("title", "description", "license", DataType.ImageryHistoric)
     item = Item(tiff_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     with pytest.raises(Exception, match=r"test_path cannot be found in the csv."):
-        metadata_loader_imagery_historic.add_metadata(item)
+        asyncio.run(metadata_loader_imagery_historic.add_metadata(item))

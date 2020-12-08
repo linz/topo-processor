@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from topo_processor.metadata.item import Item
 
 
-class MetadataLoader(ABC):
+class MetadataValidator(ABC):
     @property
     @abstractmethod
     def name(self):
@@ -14,5 +14,5 @@ class MetadataLoader(ABC):
         pass
 
     @abstractmethod
-    async def add_metadata(self, item: Item):
+    async def check_validity(self, item: Item):
         pass

@@ -1,6 +1,7 @@
 import os
 
 import pystac as stac
+import rasterio
 
 from topo_processor.metadata.item import Item
 from topo_processor.util.tiff import is_tiff
@@ -14,9 +15,22 @@ class MetadataLoaderTiff(MetadataLoader):
     def is_applicable(self, item: Item) -> bool:
         return is_tiff(item.path)
 
-    def add_metadata(self, item: Item) -> None:
-        # TODO use GDAL to load metadata from the tiff file if it exists
-        item.stac_item.add_asset(
-            key="image",
-            asset=stac.Asset(href=os.path.basename(item.path), properties={}, media_type=stac.MediaType.TIFF),
-        )
+    async def add_metadata(self, item: Item) -> None:
+        if "projection" not in item.stac_item.stac_extensions:
+            item.stac_item.stac_extensions.append("projection")
+        with rasterio.open(item.path) as tiff:
+            if tiff.crs:
+                if not tiff.crs.is_epsg_code:
+                    raise Exception("The code is not a valid EPSG code.")
+                crs = tiff.crs.to_epsg()
+            else:
+                crs = None
+            item.stac_item.properties.update({"proj:epsg": crs})
+            item.stac_item.add_asset(
+                key="image",
+                asset=stac.Asset(
+                    href=os.path.basename(item.path),
+                    properties={"linz:image_width": tiff.width, "linz:image_height": tiff.height},
+                    media_type=stac.MediaType.TIFF,
+                ),
+            )
