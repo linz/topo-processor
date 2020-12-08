@@ -238,14 +238,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "py-multihash"
-version = "0.2.3"
+version = "2.0.1"
 description = "Multihash implementation in Python"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-base58 = ">=1.0.2,<2.0"
+base58 = ">=1.0.2,<3.0"
 morphys = ">=1.0,<2.0"
 six = ">=1.10.0,<2.0"
 varint = ">=1.0.2,<2.0"
@@ -436,7 +436,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8205e25f691b3427a01cc0ccb2d4fb8371f3d9632deea53ef272948e27f0e8bc"
+content-hash = "7f128a078d2365b02d4f12717b54f15913eb5baf1cd6400081718adcfff96385"
 
 [metadata.files]
 affine = [
@@ -582,8 +582,8 @@ py = [
     {file = "py-1.9.0.tar.gz", hash = "sha256:9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"},
 ]
 py-multihash = [
-    {file = "py-multihash-0.2.3.tar.gz", hash = "sha256:f0ade4de820afdc4b4aaa40464ec86c9da5cae3a4578cda2daab4b0eb7e5b18d"},
-    {file = "py_multihash-0.2.3-py2.py3-none-any.whl", hash = "sha256:a0602c99093587dfbf1634e2e8c7726de39374b0d68587a36093b4c237af6969"},
+    {file = "py-multihash-2.0.1.tar.gz", hash = "sha256:b97511a87b7091f8b37a3d74ccb4a898e133529e7c5e431f9a27f78248a75e60"},
+    {file = "py_multihash-2.0.1-py2.py3-none-any.whl", hash = "sha256:c388728b3456d35cd6668b42a3d9ba32dd640493c8e93b992979668dcf2c0676"},
 ]
 pylint = [
     {file = "pylint-2.6.0-py3-none-any.whl", hash = "sha256:bfe68f020f8a0fece830a22dd4d5dddb4ecc6137db04face4c3420a46a52239f"},
