@@ -3,7 +3,7 @@ from .metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from .metadata_loader_repo import MetadataLoaderRepository
 from .metadata_loader_tiff import MetadataLoaderTiff
 
-repo = MetadataLoaderRepository()
-repo.append(MetadataLoaderImageryHistoric())
-repo.append(MetadataLoaderTiff())
-repo.append(MetadataLoaderChecksum())
+loader_repo = MetadataLoaderRepository()
+loader_repo.append(MetadataLoaderImageryHistoric())
+loader_repo.append(MetadataLoaderTiff())
+loader_repo.append(MetadataLoaderChecksum())

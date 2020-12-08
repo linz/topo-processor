@@ -21,7 +21,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    def add_metadata(self, item: Item) -> None:
+    async def add_metadata(self, item: Item) -> None:
         if not self.is_init:
             self.read_csv()
 
@@ -36,12 +36,24 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             "linz:photo_no": item_dict["photo_no"],
             "linz:alternate_survey_name": item_dict["alternate_survey_name"],
             "linz:camera": item_dict["camera"],
+            "linz:camera_sequence_no": item_dict["camera_sequence_no"],
             "linz:nominal_focal_length": item_dict["nominal_focal_length"],
             "linz:altitude": item_dict["altitude"],
             "linz:scale": item_dict["scale"],
+            "linz:photocentre_lat": item_dict["photocentre_lat"],
+            "linz:photocentre_lon": item_dict["photocentre_lon"],
             "linz:date": item_dict["date"],
+            "linz:film": item_dict["film"],
+            "linz:film_sequence_no": item_dict["film_sequence_no"],
+            "linz:photo_type": item_dict["photo_type"],
             "linz:format": item_dict["format"],
+            "linz:source": item_dict["source"],
+            "linz:physical_film_condition": item_dict["physical_film_condition"],
+            "linz:image_anomalies": item_dict["image_anomalies"],
+            "linz:scanned": item_dict["scanned"],
+            "linz:raw_filename": item_dict["raw_filename"],
             "linz:released_filename": item_dict["released_filename"],
+            "linz:when_scanned": item_dict["when_scanned"],
             "linz:photo_version": item_dict["photo_version"],
         }
         item.stac_item.properties.update(properties)
