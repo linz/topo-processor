@@ -7,7 +7,7 @@ authors = ["Blayne Chard <bchard@linz.govt.nz>", "Megan Davidson <mdavidson@linz
 [tool.poetry.dependencies]
 python = "^3.8"
 linz-logger= "^0.2.0"
-pystac= "^0.5.2"
+pystac= "^0.5.4"
 py-multihash = "^2.0.1"
 rasterio = "^1.1.8"
 
