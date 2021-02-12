@@ -22,7 +22,7 @@ async def upload_items(collection: Collection, target: str):
         await write_stac_object(item, f"temp/{item.item_output_path}")
         hash_value = await multihash_as_hex(f"temp/{item.item_output_path}")
         to_upload.append(
-            upload_file(f"temp/{item.item_output_path}", f"{item.item_output_path}", "application/json", hash_value, target)
+            upload_file(f"temp/{item.item_output_path}", item.item_output_path, "application/json", hash_value, target)
         )
         # for data
         to_upload.append(
@@ -43,7 +43,7 @@ async def upload_collection(collection: Collection, target: str):
     hash_value = await multihash_as_hex(f"temp/{collection.collection_output_path}")
     await upload_file(
         f"temp/{collection.collection_output_path}",
-        f"{collection.collection_output_path}",
+        collection.collection_output_path,
         "application/json",
         hash_value,
         target,
