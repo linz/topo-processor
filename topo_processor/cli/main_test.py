@@ -1,7 +1,7 @@
 import json
 import os
 import shutil
-from tempfile import gettempdir
+from tempfile import mkdtemp
 
 import pytest
 
@@ -11,17 +11,22 @@ from .main import upload_to_local_disk
 
 
 @pytest.fixture(autouse=True)
-def teardown():
-    yield
-    shutil.rmtree(os.path.join(gettempdir(), "C8054"))
+def setup():
+    """
+    This function creates a temporary directory and deletes it after each test.
+    See following link for details:
+    https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
+    """
+    target = mkdtemp()
+    yield target
+    shutil.rmtree(os.path.join(target, "C8054"))
 
 
 @pytest.mark.asyncio
-async def test_local_save_paths():
-
+async def test_local_save_paths(setup):
     source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
     datatype = "imagery.historic"
-    target = gettempdir()
+    target = setup
 
     collection = await create_collection(source, DataType(datatype))
     await upload_to_local_disk(collection, target)
@@ -32,11 +37,10 @@ async def test_local_save_paths():
 
 
 @pytest.mark.asyncio
-async def test_item_contents():
-
+async def test_item_contents(setup):
     source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
     datatype = "imagery.historic"
-    target = gettempdir()
+    target = setup
 
     collection = await create_collection(source, DataType(datatype))
     await upload_to_local_disk(collection, target)
