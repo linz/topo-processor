@@ -14,4 +14,4 @@ class MetadataLoaderChecksum(MetadataLoader):
     async def add_metadata(self, item: Item) -> None:
         if "checksum" not in item.stac_item.stac_extensions:
             item.stac_item.stac_extensions.append("checksum")
-        item.stac_item.properties["checksum:multihash"] = multihash_as_hex(item.path)
+        item.stac_item.properties["checksum:multihash"] = await multihash_as_hex(item.path)
