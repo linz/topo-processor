@@ -2,9 +2,9 @@ import asyncio
 
 import pytest
 
-from topo_processor.metadata.collection import Collection
-from topo_processor.metadata.data_type import DataType
-from topo_processor.metadata.item import Item
+from topo_processor.factory.collection import Collection
+from topo_processor.factory.data_type import DataType
+from topo_processor.factory.item import Item
 
 from .metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 
