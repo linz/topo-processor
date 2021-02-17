@@ -3,6 +3,7 @@ import os
 
 from linz_logger import get_log
 
+from topo_processor.data.compressors import compressor_repo
 from topo_processor.metadata.loaders import loader_repo
 from topo_processor.metadata.validators import validator_repo
 from topo_processor.util.time import time_in_ms
@@ -20,6 +21,12 @@ async def create_collection(path: str, data_type: DataType) -> Collection:
         "Collection Created", id=collection.stac_collection.id, data_type=data_type, duration=time_in_ms() - start_time
     )
     return collection
+
+
+async def process_item(item):
+    await loader_repo.add_metadata(item)
+    await validator_repo.check_validity(item)
+    await compressor_repo.compress_data(item)
 
 
 async def create_items(collection: Collection, path: str) -> None:

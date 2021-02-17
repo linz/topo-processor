@@ -1,0 +1,5 @@
+from .data_compressor_imagery_historic import DataCompressorImageryHistoric
+from .data_compressor_repo import DataCompressorRepository
+
+compressor_repo = DataCompressorRepository()
+compressor_repo.append(DataCompressorImageryHistoric())
