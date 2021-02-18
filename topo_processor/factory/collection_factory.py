@@ -3,7 +3,7 @@ import os
 
 from linz_logger import get_log
 
-from topo_processor.data.compressors import compressor_repo
+from topo_processor.imagery.compressors import compressor_repo
 from topo_processor.metadata.loaders import loader_repo
 from topo_processor.metadata.validators import validator_repo
 from topo_processor.util.time import time_in_ms
