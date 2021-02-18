@@ -1,5 +1,7 @@
 import asyncio
 from functools import wraps
+from shutil import rmtree
+from tempfile import mkdtemp
 
 import click
 from linz_logger import get_log
@@ -52,12 +54,14 @@ def coroutine(f):
 )
 @coroutine
 async def main(source, datatype, target, upload):
+    temp_dir = mkdtemp()
     collection = await create_collection(source, DataType(datatype))
     start_time = time_in_ms()
     if upload:
-        await upload_to_s3(collection, target)
+        await upload_to_s3(collection, target, temp_dir)
     else:
         await upload_to_local_disk(collection, target)
+    rmtree(temp_dir)
     get_log().debug(
         "Upload Completed",
         location=target,
