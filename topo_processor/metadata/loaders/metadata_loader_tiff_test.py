@@ -9,9 +9,10 @@ from .metadata_loader_tiff import MetadataLoaderTiff
 
 
 def test_add_metadata():
-    tiff_path = os.path.join(os.getcwd(), "test_data", "tiffs", "CROWN_399_E_49.tiff")
-    collection = Collection("title", "description", "license", DataType.ImageryHistoric)
+    tiff_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
+    collection = Collection(DataType.ImageryHistoric)
     item = Item(tiff_path, collection)
+    item.asset_basename = "399/1234"
     loader = MetadataLoaderTiff()
     assert loader.is_applicable(item)
 

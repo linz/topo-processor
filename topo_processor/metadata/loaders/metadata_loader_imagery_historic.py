@@ -57,8 +57,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             "linz:photo_version": item_dict["photo_version"],
         }
         item.stac_item.properties.update(properties)
+        item.stac_item.id = item_dict["sufi"]
+        item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
+        item.item_output_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
+        item.collection.collection_output_path = f"{item_dict['survey']}/collection.json"
 
     def read_csv(self):
+        self.csv_dict = {}
         csv_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
         if not os.path.isfile(csv_path):
             raise Exception('Missing "historical_aerial_photos_metadata.csv"')

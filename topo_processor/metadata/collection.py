@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List
 
 import pystac as stac
+import ulid
 
 from .data_type import DataType
 
@@ -11,28 +12,24 @@ if TYPE_CHECKING:
 
 
 class Collection:
-    """
-    A collection of Items
-    """
-
-    tilte: str
+    title: str
     description: str
     license: str
     data_type: DataType
     items: List["Item"]
     providers: List[stac.Provider]
+    collection_output_path: str
 
-    def __init__(self, title: str, description: str, licence: str, data_type: DataType):
-        self.title = title
-        self.description = description
-        self.license = licence
+    def __init__(self, data_type: DataType):
         self.data_type = data_type
         self.items = []
-        self.providers = GLOBAL_PROVIDERS
-
-    def stac_collection(self) -> stac.Collection:
-        raise Exception("Not Yet Implemented")
-
+        self.stac_collection = stac.Collection(
+            id=ulid.ulid(),
+            description=None,
+            license=None,
+            providers=GLOBAL_PROVIDERS,
+            extent=stac.SpatialExtent(bboxes=[0, 0, 0, 0]),
+        )
         # Required Fields - jeremy's Documentation:
         # - Title
         # - Type
