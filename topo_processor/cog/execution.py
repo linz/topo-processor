@@ -24,7 +24,7 @@ class ExecutionLocal:
         get_log().debug(
             "Ran command", command=cmd.to_full_command(), stdout=stdout.decode(), duration=time_in_ms() - start_time
         )
-        return proc.returncode
+        return proc.returncode, stdout.decode(), stderr.decode()
 
 
 class ExecutionDocker:

@@ -1,25 +1,20 @@
-import pytest
+import asyncio
 
 from topo_processor.cog.command import Command
 
 
-@pytest.mark.asyncio
-async def test_hello_world_local(capsys):
+def test_hello_world_local():
     cmd = Command("echo")
     cmd.append_arg("Hello World Local!!!")
-    return_code = await cmd.run()
-
-    stdout, stderr = capsys.readouterr()
-    assert "Hello World Local!!!" in stdout
+    return_code, stdout, stderr = asyncio.run(cmd.run())
+    assert stdout == "Hello World Local!!!\n"
+    assert stderr == ""
     assert return_code == 0
 
 
-@pytest.mark.asyncio
-async def test_hello_world_docker(capsys):
-    cmd = Command("echo", {"container": "ubuntu", "tag": "20.04"})
+def test_hello_world_docker():
+    cmd = Command("/bin/echo", {"container": "busybox", "tag": "latest"})
     cmd.append_arg("Hello World Docker!!!")
-    return_code = await cmd.run()
-
-    stdout, stderr = capsys.readouterr()
-    assert "Hello World Docker!!!" in stdout
+    return_code, stdout, stderr = asyncio.run(cmd.run())
+    assert stdout == "Hello World Docker!!!\n"
     assert return_code == 0

@@ -26,13 +26,11 @@ class Command:
     def append_arg(self, *args: str) -> "Command":
         for argument in args:
             self.arguments.append(argument)
-        return self
 
     def mount(self, *args: str) -> "Command":
         """Mount a folder, useful only if the command is run inside of docker"""
         for volume in args:
             self.volumes.append(volume)
-        return os.sendfile
 
     def to_full_command(self) -> List[str]:
         return [self.command] + self.arguments
@@ -44,7 +42,6 @@ class Command:
         docker.append_arg("run")
         docker.append_arg("--user", f"{os.geteuid()}:{os.getegid()}")
         for volume in self.volumes:
-            docker.mount(volume)
             docker.append_arg("-v", f"{volume}:{volume}")
         docker.append_arg("--rm")
 
