@@ -2,16 +2,34 @@ import os
 
 import pytest
 
-from topo_processor.cog.create_cog import create_cog
+from topo_processor.cog.create_cog import to_gdal_command
+
+
+@pytest.fixture(autouse=True)
+def delete_cog():
+    """Automatically runs before and after each test"""
+    yield
+    output_path = os.path.join(os.getcwd(), "CROWN_399_E_49.tiff.LZW.cog.tiff")
+    if os.path.isfile(output_path):
+        os.remove(output_path)
 
 
 @pytest.mark.asyncio
-async def test_create_cog():
-    tiff_path = os.path.join(os.getcwd(), "test_data", "tiffs", "CROWN_399_E_49.tiff")
-    output_path = os.getcwd()
-    await create_cog(tiff_path, output_path)
-
-    output_cog_path = os.path.join(output_path, "CROWN_399_E_49.tiff.tif.deflate.cog.tiff")
-    assert os.path.isfile(output_cog_path)
-    if os.path.isfile(output_cog_path):
-        os.remove(output_cog_path)
+async def test_gdal_command():
+    input_file = "fake_input.tiff"
+    output_dir = "fake_output_dir"
+    compression_method = "LZW"
+    cmd = to_gdal_command(input_file, output_dir, compression_method)
+    assert cmd.to_full_command() == [
+        "gdal_translate",
+        "fake_input.tiff",
+        "-of",
+        "COG",
+        "-co",
+        "COMPRESS=LZW",
+        "-co",
+        "NUM_THREADS=ALL_CPUS",
+        "-co",
+        "PREDICTOR=2",
+        "fake_output_dir/fake_input.tiff.LZW.cog.tiff",
+    ]
