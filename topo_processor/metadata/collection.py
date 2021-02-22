@@ -6,7 +6,6 @@ import ulid
 from .data_type import DataType
 
 GLOBAL_PROVIDERS = [stac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
-
 if TYPE_CHECKING:
     from .item import Item
 
