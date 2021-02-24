@@ -3,6 +3,7 @@ import os
 
 from linz_logger import get_log
 
+from topo_processor.imagery.transformers import transformer_repo
 from topo_processor.metadata.loaders import loader_repo
 from topo_processor.metadata.validators import validator_repo
 from topo_processor.util.time import time_in_ms
@@ -37,3 +38,4 @@ async def create_items(collection: Collection, path: str) -> None:
 async def process_item(item):
     await loader_repo.add_metadata(item)
     await validator_repo.check_validity(item)
+    await transformer_repo.transform_data(item)

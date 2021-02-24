@@ -3,7 +3,7 @@ import os
 import pystac as stac
 import rasterio
 
-from topo_processor.metadata.item import Item
+from topo_processor.stac.item import Item
 from topo_processor.util.tiff import is_tiff
 
 from .metadata_loader import MetadataLoader

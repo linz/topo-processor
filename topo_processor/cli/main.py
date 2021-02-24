@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 import click
 from linz_logger import get_log
 
-from topo_processor.metadata import DataType, create_collection
+from topo_processor.stac import DataType, create_collection
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util.time import time_in_ms
 

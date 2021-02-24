@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from topo_processor.stac.item import Item
 
 
-class MetadataValidator(ABC):
+class DataTransformer(ABC):
     @property
     @abstractmethod
     def name(self):
@@ -14,5 +14,5 @@ class MetadataValidator(ABC):
         pass
 
     @abstractmethod
-    async def check_validity(self, item: Item):
+    async def transform_data(self, item: Item):
         pass

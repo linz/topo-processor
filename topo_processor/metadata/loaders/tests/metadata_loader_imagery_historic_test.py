@@ -2,11 +2,10 @@ import asyncio
 
 import pytest
 
-from topo_processor.metadata.collection import Collection
-from topo_processor.metadata.data_type import DataType
-from topo_processor.metadata.item import Item
-
-from .metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
+from topo_processor.metadata.loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.data_type import DataType
+from topo_processor.stac.item import Item
 
 
 def test_is_applicable():

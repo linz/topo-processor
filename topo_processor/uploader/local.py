@@ -1,7 +1,7 @@
 from shutil import copyfile
 
-from topo_processor.metadata.collection import Collection
-from topo_processor.metadata.item import Item
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.item import Item
 from topo_processor.util import write_stac_object
 
 

@@ -1,0 +1,5 @@
+from .data_transformer_imagery_historic import DataTransformerImageryHistoric
+from .data_transformer_repo import DataTransformerRepository
+
+transformer_repo = DataTransformerRepository()
+transformer_repo.append(DataTransformerImageryHistoric())
