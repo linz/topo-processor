@@ -4,7 +4,7 @@ import os
 import boto3
 from linz_logger import get_log
 
-from topo_processor.metadata.collection import Collection
+from topo_processor.stac.collection import Collection
 from topo_processor.util import multihash_as_hex, time_in_ms, write_stac_object
 
 s3 = boto3.client("s3")

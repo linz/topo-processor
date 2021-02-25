@@ -3,7 +3,7 @@ from typing import List
 
 from linz_logger import get_log
 
-from topo_processor.metadata.item import Item
+from topo_processor.stac.item import Item
 from topo_processor.util.time import time_in_ms
 
 from .metadata_loader import MetadataLoader

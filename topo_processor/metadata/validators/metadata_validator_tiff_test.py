@@ -3,9 +3,9 @@ import os
 
 import pytest
 
-from topo_processor.metadata.collection import Collection
-from topo_processor.metadata.data_type import DataType
-from topo_processor.metadata.item import Item
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.data_type import DataType
+from topo_processor.stac.item import Item
 
 from .metadata_validator_tiff import MetadataValidatorTiff
 

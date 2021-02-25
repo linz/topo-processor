@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 
 import pytest
 
-from topo_processor.metadata import DataType, create_collection
+from topo_processor.stac import DataType, create_collection
 
 from .main import upload_to_local_disk
 
