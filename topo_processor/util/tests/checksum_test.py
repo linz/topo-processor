@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from .checksum import multihash_as_hex
+from topo_processor.util.checksum import multihash_as_hex
 
 
 @pytest.mark.asyncio

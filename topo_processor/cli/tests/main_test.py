@@ -5,9 +5,8 @@ from tempfile import mkdtemp
 
 import pytest
 
+from topo_processor.cli.main import upload_to_local_disk
 from topo_processor.stac import DataType, create_collection
-
-from .main import upload_to_local_disk
 
 
 @pytest.fixture(autouse=True)
