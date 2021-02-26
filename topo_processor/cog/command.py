@@ -23,11 +23,11 @@ class Command:
             self.container = docker_ref.get("container", None)
             self.container_tag = docker_ref.get("tag", None)
 
-    def append_arg(self, *args: str) -> "Command":
+    def append_arg(self, *args: str):
         for argument in args:
             self.arguments.append(argument)
 
-    def mount(self, *args: str) -> "Command":
+    def mount(self, *args: str):
         """Mount a folder, useful only if the command is run inside of docker"""
         for volume in args:
             self.volumes.append(volume)

@@ -18,7 +18,7 @@ def setup():
     """
     target = mkdtemp()
     yield target
-    shutil.rmtree(os.path.join(target, "C8054"))
+    shutil.rmtree(target)
 
 
 @pytest.mark.asyncio
