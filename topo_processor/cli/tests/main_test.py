@@ -9,39 +9,38 @@ from topo_processor.cli.main import upload_to_local_disk
 from topo_processor.stac import DataType, create_collection
 
 
+@pytest.mark.asyncio
 @pytest.fixture(autouse=True)
-def setup():
+async def setup():
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
     https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
     """
+    source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
+    datatype = "imagery.historic"
+    collection = await create_collection(source, DataType(datatype))
     target = mkdtemp()
-    yield target
-    shutil.rmtree(os.path.join(target, "C8054"))
+    yield collection, target
+    shutil.rmtree(target)
+    shutil.rmtree(collection.temp_dir)
 
 
 @pytest.mark.asyncio
 async def test_local_save_paths(setup):
-    source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
-    datatype = "imagery.historic"
-    target = setup
+    collection, target = setup
 
-    collection = await create_collection(source, DataType(datatype))
     await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
-    assert os.path.isfile(os.path.join(target, "C8054", "29659.tiff"))
+    assert os.path.isfile(os.path.join(target, "C8054", "29659.lzw.cog.tiff"))
     assert os.path.isfile(os.path.join(target, "C8054", "collection.json"))
 
 
 @pytest.mark.asyncio
 async def test_item_contents(setup):
-    source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
-    datatype = "imagery.historic"
-    target = setup
+    collection, target = setup
 
-    collection = await create_collection(source, DataType(datatype))
     await upload_to_local_disk(collection, target)
 
     with open(os.path.join(target, "C8054", "29659.json")) as item_json_file:

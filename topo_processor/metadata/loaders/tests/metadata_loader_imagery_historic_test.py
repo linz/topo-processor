@@ -1,4 +1,6 @@
 import asyncio
+import shutil
+from tempfile import mkdtemp
 
 import pytest
 
@@ -8,33 +10,47 @@ from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
 
 
-def test_is_applicable():
+@pytest.fixture(autouse=True)
+async def setup():
+    """
+    This function creates a temporary directory and deletes it after each test.
+    See following link for details:
+    https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
+    """
+    temp_dir = mkdtemp()
+    collection = Collection(DataType.ImageryHistoric, temp_dir)
+    yield collection
+    shutil.rmtree(temp_dir)
+
+
+def test_is_applicable(setup):
     tiff_path = "test_path.tiff"
-    collection = Collection(DataType.ImageryHistoric)
+    collection = setup
     item = Item(tiff_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert metadata_loader_imagery_historic.is_applicable(item)
 
 
-def test_is_not_applicable_wrong_file_extension():
+def test_is_not_applicable_wrong_file_extension(setup):
     tiff_path = "test_path"
-    collection = Collection(DataType.ImageryHistoric)
+    collection = setup
     item = Item(tiff_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert not metadata_loader_imagery_historic.is_applicable(item)
 
 
-def test_is_not_applicable_wrong_data_type():
+def test_is_not_applicable_wrong_data_type(setup):
     tiff_path = "test_path.tiff"
-    collection = Collection(DataType.LidarPointCloud)
+    collection = setup
+    collection.data_type = DataType.LidarDEM
     item = Item(tiff_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert not metadata_loader_imagery_historic.is_applicable(item)
 
 
-def test_item_not_found_in_csv():
+def test_item_not_found_in_csv(setup):
     tiff_path = "test_path.tiff"
-    collection = Collection(DataType.ImageryHistoric)
+    collection = setup
     item = Item(tiff_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     with pytest.raises(Exception, match=r"test_path cannot be found in the csv."):

@@ -20,6 +20,8 @@ class DataTransformerImageryHistoric(DataTransformer):
 
     async def transform_data(self, item: Item) -> None:
         input_file = os.path.abspath(item.path)
-        output_dir = os.getcwd()  # TODO tempdir?
-        compression_method = "LZW"
-        await create_cog(input_file, output_dir, compression_method)
+        if not os.path.isdir(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])):
+            os.makedirs(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"]))
+        output_dir = os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])
+        item.transformed_asset_extension = "lzw.cog.tiff"
+        item.transformed_data_path = await create_cog(input_file, output_dir, "lzw")

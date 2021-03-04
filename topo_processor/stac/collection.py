@@ -1,3 +1,4 @@
+from tempfile import mkdtemp
 from typing import TYPE_CHECKING, List
 
 import pystac as stac
@@ -15,12 +16,14 @@ class Collection:
     description: str
     license: str
     data_type: DataType
+    temp_dir: str
     items: List["Item"]
     providers: List[stac.Provider]
     collection_output_path: str
 
-    def __init__(self, data_type: DataType):
+    def __init__(self, data_type: DataType, temp_dir: str):
         self.data_type = data_type
+        self.temp_dir = temp_dir
         self.items = []
         self.stac_collection = stac.Collection(
             id=ulid.ulid(),

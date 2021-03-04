@@ -23,14 +23,16 @@ class Command:
             self.container = docker_ref.get("container", None)
             self.container_tag = docker_ref.get("tag", None)
 
-    def append_arg(self, *args: str) -> "Command":
+    def arg(self, *args: str) -> "Command":
         for argument in args:
             self.arguments.append(argument)
+        return self
 
     def mount(self, *args: str) -> "Command":
         """Mount a folder, useful only if the command is run inside of docker"""
         for volume in args:
             self.volumes.append(volume)
+        return self
 
     def to_full_command(self) -> List[str]:
         return [self.command] + self.arguments
@@ -39,20 +41,20 @@ class Command:
         if not self.container:
             raise Exception(f"No container found for command {self.command}")
         docker = Command("docker")
-        docker.append_arg("run")
-        docker.append_arg("--user", f"{os.geteuid()}:{os.getegid()}")
+        docker.arg("run")
+        docker.arg("--user", f"{os.geteuid()}:{os.getegid()}")
         for volume in self.volumes:
-            docker.append_arg("-v", f"{volume}:{volume}")
-        docker.append_arg("--rm")
+            docker.arg("-v", f"{volume}:{volume}")
+        docker.arg("--rm")
 
         if not self.container_tag:
-            docker.append_arg(self.container)
+            docker.arg(self.container)
         else:
-            docker.append_arg(f"{self.container}:{self.container_tag}")
+            docker.arg(f"{self.container}:{self.container_tag}")
 
-        docker.append_arg(self.command)
+        docker.arg(self.command)
         for argument in self.arguments:
-            docker.append_arg(argument)
+            docker.arg(argument)
         return docker
 
     async def run(self):
