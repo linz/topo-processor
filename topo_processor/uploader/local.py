@@ -14,4 +14,9 @@ async def upload_to_local_disk(collection: Collection, target: str):
 
 async def copy_item_data_file(stac_item: Item, target: str):
     # TODO this is not async
-    copyfile(stac_item.path, f"{target}/{stac_item.asset_basename}.{stac_item.asset_extension}")
+    if stac_item.transformed_data_path:
+        copyfile(
+            stac_item.transformed_data_path, f"{target}/{stac_item.asset_basename}.{stac_item.transformed_asset_extension}"
+        )
+    else:
+        copyfile(stac_item.path, f"{target}/{stac_item.asset_basename}.{stac_item.asset_extension}")

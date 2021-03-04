@@ -10,40 +10,55 @@ from topo_processor.util import multihash_as_hex, time_in_ms, write_stac_object
 s3 = boto3.client("s3")
 
 
-async def upload_to_s3(collection: Collection, target: str, temp_dir: str):
-    await upload_items(collection, target, temp_dir)
-    await upload_collection(collection, target, temp_dir)
+async def upload_to_s3(collection: Collection, target: str):
+    await upload_items(collection, target)
+    await upload_collection(collection, target)
 
 
-async def upload_items(collection: Collection, target: str, temp_dir: str):
+async def upload_items(collection: Collection, target: str):
     to_upload = []
     for item in collection.items:
         # for metadata
-        await write_stac_object(item, os.path.join(temp_dir, item.item_output_path))
-        hash_value = await multihash_as_hex(os.path.join(temp_dir, item.item_output_path))
+        await write_stac_object(item, os.path.join(collection.temp_dir, item.item_output_path))
+        hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, item.item_output_path))
         to_upload.append(
             upload_file(
-                os.path.join(temp_dir, item.item_output_path), item.item_output_path, "application/json", hash_value, target
-            )
-        )
-        # for data
-        to_upload.append(
-            upload_file(
-                item.path,
-                f"{item.asset_basename}.{item.asset_extension}",
-                item.content_type,
-                item.stac_item.properties["checksum:multihash"],
+                os.path.join(collection.temp_dir, item.item_output_path),
+                item.item_output_path,
+                "application/json",
+                hash_value,
                 target,
             )
         )
+        # for data
+        if item.transformed_data_path:
+            to_upload.append(
+                upload_file(
+                    item.transformed_data_path,
+                    f"{item.asset_basename}.{item.transformed_asset_extension}",
+                    item.content_type,
+                    item.stac_item.properties["checksum:multihash"],
+                    target,
+                )
+            )
+        else:
+            to_upload.append(
+                upload_file(
+                    item.path,
+                    f"{item.asset_basename}.{item.asset_extension}",
+                    item.content_type,
+                    item.stac_item.properties["checksum:multihash"],
+                    target,
+                )
+            )
     await asyncio.gather(*to_upload)
 
 
-async def upload_collection(collection: Collection, target: str, temp_dir: str):
-    await write_stac_object(collection, os.path.join(temp_dir, collection.collection_output_path))
-    hash_value = await multihash_as_hex(os.path.join(temp_dir, collection.collection_output_path))
+async def upload_collection(collection: Collection, target: str):
+    await write_stac_object(collection, os.path.join(collection.temp_dir, collection.collection_output_path))
+    hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, collection.collection_output_path))
     await upload_file(
-        os.path.join(temp_dir, collection.collection_output_path),
+        os.path.join(collection.temp_dir, collection.collection_output_path),
         collection.collection_output_path,
         "application/json",
         hash_value,
