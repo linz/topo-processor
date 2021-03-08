@@ -4,7 +4,7 @@ from tempfile import mkdtemp
 
 import pytest
 
-from topo_processor.metadata.loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
+from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from topo_processor.stac.collection import Collection
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item

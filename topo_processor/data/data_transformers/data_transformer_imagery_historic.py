@@ -1,6 +1,7 @@
 import os
 
 from topo_processor.cog.create_cog import create_cog
+from topo_processor.stac import add_asset_image
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
 from topo_processor.util import is_tiff
@@ -23,5 +24,6 @@ class DataTransformerImageryHistoric(DataTransformer):
         if not os.path.isdir(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])):
             os.makedirs(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"]))
         output_dir = os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])
-        item.transformed_asset_extension = "lzw.cog.tiff"
-        item.transformed_data_path = await create_cog(input_file, output_dir, "lzw")
+        item.asset_extension = "lzw.cog.tiff"
+        item.path = await create_cog(input_file, output_dir, "lzw")
+        await add_asset_image(item)

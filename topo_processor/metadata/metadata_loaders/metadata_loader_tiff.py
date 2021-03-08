@@ -1,6 +1,3 @@
-import os
-
-import pystac as stac
 import rasterio
 
 from topo_processor.stac.item import Item
@@ -28,11 +25,3 @@ class MetadataLoaderTiff(MetadataLoader):
             item.stac_item.properties.update({"proj:epsg": crs})
             item.asset_extension = "tiff"
             item.content_type = "image/tiff"
-            item.stac_item.add_asset(
-                key="image",
-                asset=stac.Asset(
-                    href=f"{item.asset_basename}.{item.asset_extension}",
-                    properties={"linz:image_width": tiff.width, "linz:image_height": tiff.height},
-                    media_type=stac.MediaType.TIFF,
-                ),
-            )

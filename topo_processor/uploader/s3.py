@@ -31,26 +31,15 @@ async def upload_items(collection: Collection, target: str):
             )
         )
         # for data
-        if item.transformed_data_path:
-            to_upload.append(
-                upload_file(
-                    item.transformed_data_path,
-                    f"{item.asset_basename}.{item.transformed_asset_extension}",
-                    item.content_type,
-                    item.stac_item.properties["checksum:multihash"],
-                    target,
-                )
+        to_upload.append(
+            upload_file(
+                item.path,
+                f"{item.asset_basename}.{item.asset_extension}",
+                item.content_type,
+                item.stac_item.properties["checksum:multihash"],
+                target,
             )
-        else:
-            to_upload.append(
-                upload_file(
-                    item.path,
-                    f"{item.asset_basename}.{item.asset_extension}",
-                    item.content_type,
-                    item.stac_item.properties["checksum:multihash"],
-                    target,
-                )
-            )
+        )
     await asyncio.gather(*to_upload)
 
 

@@ -28,7 +28,7 @@ class Command:
             self.arguments.append(argument)
         return self
 
-    def mount(self, *args: str):
+    def mount(self, *args: str) -> "Command":
         """Mount a folder, useful only if the command is run inside of docker"""
         for volume in args:
             self.volumes.append(volume)
