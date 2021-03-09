@@ -2,24 +2,26 @@ from datetime import datetime
 
 import pystac as stac
 
-from .collection import Collection
+from .data_type import DataType
 
 
 class Item:
-
-    path: str  # path to data file (input or transformed)
-    item_output_path: str  # destination path for stac item json file
+    source_file: str
+    data_type: DataType
+    temp_dir = str
+    metadata_file: str  # destination path for stac item json file
     asset_basename: str  # base name of asset (survey/sufi)
     asset_extension: str  # extension of asset (lzw.cog.tiff)
+    output_dir: str  # directory metadata and data will be stored
     content_type: str
-    collection: Collection
     stac_item: stac.Item
+    is_valid: bool
 
-    def __init__(self, path: str, collection: Collection):
-        self.path = path
-        self.collection = collection
+    def __init__(self, source_file: str, data_type: DataType, temp_dir: str):
+        self.source_file = source_file
+        self.data_type = data_type
+        self.temp_dir = temp_dir
         self.stac_item = stac.Item(
-            # add collection back to the constuctor:stac_item after collection.stac_collection is implemented
             id=None,
             geometry=None,
             bbox=None,
@@ -27,3 +29,4 @@ class Item:
             properties={},
             stac_extensions=[],
         )
+        self.is_valid = False

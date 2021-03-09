@@ -19,12 +19,12 @@ async def upload_items(collection: Collection, target: str):
     to_upload = []
     for item in collection.items:
         # for metadata
-        await write_stac_object(item, os.path.join(collection.temp_dir, item.item_output_path))
-        hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, item.item_output_path))
+        await write_stac_object(item, os.path.join(collection.temp_dir, item.metadata_file))
+        hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, item.metadata_file))
         to_upload.append(
             upload_file(
-                os.path.join(collection.temp_dir, item.item_output_path),
-                item.item_output_path,
+                os.path.join(collection.temp_dir, item.metadata_file),
+                item.metadata_file,
                 "application/json",
                 hash_value,
                 target,
@@ -33,7 +33,7 @@ async def upload_items(collection: Collection, target: str):
         # for data
         to_upload.append(
             upload_file(
-                item.path,
+                item.source_dir,
                 f"{item.asset_basename}.{item.asset_extension}",
                 item.content_type,
                 item.stac_item.properties["checksum:multihash"],
@@ -44,11 +44,11 @@ async def upload_items(collection: Collection, target: str):
 
 
 async def upload_collection(collection: Collection, target: str):
-    await write_stac_object(collection, os.path.join(collection.temp_dir, collection.collection_output_path))
-    hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, collection.collection_output_path))
+    await write_stac_object(collection, os.path.join(collection.temp_dir, collection.metadata_file))
+    hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, collection.metadata_file))
     await upload_file(
-        os.path.join(collection.temp_dir, collection.collection_output_path),
-        collection.collection_output_path,
+        os.path.join(collection.temp_dir, collection.metadata_file),
+        collection.metadata_file,
         "application/json",
         hash_value,
         target,

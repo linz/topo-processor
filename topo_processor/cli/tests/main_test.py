@@ -5,11 +5,10 @@ from tempfile import mkdtemp
 
 import pytest
 
-from topo_processor.cli.main import upload_to_local_disk
+from topo_processor.cli.main import main
 from topo_processor.stac import DataType, create_collection
 
 
-@pytest.mark.asyncio
 @pytest.fixture(autouse=True)
 async def setup():
     """
@@ -17,13 +16,9 @@ async def setup():
     See following link for details:
     https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
     """
-    source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
-    datatype = "imagery.historic"
-    collection = await create_collection(source, DataType(datatype))
-    target = mkdtemp()
-    yield collection, target
-    shutil.rmtree(target)
-    shutil.rmtree(collection.temp_dir)
+    temp_dir = mkdtemp()
+    yield temp_dir
+    shutil.rmtree(temp_dir)
 
 
 @pytest.mark.asyncio

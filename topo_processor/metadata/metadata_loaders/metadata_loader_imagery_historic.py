@@ -15,9 +15,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     csv_dict: Dict[str, Dict[str, str]] = {}
 
     def is_applicable(self, item: Item) -> bool:
-        if item.collection.data_type != DataType.ImageryHistoric:
+        if item.data_type != DataType.ImageryHistoric:
             return False
-        if not is_tiff(item.path):
+        if not is_tiff(item.source_file):
             return False
         return True
 
@@ -25,10 +25,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if not self.is_init:
             self.read_csv()
 
-        item_path_basename = os.path.splitext(os.path.basename(item.path))[0]
-        if item_path_basename not in self.csv_dict:
-            raise Exception(f"{item_path_basename} cannot be found in the csv.")
-        item_dict = self.csv_dict[item_path_basename]
+        source_file_basename = os.path.splitext(os.path.basename(item.source_file))[0]
+        if source_file_basename not in self.csv_dict:
+            raise Exception(f"{source_file_basename} cannot be found in the csv.")
+        item_dict = self.csv_dict[source_file_basename]
         properties = {
             "linz:sufi": item_dict["sufi"],
             "linz:survey": item_dict["survey"],
@@ -59,8 +59,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.stac_item.properties.update(properties)
         item.stac_item.id = item_dict["sufi"]
         item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
-        item.item_output_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
-        item.collection.collection_output_path = f"{item_dict['survey']}/collection.json"
+        item.metadata_file = f"{item_dict['survey']}/{item_dict['sufi']}.json"
 
     def read_csv(self):
         self.csv_dict = {}

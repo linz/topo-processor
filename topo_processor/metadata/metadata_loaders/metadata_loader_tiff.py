@@ -10,12 +10,12 @@ class MetadataLoaderTiff(MetadataLoader):
     name = "loader.imagery.tiff"
 
     def is_applicable(self, item: Item) -> bool:
-        return is_tiff(item.path)
+        return is_tiff(item.source_file)
 
     async def add_metadata(self, item: Item) -> None:
         if "projection" not in item.stac_item.stac_extensions:
             item.stac_item.stac_extensions.append("projection")
-        with rasterio.open(item.path) as tiff:
+        with rasterio.open(item.source_file) as tiff:
             if tiff.crs:
                 if not tiff.crs.is_epsg_code:
                     raise Exception("The code is not a valid EPSG code.")

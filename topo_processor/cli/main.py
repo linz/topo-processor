@@ -1,11 +1,13 @@
 import asyncio
+import os
 from functools import wraps
 from shutil import rmtree
-
+from tempfile import mkdtemp
+from pystac import LinkType
 import click
 from linz_logger import get_log
 
-from topo_processor.stac import DataType, create_collection
+from topo_processor.stac import DataType, create_collection, create_items
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util.time import time_in_ms
 
@@ -53,18 +55,26 @@ def coroutine(f):
 )
 @coroutine
 async def main(source, datatype, target, upload):
-    collection = await create_collection(source, DataType(datatype))
     start_time = time_in_ms()
+    data_type = DataType(datatype)
+    temp_dir = mkdtemp()
+    collection = await create_collection(data_type, temp_dir)
+    items = await create_items(source, data_type, temp_dir)
+    for item in items:
+        if item.is_valid:
+            collection.metadata_file = os.path.join(item.output_dir, "collection.json")
+            collection.items.append(item)
+            item.stac_item.set_collection(collection.stac_collection, LinkType.ABSOLUTE)
     try:
         if upload:
             await upload_to_s3(collection, target)
         else:
             await upload_to_local_disk(collection, target)
     finally:
-        rmtree(collection.temp_dir)
+        rmtree(temp_dir)
         get_log().debug(
             "Upload Completed",
             location=target,
-            data_type=collection.data_type.value,
+            data_type=data_type.value,
             duration=time_in_ms() - start_time,
         )

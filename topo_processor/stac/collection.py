@@ -1,4 +1,3 @@
-from tempfile import mkdtemp
 from typing import TYPE_CHECKING, List
 
 import pystac as stac
@@ -6,9 +5,12 @@ import ulid
 
 from .data_type import DataType
 
-GLOBAL_PROVIDERS = [stac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
     from .item import Item
+
+GLOBAL_PROVIDERS = [
+    stac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"], url="https://data.linz.govt.nz/")
+]
 
 
 class Collection:
@@ -19,7 +21,8 @@ class Collection:
     temp_dir: str
     items: List["Item"]
     providers: List[stac.Provider]
-    collection_output_path: str
+    metadata_file: str
+    stac_collection: stac.Collection
 
     def __init__(self, data_type: DataType, temp_dir: str):
         self.data_type = data_type
@@ -31,6 +34,7 @@ class Collection:
             license=None,
             providers=GLOBAL_PROVIDERS,
             extent=stac.SpatialExtent(bboxes=[0, 0, 0, 0]),
+            href=None
         )
         # Required Fields - jeremy's Documentation:
         # - Title
