@@ -14,5 +14,5 @@ class MetadataValidator(ABC):
         pass
 
     @abstractmethod
-    async def check_validity(self, item: Item):
+    async def validate_metadata(self, item: Item):
         pass

@@ -16,12 +16,12 @@ class MetadataValidatorRepository:
     def append(self, loader: MetadataValidator) -> None:
         self.validators.append(loader)
 
-    async def check_validity(self, item: Item) -> None:
+    async def validate_metadata(self, item: Item) -> None:
         async with self.lock:
             for validator in self.validators:
                 if validator.is_applicable(item):
                     start_time = time_in_ms()
-                    await validator.check_validity(item)
+                    await validator.validate_metadata(item)
                     get_log().debug(
                         "Validity Checked",
                         validator=validator.name,

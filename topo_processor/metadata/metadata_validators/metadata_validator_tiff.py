@@ -13,7 +13,7 @@ class MetadataValidatorTiff(MetadataValidator):
     def is_applicable(self, item: Item) -> bool:
         return is_tiff(item.path)
 
-    async def check_validity(self, item: Item) -> None:
+    async def validate_metadata(self, item: Item) -> None:
         photo_type = item.stac_item.properties["linz:photo_type"]
         with rasterio.open(item.path) as tiff:
             if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:

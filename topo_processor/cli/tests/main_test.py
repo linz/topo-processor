@@ -50,7 +50,7 @@ async def test_item_contents(setup):
     assert item_metadata["properties"]["linz:sufi"] == "29659"
     assert item_metadata["id"] == item_metadata["properties"]["linz:sufi"]
     assert (
-        item_metadata["properties"]["checksum:multihash"]
-        == "1220f7ea9017ef596cc650369493dc3993d9ab5c99055bbc5c7bac9d4e061c5f2f7a"
+        item_metadata["assets"]["image"]["file:checksum"]
+        == "122083318d91bfb2a04a82b381e2024d925a5ab3deababa0058dcb1b19ae4e805c9a"
     )
-    assert (item_metadata["assets"]["image"]["href"]) == "C8054/29659.tiff"
+    assert (item_metadata["assets"]["image"]["href"]) == "C8054/29659.lzw.cog.tiff"
