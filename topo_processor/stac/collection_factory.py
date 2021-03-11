@@ -19,9 +19,7 @@ async def create_collection(source_dir: str, data_type: DataType) -> Collection:
     temp_dir = mkdtemp()
     collection = Collection(data_type, temp_dir)
     await create_items(collection, source_dir)
-    get_log().debug(
-        "Collection Created", id=collection.stac_collection.id, data_type=data_type, duration=time_in_ms() - start_time
-    )
+    get_log().debug("Collection Created", data_type=data_type, duration=time_in_ms() - start_time)
     return collection
 
 

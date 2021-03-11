@@ -1,4 +1,3 @@
-from tempfile import mkdtemp
 from typing import TYPE_CHECKING, List
 
 import pystac as stac
@@ -25,13 +24,16 @@ class Collection:
         self.data_type = data_type
         self.temp_dir = temp_dir
         self.items = []
-        self.stac_collection = stac.Collection(
+
+    def create_stac(self) -> stac.Collection:
+        stac_collection = stac.Collection(
             id=ulid.ulid(),
             description=None,
             license=None,
             providers=GLOBAL_PROVIDERS,
             extent=stac.SpatialExtent(bboxes=[0, 0, 0, 0]),
         )
+        return stac_collection
         # Required Fields - jeremy's Documentation:
         # - Title
         # - Type
