@@ -56,9 +56,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             "linz:when_scanned": item_dict["when_scanned"],
             "linz:photo_version": item_dict["photo_version"],
         }
-        item.stac_item.properties.update(properties)
-        item.stac_item.id = item_dict["sufi"]
-        item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
+        item.properties.update(properties)
+        item.id = item_dict["sufi"]
+        # item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
         item.metadata_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
         item.collection.metadata_path = f"{item_dict['survey']}/collection.json"
 

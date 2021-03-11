@@ -13,8 +13,8 @@ class MetadataLoaderTiff(MetadataLoader):
         return is_tiff(item.source_path)
 
     async def add_metadata(self, item: Item) -> None:
-        if "projection" not in item.stac_item.stac_extensions:
-            item.stac_item.stac_extensions.append("projection")
+        if "projection" not in item.stac_extensions:
+            item.stac_extensions.append("projection")
         with rasterio.open(item.source_path) as tiff:
             if tiff.crs:
                 if not tiff.crs.is_epsg_code:
@@ -22,6 +22,4 @@ class MetadataLoaderTiff(MetadataLoader):
                 crs = tiff.crs.to_epsg()
             else:
                 crs = None
-            item.stac_item.properties.update({"proj:epsg": crs})
-            item.asset_extension = "tiff"
-            item.content_type = "image/tiff"
+            item.properties.update({"proj:epsg": crs})
