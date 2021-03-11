@@ -15,15 +15,17 @@ class DataTransformerImageryHistoric(DataTransformer):
     def is_applicable(self, item: Item) -> bool:
         if item.collection.data_type != DataType.ImageryHistoric:
             return False
-        if not is_tiff(item.path):
+        if not is_tiff(item.source_path):
             return False
         return True
 
     async def transform_data(self, item: Item) -> None:
-        input_file = os.path.abspath(item.path)
         if not os.path.isdir(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])):
             os.makedirs(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"]))
-        output_dir = os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])
+        survey_name = os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])
+        compression_method = "lzw"
         item.asset_extension = "lzw.cog.tiff"
-        item.path = await create_cog(input_file, output_dir, "lzw")
+        output_path = os.path.join(survey_name, f"{os.path.basename(item.source_path)}.{compression_method}.cog.tiff")
+        await create_cog(item.source_path, output_path, compression_method).run()
+        item.source_path = output_path  # TODO save this path somewhere else
         await add_asset_image(item)

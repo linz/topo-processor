@@ -14,27 +14,27 @@ from .data_type import DataType
 from .item import Item
 
 
-async def create_collection(path: str, data_type: DataType) -> Collection:
+async def create_collection(source_dir: str, data_type: DataType) -> Collection:
     start_time = time_in_ms()
     temp_dir = mkdtemp()
     collection = Collection(data_type, temp_dir)
-    await create_items(collection, path)
+    await create_items(collection, source_dir)
     get_log().debug(
         "Collection Created", id=collection.stac_collection.id, data_type=data_type, duration=time_in_ms() - start_time
     )
     return collection
 
 
-async def create_items(collection: Collection, path: str) -> None:
+async def create_items(collection: Collection, source_dir: str) -> None:
     start_time = time_in_ms()
     items_to_process = []
-    for f in os.listdir(path):
-        file_path = os.path.join(path, f)
-        item = Item(file_path, collection)
+    for file_ in os.listdir(source_dir):
+        source_path_path = os.path.join(source_dir, file_)
+        item = Item(source_path_path, collection)
         items_to_process.append(process_item(item))
         collection.items.append(item)
     await asyncio.gather(*items_to_process)
-    get_log().debug("Items Created", count=len(collection.items), path=path, duration=time_in_ms() - start_time)
+    get_log().debug("Items Created", count=len(collection.items), source_dir=source_dir, duration=time_in_ms() - start_time)
 
 
 async def process_item(item):

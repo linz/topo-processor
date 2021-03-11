@@ -1,4 +1,5 @@
 import asyncio
+import os
 from functools import wraps
 from shutil import rmtree
 
@@ -53,7 +54,8 @@ def coroutine(f):
 )
 @coroutine
 async def main(source, datatype, target, upload):
-    collection = await create_collection(source, DataType(datatype))
+    source_dir = os.path.abspath(source)
+    collection = await create_collection(source_dir, DataType(datatype))
     start_time = time_in_ms()
     try:
         if upload:

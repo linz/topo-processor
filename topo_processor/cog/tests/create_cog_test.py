@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from topo_processor.cog.create_cog import to_gdal_command
+from topo_processor.cog.create_cog import create_cog
 
 
 @pytest.fixture(autouse=True)
@@ -15,13 +15,13 @@ def delete_cog():
 
 
 @pytest.mark.asyncio
-async def test_gdal_command():
-    input_file = "fake_input_dir/fake_input.tiff"
+async def test_cog_command():
+    input_path = "fake_input_dir/fake_input.tiff"
     output_dir = "fake_output_dir"
     compression_method = "LZW"
-    output_file = os.path.join(output_dir, f"{os.path.basename(input_file)}.{compression_method}.cog.tiff")
+    output_path = os.path.join(output_dir, f"{os.path.basename(input_path)}.{compression_method}.cog.tiff")
 
-    cmd = to_gdal_command(input_file, output_file, compression_method)
+    cmd = create_cog(input_path, output_path, compression_method)
     assert cmd.to_full_command() == [
         "gdal_translate",
         "fake_input_dir/fake_input.tiff",

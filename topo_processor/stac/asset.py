@@ -7,7 +7,7 @@ async def add_asset_image(item):
     if "file" not in item.stac_item.stac_extensions:
         item.stac_item.stac_extensions.append("file")
 
-    checksum = await multihash_as_hex(item.path)
+    checksum = await multihash_as_hex(item.source_path)
     item.stac_item.add_asset(
         key="image",
         asset=stac.Asset(

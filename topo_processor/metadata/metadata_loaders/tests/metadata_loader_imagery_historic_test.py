@@ -24,34 +24,34 @@ async def setup():
 
 
 def test_is_applicable(setup):
-    tiff_path = "test_path.tiff"
+    source_path = "test_abc.tiff"
     collection = setup
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert metadata_loader_imagery_historic.is_applicable(item)
 
 
 def test_is_not_applicable_wrong_file_extension(setup):
-    tiff_path = "test_path"
+    source_path = "test_abc"
     collection = setup
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert not metadata_loader_imagery_historic.is_applicable(item)
 
 
 def test_is_not_applicable_wrong_data_type(setup):
-    tiff_path = "test_path.tiff"
+    source_path = "test_abc.tiff"
     collection = setup
     collection.data_type = DataType.LidarDEM
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert not metadata_loader_imagery_historic.is_applicable(item)
 
 
 def test_item_not_found_in_csv(setup):
-    tiff_path = "test_path.tiff"
+    source_path = "test_abc.tiff"
     collection = setup
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    with pytest.raises(Exception, match=r"test_path cannot be found in the csv."):
+    with pytest.raises(Exception, match=r"test_abc cannot be found in the csv."):
         asyncio.run(metadata_loader_imagery_historic.add_metadata(item))

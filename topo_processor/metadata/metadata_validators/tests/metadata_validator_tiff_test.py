@@ -25,9 +25,9 @@ async def setup():
 
 
 def test_check_validity(setup):
-    tiff_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
     collection = setup
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     item.stac_item.properties.update({"linz:photo_type": "COLOUR"})
 
     validator = MetadataValidatorTiff()
