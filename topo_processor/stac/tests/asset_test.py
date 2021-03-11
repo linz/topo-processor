@@ -25,9 +25,9 @@ async def setup():
 
 @pytest.mark.asyncio
 async def test_add_asset_image(setup):
-    tiff_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
     collection = setup
-    item = Item(tiff_path, collection)
+    item = Item(source_path, collection)
     item.asset_basename = "399/72359"
     item.asset_extension = "lzw.cog.tiff"
     await add_asset_image(item)

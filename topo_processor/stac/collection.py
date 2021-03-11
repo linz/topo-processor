@@ -19,7 +19,7 @@ class Collection:
     temp_dir: str
     items: List["Item"]
     providers: List[stac.Provider]
-    collection_output_path: str
+    metadata_path: str
 
     def __init__(self, data_type: DataType, temp_dir: str):
         self.data_type = data_type

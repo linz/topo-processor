@@ -17,7 +17,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, item: Item) -> bool:
         if item.collection.data_type != DataType.ImageryHistoric:
             return False
-        if not is_tiff(item.path):
+        if not is_tiff(item.source_path):
             return False
         return True
 
@@ -25,10 +25,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if not self.is_init:
             self.read_csv()
 
-        item_path_basename = os.path.splitext(os.path.basename(item.path))[0]
-        if item_path_basename not in self.csv_dict:
-            raise Exception(f"{item_path_basename} cannot be found in the csv.")
-        item_dict = self.csv_dict[item_path_basename]
+        item.source_path_basename = os.path.splitext(os.path.basename(item.source_path))[0]
+        if item.source_path_basename not in self.csv_dict:
+            raise Exception(f"{item.source_path_basename} cannot be found in the csv.")
+        item_dict = self.csv_dict[item.source_path_basename]
         properties = {
             "linz:sufi": item_dict["sufi"],
             "linz:survey": item_dict["survey"],
@@ -59,8 +59,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.stac_item.properties.update(properties)
         item.stac_item.id = item_dict["sufi"]
         item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
-        item.item_output_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
-        item.collection.collection_output_path = f"{item_dict['survey']}/collection.json"
+        item.metadata_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
+        item.collection.metadata_path = f"{item_dict['survey']}/collection.json"
 
     def read_csv(self):
         self.csv_dict = {}
@@ -68,8 +68,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if not os.path.isfile(csv_path):
             raise Exception('Missing "historical_aerial_photos_metadata.csv"')
 
-        with open(csv_path, "r") as csv_file:
-            reader = csv.DictReader(csv_file, delimiter=",")
+        with open(csv_path, "r") as csv_path:
+            reader = csv.DictReader(csv_path, delimiter=",")
             for row in reader:
                 released_filename = row["released_filename"]
                 if released_filename in self.csv_dict:

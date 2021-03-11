@@ -27,5 +27,5 @@ class MetadataLoaderRepository:
                         loader=loader.name,
                         duration=time_in_ms() - start_time,
                         collection=item.collection.stac_collection.id,
-                        output_filename=item.item_output_path,
+                        output_filename=item.metadata_path,
                     )
