@@ -31,6 +31,7 @@ class Item:
 
     def __init__(self, source_path: str, collection: Collection):
         self.source_path = source_path
+        self.metadata_path = None  # The RELATIVE path of the json file
         self.properties = {}
         self.collection = collection
         self.stac_extensions = []

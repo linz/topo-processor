@@ -5,7 +5,7 @@ import boto3
 from linz_logger import get_log
 
 from topo_processor.stac.collection import Collection
-from topo_processor.util import multihash_as_hex, time_in_ms, write_stac_object
+from topo_processor.util import multihash_as_hex, time_in_ms, write_stac_metadata
 
 s3 = boto3.client("s3")
 
@@ -19,38 +19,39 @@ async def upload_items(collection: Collection, target: str):
     to_upload = []
     for item in collection.items:
         # for metadata
-        await write_stac_object(item, os.path.join(collection.temp_dir, item.metadata_path))
-        hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, item.metadata_path))
+        await write_stac_metadata(item, os.path.join(collection.temp_dir, item.metadata_path))
+        checksum = await multihash_as_hex(os.path.join(collection.temp_dir, item.metadata_path))
         to_upload.append(
             upload_file(
                 os.path.join(collection.temp_dir, item.metadata_path),
                 item.metadata_path,
-                "application/json",
-                hash_value,
-                target,
-            )
-        )
-        # for data
-        to_upload.append(
-            upload_file(
-                item.source_path,
-                f"{item.asset_basename}.{item.asset_extension}",
                 item.content_type,
-                item.properties["checksum:multihash"],
+                checksum,
                 target,
             )
         )
+        # for asset
+        for asset in item.assets:
+            to_upload.append(
+                upload_file(
+                    asset["temp_path"],
+                    asset["href"],
+                    asset["content_type"],
+                    asset["properties"]["file:checksum"],
+                    target,
+                )
+            )
     await asyncio.gather(*to_upload)
 
 
 async def upload_collection(collection: Collection, target: str):
-    await write_stac_object(collection, os.path.join(collection.temp_dir, collection.metadata_path))
-    hash_value = await multihash_as_hex(os.path.join(collection.temp_dir, collection.metadata_path))
+    await write_stac_metadata(collection, os.path.join(collection.temp_dir, collection.metadata_path))
+    checksum = await multihash_as_hex(os.path.join(collection.temp_dir, collection.metadata_path))
     await upload_file(
         os.path.join(collection.temp_dir, collection.metadata_path),
         collection.metadata_path,
         "application/json",
-        hash_value,
+        checksum,
         target,
     )
 
