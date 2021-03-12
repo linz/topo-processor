@@ -20,21 +20,21 @@ class Item:
 
     source_path: str
     metadata_path: str
-    content_type: str
-    assets: List[Asset]
     id_: str
     gemoetry: str
     bbox: str
     datetime: datetime
     properties: dict
     stac_extensions: List[str]
+    assets: List[Asset]
+    content_type: str
 
     def __init__(self, source_path: str, collection: Collection):
         self.source_path = source_path
-        self.collection = collection
         self.properties = {}
-        self.assets = []
+        self.collection = collection
         self.stac_extensions = []
+        self.assets = []
         self.content_type = "application/json"
 
     def add_asset(self, asset: Asset):

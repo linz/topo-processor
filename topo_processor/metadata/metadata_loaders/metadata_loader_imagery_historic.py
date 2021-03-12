@@ -57,8 +57,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             "linz:photo_version": item_dict["photo_version"],
         }
         item.properties.update(properties)
-        item.id = item_dict["sufi"]
-        # item.asset_basename = f"{item_dict['survey']}/{item_dict['sufi']}"
+        item.id_ = item_dict["sufi"]
         item.metadata_path = f"{item_dict['survey']}/{item_dict['sufi']}.json"
         item.collection.metadata_path = f"{item_dict['survey']}/collection.json"
 

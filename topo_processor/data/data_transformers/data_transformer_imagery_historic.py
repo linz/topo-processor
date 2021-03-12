@@ -22,11 +22,10 @@ class DataTransformerImageryHistoric(DataTransformer):
 
     async def transform_data(self, item: Item) -> None:
         survey = item.properties["linz:survey"]
-        sufi = item.properties["linz:sufi"]
         if not os.path.isdir(os.path.join(item.collection.temp_dir, survey)):
             os.makedirs(os.path.join(item.collection.temp_dir, survey))
 
-        href = os.path.join(survey, f"{sufi}.lzw.cog.tiff")
+        href = os.path.join(survey, f"{item.id_}.lzw.cog.tiff")
         output_path = os.path.join(item.collection.temp_dir, href)
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
 
@@ -38,5 +37,6 @@ class DataTransformerImageryHistoric(DataTransformer):
             "properties": {"file:checksum": checksum},
             "media_type": stac.MediaType.TIFF,
             "stac_extensions": ["file"],
+            "content_type": "image/tiff",
         }
         item.add_asset(asset)
