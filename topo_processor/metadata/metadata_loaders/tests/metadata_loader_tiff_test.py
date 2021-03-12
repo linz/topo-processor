@@ -33,5 +33,5 @@ def test_add_metadata(setup):
     assert loader.is_applicable(item)
 
     asyncio.run(loader.add_metadata(item))
-    assert item.stac_item.properties["proj:epsg"] is None
-    assert len(item.stac_item.assets) == 0
+    assert item.properties["proj:epsg"] is None
+    assert len(item.assets) == 0

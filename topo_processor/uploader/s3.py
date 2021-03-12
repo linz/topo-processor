@@ -36,7 +36,7 @@ async def upload_items(collection: Collection, target: str):
                 item.source_path,
                 f"{item.asset_basename}.{item.asset_extension}",
                 item.content_type,
-                item.stac_item.properties["checksum:multihash"],
+                item.properties["checksum:multihash"],
                 target,
             )
         )
