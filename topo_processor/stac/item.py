@@ -56,6 +56,6 @@ class Item:
         for asset in self.assets:
             stac_item.add_asset(
                 key=asset["key"],
-                asset=stac.Asset(href=asset["href"], properties=asset["properties"], media_type=asset["media_type"]),
+                asset=stac.Asset(href=asset["href"], properties=asset["properties"], media_type=asset["content_type"]),
             )
         return stac_item
