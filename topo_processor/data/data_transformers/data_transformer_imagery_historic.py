@@ -31,7 +31,7 @@ class DataTransformerImageryHistoric(DataTransformer):
         checksum = await multihash_as_hex(output_path)
         asset = {
             "temp_path": output_path,
-            "key": "cog",
+            "key": "image",
             "href": os.path.join(survey, f"{item.id}.tiff"),
             "properties": {"file:checksum": checksum},
             "media_type": stac.MediaType.TIFF,
