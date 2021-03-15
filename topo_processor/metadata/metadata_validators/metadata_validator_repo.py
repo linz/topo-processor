@@ -26,6 +26,5 @@ class MetadataValidatorRepository:
                         "Validity Checked",
                         validator=validator.name,
                         duration=time_in_ms() - start_time,
-                        collection=item.collection.stac_collection.id,
                         output_filename=item.metadata_path,
                     )

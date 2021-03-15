@@ -19,9 +19,7 @@ async def create_collection(source_dir: str, data_type: DataType) -> Collection:
     temp_dir = mkdtemp()
     collection = Collection(data_type, temp_dir)
     await create_items(collection, source_dir)
-    get_log().debug(
-        "Collection Created", id=collection.stac_collection.id, data_type=data_type, duration=time_in_ms() - start_time
-    )
+    get_log().debug("Collection Created", data_type=data_type, duration=time_in_ms() - start_time)
     return collection
 
 
@@ -39,5 +37,7 @@ async def create_items(collection: Collection, source_dir: str) -> None:
 
 async def process_item(item):
     await metadata_loader_repo.add_metadata(item)
-    await metadata_validator_repo.validate_metadata(item)
-    await data_transformer_repo.transform_data(item)
+    if item.is_valid:
+        await metadata_validator_repo.validate_metadata(item)
+    if item.is_valid:
+        await data_transformer_repo.transform_data(item)

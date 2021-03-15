@@ -1,27 +1,17 @@
 import os
 
 import pytest
+import ulid
 
 from topo_processor.cog.create_cog import create_cog
-
-
-@pytest.fixture(autouse=True)
-def delete_cog():
-    """Automatically runs before and after each test"""
-    yield
-    output_path = os.path.join(os.getcwd(), "CROWN_399_E_49.tiff.lzw.cog.tiff")
-    if os.path.isfile(output_path):
-        os.remove(output_path)
 
 
 @pytest.mark.asyncio
 async def test_cog_command():
     input_path = "fake_input_dir/fake_input.tiff"
-    output_dir = "fake_output_dir"
-    compression_method = "LZW"
-    output_path = os.path.join(output_dir, f"{os.path.basename(input_path)}.{compression_method}.cog.tiff")
+    output_path = "fake_input_dir/fake_output.tiff"
 
-    cmd = create_cog(input_path, output_path, compression_method)
+    cmd = create_cog(input_path, output_path, "LZW")
     assert cmd.to_full_command() == [
         "gdal_translate",
         "fake_input_dir/fake_input.tiff",
@@ -33,5 +23,5 @@ async def test_cog_command():
         "NUM_THREADS=ALL_CPUS",
         "-co",
         "PREDICTOR=2",
-        "fake_output_dir/fake_input.tiff.LZW.cog.tiff",
+        "fake_input_dir/fake_output.tiff",
     ]

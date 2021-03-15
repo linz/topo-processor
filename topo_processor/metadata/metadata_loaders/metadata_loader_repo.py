@@ -21,11 +21,15 @@ class MetadataLoaderRepository:
             for loader in self.loaders:
                 if loader.is_applicable(item):
                     start_time = time_in_ms()
-                    await loader.add_metadata(item)
+                    try:
+                        await loader.add_metadata(item)
+                    except Exception as error_msg:
+                        item.is_valid = False
+                        get_log().debug(f"Item not valid: {error_msg}", loader=loader.name, source_path=item.source_path)
+                        return
                     get_log().debug(
                         "Metadata Added",
                         loader=loader.name,
                         duration=time_in_ms() - start_time,
-                        collection=item.collection.stac_collection.id,
-                        output_filename=item.metadata_path,
+                        metadata_path=item.metadata_path,
                     )

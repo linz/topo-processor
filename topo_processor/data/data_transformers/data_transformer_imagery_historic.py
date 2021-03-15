@@ -1,10 +1,12 @@
 import os
 
+import pystac as stac
+import ulid
+
 from topo_processor.cog.create_cog import create_cog
-from topo_processor.stac import add_asset_image
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
-from topo_processor.util import is_tiff
+from topo_processor.util import is_tiff, multihash_as_hex
 
 from .data_transformer import DataTransformer
 
@@ -20,12 +22,19 @@ class DataTransformerImageryHistoric(DataTransformer):
         return True
 
     async def transform_data(self, item: Item) -> None:
-        if not os.path.isdir(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])):
-            os.makedirs(os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"]))
-        survey_name = os.path.join(item.collection.temp_dir, item.stac_item.properties["linz:survey"])
-        compression_method = "lzw"
-        item.asset_extension = "lzw.cog.tiff"
-        output_path = os.path.join(survey_name, f"{os.path.basename(item.source_path)}.{compression_method}.cog.tiff")
-        await create_cog(item.source_path, output_path, compression_method).run()
-        item.source_path = output_path  # TODO save this path somewhere else
-        await add_asset_image(item)
+        survey = item.properties["linz:survey"]
+        if not os.path.isdir(os.path.join(item.collection.temp_dir, survey)):
+            os.makedirs(os.path.join(item.collection.temp_dir, survey))
+        output_path = os.path.join(item.collection.temp_dir, f"{ulid.ulid()}.tiff")
+        await create_cog(item.source_path, output_path, compression_method="lzw").run()
+
+        checksum = await multihash_as_hex(output_path)
+        asset = {
+            "path": output_path,
+            "key": "image",
+            "href": os.path.join(survey, f"{item.id}.tiff"),
+            "properties": {"file:checksum": checksum},
+            "stac_extensions": ["file"],
+            "content_type": stac.MediaType.COG,
+        }
+        item.add_asset(asset)

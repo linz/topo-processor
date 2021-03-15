@@ -33,7 +33,7 @@ async def test_local_save_paths(setup):
     await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
-    assert os.path.isfile(os.path.join(target, "C8054", "29659.lzw.cog.tiff"))
+    assert os.path.isfile(os.path.join(target, "C8054", "29659.tiff"))
     assert os.path.isfile(os.path.join(target, "C8054", "collection.json"))
 
 
@@ -53,4 +53,4 @@ async def test_item_contents(setup):
         item_metadata["assets"]["image"]["file:checksum"]
         == "122083318d91bfb2a04a82b381e2024d925a5ab3deababa0058dcb1b19ae4e805c9a"
     )
-    assert (item_metadata["assets"]["image"]["href"]) == "C8054/29659.lzw.cog.tiff"
+    assert (item_metadata["assets"]["image"]["href"]) == "C8054/29659.tiff"
