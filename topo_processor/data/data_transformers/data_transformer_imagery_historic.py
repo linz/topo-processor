@@ -30,12 +30,13 @@ class DataTransformerImageryHistoric(DataTransformer):
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
 
         item.add_asset(
+            "cog",
             Asset(
                 key="image",
                 path=output_path,
                 properties={"file:checksum": None},
                 content_type=pystac.MediaType.COG,
                 file_ext=".tiff",
-                upload=True,
-            )
+                needs_upload=True,
+            ),
         )

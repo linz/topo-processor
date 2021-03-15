@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from mimetypes import MimeTypes
 from typing import List
@@ -16,7 +17,7 @@ class Item:
     bbox: str
     datetime: datetime
     properties: dict
-    stac_extensions: List[str]
+    stac_extensions: dict
     assets: List[Asset]
     content_type: pystac.MediaType
     file_ext: str
@@ -28,13 +29,22 @@ class Item:
         self.properties = {}
         self.collection = collection
         self.stac_extensions = ["file"]
-        self.assets = []
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
         self.is_valid = True
+        self.assets = {
+            "source": Asset(
+                key="source",
+                path=source_path,
+                properties={"file:checksum": None},
+                content_type=MimeTypes().guess_type(source_path)[0],
+                file_ext=os.path.splitext(source_path)[1],
+                needs_upload=True,
+            )
+        }
 
-    def add_asset(self, asset: Asset):
-        self.assets.append(asset)
+    def add_asset(self, desciptor: str, asset: Asset):
+        self.assets[desciptor] = asset
 
     def create_stac(self) -> pystac.Item:
         stac = pystac.Item(
@@ -45,10 +55,12 @@ class Item:
             properties=self.properties,
             stac_extensions=self.stac_extensions,
         )
-        for asset in self.assets:
-            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
-            stac.add_asset(
-                key=asset.key,
-                asset=asset.create_stac(),
-            )
+        for asset_descriptor in self.assets:
+            asset = self.assets[asset_descriptor]
+            if asset.needs_upload:
+                asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
+                stac.add_asset(
+                    key=asset.key,
+                    asset=asset.create_stac(),
+                )
         return stac

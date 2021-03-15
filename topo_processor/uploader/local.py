@@ -11,9 +11,12 @@ async def upload_to_local_disk(collection: Collection, target: str):
 
     for item in collection.items:
 
-        for asset in item.assets:
-            asset.properties["file:checksum"] = await multihash_as_hex(asset.path)
-            copyfile(asset.path, os.path.join(target, collection.title, f"{item.id}{asset.file_ext}"))
+        for asset_descriptor in item.assets:
+            asset = item.assets[asset_descriptor]
+            print(asset)
+            if asset.needs_upload:
+                asset.properties["file:checksum"] = await multihash_as_hex(asset.path)
+                copyfile(asset.path, os.path.join(target, collection.title, f"{item.id}{asset.file_ext}"))
 
         await write_stac_metadata(item, os.path.join(target, collection.title, f"{item.id}{item.file_ext}"))
 
