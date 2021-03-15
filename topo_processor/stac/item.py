@@ -25,7 +25,7 @@ class Item:
     properties: dict
     stac_extensions: List[str]
     assets: List[Asset]
-    content_type: str
+    content_type: pystac.MediaType
     is_valid: bool
 
     def __init__(self, source_path: str, collection: Collection):
@@ -35,7 +35,7 @@ class Item:
         self.collection = collection
         self.stac_extensions = ["file"]
         self.assets = []
-        self.content_type = "application/json"
+        self.content_type = pystac.MediaType.JSON
         self.is_valid = True
 
     def add_asset(self, asset: Asset):

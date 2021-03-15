@@ -19,11 +19,13 @@ class Collection:
     items: List["Item"]
     providers: List[pystac.Provider]
     metadata_path: str
+    content_type = pystac.MediaType
 
     def __init__(self, data_type: DataType, temp_dir: str):
         self.data_type = data_type
         self.temp_dir = temp_dir
         self.items = []
+        self.content_type = pystac.MediaType.JSON
 
     def create_stac(self) -> pystac.Collection:
         stac_collection = pystac.Collection(

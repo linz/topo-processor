@@ -50,7 +50,7 @@ async def upload_collection(collection: Collection, target: str):
     await upload_file(
         os.path.join(collection.temp_dir, collection.metadata_path),
         collection.metadata_path,
-        "application/json",
+        collection.content_type,
         checksum,
         target,
     )
