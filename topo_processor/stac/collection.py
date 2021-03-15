@@ -8,6 +8,7 @@ from .data_type import DataType
 GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
     from .item import Item
+from mimetypes import MimeTypes
 
 
 class Collection:
@@ -26,6 +27,7 @@ class Collection:
         self.temp_dir = temp_dir
         self.items = []
         self.content_type = pystac.MediaType.JSON
+        self.file_ext = MimeTypes().guess_extension(self.content_type)
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(

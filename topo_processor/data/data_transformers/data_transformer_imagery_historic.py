@@ -33,9 +33,9 @@ class DataTransformerImageryHistoric(DataTransformer):
             Asset(
                 key="image",
                 path=output_path,
-                href=os.path.join(survey, f"{item.id}.tiff"),
                 properties={"file:checksum": None},
                 content_type=pystac.MediaType.COG,
+                file_ext=".tiff",
                 upload=True,
             )
         )

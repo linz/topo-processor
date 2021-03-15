@@ -1,4 +1,5 @@
 from datetime import datetime
+from mimetypes import MimeTypes
 from typing import List
 
 import pystac
@@ -18,6 +19,7 @@ class Item:
     stac_extensions: List[str]
     assets: List[Asset]
     content_type: pystac.MediaType
+    file_ext: str
     is_valid: bool
 
     def __init__(self, source_path: str, collection: Collection):
@@ -28,6 +30,7 @@ class Item:
         self.stac_extensions = ["file"]
         self.assets = []
         self.content_type = pystac.MediaType.JSON
+        self.file_ext = MimeTypes().guess_extension(self.content_type)
         self.is_valid = True
 
     def add_asset(self, asset: Asset):
