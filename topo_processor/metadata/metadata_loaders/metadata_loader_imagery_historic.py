@@ -60,6 +60,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.id = item_metadata["sufi"]
         item.metadata_path = f"{item_metadata['survey']}/{item_metadata['sufi']}.json"
         item.collection.metadata_path = f"{item_metadata['survey']}/collection.json"
+        item.collection.title = item_metadata["survey"]
 
     def read_csv(self):
         self.raw_metadata = {}
