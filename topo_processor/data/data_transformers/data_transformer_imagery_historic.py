@@ -25,7 +25,7 @@ class DataTransformerImageryHistoric(DataTransformer):
         if not os.path.isdir(os.path.join(item.collection.temp_dir, survey)):
             os.makedirs(os.path.join(item.collection.temp_dir, survey))
 
-        href = os.path.join(survey, f"{item.id}.lzw.cog.tiff")
+        href = os.path.join(survey, f"{item.id}.tiff")
         output_path = os.path.join(item.collection.temp_dir, href)
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
 

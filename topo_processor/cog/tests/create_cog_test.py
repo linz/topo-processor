@@ -9,7 +9,7 @@ from topo_processor.cog.create_cog import create_cog
 def delete_cog():
     """Automatically runs before and after each test"""
     yield
-    output_path = os.path.join(os.getcwd(), "CROWN_399_E_49.tiff.lzw.cog.tiff")
+    output_path = os.path.join(os.getcwd(), "CROWN_399_E_49.tiff")
     if os.path.isfile(output_path):
         os.remove(output_path)
 
