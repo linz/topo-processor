@@ -29,7 +29,8 @@ async def test_upload_to_local(setup):
     source, datatype, target, upload = setup
     source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
-    collection = await create_collection(source_dir, data_type)
+    temp_dir = mkdtemp()
+    collection = await create_collection(source_dir, data_type, temp_dir)
     await upload_to_local_disk(collection, target)
     shutil.rmtree(collection.temp_dir)
 

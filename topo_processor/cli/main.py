@@ -2,6 +2,7 @@ import asyncio
 import os
 from functools import wraps
 from shutil import rmtree
+from tempfile import mkdtemp
 
 import click
 from linz_logger import get_log
@@ -57,14 +58,15 @@ async def main(source, datatype, target, upload):
     start_time = time_in_ms()
     source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
-    collection = await create_collection(source_dir, data_type)
+    temp_dir = mkdtemp()
+    collection = await create_collection(source_dir, data_type, temp_dir)
     try:
         if upload:
             await upload_to_s3(collection, target)
         else:
             await upload_to_local_disk(collection, target)
     finally:
-        rmtree(collection.temp_dir)
+        rmtree(temp_dir)
         get_log().debug(
             "Upload Completed",
             location=target,
