@@ -1,9 +1,8 @@
 import json
-import asyncio
 import os
 import shutil
 from tempfile import mkdtemp
-from topo_processor.cli.main import main
+
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk

@@ -3,11 +3,13 @@ from shutil import copyfile
 
 from topo_processor.stac.collection import Collection
 from topo_processor.stac.item import Item
-from topo_processor.util import write_stac_metadata
+from topo_processor.util import multihash_as_hex, write_stac_metadata
 
 
 async def upload_to_local_disk(collection: Collection, target: str):
     for item in collection.items:
+        for asset in item.assets:
+            asset["properties"]["file:checksum"] = await multihash_as_hex(asset["path"])
         await write_stac_metadata(item, f"{target}/{item.metadata_path}")  # for metadata
         await copy_asset(item, target)  # for data
     await write_stac_metadata(collection, f"{target}/{collection.metadata_path}")
