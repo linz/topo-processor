@@ -28,6 +28,7 @@ class Item:
     stac_extensions: List[str]
     assets: List[Asset]
     content_type: str
+    is_valid: bool
 
     def __init__(self, source_path: str, collection: Collection):
         self.source_path = source_path
@@ -37,6 +38,7 @@ class Item:
         self.stac_extensions = []
         self.assets = []
         self.content_type = "application/json"
+        self.is_valid = True
 
     def add_asset(self, asset: Asset):
         self.assets.append(asset)

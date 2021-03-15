@@ -37,5 +37,7 @@ async def create_items(collection: Collection, source_dir: str) -> None:
 
 async def process_item(item):
     await metadata_loader_repo.add_metadata(item)
-    await metadata_validator_repo.validate_metadata(item)
-    await data_transformer_repo.transform_data(item)
+    if item.is_valid:
+        await metadata_validator_repo.validate_metadata(item)
+    if item.is_valid:
+        await data_transformer_repo.transform_data(item)
