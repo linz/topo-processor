@@ -11,9 +11,8 @@ class Asset(TypedDict):
     key: str
     href: str
     properties = dict
-    media_type = pystac.MediaType
+    content_type = pystac.MediaType
     stac_extensions = []
-    content_type = str
 
 
 class Item:
