@@ -46,6 +46,7 @@ class Item:
             stac_extensions=self.stac_extensions,
         )
         for asset in self.assets:
+            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
             stac.add_asset(
                 key=asset.key,
                 asset=asset.create_stac(),

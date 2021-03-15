@@ -1,3 +1,4 @@
+from mimetypes import MimeTypes
 from typing import TYPE_CHECKING, List
 
 import pystac
@@ -8,7 +9,6 @@ from .data_type import DataType
 GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
     from .item import Item
-from mimetypes import MimeTypes
 
 
 class Collection:
