@@ -1,6 +1,7 @@
 import os
 
 import pystac as stac
+import ulid
 
 from topo_processor.cog.create_cog import create_cog
 from topo_processor.stac.data_type import DataType
@@ -24,16 +25,14 @@ class DataTransformerImageryHistoric(DataTransformer):
         survey = item.properties["linz:survey"]
         if not os.path.isdir(os.path.join(item.collection.temp_dir, survey)):
             os.makedirs(os.path.join(item.collection.temp_dir, survey))
-
-        href = os.path.join(survey, f"{item.id}.tiff")
-        output_path = os.path.join(item.collection.temp_dir, href)
+        output_path = os.path.join(item.collection.temp_dir, f"{ulid.ulid()}.tiff")
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
 
         checksum = await multihash_as_hex(output_path)
         asset = {
             "temp_path": output_path,
             "key": "cog",
-            "href": href,
+            "href": os.path.join(survey, f"{item.id}.tiff"),
             "properties": {"file:checksum": checksum},
             "media_type": stac.MediaType.TIFF,
             "stac_extensions": ["file"],
