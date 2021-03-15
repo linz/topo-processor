@@ -1,6 +1,6 @@
 import os
 
-import pystac as stac
+import pystac
 import ulid
 
 from topo_processor.cog.create_cog import create_cog
@@ -35,6 +35,6 @@ class DataTransformerImageryHistoric(DataTransformer):
             "href": os.path.join(survey, f"{item.id}.tiff"),
             "properties": {"file:checksum": checksum},
             "stac_extensions": ["file"],
-            "content_type": stac.MediaType.COG,
+            "content_type": pystac.MediaType.COG,
         }
         item.add_asset(asset)

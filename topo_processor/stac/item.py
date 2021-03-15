@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, TypedDict
 
-import pystac as stac
+import pystac
 
 from .collection import Collection
 
@@ -11,7 +11,7 @@ class Asset(TypedDict):
     key: str
     href: str
     properties = dict
-    media_type = stac.MediaType
+    media_type = pystac.MediaType
     stac_extensions = []
     content_type = str
 
@@ -46,8 +46,8 @@ class Item:
             if asset_stac_extension not in self.stac_extensions:
                 self.stac_extensions.append(asset_stac_extension)
 
-    def create_stac(self) -> stac.Item:
-        stac_item = stac.Item(
+    def create_stac(self) -> pystac.Item:
+        stac_item = pystac.Item(
             id=self.id,
             geometry=None,
             bbox=None,
@@ -58,6 +58,6 @@ class Item:
         for asset in self.assets:
             stac_item.add_asset(
                 key=asset["key"],
-                asset=stac.Asset(href=asset["href"], properties=asset["properties"], media_type=asset["content_type"]),
+                asset=pystac.Asset(href=asset["href"], properties=asset["properties"], media_type=asset["content_type"]),
             )
         return stac_item
