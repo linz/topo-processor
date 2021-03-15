@@ -16,4 +16,4 @@ async def upload_to_local_disk(collection: Collection, target: str):
 async def copy_asset(item: Item, target: str):
     # TODO this is not async
     for asset in item.assets:
-        copyfile(asset["temp_path"], os.path.join(target, asset["href"]))
+        copyfile(asset["path"], os.path.join(target, asset["href"]))

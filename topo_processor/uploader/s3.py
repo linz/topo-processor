@@ -34,7 +34,7 @@ async def upload_items(collection: Collection, target: str):
         for asset in item.assets:
             to_upload.append(
                 upload_file(
-                    asset["temp_path"],
+                    asset["path"],
                     asset["href"],
                     asset["content_type"],
                     asset["properties"]["file:checksum"],

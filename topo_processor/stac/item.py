@@ -7,7 +7,7 @@ from .collection import Collection
 
 
 class Asset(TypedDict):
-    temp_path: str
+    path: str
     key: str
     href: str
     properties = dict
