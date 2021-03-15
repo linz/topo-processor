@@ -28,14 +28,14 @@ class Collection:
         self.content_type = pystac.MediaType.JSON
 
     def create_stac(self) -> pystac.Collection:
-        stac_collection = pystac.Collection(
+        stac = pystac.Collection(
             id=ulid.ulid(),
             description=None,
             license=None,
             providers=GLOBAL_PROVIDERS,
             extent=pystac.SpatialExtent(bboxes=[0, 0, 0, 0]),
         )
-        return stac_collection
+        return stac
         # Required Fields - jeremy's Documentation:
         # - Title
         # - Type

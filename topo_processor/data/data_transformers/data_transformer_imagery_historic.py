@@ -4,6 +4,7 @@ import pystac
 import ulid
 
 from topo_processor.cog.create_cog import create_cog
+from topo_processor.stac.asset import Asset
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
 from topo_processor.util import is_tiff
@@ -29,11 +30,12 @@ class DataTransformerImageryHistoric(DataTransformer):
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
 
         item.add_asset(
-            {
-                "path": output_path,
-                "key": "image",
-                "href": os.path.join(survey, f"{item.id}.tiff"),
-                "properties": {"file:checksum": None},
-                "content_type": pystac.MediaType.COG,
-            }
+            Asset(
+                key="image",
+                path=output_path,
+                href=os.path.join(survey, f"{item.id}.tiff"),
+                properties={"file:checksum": None},
+                content_type=pystac.MediaType.COG,
+                upload=True,
+            )
         )
