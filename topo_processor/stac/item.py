@@ -12,7 +12,6 @@ class Asset(TypedDict):
     href: str
     properties = dict
     content_type = pystac.MediaType
-    stac_extensions = []
 
 
 class Item:
@@ -34,16 +33,13 @@ class Item:
         self.metadata_path = None  # The RELATIVE path of the json file
         self.properties = {}
         self.collection = collection
-        self.stac_extensions = []
+        self.stac_extensions = ["file"]
         self.assets = []
         self.content_type = "application/json"
         self.is_valid = True
 
     def add_asset(self, asset: Asset):
         self.assets.append(asset)
-        for asset_stac_extension in asset["stac_extensions"]:
-            if asset_stac_extension not in self.stac_extensions:
-                self.stac_extensions.append(asset_stac_extension)
 
     def create_stac(self) -> pystac.Item:
         stac_item = pystac.Item(

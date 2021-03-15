@@ -34,7 +34,6 @@ class DataTransformerImageryHistoric(DataTransformer):
             "key": "image",
             "href": os.path.join(survey, f"{item.id}.tiff"),
             "properties": {"file:checksum": checksum},
-            "stac_extensions": ["file"],
             "content_type": pystac.MediaType.COG,
         }
         item.add_asset(asset)
