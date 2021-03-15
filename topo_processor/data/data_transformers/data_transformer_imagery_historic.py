@@ -40,3 +40,4 @@ class DataTransformerImageryHistoric(DataTransformer):
                 needs_upload=True,
             ),
         )
+        item.assets["source"].needs_upload = False
