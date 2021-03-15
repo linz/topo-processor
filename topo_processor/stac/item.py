@@ -20,7 +20,7 @@ class Item:
 
     source_path: str
     metadata_path: str
-    id_: str
+    id: str
     gemoetry: str
     bbox: str
     datetime: datetime
@@ -46,7 +46,7 @@ class Item:
 
     def create_stac(self) -> stac.Item:
         stac_item = stac.Item(
-            id=self.id_,
+            id=self.id,
             geometry=None,
             bbox=None,
             datetime=datetime.now(),
