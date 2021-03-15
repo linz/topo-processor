@@ -56,7 +56,8 @@ def coroutine(f):
 async def main(source, datatype, target, upload):
     start_time = time_in_ms()
     source_dir = os.path.abspath(source)
-    collection = await create_collection(source_dir, DataType(datatype))
+    data_type = DataType(datatype)
+    collection = await create_collection(source_dir, data_type)
     try:
         if upload:
             await upload_to_s3(collection, target)
@@ -67,6 +68,6 @@ async def main(source, datatype, target, upload):
         get_log().debug(
             "Upload Completed",
             location=target,
-            data_type=collection.data_type.value,
+            data_type=data_type.value,
             duration=time_in_ms() - start_time,
         )

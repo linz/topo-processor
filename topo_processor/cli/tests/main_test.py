@@ -1,17 +1,17 @@
 import json
+import asyncio
 import os
 import shutil
 from tempfile import mkdtemp
-
+from topo_processor.cli.main import main
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk
 from topo_processor.stac import DataType, create_collection
 
 
-@pytest.mark.asyncio
 @pytest.fixture(autouse=True)
-async def setup():
+def setup():
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -19,29 +19,24 @@ async def setup():
     """
     source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
     datatype = "imagery.historic"
-    collection = await create_collection(source, DataType(datatype))
     target = mkdtemp()
-    yield collection, target
+    upload = False
+    yield source, datatype, target, upload
     shutil.rmtree(target)
-    shutil.rmtree(collection.temp_dir)
 
 
 @pytest.mark.asyncio
-async def test_local_save_paths(setup):
-    collection, target = setup
-
+async def test_upload_to_local(setup):
+    source, datatype, target, upload = setup
+    source_dir = os.path.abspath(source)
+    data_type = DataType(datatype)
+    collection = await create_collection(source_dir, data_type)
     await upload_to_local_disk(collection, target)
+    shutil.rmtree(collection.temp_dir)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
     assert os.path.isfile(os.path.join(target, "C8054", "29659.tiff"))
     assert os.path.isfile(os.path.join(target, "C8054", "collection.json"))
-
-
-@pytest.mark.asyncio
-async def test_item_contents(setup):
-    collection, target = setup
-
-    await upload_to_local_disk(collection, target)
 
     with open(os.path.join(target, "C8054", "29659.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
