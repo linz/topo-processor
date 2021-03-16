@@ -18,5 +18,4 @@ async def upload_to_local_disk(collection: Collection, target: str):
                 copyfile(asset.path, os.path.join(target, collection.title, f"{item.id}{asset.file_ext}"))
 
         await write_stac_metadata(item, os.path.join(target, collection.title, f"{item.id}{item.file_ext}"))
-
     await write_stac_metadata(collection, os.path.join(target, collection.title, f"collection{collection.file_ext}"))

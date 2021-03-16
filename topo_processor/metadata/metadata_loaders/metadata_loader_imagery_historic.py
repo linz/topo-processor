@@ -15,7 +15,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
     def is_applicable(self, item: Item) -> bool:
-        if item.collection.data_type != DataType.ImageryHistoric:
+        if item.data_type != DataType.ImageryHistoric:
             return False
         if not is_tiff(item.source_path):
             return False
@@ -59,8 +59,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(properties)
         item.id = item_metadata["sufi"]
         item.metadata_path = f"{item_metadata['survey']}/{item_metadata['sufi']}.json"
-        item.collection.metadata_path = f"{item_metadata['survey']}/collection.json"
-        item.collection.title = item_metadata["survey"]
 
     def read_csv(self):
         self.raw_metadata = {}

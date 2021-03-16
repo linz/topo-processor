@@ -7,10 +7,14 @@ import pystac
 
 from .asset import Asset
 from .collection import Collection
+from .data_type import DataType
 
 
 class Item:
     source_path: str
+    data_type: DataType
+    target: str
+    temp_dir: str
     metadata_path: str
     id: str
     gemoetry: str
@@ -22,12 +26,15 @@ class Item:
     content_type: pystac.MediaType
     file_ext: str
     is_valid: bool
+    collection: Collection
 
-    def __init__(self, source_path: str, collection: Collection):
+    def __init__(self, source_path: str, data_type: DataType, target: str, temp_dir: str):
         self.source_path = source_path
+        self.data_type = data_type
+        self.target = target
+        self.temp_dir = temp_dir
         self.metadata_path = None  # The RELATIVE path of the json file
         self.properties = {}
-        self.collection = collection
         self.stac_extensions = ["file"]
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
@@ -54,7 +61,7 @@ class Item:
             properties=self.properties,
             stac_extensions=self.stac_extensions,
         )
-        existing_asset_hrefs = set()
+        existing_asset_hrefs = {}
         for asset_descriptor in self.assets:
             asset = self.assets[asset_descriptor]
             if not asset.needs_upload:
@@ -65,5 +72,5 @@ class Item:
                 raise Exception(f"{asset.href} already exists.")
 
             stac.add_asset(key=asset.key, asset=asset.create_stac())
-            existing_asset_hrefs.add(asset.href)
+            existing_asset_hrefs[asset.href] = asset
         return stac

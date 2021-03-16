@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk
-from topo_processor.stac import DataType, create_collection
+from topo_processor.stac import CollectionStore, DataType, create_items
 
 
 @pytest.fixture(autouse=True)
@@ -16,23 +16,24 @@ def setup():
     See following link for details:
     https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
     """
-    source = os.path.join(os.getcwd(), "test_data", "tiffs", "C8054")
-    datatype = "imagery.historic"
+    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "C8054"))
+    datatype = DataType.ImageryHistoric
     target = mkdtemp()
-    upload = False
-    yield source, datatype, target, upload
+    temp_dir = mkdtemp()
+    yield source, datatype, target, temp_dir
     shutil.rmtree(target)
+    shutil.rmtree(temp_dir)
 
 
 @pytest.mark.asyncio
 async def test_upload_to_local(setup):
-    source, datatype, target, upload = setup
-    source_dir = os.path.abspath(source)
-    data_type = DataType(datatype)
-    temp_dir = mkdtemp()
-    collection = await create_collection(source_dir, data_type, temp_dir)
-    await upload_to_local_disk(collection, target)
-    shutil.rmtree(collection.temp_dir)
+    source_dir, data_type, target, temp_dir = setup
+
+    await create_items(source_dir, data_type, target, temp_dir)
+    store = CollectionStore()
+    for collection_descriptor in store.collections:
+        collection = store.collections[collection_descriptor]
+        await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
     assert os.path.isfile(os.path.join(target, "C8054", "29659.tiff"))

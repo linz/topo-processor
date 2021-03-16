@@ -16,15 +16,13 @@ class Collection:
     description: str
     license: str
     data_type: DataType
-    temp_dir: str
     items: List["Item"]
     providers: List[pystac.Provider]
     metadata_path: str
     content_type = pystac.MediaType
 
-    def __init__(self, data_type: DataType, temp_dir: str):
-        self.data_type = data_type
-        self.temp_dir = temp_dir
+    def __init__(self, title: str):
+        self.title = title
         self.items = []
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
