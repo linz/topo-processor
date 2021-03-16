@@ -54,12 +54,17 @@ class Item:
             properties=self.properties,
             stac_extensions=self.stac_extensions,
         )
+        existing_asset_hrefs = []
         for asset_descriptor in self.assets:
             asset = self.assets[asset_descriptor]
             if asset.needs_upload:
                 asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
-                stac.add_asset(
-                    key=asset.key,
-                    asset=asset.create_stac(),
-                )
+                if asset.href not in existing_asset_hrefs:
+                    stac.add_asset(
+                        key=asset.key,
+                        asset=asset.create_stac(),
+                    )
+                    existing_asset_hrefs.append(asset.href)
+                else:
+                    raise Exception(f"{asset.href} already existed.")
         return stac
