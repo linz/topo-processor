@@ -32,5 +32,5 @@ def test_duplicate_asset():
             needs_upload=True,
         ),
     )
-    with pytest.raises(Exception, match=r"./collection_title/item_id.tiff already existed."):
+    with pytest.raises(Exception, match=r"./collection_title/item_id.tiff already exists."):
         item.create_stac()

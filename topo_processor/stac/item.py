@@ -42,8 +42,8 @@ class Item:
             )
         }
 
-    def add_asset(self, desciptor: str, asset: Asset):
-        self.assets[desciptor] = asset
+    def add_asset(self, descriptor: str, asset: Asset):
+        self.assets[descriptor] = asset
 
     def create_stac(self) -> pystac.Item:
         stac = pystac.Item(
@@ -54,17 +54,16 @@ class Item:
             properties=self.properties,
             stac_extensions=self.stac_extensions,
         )
-        existing_asset_hrefs = []
+        existing_asset_hrefs = set()
         for asset_descriptor in self.assets:
             asset = self.assets[asset_descriptor]
-            if asset.needs_upload:
-                asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
-                if asset.href not in existing_asset_hrefs:
-                    stac.add_asset(
-                        key=asset.key,
-                        asset=asset.create_stac(),
-                    )
-                    existing_asset_hrefs.append(asset.href)
-                else:
-                    raise Exception(f"{asset.href} already existed.")
+            if not asset.needs_upload:
+                continue
+
+            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
+            if asset.href in existing_asset_hrefs:
+                raise Exception(f"{asset.href} already exists.")
+
+            stac.add_asset(key=asset.key, asset=asset.create_stac())
+            existing_asset_hrefs.add(asset.href)
         return stac
