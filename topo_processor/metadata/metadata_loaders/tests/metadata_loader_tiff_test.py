@@ -34,4 +34,4 @@ def test_add_metadata(setup):
 
     asyncio.run(loader.add_metadata(item))
     assert item.properties["proj:epsg"] is None
-    assert len(item.assets) == 0
+    assert len(item.assets) == 1

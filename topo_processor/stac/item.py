@@ -1,23 +1,15 @@
+import os
 from datetime import datetime
-from typing import List, TypedDict
+from mimetypes import MimeTypes
+from typing import List
 
-import pystac as stac
+import pystac
 
+from .asset import Asset
 from .collection import Collection
 
 
-class Asset(TypedDict):
-    path: str
-    key: str
-    href: str
-    properties = dict
-    media_type = stac.MediaType
-    stac_extensions = []
-    content_type = str
-
-
 class Item:
-
     source_path: str
     metadata_path: str
     id: str
@@ -25,9 +17,10 @@ class Item:
     bbox: str
     datetime: datetime
     properties: dict
-    stac_extensions: List[str]
+    stac_extensions: dict
     assets: List[Asset]
-    content_type: str
+    content_type: pystac.MediaType
+    file_ext: str
     is_valid: bool
 
     def __init__(self, source_path: str, collection: Collection):
@@ -35,19 +28,25 @@ class Item:
         self.metadata_path = None  # The RELATIVE path of the json file
         self.properties = {}
         self.collection = collection
-        self.stac_extensions = []
-        self.assets = []
-        self.content_type = "application/json"
+        self.stac_extensions = ["file"]
+        self.content_type = pystac.MediaType.JSON
+        self.file_ext = MimeTypes().guess_extension(self.content_type)
         self.is_valid = True
+        self.assets = {
+            "source": Asset(
+                key="source",
+                path=source_path,
+                content_type=MimeTypes().guess_type(source_path)[0],
+                file_ext=os.path.splitext(source_path)[1],
+                needs_upload=True,
+            )
+        }
 
-    def add_asset(self, asset: Asset):
-        self.assets.append(asset)
-        for asset_stac_extension in asset["stac_extensions"]:
-            if asset_stac_extension not in self.stac_extensions:
-                self.stac_extensions.append(asset_stac_extension)
+    def add_asset(self, descriptor: str, asset: Asset):
+        self.assets[descriptor] = asset
 
-    def create_stac(self) -> stac.Item:
-        stac_item = stac.Item(
+    def create_stac(self) -> pystac.Item:
+        stac = pystac.Item(
             id=self.id,
             geometry=None,
             bbox=None,
@@ -55,9 +54,16 @@ class Item:
             properties=self.properties,
             stac_extensions=self.stac_extensions,
         )
-        for asset in self.assets:
-            stac_item.add_asset(
-                key=asset["key"],
-                asset=stac.Asset(href=asset["href"], properties=asset["properties"], media_type=asset["content_type"]),
-            )
-        return stac_item
+        existing_asset_hrefs = set()
+        for asset_descriptor in self.assets:
+            asset = self.assets[asset_descriptor]
+            if not asset.needs_upload:
+                continue
+
+            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
+            if asset.href in existing_asset_hrefs:
+                raise Exception(f"{asset.href} already exists.")
+
+            stac.add_asset(key=asset.key, asset=asset.create_stac())
+            existing_asset_hrefs.add(asset.href)
+        return stac

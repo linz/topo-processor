@@ -1,6 +1,5 @@
 import asyncio
 import os
-from tempfile import mkdtemp
 
 from linz_logger import get_log
 
@@ -14,9 +13,8 @@ from .data_type import DataType
 from .item import Item
 
 
-async def create_collection(source_dir: str, data_type: DataType) -> Collection:
+async def create_collection(source_dir: str, data_type: DataType, temp_dir: str) -> Collection:
     start_time = time_in_ms()
-    temp_dir = mkdtemp()
     collection = Collection(data_type, temp_dir)
     await create_items(collection, source_dir)
     get_log().debug("Collection Created", data_type=data_type, duration=time_in_ms() - start_time)

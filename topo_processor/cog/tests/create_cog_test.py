@@ -1,7 +1,4 @@
-import os
-
 import pytest
-import ulid
 
 from topo_processor.cog.create_cog import create_cog
 
