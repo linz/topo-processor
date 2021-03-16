@@ -34,7 +34,6 @@ class DataTransformerImageryHistoric(DataTransformer):
             Asset(
                 key="image",
                 path=output_path,
-                properties={"file:checksum": None},
                 content_type=pystac.MediaType.COG,
                 file_ext=".tiff",
                 needs_upload=True,

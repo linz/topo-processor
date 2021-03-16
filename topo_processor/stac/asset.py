@@ -10,11 +10,11 @@ class Asset:
     file_ext = str
     needs_upload = bool
 
-    def __init__(self, path, key, properties, content_type, file_ext, needs_upload):
+    def __init__(self, path, key, content_type, file_ext, needs_upload):
         self.path = path
         self.key = key
         self.href = None
-        self.properties = properties
+        self.properties = {}
         self.content_type = content_type
         self.file_ext = file_ext
         self.needs_upload = needs_upload

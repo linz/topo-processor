@@ -36,7 +36,6 @@ class Item:
             "source": Asset(
                 key="source",
                 path=source_path,
-                properties={"file:checksum": None},
                 content_type=MimeTypes().guess_type(source_path)[0],
                 file_ext=os.path.splitext(source_path)[1],
                 needs_upload=True,
