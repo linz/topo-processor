@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk
-from topo_processor.stac import CollectionStore, DataType, create_items
+from topo_processor.stac import DataType, collection_store, create_items
 
 
 @pytest.fixture(autouse=True)
@@ -30,10 +30,8 @@ async def test_upload_to_local(setup):
     data_type, target, temp_dir = setup
 
     await create_items(source_dir, data_type, target, temp_dir)
-    store = CollectionStore()
-    # store.get_collection("C8054")
-    for collection_descriptor in store.collections:
-        collection = store.collections[collection_descriptor]
+    for collection_descriptor in collection_store:
+        collection = collection_store[collection_descriptor]
         await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
@@ -58,10 +56,9 @@ async def test_upload_different_surveys_same_folder(setup):
     source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "399"))
     data_type, target, temp_dir = setup
     await create_items(source_dir, data_type, target, temp_dir)
-    store = CollectionStore()
-    del store.collections["C8054"]
-    for collection_descriptor in store.collections:
-        collection = store.collections[collection_descriptor]
+    del collection_store["C8054"]
+    for collection_descriptor in collection_store:
+        collection = collection_store[collection_descriptor]
         await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "399", "72358.json"))

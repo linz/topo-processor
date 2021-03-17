@@ -2,7 +2,7 @@ import os
 
 from linz_logger import get_log
 
-from topo_processor.stac.collection_store import CollectionStore
+from topo_processor.stac.collection_store import get_collection
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
 from topo_processor.util.tiff import is_tiff
@@ -30,8 +30,7 @@ class MetadataValidatorImageryHistoric(MetadataValidator):
                 parent_folder=parent_folder,
                 source_file=item.source_path,
             )
-        store = CollectionStore()
-        collection = store.get_collection(title)
+        collection = get_collection(title)
         item.collection = collection
         item.collection.metadata_path = f"{item.properties['linz:survey']}/collection.json"
         collection.items.append(item)
