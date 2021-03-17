@@ -52,6 +52,7 @@ async def test_upload_to_local(setup):
     )
     assert (item_metadata["assets"]["image"]["href"]) == "./C8054/29659.tiff"
 
+
 @pytest.mark.asyncio
 async def test_upload_different_surveys_same_folder(setup):
     source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "399"))
@@ -82,5 +83,3 @@ async def test_upload_different_surveys_same_folder(setup):
         == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"
     )
     assert (item_metadata["assets"]["image"]["href"]) == "./398/72352.tiff"
-
-
