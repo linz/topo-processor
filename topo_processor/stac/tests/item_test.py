@@ -31,5 +31,5 @@ def test_duplicate_asset():
         ),
     )
     item.assets["source"].needs_upload = False
-    with pytest.raises(Exception, match=r"."):
+    with pytest.raises(Exception, match=r"./fake_title/item_id.tiff already exists."):
         item.create_stac()
