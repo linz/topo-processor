@@ -61,18 +61,18 @@ async def main(source, datatype, target, upload):
     temp_dir = mkdtemp()
     await create_items(source_dir, data_type, target, temp_dir)
     store = CollectionStore()
-    for collection_descriptor in store.collections:
-        collection = store.collections[collection_descriptor]
-        try:
+    try:
+        for collection_descriptor in store.collections:
+            collection = store.collections[collection_descriptor]
             if upload:
                 await upload_to_s3(collection, target)
             else:
                 await upload_to_local_disk(collection, target)
-        finally:
-            rmtree(temp_dir)
-            get_log().debug(
-                "Upload Completed",
-                location=target,
-                data_type=data_type.value,
-                duration=time_in_ms() - start_time,
-            )
+    finally:
+        rmtree(temp_dir)
+        get_log().debug(
+            "Upload Completed",
+            location=target,
+            data_type=data_type.value,
+            duration=time_in_ms() - start_time,
+        )
