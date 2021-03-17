@@ -16,21 +16,22 @@ def setup():
     See following link for details:
     https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
     """
-    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "C8054"))
     datatype = DataType.ImageryHistoric
     target = mkdtemp()
     temp_dir = mkdtemp()
-    yield source, datatype, target, temp_dir
+    yield datatype, target, temp_dir
     shutil.rmtree(target)
     shutil.rmtree(temp_dir)
 
 
 @pytest.mark.asyncio
 async def test_upload_to_local(setup):
-    source_dir, data_type, target, temp_dir = setup
+    source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "C8054"))
+    data_type, target, temp_dir = setup
 
     await create_items(source_dir, data_type, target, temp_dir)
     store = CollectionStore()
+    # store.get_collection("C8054")
     for collection_descriptor in store.collections:
         collection = store.collections[collection_descriptor]
         await upload_to_local_disk(collection, target)
@@ -50,3 +51,36 @@ async def test_upload_to_local(setup):
         == "122083318d91bfb2a04a82b381e2024d925a5ab3deababa0058dcb1b19ae4e805c9a"
     )
     assert (item_metadata["assets"]["image"]["href"]) == "./C8054/29659.tiff"
+
+@pytest.mark.asyncio
+async def test_upload_different_surveys_same_folder(setup):
+    source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "399"))
+    data_type, target, temp_dir = setup
+    await create_items(source_dir, data_type, target, temp_dir)
+    store = CollectionStore()
+    del store.collections["C8054"]
+    for collection_descriptor in store.collections:
+        collection = store.collections[collection_descriptor]
+        await upload_to_local_disk(collection, target)
+
+    assert os.path.isfile(os.path.join(target, "399", "72358.json"))
+    assert os.path.isfile(os.path.join(target, "399", "72358.tiff"))
+    assert os.path.isfile(os.path.join(target, "399", "collection.json"))
+
+    assert os.path.isfile(os.path.join(target, "398", "72352.json"))
+    assert os.path.isfile(os.path.join(target, "398", "72352.tiff"))
+    assert os.path.isfile(os.path.join(target, "398", "collection.json"))
+
+    with open(os.path.join(target, "398", "72352.json")) as item_json_file:
+        item_metadata = json.load(item_json_file)
+
+    assert item_metadata["properties"]["linz:survey"] == "398"
+    assert item_metadata["properties"]["linz:sufi"] == "72352"
+    assert item_metadata["id"] == item_metadata["properties"]["linz:sufi"]
+    assert (
+        item_metadata["assets"]["image"]["file:checksum"]
+        == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"
+    )
+    assert (item_metadata["assets"]["image"]["href"]) == "./398/72352.tiff"
+
+
