@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 import click
 from linz_logger import get_log
 
-from topo_processor.stac import DataType, create_collection
+from topo_processor.stac import DataType, collection_store, create_items
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util.time import time_in_ms
 
@@ -59,12 +59,14 @@ async def main(source, datatype, target, upload):
     source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
     temp_dir = mkdtemp()
-    collection = await create_collection(source_dir, data_type, temp_dir)
+    await create_items(source_dir, data_type, target, temp_dir)
     try:
-        if upload:
-            await upload_to_s3(collection, target)
-        else:
-            await upload_to_local_disk(collection, target)
+        for collection_descriptor in collection_store:
+            collection = collection_store[collection_descriptor]
+            if upload:
+                await upload_to_s3(collection, target)
+            else:
+                await upload_to_local_disk(collection, target)
     finally:
         rmtree(temp_dir)
         get_log().debug(
