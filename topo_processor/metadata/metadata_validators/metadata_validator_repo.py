@@ -1,4 +1,5 @@
 import asyncio
+import os
 from typing import List
 
 from linz_logger import get_log
@@ -26,5 +27,5 @@ class MetadataValidatorRepository:
                         "Validity Checked",
                         validator=validator.name,
                         duration=time_in_ms() - start_time,
-                        output_filename=item.metadata_path,
+                        output_filename=os.path.join(item.parent, f"{item.id}{item.file_ext}"),
                     )

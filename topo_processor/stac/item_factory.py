@@ -7,6 +7,7 @@ from topo_processor.data.data_transformers import data_transformer_repo
 from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac import DataType, Item
+from topo_processor.stac.collection_store import get_collection
 from topo_processor.util.time import time_in_ms
 
 
@@ -27,3 +28,7 @@ async def process_item(item):
         await metadata_validator_repo.validate_metadata(item)
     if item.is_valid:
         await data_transformer_repo.transform_data(item)
+    collection = get_collection(item.parent)
+    item.collection = collection
+    item.collection.metadata_path = os.path.join(item.parent, f"collection{collection.file_ext}")
+    collection.items.append(item)

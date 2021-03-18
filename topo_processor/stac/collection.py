@@ -23,6 +23,7 @@ class Collection:
 
     def __init__(self, title: str):
         self.title = title
+
         self.items = []
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
