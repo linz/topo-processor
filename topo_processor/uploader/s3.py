@@ -19,12 +19,12 @@ async def upload_items(collection: Collection, target: str):
     to_upload = []
     for item in collection.items:
         # for metadata
-        await write_stac_metadata(item, os.path.join(collection.temp_dir, item.metadata_path))
-        checksum = await multihash_as_hex(os.path.join(collection.temp_dir, item.metadata_path))
+        await write_stac_metadata(item, os.path.join(item.temp_dir, item.parent, f"{item.id}{item.file_ext}"))
+        checksum = await multihash_as_hex(os.path.join(item.temp_dir, item.parent, f"{item.id}{item.file_ext}"))
         to_upload.append(
             upload_file(
-                os.path.join(collection.temp_dir, item.metadata_path),
-                item.metadata_path,
+                os.path.join(collection.temp_dir, item.parent, f"{item.id}{item.file_ext}"),
+                os.path.join(item.parent, f"{item.id}{item.file_ext}"),
                 item.content_type,
                 checksum,
                 target,
@@ -45,6 +45,7 @@ async def upload_items(collection: Collection, target: str):
 
 
 async def upload_collection(collection: Collection, target: str):
+    # TODO: collection has no temp dir
     await write_stac_metadata(collection, os.path.join(collection.temp_dir, collection.metadata_path))
     checksum = await multihash_as_hex(os.path.join(collection.temp_dir, collection.metadata_path))
     await upload_file(

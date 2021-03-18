@@ -1,4 +1,5 @@
 import asyncio
+import os
 from typing import List
 
 from linz_logger import get_log
@@ -31,5 +32,5 @@ class MetadataLoaderRepository:
                         "Metadata Added",
                         loader=loader.name,
                         duration=time_in_ms() - start_time,
-                        metadata_path=item.metadata_path,
+                        metadata_path=os.path.join(item.parent, f"{item.id}{item.file_ext}"),
                     )

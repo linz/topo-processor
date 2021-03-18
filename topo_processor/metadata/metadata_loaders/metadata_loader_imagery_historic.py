@@ -29,36 +29,37 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if item.source_path_basename not in self.raw_metadata:
             raise Exception(f"{item.source_path_basename} cannot be found in the csv.")
         item_metadata = self.raw_metadata[item.source_path_basename]
-        properties = {
-            "linz:sufi": item_metadata["sufi"],
-            "linz:survey": item_metadata["survey"],
-            "linz:run": item_metadata["run"],
-            "linz:photo_no": item_metadata["photo_no"],
-            "linz:alternate_survey_name": item_metadata["alternate_survey_name"],
-            "linz:camera": item_metadata["camera"],
-            "linz:camera_sequence_no": item_metadata["camera_sequence_no"],
-            "linz:nominal_focal_length": item_metadata["nominal_focal_length"],
-            "linz:altitude": item_metadata["altitude"],
-            "linz:scale": item_metadata["scale"],
-            "linz:photocentre_lat": item_metadata["photocentre_lat"],
-            "linz:photocentre_lon": item_metadata["photocentre_lon"],
-            "linz:date": item_metadata["date"],
-            "linz:film": item_metadata["film"],
-            "linz:film_sequence_no": item_metadata["film_sequence_no"],
-            "linz:photo_type": item_metadata["photo_type"],
-            "linz:format": item_metadata["format"],
-            "linz:source": item_metadata["source"],
-            "linz:physical_film_condition": item_metadata["physical_film_condition"],
-            "linz:image_anomalies": item_metadata["image_anomalies"],
-            "linz:scanned": item_metadata["scanned"],
-            "linz:raw_filename": item_metadata["raw_filename"],
-            "linz:released_filename": item_metadata["released_filename"],
-            "linz:when_scanned": item_metadata["when_scanned"],
-            "linz:photo_version": item_metadata["photo_version"],
-        }
-        item.properties.update(properties)
+        item.properties.update(
+            {
+                "linz:sufi": item_metadata["sufi"],
+                "linz:survey": item_metadata["survey"],
+                "linz:run": item_metadata["run"],
+                "linz:photo_no": item_metadata["photo_no"],
+                "linz:alternate_survey_name": item_metadata["alternate_survey_name"],
+                "linz:camera": item_metadata["camera"],
+                "linz:camera_sequence_no": item_metadata["camera_sequence_no"],
+                "linz:nominal_focal_length": item_metadata["nominal_focal_length"],
+                "linz:altitude": item_metadata["altitude"],
+                "linz:scale": item_metadata["scale"],
+                "linz:photocentre_lat": item_metadata["photocentre_lat"],
+                "linz:photocentre_lon": item_metadata["photocentre_lon"],
+                "linz:date": item_metadata["date"],
+                "linz:film": item_metadata["film"],
+                "linz:film_sequence_no": item_metadata["film_sequence_no"],
+                "linz:photo_type": item_metadata["photo_type"],
+                "linz:format": item_metadata["format"],
+                "linz:source": item_metadata["source"],
+                "linz:physical_film_condition": item_metadata["physical_film_condition"],
+                "linz:image_anomalies": item_metadata["image_anomalies"],
+                "linz:scanned": item_metadata["scanned"],
+                "linz:raw_filename": item_metadata["raw_filename"],
+                "linz:released_filename": item_metadata["released_filename"],
+                "linz:when_scanned": item_metadata["when_scanned"],
+                "linz:photo_version": item_metadata["photo_version"],
+            }
+        )
         item.id = item_metadata["sufi"]
-        item.metadata_path = f"{item_metadata['survey']}/{item_metadata['sufi']}.json"
+        item.parent = item_metadata["survey"]
 
     def read_csv(self):
         self.raw_metadata = {}

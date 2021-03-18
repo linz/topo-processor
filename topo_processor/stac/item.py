@@ -15,7 +15,6 @@ class Item:
     data_type: DataType
     target: str
     temp_dir: str
-    metadata_path: str
     id: str
     gemoetry: str
     bbox: str
@@ -27,13 +26,14 @@ class Item:
     file_ext: str
     is_valid: bool
     collection: Collection
+    parent: str
 
     def __init__(self, source_path: str, data_type: DataType, target: str, temp_dir: str):
         self.source_path = source_path
         self.data_type = data_type
         self.target = target
         self.temp_dir = temp_dir
-        self.metadata_path = None  # The RELATIVE path of the json file
+
         self.properties = {}
         self.stac_extensions = ["file"]
         self.content_type = pystac.MediaType.JSON

@@ -22,7 +22,8 @@ async def setup():
     shutil.rmtree(temp_dir)
 
 
-def test_check_validity(setup):
+@pytest.mark.asyncio
+async def test_check_validity(setup):
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
     temp_dir = setup
     item = Item(source_path, DataType.ImageryHistoric, "fake_target", temp_dir)
@@ -30,5 +31,5 @@ def test_check_validity(setup):
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    with pytest.raises(Exception, match=r"Validation failed"):
-        asyncio.run(validator.validate_metadata(item))
+    await validator.validate_metadata(item)
+    assert item.is_valid is False
