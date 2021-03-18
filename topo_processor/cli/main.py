@@ -61,8 +61,7 @@ async def main(source, datatype, target, upload):
     temp_dir = mkdtemp()
     await create_items(source_dir, data_type, target, temp_dir)
     try:
-        for collection_descriptor in collection_store:
-            collection = collection_store[collection_descriptor]
+        for collection in collection_store.values():
             if upload:
                 await upload_to_s3(collection, target)
             else:

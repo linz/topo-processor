@@ -30,8 +30,7 @@ async def test_upload_to_local(setup):
     data_type, target, temp_dir = setup
 
     await create_items(source_dir, data_type, target, temp_dir)
-    for collection_descriptor in collection_store:
-        collection = collection_store[collection_descriptor]
+    for collection in collection_store.values():
         await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "C8054", "29659.json"))
@@ -57,8 +56,7 @@ async def test_upload_different_surveys_same_folder(setup):
     data_type, target, temp_dir = setup
     await create_items(source_dir, data_type, target, temp_dir)
     del collection_store["C8054"]
-    for collection_descriptor in collection_store:
-        collection = collection_store[collection_descriptor]
+    for collection in collection_store.values():
         await upload_to_local_disk(collection, target)
 
     assert os.path.isfile(os.path.join(target, "399", "72358.json"))

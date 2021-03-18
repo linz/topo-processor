@@ -62,8 +62,7 @@ class Item:
             stac_extensions=self.stac_extensions,
         )
         existing_asset_hrefs = {}
-        for asset_descriptor in self.assets:
-            asset = self.assets[asset_descriptor]
+        for asset in self.assets.values():
             if not asset.needs_upload:
                 continue
 
