@@ -14,15 +14,21 @@ class MetadataValidatorRepository:
     validators: List[MetadataValidator] = []
     lock = asyncio.Semaphore(5)
 
-    def append(self, loader: MetadataValidator) -> None:
-        self.validators.append(loader)
+    def append(self, validator: MetadataValidator) -> None:
+        self.validators.append(validator)
 
     async def validate_metadata(self, item: Item) -> None:
         async with self.lock:
             for validator in self.validators:
                 if validator.is_applicable(item):
                     start_time = time_in_ms()
-                    await validator.validate_metadata(item)
+                    try:
+                        await validator.validate_metadata(item)
+                    except Exception as error_msg:
+                        item.is_valid = False
+                        get_log().warning(
+                            f"Item not valid: {error_msg}", validator=validator.name, source_path=item.source_path
+                        )
                     get_log().debug(
                         "Validity Checked",
                         validator=validator.name,
