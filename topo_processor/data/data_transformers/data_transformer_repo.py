@@ -21,8 +21,15 @@ class DataTransformerRepository:
             for transformers in self.transformers:
                 if transformers.is_applicable(item):
                     start_time = time_in_ms()
-                    await transformers.transform_data(item)
+                    try:
+                        await transformers.transform_data(item)
+                    except Exception as error_msg:
+                        item.is_valid = False
+                        item.error_msgs.append(str(error_msg))
+                        get_log().warning(
+                            f"Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
+                        )
                     get_log().debug(
-                        "Data Compressed",
+                        "Data Transformed",
                         duration=time_in_ms() - start_time,
                     )

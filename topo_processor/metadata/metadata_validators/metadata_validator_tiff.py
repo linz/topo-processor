@@ -18,11 +18,7 @@ class MetadataValidatorTiff(MetadataValidator):
         with rasterio.open(item.source_path) as tiff:
             if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
                 if photo_type != "B&W":
-                    raise Exception(
-                        f"Validation Failed. {item.source_path} has wrong photo type of {', '.join([color.name for color in tiff.colorinterp])}"
-                    )
+                    raise Exception(f"Wrong photo type of {', '.join([color.name for color in tiff.colorinterp])}")
             if all(item in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for item in tiff.colorinterp):
                 if photo_type != "COLOUR":
-                    raise Exception(
-                        f"Validation Failed. {item.source_path} has wrong photo type of {', '.join([color.name for color in tiff.colorinterp])}"
-                    )
+                    raise Exception(f"Wrong photo type of {', '.join([color.name for color in tiff.colorinterp])}")

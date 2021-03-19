@@ -26,8 +26,9 @@ class MetadataValidatorRepository:
                         await validator.validate_metadata(item)
                     except Exception as error_msg:
                         item.is_valid = False
+                        item.error_msgs.append(str(error_msg))
                         get_log().warning(
-                            f"Item not valid: {error_msg}", validator=validator.name, source_path=item.source_path
+                            f"Validation Failed: {error_msg}", validator=validator.name, source_path=item.source_path
                         )
                     get_log().debug(
                         "Validity Checked",

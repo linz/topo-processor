@@ -23,10 +23,13 @@ class MetadataLoaderRepository:
                 if loader.is_applicable(item):
                     start_time = time_in_ms()
                     try:
-                        await loader.add_metadata(item)
+                        await loader.load_metadata(item)
                     except Exception as error_msg:
                         item.is_valid = False
-                        get_log().warning(f"Item not valid: {error_msg}", loader=loader.name, source_path=item.source_path)
+                        item.error_msgs.append(str(error_msg))
+                        get_log().warning(
+                            f"Metadata Load Failed: {error_msg}", loader=loader.name, source_path=item.source_path
+                        )
                         return
                     get_log().debug(
                         "Metadata Added",

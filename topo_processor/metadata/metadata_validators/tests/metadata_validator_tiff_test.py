@@ -30,5 +30,5 @@ async def test_check_validity(setup):
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    with pytest.raises(Exception, match=r"CROWN_399_E_49.tiff has wrong photo type of gray"):
+    with pytest.raises(Exception, match=r"Wrong photo type of gray"):
         await validator.validate_metadata(item)
