@@ -11,7 +11,7 @@ async def upload_to_local_disk(collection: Collection, target: str):
     if not os.path.isdir(os.path.join(target, collection.title)):
         os.makedirs(os.path.join(target, collection.title))
 
-    for item in collection.items:
+    for item in collection.items.values():
         if item.is_valid:
             for asset in item.assets.values():
                 if asset.needs_upload:

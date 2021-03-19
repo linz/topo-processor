@@ -1,5 +1,5 @@
 from mimetypes import MimeTypes
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Dict, List
 
 import pystac
 import ulid
@@ -16,15 +16,14 @@ class Collection:
     description: str
     license: str
     data_type: DataType
-    items: List["Item"]
+    items: Dict[str, "Item"]
     providers: List[pystac.Provider]
-    metadata_path: str
     content_type = pystac.MediaType
 
     def __init__(self, title: str):
         self.title = title
 
-        self.items = []
+        self.items = {}
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
 

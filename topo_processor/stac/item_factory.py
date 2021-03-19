@@ -29,6 +29,8 @@ async def process_item(item):
     if item.is_valid:
         await data_transformer_repo.transform_data(item)
     collection = get_collection(item.parent)
-    item.collection = collection
-    item.collection.metadata_path = os.path.join(item.parent, f"collection{collection.file_ext}")
-    collection.items.append(item)
+    if item.id in collection.items:
+        get_log().info("Duplicate Items", source_path=item.source_path)
+    else:
+        item.collection = collection
+        collection.items[item.id] = item
