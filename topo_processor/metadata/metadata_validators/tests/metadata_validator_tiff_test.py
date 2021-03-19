@@ -1,4 +1,3 @@
-import asyncio
 import os
 import shutil
 from tempfile import mkdtemp

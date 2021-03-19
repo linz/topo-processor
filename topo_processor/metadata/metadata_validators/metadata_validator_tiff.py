@@ -1,5 +1,4 @@
 import rasterio
-from linz_logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.stac.item import Item
