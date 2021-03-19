@@ -1,8 +1,6 @@
 import asyncio
 from typing import TYPE_CHECKING
 
-from linz_logger import get_log
-
 from topo_processor.util.time import time_in_ms
 
 if TYPE_CHECKING:
@@ -21,9 +19,6 @@ class ExecutionLocal:
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
             raise Exception(stderr.decode())
-        get_log().debug(
-            "Ran command", command=cmd.to_full_command(), stdout=stdout.decode(), duration=time_in_ms() - start_time
-        )
         return proc.returncode, stdout.decode(), stderr.decode()
 
 
