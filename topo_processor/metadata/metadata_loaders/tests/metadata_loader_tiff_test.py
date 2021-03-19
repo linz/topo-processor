@@ -22,13 +22,13 @@ async def setup():
 
 
 @pytest.mark.asyncio
-async def test_add_metadata(setup):
+async def test_load_metadata(setup):
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
     temp_dir = setup
     item = Item(source_path, DataType.ImageryHistoric, "fake_target", temp_dir)
     loader = MetadataLoaderTiff()
     assert loader.is_applicable(item)
 
-    await loader.add_metadata(item)
+    await loader.load_metadata(item)
     assert item.properties["proj:epsg"] is None
     assert len(item.assets) == 1

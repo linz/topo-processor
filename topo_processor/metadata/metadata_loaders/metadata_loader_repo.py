@@ -17,7 +17,7 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    async def add_metadata(self, item: Item) -> None:
+    async def load_metadata(self, item: Item) -> None:
         async with self.lock:
             for loader in self.loaders:
                 if loader.is_applicable(item):
@@ -32,7 +32,7 @@ class MetadataLoaderRepository:
                         )
                         return
                     get_log().debug(
-                        "Metadata Added",
+                        "Metadata Loaded",
                         loader=loader.name,
                         duration=time_in_ms() - start_time,
                         metadata_path=os.path.join(item.parent, f"{item.id}{item.file_ext}"),

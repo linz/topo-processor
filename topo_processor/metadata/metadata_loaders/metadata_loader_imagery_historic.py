@@ -21,7 +21,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    async def add_metadata(self, item: Item) -> None:
+    async def load_metadata(self, item: Item) -> None:
         if not self.is_init:
             self.read_csv()
 
