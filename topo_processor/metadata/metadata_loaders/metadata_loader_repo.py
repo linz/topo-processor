@@ -26,7 +26,7 @@ class MetadataLoaderRepository:
                         await loader.add_metadata(item)
                     except Exception as error_msg:
                         item.is_valid = False
-                        get_log().debug(f"Item not valid: {error_msg}", loader=loader.name, source_path=item.source_path)
+                        get_log().warning(f"Item not valid: {error_msg}", loader=loader.name, source_path=item.source_path)
                         return
                     get_log().debug(
                         "Metadata Added",
