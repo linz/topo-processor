@@ -18,7 +18,7 @@ class Collection:
     data_type: DataType
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
-    content_type = pystac.MediaType
+    content_type: pystac.MediaType
 
     def __init__(self, title: str):
         self.title = title

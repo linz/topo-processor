@@ -1,8 +1,6 @@
 import asyncio
 from typing import TYPE_CHECKING
 
-from topo_processor.util.time import time_in_ms
-
 if TYPE_CHECKING:
     from .command import Command
 
@@ -12,7 +10,6 @@ class ExecutionLocal:
 
     @staticmethod
     async def run(cmd: "Command"):
-        start_time = time_in_ms()
         proc = await asyncio.create_subprocess_exec(
             *cmd.to_full_command(), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
