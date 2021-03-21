@@ -28,9 +28,12 @@ async def process_item(item):
         await metadata_validator_repo.validate_metadata(item)
     if item.is_valid:
         await data_transformer_repo.transform_data(item)
+    link_collection_item(item)
+
+
+def link_collection_item(item):
     collection = get_collection(item.parent)
     if item.id in collection.items:
-        get_log().info("Duplicate Items", source_path=item.source_path)
-    else:
-        item.collection = collection
-        collection.items[item.id] = item
+        raise Exception(f"Duplicate Items: {item.source_path}")
+    item.collection = collection
+    collection.items[item.id] = item
