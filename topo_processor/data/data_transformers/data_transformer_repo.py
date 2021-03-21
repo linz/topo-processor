@@ -29,6 +29,7 @@ class DataTransformerRepository:
                         get_log().warning(
                             f"Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
                         )
+                        return False
                     get_log().debug(
                         "Data Transformed",
                         duration=time_in_ms() - start_time,
