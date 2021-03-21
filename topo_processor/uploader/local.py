@@ -22,5 +22,5 @@ async def upload_to_local_disk(collection: Collection, target: str):
                     stac_collection.add_item(stac_item)
             await write_stac_metadata(stac_item, os.path.join(target, item.parent, f"{item.id}{item.file_ext}"))
         else:
-            get_log().warning("Invalid item was not uploaded:", error="; ".join(item.error_msgs), source_path=item.source_path)
+            get_log().warning("Invalid item was not uploaded:", error=item.error_msgs, source_path=item.source_path)
         await write_stac_metadata(stac_collection, os.path.join(target, collection.title, f"collection{collection.file_ext}"))
