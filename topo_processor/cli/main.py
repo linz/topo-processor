@@ -9,7 +9,7 @@ from linz_logger import get_log
 
 from topo_processor.stac import DataType, collection_store, create_items
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
-from topo_processor.util.time import time_in_ms
+from topo_processor.util import time_in_ms
 
 
 def coroutine(f):

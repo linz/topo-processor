@@ -5,9 +5,7 @@ import ulid
 from linz_logger import get_log
 
 from topo_processor.cog.create_cog import create_cog
-from topo_processor.stac.asset import Asset
-from topo_processor.stac.data_type import DataType
-from topo_processor.stac.item import Item
+from topo_processor.stac import Asset, DataType, Item
 from topo_processor.util import is_tiff, time_in_ms
 
 from .data_transformer import DataTransformer

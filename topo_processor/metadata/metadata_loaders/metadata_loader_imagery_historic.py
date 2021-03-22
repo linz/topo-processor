@@ -2,8 +2,7 @@ import csv
 import os
 from typing import Dict
 
-from topo_processor.stac.data_type import DataType
-from topo_processor.stac.item import Item
+from topo_processor.stac import DataType, Item
 from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader

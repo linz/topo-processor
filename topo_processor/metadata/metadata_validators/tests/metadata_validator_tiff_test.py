@@ -5,8 +5,7 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.metadata.metadata_validators.metadata_validator_tiff import MetadataValidatorTiff
-from topo_processor.stac.data_type import DataType
-from topo_processor.stac.item import Item
+from topo_processor.stac import DataType, Item
 
 
 @pytest.fixture(autouse=True)

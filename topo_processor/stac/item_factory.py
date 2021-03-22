@@ -8,7 +8,7 @@ from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac import DataType, Item
 from topo_processor.stac.collection_store import get_collection
-from topo_processor.util.time import time_in_ms
+from topo_processor.util import time_in_ms
 
 
 async def create_items(source_dir: str, data_type: DataType, target: str, temp_dir: str) -> None:
