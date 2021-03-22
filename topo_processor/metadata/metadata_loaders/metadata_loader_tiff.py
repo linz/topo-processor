@@ -12,7 +12,7 @@ class MetadataLoaderTiff(MetadataLoader):
     def is_applicable(self, item: Item) -> bool:
         return is_tiff(item.source_path)
 
-    async def add_metadata(self, item: Item) -> None:
+    async def load_metadata(self, item: Item) -> None:
         if "projection" not in item.stac_extensions:
             item.stac_extensions.append("projection")
         with rasterio.open(item.source_path) as tiff:

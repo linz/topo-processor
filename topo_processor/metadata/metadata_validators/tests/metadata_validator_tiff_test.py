@@ -1,4 +1,3 @@
-import asyncio
 import os
 import shutil
 from tempfile import mkdtemp
@@ -31,5 +30,5 @@ async def test_check_validity(setup):
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    await validator.validate_metadata(item)
-    assert item.is_valid is False
+    with pytest.raises(Exception, match=r"Wrong photo type of gray"):
+        await validator.validate_metadata(item)

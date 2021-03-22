@@ -51,4 +51,4 @@ def test_item_not_found_in_csv(setup):
     item = Item(source_path, DataType.ImageryHistoric, "fake_target", temp_dir)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     with pytest.raises(Exception, match=r"test_abc cannot be found in the csv."):
-        asyncio.run(metadata_loader_imagery_historic.add_metadata(item))
+        asyncio.run(metadata_loader_imagery_historic.load_metadata(item))

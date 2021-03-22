@@ -2,12 +2,13 @@ import os
 
 import pystac
 import ulid
+from linz_logger import get_log
 
 from topo_processor.cog.create_cog import create_cog
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item import Item
-from topo_processor.util import is_tiff
+from topo_processor.util import is_tiff, time_in_ms
 
 from .data_transformer import DataTransformer
 
@@ -27,7 +28,9 @@ class DataTransformerImageryHistoric(DataTransformer):
         if not os.path.isdir(os.path.join(item.temp_dir, survey)):
             os.makedirs(os.path.join(item.temp_dir, survey))
         output_path = os.path.join(item.temp_dir, f"{ulid.ulid()}.tiff")
+        start_time = time_in_ms()
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
+        get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
         item.add_asset(
             "cog",

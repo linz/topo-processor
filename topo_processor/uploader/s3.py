@@ -4,7 +4,7 @@ import os
 import boto3
 from linz_logger import get_log
 
-from topo_processor.stac.collection import Collection
+from topo_processor.stac import Collection
 from topo_processor.util import multihash_as_hex, time_in_ms, write_stac_metadata
 
 s3 = boto3.client("s3")
@@ -17,7 +17,7 @@ async def upload_to_s3(collection: Collection, target: str):
 
 async def upload_items(collection: Collection, target: str):
     to_upload = []
-    for item in collection.items:
+    for item in collection.items.values():
         # for metadata
         await write_stac_metadata(item, os.path.join(item.temp_dir, item.parent, f"{item.id}{item.file_ext}"))
         checksum = await multihash_as_hex(os.path.join(item.temp_dir, item.parent, f"{item.id}{item.file_ext}"))

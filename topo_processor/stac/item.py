@@ -25,6 +25,7 @@ class Item:
     content_type: pystac.MediaType
     file_ext: str
     is_valid: bool
+    error_msgs: List[str]
     collection: Collection
     parent: str
 
@@ -39,6 +40,7 @@ class Item:
         self.content_type = pystac.MediaType.JSON
         self.file_ext = MimeTypes().guess_extension(self.content_type)
         self.is_valid = True
+        self.error_msgs = []
         self.assets = {
             "source": Asset(
                 key="source",

@@ -23,12 +23,17 @@ async def create_items(source_dir: str, data_type: DataType, target: str, temp_d
 
 
 async def process_item(item):
-    await metadata_loader_repo.add_metadata(item)
+    await metadata_loader_repo.load_metadata(item)
     if item.is_valid:
         await metadata_validator_repo.validate_metadata(item)
     if item.is_valid:
         await data_transformer_repo.transform_data(item)
+    link_collection_item(item)
+
+
+def link_collection_item(item):
     collection = get_collection(item.parent)
+    if item.id in collection.items:
+        raise Exception(f"Duplicate Items: {item.source_path}")
     item.collection = collection
-    item.collection.metadata_path = os.path.join(item.parent, f"collection{collection.file_ext}")
-    collection.items.append(item)
+    collection.items[item.id] = item
