@@ -27,7 +27,7 @@ class DataTransformerRepository:
                         item.is_valid = False
                         item.error_msgs.append(str(error_msg))
                         get_log().warning(
-                            f"Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
+                            f"Data Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
                         )
                         return False
                     get_log().debug(

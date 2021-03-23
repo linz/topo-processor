@@ -7,7 +7,7 @@ from .metadata_loader import MetadataLoader
 
 
 class MetadataLoaderTiff(MetadataLoader):
-    name = "loader.imagery.tiff"
+    name = "metadata.loader.imagery.tiff"
 
     def is_applicable(self, item: Item) -> bool:
         return is_tiff(item.source_path)

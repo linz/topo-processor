@@ -9,7 +9,7 @@ from .metadata_loader import MetadataLoader
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
-    name = "loader.imagery.historic"
+    name = "metadata.loader.imagery.historic"
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 

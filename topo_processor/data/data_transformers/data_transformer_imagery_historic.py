@@ -12,7 +12,7 @@ from .data_transformer import DataTransformer
 
 
 class DataTransformerImageryHistoric(DataTransformer):
-    name = "compressor.imagery.historic"
+    name = "data.transformer.imagery.historic"
 
     def is_applicable(self, item: Item) -> bool:
         if item.data_type != DataType.ImageryHistoric:
