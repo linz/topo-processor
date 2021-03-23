@@ -22,14 +22,10 @@ class DataTransformerImageryHistoric(DataTransformer):
         return True
 
     async def transform_data(self, item: Item) -> None:
-        survey = item.properties["linz:survey"]
-        if not os.path.isdir(os.path.join(item.temp_dir, survey)):
-            os.makedirs(os.path.join(item.temp_dir, survey))
-        output_path = os.path.join(item.temp_dir, f"{ulid.ulid()}.tiff")
         start_time = time_in_ms()
+        output_path = os.path.join(item.temp_dir, f"{ulid.ulid()}.tiff")
         await create_cog(item.source_path, output_path, compression_method="lzw").run()
         get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
-
         item.add_asset(
             "cog",
             Asset(
