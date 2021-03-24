@@ -1,13 +1,13 @@
 import rasterio
 
-from topo_processor.stac.item import Item
-from topo_processor.util.tiff import is_tiff
+from topo_processor.stac import Item
+from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader
 
 
 class MetadataLoaderTiff(MetadataLoader):
-    name = "loader.imagery.tiff"
+    name = "metadata.loader.imagery.tiff"
 
     def is_applicable(self, item: Item) -> bool:
         return is_tiff(item.source_path)

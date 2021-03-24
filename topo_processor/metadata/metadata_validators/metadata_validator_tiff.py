@@ -1,8 +1,8 @@
 import rasterio
 from rasterio.enums import ColorInterp
 
-from topo_processor.stac.item import Item
-from topo_processor.util.tiff import is_tiff
+from topo_processor.stac import Item
+from topo_processor.util import is_tiff
 
 from .metadata_validator import MetadataValidator
 

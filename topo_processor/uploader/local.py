@@ -3,7 +3,7 @@ from shutil import copyfile
 
 from linz_logger import get_log
 
-from topo_processor.stac.collection import Collection
+from topo_processor.stac import Collection
 from topo_processor.util import multihash_as_hex, write_stac_metadata
 
 

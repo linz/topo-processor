@@ -3,8 +3,8 @@ from typing import List
 
 from linz_logger import get_log
 
-from topo_processor.stac.item import Item
-from topo_processor.util.time import time_in_ms
+from topo_processor.stac import Item
+from topo_processor.util import time_in_ms
 
 from .data_transformer import DataTransformer
 
@@ -27,7 +27,7 @@ class DataTransformerRepository:
                         item.is_valid = False
                         item.error_msgs.append(str(error_msg))
                         get_log().warning(
-                            f"Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
+                            f"Data Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
                         )
                         return False
                     get_log().debug(

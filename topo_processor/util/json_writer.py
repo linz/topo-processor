@@ -3,9 +3,7 @@ from typing import Union
 import pystac
 from linz_logger import get_log
 
-from topo_processor.stac.collection import Collection
-from topo_processor.stac.item import Item
-from topo_processor.util.time import time_in_ms
+from .time import time_in_ms
 
 
 async def write_stac_metadata(custom_stac: Union[pystac.Item, pystac.Collection], destination: str):

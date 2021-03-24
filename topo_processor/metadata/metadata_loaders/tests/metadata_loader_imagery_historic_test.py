@@ -1,12 +1,10 @@
-import asyncio
 import shutil
 from tempfile import mkdtemp
 
 import pytest
 
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
-from topo_processor.stac.data_type import DataType
-from topo_processor.stac.item import Item
+from topo_processor.stac import DataType, Item
 
 
 @pytest.fixture(autouse=True)
@@ -45,10 +43,11 @@ def test_is_not_applicable_wrong_data_type(setup):
     assert not metadata_loader_imagery_historic.is_applicable(item)
 
 
-def test_item_not_found_in_csv(setup):
+@pytest.mark.asyncio
+async def test_item_not_found_in_csv(setup):
     source_path = "test_abc.tiff"
     temp_dir = setup
     item = Item(source_path, DataType.ImageryHistoric, "fake_target", temp_dir)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     with pytest.raises(Exception, match=r"test_abc cannot be found in the csv."):
-        asyncio.run(metadata_loader_imagery_historic.load_metadata(item))
+        await metadata_loader_imagery_historic.load_metadata(item)

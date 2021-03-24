@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from topo_processor.stac.item import Item
+from topo_processor.stac import Item
 
 
 class MetadataLoader(ABC):
