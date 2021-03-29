@@ -7,6 +7,8 @@ import pystac
 import ulid
 from linz_logger import get_log
 
+from topo_processor.util import Validity
+
 GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
     from .item import Item
@@ -14,7 +16,7 @@ if TYPE_CHECKING:
 TEMP_DIR = None
 
 
-class Collection:
+class Collection(Validity):
     title: str
     description: str
     license: str

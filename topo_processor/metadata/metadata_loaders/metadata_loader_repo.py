@@ -24,10 +24,10 @@ class MetadataLoaderRepository:
                     start_time = time_in_ms()
                     try:
                         await loader.load_metadata(asset)
-                        if not asset.valid.is_valid:
+                        if not asset.is_valid:
                             break
                     except Exception as e:
-                        asset.valid.add_error(str(e), loader.name, e)
+                        asset.add_error(str(e), loader.name, e)
                         get_log().warning(f"Metadata Load Failed: {e}", loader=loader.name)
                         return
                     get_log().debug(

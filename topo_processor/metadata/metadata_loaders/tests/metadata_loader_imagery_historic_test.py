@@ -21,6 +21,6 @@ async def test_item_not_found_in_csv():
         "msg": "Asset not found in CSV file",
         "level": "error",
         "cause": "metadata.loader.imagery.historic",
-        "error": "Asset not found in CSV file",
+        "error": None,
     }
-    assert error_msg in asset.valid.log
+    assert error_msg in asset.log

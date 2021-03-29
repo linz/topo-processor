@@ -13,7 +13,7 @@ async def upload_to_local_disk(collection: Collection, target: str):
 
     stac_collection = collection.create_stac()
     for item in collection.items.values():
-        if item.is_valid:
+        if item.check_validity:
             stac_item = item.create_stac()
             stac_collection.add_item(stac_item)
             for asset in item.assets:

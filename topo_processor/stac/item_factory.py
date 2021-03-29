@@ -29,7 +29,7 @@ async def create_items(source_dir: str) -> None:
 
 
 async def process_item(item):
-    if item.is_valid:
+    if item.check_validity:
         await metadata_validator_repo.validate_metadata(item)
-    if item.is_valid:
+    if item.check_validity:
         await data_transformer_repo.transform_data(item)

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from .item import Item
 
 
-class Asset:
+class Asset(Validity):
     # The raw file location on disk
     path: str
     # New file name used for uploading
@@ -23,8 +23,6 @@ class Asset:
 
     item: "Item"
 
-    valid: Validity
-
     def __init__(self, path: str):
         self.path = path
         self.content_type = None
@@ -32,7 +30,6 @@ class Asset:
         self.needs_upload = True
 
         self.properties = {}
-        self.valid = Validity()
 
         self.item = None
 

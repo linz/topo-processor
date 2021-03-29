@@ -25,7 +25,7 @@ class MetadataValidatorRepository:
                     try:
                         await validator.validate_metadata(item)
                     except Exception as e:
-                        item.valid.add_error(str(e), validator.name, e)
+                        item.add_error(str(e), validator.name, e)
                         get_log().warning(f"Validation Failed: {e}", validator=validator.name)
                     get_log().debug(
                         "Validity Checked",

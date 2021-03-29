@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 from typing import List
 
@@ -10,7 +9,7 @@ from .asset import Asset
 from .collection import Collection
 
 
-class Item:
+class Item(Validity):
 
     id: str
 
@@ -23,21 +22,18 @@ class Item:
     assets: List[Asset]
     collection: Collection
 
-    valid: Validity
-
     def __init__(self, item_id: str):
         self.properties = {}
         self.id = item_id
         self.stac_extensions = set(["file"])
-        self.valid = Validity()
         self.collection = None
         self.assets = []
 
-    def is_valid(self):
-        if not self.valid.is_valid:
+    def check_validity(self):
+        if not self.is_valid:
             return False
         for asset in self.assets:
-            if not asset.valid.is_valid:
+            if not asset.is_valid:
                 return False
         return True
 
