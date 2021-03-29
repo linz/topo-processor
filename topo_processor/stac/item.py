@@ -1,58 +1,59 @@
 import os
 from datetime import datetime
-from mimetypes import MimeTypes
 from typing import List
 
 import pystac
 
+from topo_processor.util import Validity
+
 from .asset import Asset
 from .collection import Collection
-from .data_type import DataType
 
 
 class Item:
-    source_path: str
-    data_type: DataType
-    target: str
-    temp_dir: str
+
     id: str
+
     gemoetry: str
     bbox: str
     datetime: datetime
     properties: dict
-    stac_extensions: dict
+
+    stac_extensions: set
     assets: List[Asset]
-    content_type: pystac.MediaType
-    file_ext: str
-    is_valid: bool
-    error_msgs: List[str]
     collection: Collection
-    parent: str
 
-    def __init__(self, source_path: str, data_type: DataType, target: str, temp_dir: str):
-        self.source_path = source_path
-        self.data_type = data_type
-        self.target = target
-        self.temp_dir = temp_dir
+    valid: Validity
 
+    def __init__(self, item_id: str):
         self.properties = {}
-        self.stac_extensions = ["file"]
-        self.content_type = pystac.MediaType.JSON
-        self.file_ext = MimeTypes().guess_extension(self.content_type)
-        self.is_valid = True
-        self.error_msgs = []
-        self.assets = {
-            "source": Asset(
-                key="source",
-                path=source_path,
-                content_type=MimeTypes().guess_type(source_path)[0],
-                file_ext=os.path.splitext(source_path)[1],
-                needs_upload=True,
-            )
-        }
+        self.id = item_id
+        self.stac_extensions = set(["file"])
+        self.valid = Validity()
+        self.collection = None
+        self.assets = []
 
-    def add_asset(self, descriptor: str, asset: Asset):
-        self.assets[descriptor] = asset
+    def get_tmp_dir(self):
+        temp_dir = os.path.join(self.collection.get_temp_dir(), self.id)
+        os.mkdir(temp_dir)
+        return temp_dir
+
+    def is_valid(self):
+        if not self.valid.is_valid:
+            return False
+        for asset in self.assets:
+            if not asset.valid.is_valid:
+                return False
+        return True
+
+    def add_asset(self, asset: Asset):
+        if asset.item:
+            raise Exception(f"Asset is already assoiciated with an item: existing item='{asset.item.id}' new item='{self.id}'")
+        self.assets.append(asset)
+        asset.item = self
+
+    def add_extension(self, ext: str):
+        self.stac_extensions.add(ext)
 
     def create_stac(self) -> pystac.Item:
         stac = pystac.Item(
@@ -61,17 +62,19 @@ class Item:
             bbox=None,
             datetime=datetime.now(),
             properties=self.properties,
-            stac_extensions=self.stac_extensions,
+            stac_extensions=list(self.stac_extensions),
         )
         existing_asset_hrefs = {}
-        for asset in self.assets.values():
+        for asset in self.assets:
             if not asset.needs_upload:
                 continue
 
-            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext}"
+            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext()}"
             if asset.href in existing_asset_hrefs:
                 raise Exception(f"{asset.href} already exists.")
 
-            stac.add_asset(key=asset.key, asset=asset.create_stac())
+            stac.add_asset(
+                key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
+            )
             existing_asset_hrefs[asset.href] = asset
         return stac

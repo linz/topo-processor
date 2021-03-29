@@ -1,30 +1,56 @@
-from mimetypes import MimeTypes
+import os
+from shutil import rmtree
+from tempfile import mkdtemp
 from typing import TYPE_CHECKING, Dict, List
 
 import pystac
 import ulid
-
-from .data_type import DataType
+from linz_logger import get_log
 
 GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
     from .item import Item
+
+TEMP_DIR = None
 
 
 class Collection:
     title: str
     description: str
     license: str
-    data_type: DataType
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
-    content_type: pystac.MediaType
 
     def __init__(self, title: str):
         self.title = title
         self.items = {}
-        self.content_type = pystac.MediaType.JSON
-        self.file_ext = MimeTypes().guess_extension(self.content_type)
+
+    def add_item(self, item: "Item"):
+        if item.collection is not None and item.collection != self:
+            raise Exception(f"Remapping of collection? existing='{item.collection.title}' new='{self.title}' item='{item.id}'")
+        if item.id in self.items:
+            existing = self.items[item.id]
+            if existing != item:
+                raise Exception(f"Remapping of item id in collection='{self.title}' item='{item.id}'")
+            return
+        self.items[item.id] = item
+
+    def get_temp_dir(self):
+        global TEMP_DIR
+        if not TEMP_DIR:
+            TEMP_DIR = mkdtemp()
+            get_log().debug("Temp directory created", path=TEMP_DIR)
+        temp_dir = os.path.join(TEMP_DIR, self.title)
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
+        return temp_dir
+
+    def delete_temp_dir(self):
+        global TEMP_DIR
+        if TEMP_DIR:
+            if os.path.exists(TEMP_DIR):
+                rmtree(TEMP_DIR)
+                TEMP_DIR = None
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
@@ -35,16 +61,3 @@ class Collection:
             extent=pystac.SpatialExtent(bboxes=[0, 0, 0, 0]),
         )
         return stac
-        # Required Fields - jeremy's Documentation:
-        # - Title
-        # - Type
-        # - Description
-        # - Spatial Coverage/Extent
-        # - Metadata Date time
-        # - Updated Date time
-        # - license
-        # - Publisher
-        # - creator
-        # - licensor
-        # - status
-        # - Access rights

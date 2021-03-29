@@ -18,17 +18,14 @@ class DataTransformerRepository:
 
     async def transform_data(self, item: Item) -> None:
         async with self.lock:
-            for transformers in self.transformers:
-                if transformers.is_applicable(item):
+            for transformer in self.transformers:
+                if transformer.is_applicable(item):
                     start_time = time_in_ms()
                     try:
-                        await transformers.transform_data(item)
-                    except Exception as error_msg:
-                        item.is_valid = False
-                        item.error_msgs.append(str(error_msg))
-                        get_log().warning(
-                            f"Data Transform Failed: {error_msg}", transformers=transformers.name, source_path=item.source_path
-                        )
+                        await transformer.transform_data(item)
+                    except Exception as e:
+                        item.valid.add_error(str(e), transformer.name, e)
+                        get_log().warning(f"Data Transform Failed: {e}", transformers=transformer.name)
                         return False
                     get_log().debug(
                         "Data Transformed",
