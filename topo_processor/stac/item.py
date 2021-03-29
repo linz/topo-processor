@@ -33,11 +33,6 @@ class Item:
         self.collection = None
         self.assets = []
 
-    def get_tmp_dir(self):
-        temp_dir = os.path.join(self.collection.get_temp_dir(), self.id)
-        os.mkdir(temp_dir)
-        return temp_dir
-
     def is_valid(self):
         if not self.valid.is_valid:
             return False

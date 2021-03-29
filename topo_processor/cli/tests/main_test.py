@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk
-from topo_processor.stac import DataType, collection_store, create_items
+from topo_processor.stac import collection_store, create_items
 
 
 @pytest.fixture(autouse=True)
