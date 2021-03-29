@@ -1,6 +1,6 @@
 import rasterio
 
-from topo_processor.stac import Asset, Item
+from topo_processor.stac import Asset
 from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader

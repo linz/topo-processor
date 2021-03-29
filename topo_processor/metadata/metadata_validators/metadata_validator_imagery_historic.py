@@ -2,8 +2,7 @@ import os
 
 from linz_logger import get_log
 
-from topo_processor.stac import DataType, Item
-from topo_processor.util import is_tiff
+from topo_processor.stac import Item
 
 from .metadata_validator import MetadataValidator
 

@@ -1,5 +1,4 @@
 import asyncio
-import os
 from typing import List
 
 from linz_logger import get_log
