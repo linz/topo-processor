@@ -10,9 +10,15 @@ from topo_processor.stac.store import get_asset, item_store
 from topo_processor.util import time_in_ms
 
 
-async def create_items(source_dir: str) -> None:
+async def process_directory(source_dir: str) -> None:
     start_time = time_in_ms()
+    await _create_assets(source_dir)
+    get_log().debug("Assets Created", source_dir=source_dir, duration=time_in_ms() - start_time)
+    await _create_items()
+    get_log().debug("Items Created", source_dir=source_dir, duration=time_in_ms() - start_time)
 
+
+async def _create_assets(source_dir: str) -> None:
     assets_to_process = []
     for file_ in os.listdir(source_dir):
         path = os.path.join(source_dir, file_)
@@ -20,15 +26,15 @@ async def create_items(source_dir: str) -> None:
         assets_to_process.append(metadata_loader_repo.load_metadata(asset))
     await asyncio.gather(*assets_to_process)
 
+
+async def _create_items():
     items_to_process = []
     for item in item_store.values():
-        items_to_process.append(process_item(item))
+        items_to_process.append(_process_item(item))
     await asyncio.gather(*items_to_process)
 
-    get_log().debug("Items Created", source_dir=source_dir, duration=time_in_ms() - start_time)
 
-
-async def process_item(item):
+async def _process_item(item):
     if item.check_validity:
         await metadata_validator_repo.validate_metadata(item)
     if item.check_validity:

@@ -5,7 +5,7 @@ from functools import wraps
 import click
 from linz_logger import get_log
 
-from topo_processor.stac import DataType, collection_store, create_items
+from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util import time_in_ms
 
@@ -56,7 +56,7 @@ async def main(source, datatype, target, upload):
     start_time = time_in_ms()
     source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
-    await create_items(source_dir)
+    await process_directory(source_dir)
     try:
         for collection in collection_store.values():
             if upload:

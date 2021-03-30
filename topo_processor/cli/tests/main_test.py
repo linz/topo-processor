@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.cli.main import upload_to_local_disk
-from topo_processor.stac import collection_store, create_items
+from topo_processor.stac import collection_store, process_directory
 
 
 @pytest.fixture(autouse=True)
@@ -25,7 +25,7 @@ def setup():
 async def test_upload_local(setup):
     source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "399"))
     target = setup
-    await create_items(source_dir)
+    await process_directory(source_dir)
     try:
         for collection in collection_store.values():
             await upload_to_local_disk(collection, target)
