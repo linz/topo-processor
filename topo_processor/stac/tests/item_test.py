@@ -7,11 +7,11 @@ def test_duplicate_asset():
     item = Item("item_id")
     item.collection = Collection("fake_title")
 
-    cog_1 = Asset("fake_asset_path")
+    cog_1 = Asset("fake_asset.source_path")
     cog_1.target = "fake_target.tiff"
     item.add_asset(cog_1)
 
-    cog_2 = Asset("fake_asset_path2")
+    cog_2 = Asset("fake_asset.source_path2")
     cog_2.target = "fake_target.tiff"
     item.add_asset(cog_2)
 

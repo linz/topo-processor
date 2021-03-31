@@ -20,7 +20,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if not self.is_init:
             self.read_csv()
 
-        filename = os.path.splitext(os.path.basename(asset.path))[0]
+        filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 
         if filename not in self.raw_metadata:
             asset.add_error("Asset not found in CSV file", self.name)

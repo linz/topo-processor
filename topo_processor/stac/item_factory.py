@@ -21,8 +21,7 @@ async def process_directory(source_dir: str) -> None:
 async def _create_assets(source_dir: str) -> None:
     assets_to_process = []
     for file_ in os.listdir(source_dir):
-        path = os.path.join(source_dir, file_)
-        asset = get_asset(path)
+        asset = get_asset(os.path.join(source_dir, file_))
         assets_to_process.append(metadata_loader_repo.load_metadata(asset))
     await asyncio.gather(*assets_to_process)
 

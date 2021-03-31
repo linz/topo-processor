@@ -18,8 +18,8 @@ async def upload_to_local_disk(collection: Collection, target: str):
             stac_collection.add_item(stac_item)
             for asset in item.assets:
                 if asset.needs_upload:
-                    asset.properties["file:checksum"] = await multihash_as_hex(asset.path)
-                    copyfile(asset.path, os.path.join(target, asset.target))
+                    asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
+                    copyfile(asset.source_path, os.path.join(target, asset.target))
             await write_stac_metadata(stac_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
         else:
             get_log().warning("Invalid item was not uploaded:", error=item.error_msgs)

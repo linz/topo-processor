@@ -16,17 +16,17 @@ class DataTransformerImageryHistoric(DataTransformer):
 
     def is_applicable(self, item: Item) -> bool:
         for asset in item.assets:
-            if is_tiff(asset.path):
+            if is_tiff(asset.source_path):
                 return True
         return False
 
     async def transform_data(self, item: Item) -> None:
         cog_asset_list = []
         for asset in item.assets:
-            if is_tiff(asset.path):
+            if is_tiff(asset.source_path):
                 start_time = time_in_ms()
                 output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ulid()}.tiff")
-                await create_cog(asset.path, output_path, compression_method="lzw").run()
+                await create_cog(asset.source_path, output_path, compression_method="lzw").run()
                 get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
                 asset.needs_upload = False

@@ -12,16 +12,16 @@ class MetadataValidatorTiff(MetadataValidator):
 
     def is_applicable(self, item: Item) -> bool:
         for asset in item.assets:
-            if is_tiff(asset.path):
+            if is_tiff(asset.source_path):
                 return True
         return False
 
     async def validate_metadata(self, item: Item) -> None:
         photo_type = item.properties["linz:photo_type"]
         for asset in item.assets:
-            if not is_tiff(asset.path):
+            if not is_tiff(asset.source_path):
                 continue
-            with rasterio.open(asset.path) as tiff:
+            with rasterio.open(asset.source_path) as tiff:
                 if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
                     if photo_type != "B&W":
                         raise Exception(f"Wrong photo type of {', '.join([color.name for color in tiff.colorinterp])}")

@@ -14,11 +14,11 @@ def get_collection(title: str) -> Collection:
     return collection_store[title]
 
 
-def get_asset(path: str) -> Asset:
-    if path not in asset_store:
-        asset = Asset(path)
-        asset_store[path] = asset
-    return asset_store[path]
+def get_asset(source_path: str) -> Asset:
+    if source_path not in asset_store:
+        asset = Asset(source_path)
+        asset_store[source_path] = asset
+    return asset_store[source_path]
 
 
 def get_item(item_id: str) -> Item:
