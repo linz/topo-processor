@@ -34,7 +34,7 @@ async def _create_items():
 
 
 async def _process_item(item):
-    if item.check_validity:
+    if item.is_valid():
         await metadata_validator_repo.validate_metadata(item)
-    if item.check_validity:
+    if item.is_valid():
         await data_transformer_repo.transform_data(item)

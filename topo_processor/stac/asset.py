@@ -20,6 +20,7 @@ class Asset(Validity):
     item: "Item"
 
     def __init__(self, source_path: str):
+        super().__init__()
         self.source_path = source_path
         self.content_type = None
         self.target = None

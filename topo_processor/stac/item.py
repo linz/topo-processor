@@ -12,28 +12,27 @@ from .collection import Collection
 class Item(Validity):
 
     id: str
-
     gemoetry: str
     bbox: str
     datetime: datetime
     properties: dict
-
     stac_extensions: set
-    assets: List[Asset]
     collection: Collection
+    assets: List[Asset]
 
     def __init__(self, item_id: str):
-        self.properties = {}
+        super().__init__()
         self.id = item_id
+        self.properties = {}
         self.stac_extensions = set(["file"])
         self.collection = None
         self.assets = []
 
-    def check_validity(self):
-        if not self.is_valid:
+    def is_valid(self):
+        if not super().is_valid():
             return False
         for asset in self.assets:
-            if not asset.is_valid:
+            if not asset.is_valid():
                 return False
         return True
 
