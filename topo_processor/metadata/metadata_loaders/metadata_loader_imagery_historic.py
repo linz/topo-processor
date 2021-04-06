@@ -2,8 +2,8 @@ import csv
 import os
 from typing import Dict
 
-from topo_processor.stac import DataType, Item
-from topo_processor.util import is_tiff
+from topo_processor.stac import Asset
+from topo_processor.stac.store import get_collection, get_item
 
 from .metadata_loader import MetadataLoader
 
@@ -13,52 +13,57 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
-    def is_applicable(self, item: Item) -> bool:
-        if item.data_type != DataType.ImageryHistoric:
-            return False
-        if not is_tiff(item.source_path):
-            return False
+    def is_applicable(self, asset: Asset) -> bool:
         return True
 
-    async def load_metadata(self, item: Item) -> None:
+    async def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
             self.read_csv()
 
-        item.source_path_basename = os.path.splitext(os.path.basename(item.source_path))[0]
-        if item.source_path_basename not in self.raw_metadata:
-            raise Exception(f"{item.source_path_basename} cannot be found in the csv.")
-        item_metadata = self.raw_metadata[item.source_path_basename]
+        filename = os.path.splitext(os.path.basename(asset.source_path))[0]
+
+        if filename not in self.raw_metadata:
+            asset.add_error("Asset not found in CSV file", self.name)
+            return
+        asset_metadata = self.raw_metadata[filename]
+
+        asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
+
+        collection = get_collection(asset_metadata["survey"])
+        item = get_item(asset_metadata["sufi"])
+        collection.add_item(item)
+        item.add_asset(asset)
+        item.collection = collection
+
         item.properties.update(
             {
-                "linz:sufi": item_metadata["sufi"],
-                "linz:survey": item_metadata["survey"],
-                "linz:run": item_metadata["run"],
-                "linz:photo_no": item_metadata["photo_no"],
-                "linz:alternate_survey_name": item_metadata["alternate_survey_name"],
-                "linz:camera": item_metadata["camera"],
-                "linz:camera_sequence_no": item_metadata["camera_sequence_no"],
-                "linz:nominal_focal_length": item_metadata["nominal_focal_length"],
-                "linz:altitude": item_metadata["altitude"],
-                "linz:scale": item_metadata["scale"],
-                "linz:photocentre_lat": item_metadata["photocentre_lat"],
-                "linz:photocentre_lon": item_metadata["photocentre_lon"],
-                "linz:date": item_metadata["date"],
-                "linz:film": item_metadata["film"],
-                "linz:film_sequence_no": item_metadata["film_sequence_no"],
-                "linz:photo_type": item_metadata["photo_type"],
-                "linz:format": item_metadata["format"],
-                "linz:source": item_metadata["source"],
-                "linz:physical_film_condition": item_metadata["physical_film_condition"],
-                "linz:image_anomalies": item_metadata["image_anomalies"],
-                "linz:scanned": item_metadata["scanned"],
-                "linz:raw_filename": item_metadata["raw_filename"],
-                "linz:released_filename": item_metadata["released_filename"],
-                "linz:when_scanned": item_metadata["when_scanned"],
-                "linz:photo_version": item_metadata["photo_version"],
+                "linz:sufi": asset_metadata["sufi"],
+                "linz:survey": asset_metadata["survey"],
+                "linz:run": asset_metadata["run"],
+                "linz:photo_no": asset_metadata["photo_no"],
+                "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
+                "linz:camera": asset_metadata["camera"],
+                "linz:camera_sequence_no": asset_metadata["camera_sequence_no"],
+                "linz:nominal_focal_length": asset_metadata["nominal_focal_length"],
+                "linz:altitude": asset_metadata["altitude"],
+                "linz:scale": asset_metadata["scale"],
+                "linz:photocentre_lat": asset_metadata["photocentre_lat"],
+                "linz:photocentre_lon": asset_metadata["photocentre_lon"],
+                "linz:date": asset_metadata["date"],
+                "linz:film": asset_metadata["film"],
+                "linz:film_sequence_no": asset_metadata["film_sequence_no"],
+                "linz:photo_type": asset_metadata["photo_type"],
+                "linz:format": asset_metadata["format"],
+                "linz:source": asset_metadata["source"],
+                "linz:physical_film_condition": asset_metadata["physical_film_condition"],
+                "linz:image_anomalies": asset_metadata["image_anomalies"],
+                "linz:scanned": asset_metadata["scanned"],
+                "linz:raw_filename": asset_metadata["raw_filename"],
+                "linz:released_filename": asset_metadata["released_filename"],
+                "linz:when_scanned": asset_metadata["when_scanned"],
+                "linz:photo_version": asset_metadata["photo_version"],
             }
         )
-        item.id = item_metadata["sufi"]
-        item.parent = item_metadata["survey"]
 
     def read_csv(self):
         self.raw_metadata = {}

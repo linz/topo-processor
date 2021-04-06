@@ -1,10 +1,9 @@
 import asyncio
-import os
 from typing import List
 
 from linz_logger import get_log
 
-from topo_processor.stac import Item
+from topo_processor.stac import Asset
 from topo_processor.util import time_in_ms
 
 from .metadata_loader import MetadataLoader
@@ -17,23 +16,21 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    async def load_metadata(self, item: Item) -> None:
+    async def load_metadata(self, asset: Asset) -> None:
         async with self.lock:
             for loader in self.loaders:
-                if loader.is_applicable(item):
+                if loader.is_applicable(asset):
                     start_time = time_in_ms()
                     try:
-                        await loader.load_metadata(item)
-                    except Exception as error_msg:
-                        item.is_valid = False
-                        item.error_msgs.append(str(error_msg))
-                        get_log().warning(
-                            f"Metadata Load Failed: {error_msg}", loader=loader.name, source_path=item.source_path
-                        )
+                        await loader.load_metadata(asset)
+                        if not asset.is_valid:
+                            break
+                    except Exception as e:
+                        asset.add_error(str(e), loader.name, e)
+                        get_log().warning(f"Metadata Load Failed: {e}", loader=loader.name)
                         return
                     get_log().debug(
                         "Metadata Loaded",
                         loader=loader.name,
                         duration=time_in_ms() - start_time,
-                        metadata_path=os.path.join(item.parent, f"{item.id}{item.file_ext}"),
                     )

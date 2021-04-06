@@ -1,5 +1,4 @@
 import asyncio
-import os
 from typing import List
 
 from linz_logger import get_log
@@ -24,15 +23,11 @@ class MetadataValidatorRepository:
                     start_time = time_in_ms()
                     try:
                         await validator.validate_metadata(item)
-                    except Exception as error_msg:
-                        item.is_valid = False
-                        item.error_msgs.append(str(error_msg))
-                        get_log().warning(
-                            f"Validation Failed: {error_msg}", validator=validator.name, source_path=item.source_path
-                        )
+                    except Exception as e:
+                        item.add_error(str(e), validator.name, e)
+                        get_log().warning(f"Validation Failed: {e}", validator=validator.name)
                     get_log().debug(
                         "Validity Checked",
                         validator=validator.name,
                         duration=time_in_ms() - start_time,
-                        output_filename=os.path.join(item.parent, f"{item.id}{item.file_ext}"),
                     )
