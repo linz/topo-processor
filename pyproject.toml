@@ -20,7 +20,7 @@ aiofiles = "^0.6.0"
 black = "^20.8b1"
 isort = "^5.8.0"
 pylint = "^2.7.2"
-pytest = "^6.2.2"
+pytest = "^6.2.3"
 rope = "^0.18.0"
 
 [build-system]
