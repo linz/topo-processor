@@ -8,7 +8,7 @@ from topo_processor.stac import Asset, Item
 
 @pytest.mark.asyncio
 async def test_load_metadata():
-    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "399", "CROWN_399_E_49.tiff")
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")
     item.add_asset(asset)
