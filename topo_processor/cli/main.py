@@ -3,7 +3,7 @@ import os
 from functools import wraps
 
 import click
-from linz_logger import get_log
+from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
@@ -51,8 +51,16 @@ def coroutine(f):
     is_flag=True,
     help="If True will be uploaded to the specified target s3 bucket otherwise will be stored locally in specified target location",
 )
+@click.option(
+    "-v",
+    "--verbose",
+    is_flag=True,
+    help="Use verbose to display trace logs",
+)
 @coroutine
-async def main(source, datatype, target, upload):
+async def main(source, datatype, target, upload, verbose):
+    if verbose:
+        set_level(LogLevel.trace)
     start_time = time_in_ms()
     source_dir = os.path.abspath(source)
     data_type = DataType(datatype)

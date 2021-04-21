@@ -21,7 +21,7 @@ class ExecutionLocal:
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
             raise Exception(stderr.decode())
-        get_log().debug("Ran command", command=cmd.to_full_command(), duration=time_in_ms() - start_time)
+        get_log().trace("Ran command", command=cmd.to_full_command(), duration=time_in_ms() - start_time)
         return proc.returncode, stdout.decode(), stderr.decode()
 
 
