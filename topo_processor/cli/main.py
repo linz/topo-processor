@@ -5,8 +5,8 @@ from functools import wraps
 import click
 from linz_logger import LogLevel, get_log, set_level
 
+from topo_processor.file_system import get_file_system
 from topo_processor.stac import DataType, collection_store, process_directory
-from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util import time_in_ms
 
 
@@ -46,37 +46,30 @@ def coroutine(f):
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
-    "-u",
-    "--upload",
-    is_flag=True,
-    help="If True will be uploaded to the specified target s3 bucket otherwise will be stored locally in specified target location",
-)
-@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
 @coroutine
-async def main(source, datatype, target, upload, verbose):
+async def main(source, datatype, target, verbose):
     if verbose:
         set_level(LogLevel.trace)
     start_time = time_in_ms()
-    source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
+
+    source_dir = os.path.abspath(source)
     await process_directory(source_dir)
+
+    file_system = get_file_system(target)
     try:
         for collection in collection_store.values():
-            if upload:
-                await upload_to_s3(collection, target)
-            else:
-                await upload_to_local_disk(collection, target)
-
+            await file_system.write(collection, target)
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()
         get_log().debug(
-            "Upload Completed",
+            "Finished Job",
             location=target,
             data_type=data_type.value,
             duration=time_in_ms() - start_time,
