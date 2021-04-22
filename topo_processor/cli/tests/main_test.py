@@ -5,8 +5,8 @@ from tempfile import mkdtemp
 
 import pytest
 
+from topo_processor.file_system import FileSystemLocal
 from topo_processor.stac import collection_store, process_directory
-from topo_processor.uploader import upload_to_local_disk
 
 
 @pytest.fixture(autouse=True)
@@ -28,7 +28,7 @@ async def test_upload_local(setup):
     await process_directory(source_dir)
     try:
         for collection in collection_store.values():
-            await upload_to_local_disk(collection, target)
+            await FileSystemLocal().write(collection, target)
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()
