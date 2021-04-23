@@ -34,7 +34,10 @@ class Asset(Validity):
     def get_content_type(self):
         if self.content_type:
             return self.content_type
-        return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
+        guess_type = MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
+        if guess_type:
+            return guess_type
+        return ""
 
     def create_stac(self) -> pystac.Asset:
         stac = pystac.Asset(href=self.href, properties=self.properties, media_type=self.get_content_type())

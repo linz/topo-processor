@@ -1,9 +1,9 @@
 import os
 from shutil import copyfile  # not async to be replaced
 
-from linz_logger import get_log
+import pystac
 
-from topo_processor.stac import Collection
+from topo_processor.stac import Asset, Collection, Item
 from topo_processor.util import multihash_as_hex, write_stac_metadata
 
 from .file_system import FileSystem
@@ -18,20 +18,19 @@ class FileSystemLocal(FileSystem):
     async def write(self, collection: Collection, target: str):
         if not os.path.isdir(os.path.join(target, collection.title)):
             os.makedirs(os.path.join(target, collection.title))
+        await super().write(collection, target)
 
-        stac_collection = collection.create_stac()
-        for item in collection.items.values():
-            if item.is_valid:
-                stac_item = item.create_stac()
-                stac_collection.add_item(stac_item)
-                for asset in item.assets:
-                    if asset.needs_upload:
-                        asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
-                        copyfile(asset.source_path, os.path.join(target, asset.target))
-                await write_stac_metadata(stac_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
-            else:
-                get_log().warning("Invalid item was not uploaded:", error=item.error_msgs)
-            await write_stac_metadata(stac_collection, os.path.join(target, collection.title, "collection.json"))
+    async def write_asset(self, asset: Asset, target: str):
+        asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
+        copyfile(asset.source_path, os.path.join(target, asset.target))
+
+    async def write_item(self, item: Item, target: str):
+        stac_item = item.create_stac()
+        await write_stac_metadata(stac_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
+        return stac_item
+
+    async def write_collection(self, collection: Collection, stac_collection: pystac.collection, target: str):
+        await write_stac_metadata(stac_collection, os.path.join(target, collection.title, "collection.json"))
 
     async def list_(self):
         pass
