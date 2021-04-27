@@ -15,7 +15,7 @@ def test_duplicate_item():
 
 
 def test_duplicate_item_two():
-    """"Identical items"""
+    """Identical items"""
     item_a = Item("same_id")
     item_b = Item("same_id")
     collection = Collection("fake_collection")
