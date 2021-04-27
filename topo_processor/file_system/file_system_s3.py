@@ -28,12 +28,11 @@ class FileSystemS3(FileSystem):
         pass
 
     async def write_asset(self, asset: Asset, target: str):
-        asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
         await self.upload_file(
             file_path=asset.source_path,
             key=asset.target,
             content_type=asset.get_content_type(),
-            checksum=asset.properties["file:checksum"],
+            checksum=await asset.get_checksum(),
             bucket=target.replace("s3://", ""),
         )
 
@@ -45,7 +44,7 @@ class FileSystemS3(FileSystem):
             file_path=temp_item_path,
             key=f"{item.collection.title}/{item.id}.json",
             content_type="application/json",
-            checksum=await multihash_as_hex(temp_item_path),
+            checksum=await item.get_checksum(temp_item_path),
             bucket=target.replace("s3://", ""),
         )
         return stac_item
@@ -57,7 +56,7 @@ class FileSystemS3(FileSystem):
             file_path=temp_collection_path,
             key=f"{collection.title}/collection.json",
             content_type="application/json",
-            checksum=await multihash_as_hex(temp_collection_path),
+            checksum=await collection.get_checksum(temp_collection_path),
             bucket=target.replace("s3://", ""),
         )
 

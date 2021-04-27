@@ -3,7 +3,7 @@ from typing import List
 
 import pystac
 
-from topo_processor.util import Validity
+from topo_processor.util import Validity, multihash_as_hex
 
 from .asset import Asset
 from .collection import Collection
@@ -44,6 +44,11 @@ class Item(Validity):
 
     def add_extension(self, ext: str):
         self.stac_extensions.add(ext)
+
+    async def get_checksum(self, path:str) -> str:
+        if "file:checksum" not in self.properties:
+            self.properties["file:checksum"] = await multihash_as_hex(path)
+        return self.properties["file:checksum"]
 
     def create_stac(self) -> pystac.Item:
         stac = pystac.Item(

@@ -4,7 +4,7 @@ from shutil import copyfile  # not async to be replaced
 import pystac
 
 from topo_processor.stac import Asset, Collection, Item
-from topo_processor.util import multihash_as_hex, write_stac_metadata
+from topo_processor.util import write_stac_metadata
 
 from .file_system import FileSystem
 
@@ -21,7 +21,7 @@ class FileSystemLocal(FileSystem):
         await super().write(collection, target)
 
     async def write_asset(self, asset: Asset, target: str):
-        asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
+        await asset.get_checksum()
         copyfile(asset.source_path, os.path.join(target, asset.target))
 
     async def write_item(self, item: Item, target: str):

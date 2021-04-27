@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pystac
 
-from topo_processor.util import Validity
+from topo_processor.util import Validity, multihash_as_hex
 
 if TYPE_CHECKING:
     from .item import Item
@@ -28,16 +28,21 @@ class Asset(Validity):
         self.properties = {}
         self.item = None
 
-    def file_ext(self):
+    def file_ext(self) -> str:
         return path.splitext(self.target if self.target else self.source_path)[1]
 
-    def get_content_type(self):
+    def get_content_type(self) -> str:
         if self.content_type:
             return self.content_type
         guess_type = MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
         if guess_type:
             return guess_type
         return ""
+
+    async def get_checksum(self) -> str:
+        if "file:checksum" not in self.properties:
+            self.properties["file:checksum"] = await multihash_as_hex(self.source_path)
+        return self.properties["file:checksum"]
 
     def create_stac(self) -> pystac.Asset:
         stac = pystac.Asset(href=self.href, properties=self.properties, media_type=self.get_content_type())

@@ -7,7 +7,7 @@ import pystac
 import ulid
 from linz_logger import get_log
 
-from topo_processor.util import Validity
+from topo_processor.util import Validity, multihash_as_hex
 
 GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
 if TYPE_CHECKING:
@@ -22,10 +22,12 @@ class Collection(Validity):
     license: str
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
+    checksum: str
 
     def __init__(self, title: str):
         self.title = title
         self.items = {}
+        self.checksum = None
 
     def add_item(self, item: "Item"):
         if item.collection is not None and item.collection != self:
@@ -53,6 +55,11 @@ class Collection(Validity):
             if os.path.exists(TEMP_DIR):
                 rmtree(TEMP_DIR)
                 TEMP_DIR = None
+
+    async def get_checksum(self, path:str) -> str:
+        if not self.checksum:
+            self.checksum = await multihash_as_hex(path)
+        return self.checksum
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
