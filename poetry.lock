@@ -433,7 +433,7 @@ six = ">=1.5"
 
 [[package]]
 name = "rasterio"
-version = "1.2.2"
+version = "1.2.3"
 description = "Fast and direct raster I/O for use with Numpy and SciPy"
 category = "main"
 optional = false
@@ -450,7 +450,7 @@ numpy = "*"
 snuggs = ">=1.4.1"
 
 [package.extras]
-all = ["boto3 (>=1.2.4)", "sphinx", "shapely", "ipython (>=2.0)", "pytest (>=2.8.2)", "pytest-cov (>=2.2.0)", "ghp-import", "matplotlib", "sphinx-rtd-theme", "hypothesis", "packaging", "numpydoc"]
+all = ["pytest-cov (>=2.2.0)", "ipython (>=2.0)", "matplotlib", "boto3 (>=1.2.4)", "numpydoc", "packaging", "hypothesis", "shapely", "ghp-import", "sphinx-rtd-theme", "sphinx", "pytest (>=2.8.2)"]
 docs = ["ghp-import", "numpydoc", "sphinx", "sphinx-rtd-theme"]
 ipython = ["ipython (>=2.0)"]
 plot = ["matplotlib"]
@@ -590,7 +590,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5e5b0b0328c619a18eb24ffe6f9d4d75dc7ea67f984bab52da5d77ec6d249ce2"
+content-hash = "8ddcb7d2d5267bdf36c4ee0a97734091c8649c0983669ae37b0496b7bfd338ce"
 
 [metadata.files]
 affine = [
@@ -836,15 +836,15 @@ python-dateutil = [
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
 ]
 rasterio = [
-    {file = "rasterio-1.2.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:17b6d634e185a85683a918c2c0f0ffc04d77266e285bde5ae8909a4ad796c39b"},
-    {file = "rasterio-1.2.2-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:7bbc021e795e02465936ad4fc9c4ed821233fbe3b33548c170d8c13b86f654d7"},
-    {file = "rasterio-1.2.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:56ef392561631a51eb3689ec0ac6e900c9f2f8c1ef11e23ac6da03a7b872ea5e"},
-    {file = "rasterio-1.2.2-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:1738347677a5e807bf45b8cb9660958caaa2ac13a3ea419ddba78b3addc14ab0"},
-    {file = "rasterio-1.2.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:71cbbfaad680f646b41c73d9ceadc32718c74f0c903754647d32773d60cf623b"},
-    {file = "rasterio-1.2.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:21393250452066fb67cad554da9563717324d8da5ad34f1cd7cb7aa3877314c6"},
-    {file = "rasterio-1.2.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:8b39ffc424d8910835c08582f92b8e0b1427aed3e99d4a0c49dc719c2c30d3b5"},
-    {file = "rasterio-1.2.2-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:ca8f6676e72e78f5131ebe370379d9120eb73a4e2a2c12cdb01a843d3606398d"},
-    {file = "rasterio-1.2.2.tar.gz", hash = "sha256:8187d01f30d4e01e93f0a434df6a4cc63dd026a18b5287c242b066cb56223424"},
+    {file = "rasterio-1.2.3-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:5f639ebee499cc9fb84210f184412d790cbc8bb13fe5a0c088beb28f98e5756c"},
+    {file = "rasterio-1.2.3-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:2a9bd9e4a1a78bc4bbeda1fab129c7ad0efb11419319142c479bc5d32fd518bf"},
+    {file = "rasterio-1.2.3-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:2176c4876548c02e4d24582922403d799f176f1224be89a341c7b8526544dbc4"},
+    {file = "rasterio-1.2.3-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:8e852b45dd442c9d81b54950c3fef6a91edc8d108deb1b2b2bf36f1f52939286"},
+    {file = "rasterio-1.2.3-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:45c548ab6c4a3ebbbf8f73c44abc75bdbc8eaa50c47267704fe1feef766f89bd"},
+    {file = "rasterio-1.2.3-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:d28f931ece82e609b52ac9e5addfc65d0cf125c1d70b246ea08e9f8c901c8c8c"},
+    {file = "rasterio-1.2.3-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:2032c9ad156a19d36ae00a4e060ac77331f3b6cc736757fd715fc30b7a5c67dd"},
+    {file = "rasterio-1.2.3-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:2ac2984e9c403fa11cefa16ecb7e9b9265dfac391e1b3326711c0d96a12d14e8"},
+    {file = "rasterio-1.2.3.tar.gz", hash = "sha256:d8c345e01052b70ac3bbbe100c83def813c0ab19f7412c2c98e553d03720c1c5"},
 ]
 regex = [
     {file = "regex-2021.4.4-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:619d71c59a78b84d7f18891fe914446d07edd48dc8328c8e149cbe0929b4e000"},
