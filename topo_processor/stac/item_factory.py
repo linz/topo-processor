@@ -9,10 +9,13 @@ from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac.store import get_asset, item_store
 from topo_processor.util import time_in_ms
 
+from topo_processor.file_system import get_file_system
 
 async def process_directory(source_dir: str) -> None:
+    source_fs = get_file_system(source_dir)
     start_time = time_in_ms()
-    await _create_assets(source_dir)
+    await source_fs.read()
+    _create_assets(source_dir)
     get_log().debug("Assets Created", source_dir=source_dir, duration=time_in_ms() - start_time)
     await _create_items()
     get_log().debug("Items Created", source_dir=source_dir, duration=time_in_ms() - start_time)

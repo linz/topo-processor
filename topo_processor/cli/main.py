@@ -30,7 +30,7 @@ def coroutine(f):
     "--source",
     required=True,
     type=click.Path(exists=True),
-    help="The name of the directory with data to import",
+    help="The absolute path to the directory with data to import",
 )
 @click.option(
     "-d",
@@ -58,13 +58,14 @@ async def main(source, datatype, target, verbose):
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
-    source_dir = os.path.abspath(source)
-    await process_directory(source_dir)
+    source_fs = get_file_system(source)
+    target_fs = get_file_system(target)
 
-    file_system = get_file_system(target)
+    await process_directory(source)
+
     try:
         for collection in collection_store.values():
-            await file_system.write(collection, target)
+            await target_fs.write(collection, target)
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()

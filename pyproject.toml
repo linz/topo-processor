@@ -11,9 +11,9 @@ pystac= "^0.5.6"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.3"
 click = "^7.1.2"
-boto3 = "^1.17.59"
 ulid = "^1.1"
 aiofiles = "^0.6.0"
+s3fs = "^2021.4.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.4b1"
