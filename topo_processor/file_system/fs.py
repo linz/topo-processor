@@ -13,7 +13,7 @@ class FileSystem(ABC):
         str
 
     @abstractmethod
-    async def read(self):
+    async def read(self, directory: str):
         pass
 
     @abstractmethod

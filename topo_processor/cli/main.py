@@ -58,7 +58,6 @@ async def main(source, datatype, target, verbose):
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
-    source_fs = get_file_system(source)
     target_fs = get_file_system(target)
 
     await process_directory(source)

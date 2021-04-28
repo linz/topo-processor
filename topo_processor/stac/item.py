@@ -45,7 +45,7 @@ class Item(Validity):
     def add_extension(self, ext: str):
         self.stac_extensions.add(ext)
 
-    async def get_checksum(self, path:str) -> str:
+    async def get_checksum(self, path: str) -> str:
         if "file:checksum" not in self.properties:
             self.properties["file:checksum"] = await multihash_as_hex(path)
         return self.properties["file:checksum"]

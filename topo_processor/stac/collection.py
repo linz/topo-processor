@@ -56,7 +56,7 @@ class Collection(Validity):
                 rmtree(TEMP_DIR)
                 TEMP_DIR = None
 
-    async def get_checksum(self, path:str) -> str:
+    async def get_checksum(self, path: str) -> str:
         if not self.checksum:
             self.checksum = await multihash_as_hex(path)
         return self.checksum
