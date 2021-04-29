@@ -56,7 +56,7 @@ class Collection(Validity):
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
-            id=ulid.ulid(),
+            id=str(ulid.ULID()),
             description=None,
             license=None,
             providers=GLOBAL_PROVIDERS,

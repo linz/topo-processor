@@ -428,6 +428,14 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 six = ">=1.5"
 
 [[package]]
+name = "python-ulid"
+version = "1.0.2"
+description = "Universally Unique Lexicographically Sortable Identifier"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "rasterio"
 version = "1.2.3"
 description = "Fast and direct raster I/O for use with Numpy and SciPy"
@@ -531,14 +539,6 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
-name = "ulid"
-version = "1.1"
-description = "Pyhton version of this: https://github.com/alizain/ulid"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.4"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -570,7 +570,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5418c6b2773c58df3a1a983d2d60137ff6c60a0bbd1f5c7ca9a406d3df78d1d1"
+content-hash = "57145997d6b0663ac4f6756ab002c0c9f503ee9b73504e9a20403be8fa6ebb16"
 
 [metadata.files]
 affine = [
@@ -816,6 +816,10 @@ python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
 ]
+python-ulid = [
+    {file = "python-ulid-1.0.2.tar.gz", hash = "sha256:f3772388eeb9a90b0004c706ac965d92210fb0b59ce413dae17e1f1a93bdcf14"},
+    {file = "python_ulid-1.0.2-py3-none-any.whl", hash = "sha256:e7ec6449227d7f700b5636254fb05fbf35d5c1a456acda00c712cefb9258e65c"},
+]
 rasterio = [
     {file = "rasterio-1.2.3-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:5f639ebee499cc9fb84210f184412d790cbc8bb13fe5a0c088beb28f98e5756c"},
     {file = "rasterio-1.2.3-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:2a9bd9e4a1a78bc4bbeda1fab129c7ad0efb11419319142c479bc5d32fd518bf"},
@@ -892,9 +896,6 @@ structlog = [
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
-]
-ulid = [
-    {file = "ulid-1.1.tar.gz", hash = "sha256:0943e8a751ec10dfcdb4df2758f96dffbbfbc055d0b49288caf2f92125900d49"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.4-py2.py3-none-any.whl", hash = "sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df"},
