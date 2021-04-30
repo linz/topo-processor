@@ -4,9 +4,7 @@ import shutil
 from tempfile import mkdtemp
 
 import pytest
-
-from topo_processor.stac import collection_store, process_directory
-from topo_processor.uploader import upload_to_local_disk
+import subprocess
 
 
 @pytest.fixture(autouse=True)
@@ -23,15 +21,11 @@ def setup():
 
 @pytest.mark.asyncio
 async def test_upload_local(setup):
-    source_dir = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1"))
     target = setup
-    await process_directory(source_dir)
-    try:
-        for collection in collection_store.values():
-            await upload_to_local_disk(collection, target)
-    finally:
-        for collection in collection_store.values():
-            collection.delete_temp_dir()
+    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1"))
+    target = setup
+    command = os.path.join(os.getcwd(), "upload")
+    subprocess.run([command, "-s", source, "-d", "imagery.historic", "-t", target], check=True)
 
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.json"))
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.tiff"))

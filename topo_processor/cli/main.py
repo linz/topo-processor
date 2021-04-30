@@ -1,5 +1,4 @@
 import asyncio
-import os
 from functools import wraps
 
 import click
@@ -62,9 +61,9 @@ async def main(source, datatype, target, upload, verbose):
     if verbose:
         set_level(LogLevel.trace)
     start_time = time_in_ms()
-    source_dir = os.path.abspath(source)
+
     data_type = DataType(datatype)
-    await process_directory(source_dir)
+    await process_directory(source)
     try:
         for collection in collection_store.values():
             if upload:
