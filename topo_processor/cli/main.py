@@ -4,6 +4,7 @@ from functools import wraps
 import click
 from linz_logger import LogLevel, get_log, set_level
 
+from topo_processor.file_system.get_fs import get_fs
 from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util import time_in_ms
@@ -28,7 +29,6 @@ def coroutine(f):
     "-s",
     "--source",
     required=True,
-    type=click.Path(exists=True),
     help="The name of the directory with data to import",
 )
 @click.option(
@@ -45,12 +45,6 @@ def coroutine(f):
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
-    "-u",
-    "--upload",
-    is_flag=True,
-    help="If True will be uploaded to the specified target s3 bucket otherwise will be stored locally in specified target location",
-)
-@click.option(
     "-v",
     "--verbose",
     is_flag=True,
@@ -60,10 +54,12 @@ def coroutine(f):
 async def main(source, datatype, target, upload, verbose):
     if verbose:
         set_level(LogLevel.trace)
-    start_time = time_in_ms()
 
+    start_time = time_in_ms()
     data_type = DataType(datatype)
+
     await process_directory(source)
+
     try:
         for collection in collection_store.values():
             if upload:

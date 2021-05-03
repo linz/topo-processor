@@ -1,10 +1,10 @@
 import json
 import os
 import shutil
+import subprocess
 from tempfile import mkdtemp
 
 import pytest
-import subprocess
 
 
 @pytest.fixture(autouse=True)

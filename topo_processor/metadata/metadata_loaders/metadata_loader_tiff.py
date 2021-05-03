@@ -1,5 +1,6 @@
 import rasterio
 
+from topo_processor.file_system.get_fs import get_fs
 from topo_processor.stac import Asset
 from topo_processor.util import is_tiff
 
@@ -16,11 +17,13 @@ class MetadataLoaderTiff(MetadataLoader):
 
     async def load_metadata(self, asset: Asset) -> None:
         asset.item.add_extension("projection")
-        with rasterio.open(asset.source_path) as tiff:
-            if tiff.crs:
-                if not tiff.crs.is_epsg_code:
-                    raise Exception("The code is not a valid EPSG code.")
-                crs = tiff.crs.to_epsg()
-            else:
-                crs = None
-            asset.item.properties.update({"proj:epsg": crs})
+        fs = get_fs(asset.source_path)
+        with fs.open(asset.source_path) as f:
+            with rasterio.open(f) as tiff:
+                if tiff.crs:
+                    if not tiff.crs.is_epsg_code:
+                        raise Exception("The code is not a valid EPSG code.")
+                    crs = tiff.crs.to_epsg()
+                else:
+                    crs = None
+                asset.item.properties.update({"proj:epsg": crs})
