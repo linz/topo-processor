@@ -4,9 +4,8 @@ from functools import wraps
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.file_system.get_fs import get_fs
+from topo_processor.cli.transfer_collection import transfer_collection
 from topo_processor.stac import DataType, collection_store, process_directory
-from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util import time_in_ms
 
 
@@ -51,7 +50,7 @@ def coroutine(f):
     help="Use verbose to display trace logs",
 )
 @coroutine
-async def main(source, datatype, target, upload, verbose):
+async def main(source, datatype, target, verbose):
     if verbose:
         set_level(LogLevel.trace)
 
@@ -62,10 +61,7 @@ async def main(source, datatype, target, upload, verbose):
 
     try:
         for collection in collection_store.values():
-            if upload:
-                await upload_to_s3(collection, target)
-            else:
-                await upload_to_local_disk(collection, target)
+            await transfer_collection(collection, target)
 
     finally:
         for collection in collection_store.values():

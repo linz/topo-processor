@@ -24,6 +24,7 @@ class Collection(Validity):
     providers: List[pystac.Provider]
 
     def __init__(self, title: str):
+        super().__init__()
         self.title = title
         self.items = {}
 
