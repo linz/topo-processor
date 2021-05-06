@@ -5,7 +5,6 @@ from linz_logger import get_log
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
 from topo_processor.stac import Collection
-from topo_processor.util import multihash_as_hex
 
 
 async def transfer_collection(collection: Collection, target: str):
@@ -21,8 +20,8 @@ async def transfer_collection(collection: Collection, target: str):
 
         for asset in item.assets:
             if asset.needs_upload:
-                asset.properties["file:checksum"] = await multihash_as_hex(asset.source_path)
-                transfer_file(asset.source_path, os.path.join(target, asset.target))
+                checksum = await asset.get_checksum()
+                transfer_file(asset.source_path, checksum, asset.get_content_type(), os.path.join(target, asset.target))
 
             write_json(stac_item.to_dict(), os.path.join(target, item.collection.title, f"{item.id}.json"))
 
