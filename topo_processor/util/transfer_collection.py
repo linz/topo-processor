@@ -23,6 +23,6 @@ async def transfer_collection(collection: Collection, target: str):
                 checksum = await asset.get_checksum()
                 transfer_file(asset.source_path, checksum, asset.get_content_type(), os.path.join(target, asset.target))
 
-            write_json(stac_item.to_dict(), os.path.join(target, item.collection.title, f"{item.id}.json"))
+        write_json(stac_item.to_dict(), os.path.join(target, item.collection.title, f"{item.id}.json"))
 
-        write_json(stac_collection.to_dict(), os.path.join(target, collection.title, "collection.json"))
+    write_json(stac_collection.to_dict(), os.path.join(target, collection.title, "collection.json"))

@@ -4,9 +4,9 @@ from functools import wraps
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.util.transfer_collection import transfer_collection
 from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.util import time_in_ms
+from topo_processor.util.transfer_collection import transfer_collection
 
 
 def coroutine(f):
@@ -67,7 +67,7 @@ async def main(source, datatype, target, verbose):
         for collection in collection_store.values():
             collection.delete_temp_dir()
         get_log().debug(
-            "Upload Completed",
+            "Job Completed",
             location=target,
             data_type=data_type.value,
             duration=time_in_ms() - start_time,
