@@ -1,13 +1,12 @@
 import asyncio
-import os
 from functools import wraps
 
 import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.stac import DataType, collection_store, process_directory
-from topo_processor.uploader import upload_to_local_disk, upload_to_s3
 from topo_processor.util import time_in_ms
+from topo_processor.util.transfer_collection import transfer_collection
 
 
 def coroutine(f):
@@ -29,7 +28,6 @@ def coroutine(f):
     "-s",
     "--source",
     required=True,
-    type=click.Path(exists=True),
     help="The name of the directory with data to import",
 )
 @click.option(
@@ -46,37 +44,30 @@ def coroutine(f):
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
-    "-u",
-    "--upload",
-    is_flag=True,
-    help="If True will be uploaded to the specified target s3 bucket otherwise will be stored locally in specified target location",
-)
-@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
 @coroutine
-async def main(source, datatype, target, upload, verbose):
+async def main(source, datatype, target, verbose):
     if verbose:
         set_level(LogLevel.trace)
+
     start_time = time_in_ms()
-    source_dir = os.path.abspath(source)
     data_type = DataType(datatype)
-    await process_directory(source_dir)
+
+    await process_directory(source)
+
     try:
         for collection in collection_store.values():
-            if upload:
-                await upload_to_s3(collection, target)
-            else:
-                await upload_to_local_disk(collection, target)
+            await transfer_collection(collection, target)
 
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()
         get_log().debug(
-            "Upload Completed",
+            "Job Completed",
             location=target,
             data_type=data_type.value,
             duration=time_in_ms() - start_time,
