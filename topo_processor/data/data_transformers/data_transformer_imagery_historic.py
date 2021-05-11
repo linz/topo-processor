@@ -23,18 +23,26 @@ class DataTransformerImageryHistoric(DataTransformer):
     async def transform_data(self, item: Item) -> None:
         cog_asset_list = []
         for asset in item.assets:
-            if is_tiff(asset.source_path):
-                start_time = time_in_ms()
-                output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
+            if not is_tiff(asset.source_path):
+                return
+
+            start_time = time_in_ms()
+            output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
+
+            if asset.source_path.startswith("s3://"):
+                vsis3_path = f"/vsis3/{asset.source_path.replace('s3://', '')}"
+                await create_cog(vsis3_path, output_path, compression_method="lzw").run()
+            else:
                 await create_cog(asset.source_path, output_path, compression_method="lzw").run()
-                get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
-                asset.needs_upload = False
+            get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
-                cog_asset = Asset(output_path)
-                cog_asset.content_type = pystac.MediaType.COG
-                cog_asset.target = asset.target
-                cog_asset_list.append(cog_asset)
+            asset.needs_upload = False
+
+            cog_asset = Asset(output_path)
+            cog_asset.content_type = pystac.MediaType.COG
+            cog_asset.target = asset.target
+            cog_asset_list.append(cog_asset)
 
         for asset in cog_asset_list:
             item.add_asset(asset)
