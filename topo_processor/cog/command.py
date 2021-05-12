@@ -2,7 +2,6 @@ import os
 from typing import List, Optional, TypedDict
 
 from topo_processor.cog.execution import ExecutionDocker, ExecutionLocal
-from topo_processor.util.aws_credentials import get_credentials
 
 
 class CommandDocker(TypedDict):
@@ -17,6 +16,7 @@ class Command:
         self.command = command
         self.arguments = []
         self.volumes = []
+        self.envs = []
         if docker_ref is None:
             self.use_docker = False
         else:
@@ -35,6 +35,12 @@ class Command:
             self.volumes.append(volume)
         return self
 
+    def env(self, *args: str) -> "Command":
+        """Only useful when using docker"""
+        for env in args:
+            self.envs.append(env)
+        return self
+
     def to_full_command(self) -> List[str]:
         return [self.command] + self.arguments
 
@@ -43,9 +49,8 @@ class Command:
             raise Exception(f"No container found for command {self.command}")
         docker = Command("docker")
         docker.arg("run")
-        docker.arg("--env", f"AWS_ACCESS_KEY_ID={get_credentials().access_key}")
-        docker.arg("--env", f"AWS_SECRET_ACCESS_KEY={get_credentials().secret_key}")
-        docker.arg("--env", f"AWS_SESSION_TOKEN={get_credentials().token}")
+        for env in self.envs:
+            docker.arg("--env", env)
         docker.arg("--user", f"{os.geteuid()}:{os.getegid()}")
         for volume in self.volumes:
             docker.arg("-v", f"{volume}:{volume}")
