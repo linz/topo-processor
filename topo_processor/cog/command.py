@@ -44,6 +44,16 @@ class Command:
     def to_full_command(self) -> List[str]:
         return [self.command] + self.arguments
 
+    def redacted_command(self) -> List[str]:
+        """Provide redacted argument string for logging which removes sensitive information"""
+        redacted = []
+        for arg in self.arguments:
+            if arg.startswith("AWS"):
+                split_arg = arg.split("=")
+                arg = f"{split_arg[0]}=******"
+            redacted.append(arg)
+        return [self.command] + redacted
+
     def to_docker(self) -> "Command":
         if not self.container:
             raise Exception(f"No container found for command {self.command}")

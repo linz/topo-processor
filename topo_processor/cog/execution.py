@@ -20,9 +20,9 @@ class ExecutionLocal:
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
-            get_log().trace("Ran command failed", command=cmd.to_full_command(), duration=time_in_ms() - start_time)
+            get_log().trace("Ran command failed", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
             raise Exception(stderr.decode())
-        get_log().trace("Ran command succeeded", command=cmd.to_full_command(), duration=time_in_ms() - start_time)
+        get_log().trace("Ran command succeeded", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
         return proc.returncode, stdout.decode(), stderr.decode()
 
 
