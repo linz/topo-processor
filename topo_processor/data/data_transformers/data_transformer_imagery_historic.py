@@ -29,11 +29,7 @@ class DataTransformerImageryHistoric(DataTransformer):
             start_time = time_in_ms()
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
-            if asset.source_path.startswith("s3://"):
-                vsis3_path = f"/vsis3/{asset.source_path.replace('s3://', '')}"
-                await create_cog(vsis3_path, output_path, compression_method="lzw").run()
-            else:
-                await create_cog(asset.source_path, output_path, compression_method="lzw").run()
+            await create_cog(asset.source_path, output_path, compression_method="lzw").run()
 
             get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
