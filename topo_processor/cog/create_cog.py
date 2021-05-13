@@ -1,13 +1,14 @@
 import os
 
 from topo_processor.cog.command import Command
+from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.util.aws_credentials import get_credentials
 
 
 def create_cog(input_path: str, output_path: str, compression_method: str) -> str:
     cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
 
-    if input_path.startswith("s3://"):
+    if is_s3_path(input_path):
         cmd.env(f"AWS_ACCESS_KEY_ID={get_credentials().access_key}")
         cmd.env(f"AWS_SECRET_ACCESS_KEY={get_credentials().secret_key}")
         cmd.env(f"AWS_SESSION_TOKEN={get_credentials().token}")
