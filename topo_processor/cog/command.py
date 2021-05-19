@@ -16,6 +16,7 @@ class Command:
         self.command = command
         self.arguments = []
         self.volumes = []
+        self.envs = []
         if docker_ref is None:
             self.use_docker = False
         else:
@@ -34,14 +35,32 @@ class Command:
             self.volumes.append(volume)
         return self
 
+    def env(self, *args: str) -> "Command":
+        """Only useful when using docker"""
+        for env in args:
+            self.envs.append(env)
+        return self
+
     def to_full_command(self) -> List[str]:
         return [self.command] + self.arguments
+
+    def redacted_command(self) -> List[str]:
+        """Provide redacted argument string for logging which removes sensitive information"""
+        redacted = []
+        for arg in self.arguments:
+            if arg.startswith("AWS"):
+                split_arg = arg.split("=")
+                arg = f"{split_arg[0]}=******"
+            redacted.append(arg)
+        return [self.command] + redacted
 
     def to_docker(self) -> "Command":
         if not self.container:
             raise Exception(f"No container found for command {self.command}")
         docker = Command("docker")
         docker.arg("run")
+        for env in self.envs:
+            docker.arg("--env", env)
         docker.arg("--user", f"{os.geteuid()}:{os.getegid()}")
         for volume in self.volumes:
             docker.arg("-v", f"{volume}:{volume}")

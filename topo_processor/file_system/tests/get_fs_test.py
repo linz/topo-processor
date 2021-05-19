@@ -6,7 +6,7 @@ from topo_processor.file_system.get_fs import get_fs
 
 def test_get_fs_s3():
     path = "s3://testbucket"
-    assert isinstance(get_fs(path), type(S3FileSystem))
+    assert isinstance(get_fs(path), S3FileSystem)
 
 
 def test_get_fs_local():
