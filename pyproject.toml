@@ -11,7 +11,7 @@ pystac= "^0.5.6"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.3"
 click = "^7.1.2"
-boto3 = "^1.17.71"
+boto3 = "^1.17.82"
 aiofiles = "^0.6.0"
 python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.4.0"}
