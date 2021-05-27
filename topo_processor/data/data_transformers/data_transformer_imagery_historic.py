@@ -24,8 +24,7 @@ class DataTransformerImageryHistoric(DataTransformer):
         cog_asset_list = []
         for asset in item.assets:
             if not is_tiff(asset.source_path):
-                return
-
+                continue
             start_time = time_in_ms()
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
