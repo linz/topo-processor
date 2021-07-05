@@ -54,17 +54,4 @@ class Item(Validity):
             properties=self.properties,
             stac_extensions=list(self.stac_extensions),
         )
-        existing_asset_hrefs = {}
-        for asset in self.assets:
-            if not asset.needs_upload:
-                continue
-
-            asset.href = f"./{self.collection.title}/{self.id}{asset.file_ext()}"
-            if asset.href in existing_asset_hrefs:
-                raise Exception(f"{asset.href} already exists.")
-
-            stac.add_asset(
-                key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
-            )
-            existing_asset_hrefs[asset.href] = asset
         return stac
