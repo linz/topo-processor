@@ -21,12 +21,15 @@ async def process_directory(source_dir: str) -> None:
 async def _create_assets(source_dir: str) -> None:
     assets_to_process = []
     fs = get_fs(source_dir)
-    for file_ in fs.ls(source_dir):
-        if is_s3_path(source_dir):
-            asset = get_asset(f"s3://{file_}")
-        else:
-            asset = get_asset(file_)
-        assets_to_process.append(metadata_loader_repo.load_metadata(asset))
+    for (path, _, files) in fs.walk(source_dir):
+        if not files:
+            continue
+        for file_ in files:
+            if is_s3_path(source_dir):
+                asset = get_asset(f"s3://{path}/{file_}")
+            else:
+                asset = get_asset(f"{path}/{file_}")
+            assets_to_process.append(metadata_loader_repo.load_metadata(asset))
     await asyncio.gather(*assets_to_process)
 
 

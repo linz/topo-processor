@@ -22,13 +22,17 @@ def setup():
 @pytest.mark.asyncio
 async def test_upload_local(setup):
     target = setup
-    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1"))
+    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")
     subprocess.run([command, "-s", source, "-d", "imagery.historic", "-t", target], check=True)
 
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.json"))
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.tiff"))
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "collection.json"))
+
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "29659.json"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "29659.tif"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "collection.json"))
 
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "72360.json"))
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "72360.tiff"))
