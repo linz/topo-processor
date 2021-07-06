@@ -13,13 +13,14 @@ async def transfer_collection(collection: Collection, target: str):
 
     for item in collection.items.values():
         stac_item = item.create_stac()
-        stac_collection.add_item(stac_item)
-        # this line must come after stac_collection.add_item(stac_item) pystac v5.6.0
-        stac_item.set_self_href(f"./{item.id}.json")
 
         if not item.is_valid():
             get_log().warning("Invalid item was not uploaded:", error=item.log)
             continue
+
+        stac_collection.add_item(stac_item)
+        # this line must come after stac_collection.add_item(stac_item) pystac v5.6.0
+        stac_item.set_self_href(f"./{item.id}.json")
 
         existing_asset_hrefs = {}
 
