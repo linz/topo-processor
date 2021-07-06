@@ -2,7 +2,7 @@
 name = "topo-processor"
 version = "0.1.0"
 description = ""
-authors = ["Blayne Chard <bchard@linz.govt.nz>", "Megan Davidson <mdavidson@linz.govt.nz>", "Ben Cheng <BCheng@linz.govt.nz>"]
+authors = ["Blayne Chard <bchard@linz.govt.nz>", "Paul Fouquet <pfouquet@linz.govt.nz>", "Megan Davidson <mdavidson@linz.govt.nz>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
