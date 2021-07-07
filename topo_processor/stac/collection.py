@@ -58,8 +58,8 @@ class Collection(Validity):
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
             id=str(ulid.ULID()),
-            description="STAC Collection Metadata for Historical Imagery",
-            license="MIT",
+            description=self.description,
+            license=self.license,
             providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(pystac.SpatialExtent(bboxes=[0, 0, 0, 0]), pystac.TemporalExtent(intervals=[None, None])),
         )

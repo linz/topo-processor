@@ -35,6 +35,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_asset(asset)
         item.collection = collection
 
+        collection.license = "CC BY 4.0"
+        collection.description = "Historical Imagery"
+
         item.properties.update(
             {
                 "linz:sufi": asset_metadata["sufi"],
