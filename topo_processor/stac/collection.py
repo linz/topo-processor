@@ -9,7 +9,7 @@ from linz_logger import get_log
 
 from topo_processor.util import Validity
 
-GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["Host"])]
+GLOBAL_PROVIDERS = [pystac.Provider(name="LINZ", description="Land Information New Zealand", roles=["host"])]
 if TYPE_CHECKING:
     from .item import Item
 
@@ -58,9 +58,9 @@ class Collection(Validity):
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
             id=str(ulid.ULID()),
-            description=None,
-            license=None,
+            description="STAC Collection Metadata for Historical Imagery",
+            license="MIT",
             providers=GLOBAL_PROVIDERS,
-            extent=pystac.SpatialExtent(bboxes=[0, 0, 0, 0]),
+            extent=pystac.Extent(pystac.SpatialExtent(bboxes=[0, 0, 0, 0]), pystac.TemporalExtent(intervals=[None, None])),
         )
         return stac
