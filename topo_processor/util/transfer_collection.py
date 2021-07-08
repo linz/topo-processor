@@ -9,7 +9,6 @@ from topo_processor.stac import Collection
 
 async def transfer_collection(collection: Collection, target: str):
     stac_collection = collection.create_stac()
-    stac_collection.set_self_href("./collection.json")
 
     for item in collection.items.values():
         stac_item = item.create_stac()

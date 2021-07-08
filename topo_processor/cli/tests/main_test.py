@@ -23,7 +23,6 @@ def setup():
 async def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1"))
-    target = setup
     command = os.path.join(os.getcwd(), "upload")
     subprocess.run([command, "-s", source, "-d", "imagery.historic", "-t", target], check=True)
 
