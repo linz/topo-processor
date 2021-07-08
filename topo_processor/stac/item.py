@@ -24,7 +24,7 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {}
-        self.stac_extensions = set(["file"])
+        self.stac_extensions = set(["https://stac-extensions.github.io/file/v2.0.0/schema.json"])
         self.collection = None
         self.assets = []
 

@@ -23,6 +23,14 @@ async def transfer_collection(collection: Collection, target: str):
                 checksum = await asset.get_checksum()
                 transfer_file(asset.source_path, checksum, asset.get_content_type(), os.path.join(target, asset.target))
 
-        write_json(stac_item.to_dict(), os.path.join(target, item.collection.title, f"{item.id}.json"))
+        # 06/07/2021: Workaround for pystac v1.0.0-beta.2
+        json_item = stac_item.to_dict()
+        json_item["stac_version"] = "1.0.0"
+        write_json(json_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
 
-    write_json(stac_collection.to_dict(), os.path.join(target, collection.title, "collection.json"))
+    # 06/07/2021: Workaround for pystac v1.0.0-beta.2
+    json_collection = stac_collection.to_dict()
+    json_collection["type"] = "Collection"
+    json_collection["stac_version"] = "1.0.0"
+
+    write_json(json_collection, os.path.join(target, collection.title, "collection.json"))

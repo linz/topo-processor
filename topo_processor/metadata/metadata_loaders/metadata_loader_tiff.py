@@ -16,7 +16,7 @@ class MetadataLoaderTiff(MetadataLoader):
         return is_tiff(asset.source_path)
 
     async def load_metadata(self, asset: Asset) -> None:
-        asset.item.add_extension("projection")
+        asset.item.add_extension("https://stac-extensions.github.io/projection/v1.0.0/schema.json")
         fs = get_fs(asset.source_path)
         with fs.open(asset.source_path) as f:
             with rasterio.open(f) as tiff:
