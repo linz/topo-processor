@@ -23,6 +23,8 @@ def setup():
 async def test_fail_on_duplicate_assets(setup):
     target = setup
     collection = Collection("fake_title")
+    collection.description = "fake_description"
+    collection.license = "face_license"
     item = Item("item_id")
     collection.add_item(item)
     item.collection = collection
