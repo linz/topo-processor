@@ -1,9 +1,11 @@
 import asyncio
+import os
 from functools import wraps
 
 import click
 from linz_logger import LogLevel, get_log, set_level
 
+from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.util import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
@@ -56,6 +58,9 @@ async def main(source, datatype, target, verbose):
 
     start_time = time_in_ms()
     data_type = DataType(datatype)
+
+    if not is_s3_path(source):
+        source = os.path.abspath(source)
 
     await process_directory(source)
 

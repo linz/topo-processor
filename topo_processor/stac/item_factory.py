@@ -1,9 +1,11 @@
 import asyncio
+import os
 
 from linz_logger import get_log
 
 from topo_processor.data.data_transformers import data_transformer_repo
 from topo_processor.file_system.get_fs import get_fs, is_s3_path
+from topo_processor.file_system.join_overlapping_paths import join_overlapping_paths
 from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac.store import get_asset, item_store
@@ -25,10 +27,7 @@ async def _create_assets(source_dir: str) -> None:
         if not files:
             continue
         for file_ in files:
-            if is_s3_path(source_dir):
-                asset = get_asset(f"s3://{path}/{file_}")
-            else:
-                asset = get_asset(f"{path}/{file_}")
+            asset = get_asset(f"{join_overlapping_paths(source_dir, str(path))}/{file_}")
             assets_to_process.append(metadata_loader_repo.load_metadata(asset))
     await asyncio.gather(*assets_to_process)
 
