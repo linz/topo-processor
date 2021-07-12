@@ -59,6 +59,7 @@ class Collection(Validity):
         stac = pystac.Collection(
             id=str(ulid.ULID()),
             description=self.description,
+            href="./collection.json",
             license=self.license,
             providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(pystac.SpatialExtent(bboxes=[0, 0, 0, 0]), pystac.TemporalExtent(intervals=[None, None])),

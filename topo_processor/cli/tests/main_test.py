@@ -23,7 +23,6 @@ def setup():
 async def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1"))
-    target = setup
     command = os.path.join(os.getcwd(), "upload")
     subprocess.run([command, "-s", source, "-d", "imagery.historic", "-t", target], check=True)
 
@@ -44,6 +43,4 @@ async def test_upload_local(setup):
         item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["file:checksum"]
         == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"
     )
-    assert (
-        item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["href"]
-    ) == "./SURVEY_3/72352.tiff"
+    assert (item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["href"]) == "./72352.tiff"
