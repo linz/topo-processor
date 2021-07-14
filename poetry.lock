@@ -463,7 +463,7 @@ six = ">=1.5"
 
 [[package]]
 name = "python-ulid"
-version = "1.0.2"
+version = "1.0.3"
 description = "Universally Unique Lexicographically Sortable Identifier"
 category = "main"
 optional = false
@@ -616,7 +616,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "456d7ac9d18ad1ba1ad479828e5f5e852655655e50531c453f7061cd4967d10f"
+content-hash = "ccf9493a80aa01d5057b6d32627bc905338ab43a5e4001a079647778f9e227f0"
 
 [metadata.files]
 affine = [
@@ -867,8 +867,8 @@ python-dateutil = [
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
 ]
 python-ulid = [
-    {file = "python-ulid-1.0.2.tar.gz", hash = "sha256:f3772388eeb9a90b0004c706ac965d92210fb0b59ce413dae17e1f1a93bdcf14"},
-    {file = "python_ulid-1.0.2-py3-none-any.whl", hash = "sha256:e7ec6449227d7f700b5636254fb05fbf35d5c1a456acda00c712cefb9258e65c"},
+    {file = "python-ulid-1.0.3.tar.gz", hash = "sha256:5dd8b969312a40e2212cec9c1ad63f25d4b6eafd92ee3195883e0287b6e9d19e"},
+    {file = "python_ulid-1.0.3-py3-none-any.whl", hash = "sha256:8704dc20f547f531fe3a41d4369842d737a0f275403b909d0872e7ea0fe8d6f2"},
 ]
 rasterio = [
     {file = "rasterio-1.2.6-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:fda220ca942ff7446458a1d532121a2a0bebffdcbe064e4719dcca348a2ed541"},
