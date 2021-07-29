@@ -19,7 +19,7 @@ fsspec = {extras = ["s3"], version = "^2021.6.1"}
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
 isort = "^5.9.1"
-pylint = "^2.9.3"
+pylint = "^2.9.6"
 pytest = "^6.2.4"
 rope = "^0.19.0"
 pytest-asyncio = "^0.15.1"
