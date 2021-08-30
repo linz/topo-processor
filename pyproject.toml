@@ -17,7 +17,7 @@ python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.6.1"}
 
 [tool.poetry.dev-dependencies]
-black = "^21.6b0"
+black = "^21.8b0"
 isort = "^5.9.1"
 pylint = "^2.9.3"
 pytest = "^6.2.4"
