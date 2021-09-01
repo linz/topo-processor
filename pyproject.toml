@@ -14,7 +14,7 @@ click = "^8.0.1"
 boto3 = "^1.17.105"
 aiofiles = "^0.7.0"
 python-ulid = "^1.0.2"
-fsspec = {extras = ["s3"], version = "^2021.6.1"}
+fsspec = {extras = ["s3"], version = "^2021.8.1"}
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
