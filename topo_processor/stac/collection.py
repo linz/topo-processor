@@ -1,3 +1,4 @@
+import datetime
 import os
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -62,6 +63,9 @@ class Collection(Validity):
             href="./collection.json",
             license=self.license,
             providers=GLOBAL_PROVIDERS,
-            extent=pystac.Extent(pystac.SpatialExtent(bboxes=[0, 0, 0, 0]), pystac.TemporalExtent(intervals=[None, None])),
+            extent=pystac.Extent(
+                pystac.SpatialExtent(bboxes=[[0, 0, 0, 0]]),
+                pystac.TemporalExtent(intervals=[datetime.datetime.now(), datetime.datetime.now()]),
+            ),
         )
         return stac

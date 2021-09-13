@@ -1,6 +1,7 @@
 import os
 
 from linz_logger import get_log
+from pystac.catalog import CatalogType
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
@@ -9,6 +10,10 @@ from topo_processor.stac import Collection
 
 async def transfer_collection(collection: Collection, target: str):
     stac_collection = collection.create_stac()
+    # pystac v1.1.0
+    # Required to remove cwd from collection self_href,
+    # Must be come after collection.create_stac and be before stac_collection.add_item(..)
+    stac_collection.catalog_type = CatalogType.SELF_CONTAINED
 
     for item in collection.items.values():
         stac_item = item.create_stac()
@@ -18,7 +23,9 @@ async def transfer_collection(collection: Collection, target: str):
             continue
 
         stac_collection.add_item(stac_item)
-        # this line must come after stac_collection.add_item(stac_item) pystac v5.6.0
+        # pystac v1.1.0
+        # Required to change the pystac default of ./{id}/{id}.json
+        # Must come after stac_collection.add_item(stac_item)
         stac_item.set_self_href(f"./{item.id}.json")
 
         existing_asset_hrefs = {}
@@ -37,14 +44,12 @@ async def transfer_collection(collection: Collection, target: str):
             )
             existing_asset_hrefs[asset.href] = asset
 
-        # 06/07/2021: Workaround for pystac v1.0.0-beta.2
-        json_item = stac_item.to_dict()
-        json_item["stac_version"] = "1.0.0"
+        # pystac v1.1.0
+        # Required to not add a self link with an 'absolute' link from the cwd
+        json_item = stac_item.to_dict(include_self_link=False)
         write_json(json_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
 
-    # 06/07/2021: Workaround for pystac v1.0.0-beta.2
-    json_collection = stac_collection.to_dict()
-    json_collection["type"] = "Collection"
-    json_collection["stac_version"] = "1.0.0"
-
+    # pystac v1.1.0
+    # Required to not add a self link with an 'absolute' link from the cwd
+    json_collection = stac_collection.to_dict(include_self_link=False)
     write_json(json_collection, os.path.join(target, collection.title, "collection.json"))

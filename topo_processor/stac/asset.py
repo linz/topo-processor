@@ -42,5 +42,5 @@ class Asset(Validity):
         return self.properties["file:checksum"]
 
     def create_stac(self) -> pystac.Asset:
-        stac = pystac.Asset(href=self.href, properties=self.properties, media_type=self.get_content_type())
+        stac = pystac.Asset(href=self.href, extra_fields=self.properties, media_type=self.get_content_type())
         return stac
