@@ -41,8 +41,8 @@ async def test_upload_local(setup):
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
     assert item_metadata["properties"]["linz:survey"] == "SURVEY_3"
-    assert item_metadata["properties"]["linz:sufi"] == "72352"
-    assert item_metadata["id"] == item_metadata["properties"]["linz:sufi"]
+    assert item_metadata["properties"]["linz:sufi"] == 72352
+    assert item_metadata["id"] == str(item_metadata["properties"]["linz:sufi"])
     assert (
         item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["file:checksum"]
         == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"

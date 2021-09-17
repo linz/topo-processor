@@ -15,6 +15,7 @@ aiofiles = "^0.7.0"
 python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.6.1"}
 pystac = "^1.1.0"
+jsonschema = "^3.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"

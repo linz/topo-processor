@@ -1,7 +1,11 @@
+from topo_processor.metadata.metadata_validators.metadata_validator import MetadataValidator
+
 from .metadata_validator_imagery_historic import MetadataValidatorImageryHistoric
 from .metadata_validator_repo import MetadataValidatorRepository
+from .metadata_validator_stac import MetadataValidatorStac
 from .metadata_validator_tiff import MetadataValidatorTiff
 
 metadata_validator_repo = MetadataValidatorRepository()
 metadata_validator_repo.append(MetadataValidatorTiff())
 metadata_validator_repo.append(MetadataValidatorImageryHistoric())
+metadata_validator_repo.append(MetadataValidatorStac())

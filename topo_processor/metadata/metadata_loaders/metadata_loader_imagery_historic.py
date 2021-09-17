@@ -4,6 +4,7 @@ from typing import Dict
 
 from topo_processor.stac import Asset
 from topo_processor.stac.store import get_collection, get_item
+from topo_processor.util import convert_value
 
 from .metadata_loader import MetadataLoader
 
@@ -25,12 +26,15 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if filename not in self.raw_metadata:
             asset.add_error("Asset not found in CSV file", self.name)
             return
-        asset_metadata = self.raw_metadata[filename]
+        metadata = self.raw_metadata[filename]
+        asset_metadata = {}
+        for item in metadata:
+            asset_metadata[item] = convert_value(metadata[item])
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
 
         collection = get_collection(asset_metadata["survey"])
-        item = get_item(asset_metadata["sufi"])
+        item = get_item(str(asset_metadata["sufi"]))
         collection.add_item(item)
         item.add_asset(asset)
         item.collection = collection
@@ -46,8 +50,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photo_no": asset_metadata["photo_no"],
                 "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
                 "linz:camera": asset_metadata["camera"],
-                "linz:camera_sequence_no": asset_metadata["camera_sequence_no"],
-                "linz:nominal_focal_length": asset_metadata["nominal_focal_length"],
+                "camera:sequence_number": asset_metadata["camera_sequence_no"],
+                "camera:nominal_focal_length": asset_metadata["nominal_focal_length"],
                 "linz:altitude": asset_metadata["altitude"],
                 "linz:scale": asset_metadata["scale"],
                 "linz:photocentre_lat": asset_metadata["photocentre_lat"],
@@ -67,6 +71,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photo_version": asset_metadata["photo_version"],
             }
         )
+        item.add_extension("https://linz.github.io/stac/__STAC_VERSION__/camera/schema.json")
 
     def read_csv(self):
         self.raw_metadata = {}
