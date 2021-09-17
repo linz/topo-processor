@@ -48,3 +48,18 @@ async def test_upload_local(setup):
         == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"
     )
     assert (item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["href"]) == "./72352.tiff"
+    assert len(item_metadata["links"]) == 3
+    for link in item_metadata["links"]:
+        assert link["rel"] != "self"
+        assert link["href"] == "./collection.json"
+
+    with open(os.path.join(target, "SURVEY_3", "collection.json")) as collection_json_file:
+        collection_metadata = json.load(collection_json_file)
+
+    assert len(collection_metadata["links"]) == 2
+    for link in collection_metadata["links"]:
+        assert link["rel"] != "self"
+        if link["rel"] == "root":
+            assert link["href"] == "./collection.json"
+        if link["rel"] == "item":
+            assert link["href"] == "./72352.json"
