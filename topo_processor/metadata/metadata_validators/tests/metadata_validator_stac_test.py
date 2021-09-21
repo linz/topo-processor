@@ -1,5 +1,4 @@
 import os
-from ssl import match_hostname
 
 import pytest
 
@@ -15,7 +14,7 @@ async def test_check_validity():
     item.add_asset(asset)
     item.properties.update({"camera:nominal_focal_length": "string"})
     item.properties.update({"camera:sequence_number": 1234})
-    item.add_extension("https://linz.github.io/stac/__STAC_VERSION__/camera/schema.json")
+    item.add_extension("https://linz.github.io/stac/v0.0.2/camera/schema.json")
 
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)

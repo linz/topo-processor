@@ -71,7 +71,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photo_version": asset_metadata["photo_version"],
             }
         )
-        item.add_extension("https://linz.github.io/stac/__STAC_VERSION__/camera/schema.json")
+        item.add_extension("https://linz.github.io/stac/v0.0.2/camera/schema.json")
 
     def read_csv(self):
         self.raw_metadata = {}
