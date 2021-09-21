@@ -6,6 +6,9 @@ from tempfile import mkdtemp
 
 import pytest
 
+from topo_processor.stac import item
+from topo_processor.util import StacExtensions
+
 
 @pytest.fixture(autouse=True)
 def setup():
@@ -38,10 +41,16 @@ async def test_upload_local(setup):
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "72360.tiff"))
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "collection.json"))
 
+    with open(os.path.join(target, "SURVEY_1", "72359.json")) as item_json_file:
+        item_metadata = json.load(item_json_file)
+    assert StacExtensions.camera.value not in item_metadata["stac_extensions"]
+    assert "camera:nominal_focal_length" not in item_metadata["properties"]
+    assert "camera:sequence_number" not in item_metadata["properties"]
+
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
     assert item_metadata["properties"]["linz:survey"] == "SURVEY_3"
-    assert item_metadata["properties"]["linz:sufi"] == 72352
+    assert item_metadata["properties"]["linz:sufi"] == "72352"
     assert item_metadata["id"] == str(item_metadata["properties"]["linz:sufi"])
     assert (
         item_metadata["assets"]["image/tiff; application=geotiff; profile=cloud-optimized"]["file:checksum"]

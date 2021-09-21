@@ -16,4 +16,4 @@ class MetadataValidatorStac(MetadataValidator):
             item.create_stac().validate()
 
         except STACValidationError as e:
-            raise Exception(f"Not valid STAC: {e}")
+            raise STACValidationError(message=f"Not valid STAC: {e}")
