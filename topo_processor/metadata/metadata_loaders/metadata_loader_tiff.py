@@ -2,7 +2,8 @@ import rasterio
 
 from topo_processor.file_system.get_fs import get_fs
 from topo_processor.stac import Asset
-from topo_processor.util import StacExtensions, is_tiff
+from topo_processor.stac.stac_extensions import StacExtensions
+from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader
 

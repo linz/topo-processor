@@ -2,9 +2,9 @@ import csv
 import os
 from typing import Dict
 
-from topo_processor.stac import Asset
+from topo_processor.stac import Asset, Item
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import StacExtensions, convert_value
 
 from .metadata_loader import MetadataLoader
 
@@ -84,10 +84,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.is_init = True
 
-    def add_camera_metadata(self, item, asset_metadata):
+    def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
-        camera_properties["camera:sequence_number"] = convert_value(asset_metadata["camera_sequence_no"])
-        camera_properties["camera:nominal_focal_length"] = convert_value(asset_metadata["nominal_focal_length"])
+        try:
+            camera_properties["camera:sequence_number"] = int(asset_metadata["camera_sequence_no"])
+            camera_properties["camera:nominal_focal_length"] = int(asset_metadata["nominal_focal_length"])
+        except ValueError as e:
+            item.add_error(str(e), self.name, e)
+            raise Exception(f"Invalid Camera Metadata: {e}")
         filtered_camera_properties = {field: value for field, value in camera_properties.items() if value}
         if len(filtered_camera_properties) > 0:
             item.properties.update(filtered_camera_properties)

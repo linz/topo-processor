@@ -5,7 +5,7 @@ from pystac.errors import STACValidationError
 
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
 from topo_processor.stac import Asset, Item
-from topo_processor.util import StacExtensions
+from topo_processor.stac.stac_extensions import StacExtensions
 
 
 @pytest.mark.asyncio

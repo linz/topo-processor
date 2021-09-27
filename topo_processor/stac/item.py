@@ -3,7 +3,8 @@ from typing import List
 
 import pystac
 
-from topo_processor.util import StacExtensions, Validity
+from topo_processor.stac.stac_extensions import StacExtensions
+from topo_processor.util import Validity
 
 from .asset import Asset
 from .collection import Collection
@@ -12,7 +13,7 @@ from .collection import Collection
 class Item(Validity):
 
     id: str
-    gemoetry: str
+    geometry: str
     bbox: str
     datetime: datetime
     properties: dict
