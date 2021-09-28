@@ -5,6 +5,7 @@ from typing import Dict
 from topo_processor.stac import Asset, Item
 from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
+from topo_processor.util import convert_value
 
 from .metadata_loader import MetadataLoader
 
@@ -86,14 +87,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
-        try:
-            if asset_metadata["camera_sequence_no"]:
-                camera_properties["camera:sequence_number"] = int(asset_metadata["camera_sequence_no"])
-            if asset_metadata["nominal_focal_length"]:
-                camera_properties["camera:nominal_focal_length"] = int(asset_metadata["nominal_focal_length"])
-        except ValueError as e:
-            item.add_error(str(e), self.name, e)
-            raise Exception(f"Invalid Camera Metadata: {e}")
+        if asset_metadata["camera_sequence_no"]:
+            camera_properties["camera:sequence_number"] = convert_value(asset_metadata["camera_sequence_no"])
+        if asset_metadata["nominal_focal_length"]:
+            camera_properties["camera:nominal_focal_length"] = convert_value(asset_metadata["nominal_focal_length"])
         if len(camera_properties) > 0:
             item.properties.update(camera_properties)
             item.add_extension(StacExtensions.camera.value)

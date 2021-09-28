@@ -27,7 +27,7 @@ async def test_item_not_found_in_csv():
 
 
 def test_camera_metadata_not_added():
-    """Tests camera metadata is not added if two emptry strings"""
+    """Tests camera metadata is not added if two empty strings"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
@@ -39,7 +39,7 @@ def test_camera_metadata_not_added():
 
 
 def test_not_add_camera_sequence_number_metadata():
-    """Tests camera metadata is added if one emptry strings"""
+    """Tests camera metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"camera_sequence_no": "", "nominal_focal_length": "508"}
@@ -48,13 +48,3 @@ def test_not_add_camera_sequence_number_metadata():
     assert stac.StacExtensions.camera.value in item.stac_extensions
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
-
-
-def test_add_camera_sequence_number_fails():
-    """Tests camera metadata fails on string value"""
-    source_path = "test_abc.tiff"
-    item = stac.Item(source_path)
-    metadata = {"camera_sequence_no": "85555", "nominal_focal_length": "string"}
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    with pytest.raises(Exception):
-        metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
