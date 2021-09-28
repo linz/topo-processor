@@ -87,12 +87,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
         try:
-            camera_properties["camera:sequence_number"] = int(asset_metadata["camera_sequence_no"])
-            camera_properties["camera:nominal_focal_length"] = int(asset_metadata["nominal_focal_length"])
+            if asset_metadata["camera_sequence_no"]:
+                camera_properties["camera:sequence_number"] = int(asset_metadata["camera_sequence_no"])
+            if asset_metadata["nominal_focal_length"]:
+                camera_properties["camera:nominal_focal_length"] = int(asset_metadata["nominal_focal_length"])
         except ValueError as e:
             item.add_error(str(e), self.name, e)
             raise Exception(f"Invalid Camera Metadata: {e}")
-        filtered_camera_properties = {field: value for field, value in camera_properties.items() if value}
-        if len(filtered_camera_properties) > 0:
-            item.properties.update(filtered_camera_properties)
+        if len(camera_properties) > 0:
+            item.properties.update(camera_properties)
             item.add_extension(StacExtensions.camera.value)
