@@ -1,10 +1,9 @@
 import asyncio
-import os
 
 from linz_logger import get_log
 
 from topo_processor.data.data_transformers import data_transformer_repo
-from topo_processor.file_system.get_fs import get_fs, is_s3_path
+from topo_processor.file_system.get_fs import get_fs
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
 from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo

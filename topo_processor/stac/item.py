@@ -3,11 +3,11 @@ from typing import List
 
 import pystac
 
-from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.util import Validity
 
 from .asset import Asset
 from .collection import Collection
+from .stac_extensions import StacExtensions
 
 
 class Item(Validity):

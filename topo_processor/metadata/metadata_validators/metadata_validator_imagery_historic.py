@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 from linz_logger import get_log
 
-from topo_processor.stac import Item
-
 from .metadata_validator import MetadataValidator
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class MetadataValidatorImageryHistoric(MetadataValidator):

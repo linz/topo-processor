@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from abc import ABC, abstractmethod
 
-from topo_processor.stac import Item
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class MetadataValidator(ABC):
