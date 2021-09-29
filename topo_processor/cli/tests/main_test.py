@@ -6,6 +6,8 @@ from tempfile import mkdtemp
 
 import pytest
 
+import topo_processor.stac as stac
+
 
 @pytest.fixture(autouse=True)
 def setup():
@@ -38,6 +40,12 @@ async def test_upload_local(setup):
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "72360.tiff"))
     assert os.path.isfile(os.path.join(target, "SURVEY_1", "collection.json"))
 
+    with open(os.path.join(target, "SURVEY_1", "72359.json")) as item_json_file:
+        item_metadata = json.load(item_json_file)
+    assert item_metadata["properties"]["camera:sequence_number"] == 89555
+    assert stac.StacExtensions.camera.value in item_metadata["stac_extensions"]
+    assert "camera:nominal_focal_length" not in item_metadata["properties"].keys()
+
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
     assert item_metadata["properties"]["linz:survey"] == "SURVEY_3"
@@ -63,3 +71,7 @@ async def test_upload_local(setup):
             assert link["href"] == "./collection.json"
         if link["rel"] == "item":
             assert link["href"] == "./72352.json"
+
+    assert item_metadata["properties"]["camera:sequence_number"] == 89556
+    assert item_metadata["properties"]["camera:nominal_focal_length"] == 508
+    assert stac.StacExtensions.camera.value in item_metadata["stac_extensions"]

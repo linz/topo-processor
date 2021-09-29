@@ -2,8 +2,10 @@ import csv
 import os
 from typing import Dict
 
-from topo_processor.stac import Asset
+from topo_processor.stac import Asset, Item
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
+from topo_processor.util import convert_value
 
 from .metadata_loader import MetadataLoader
 
@@ -46,8 +48,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photo_no": asset_metadata["photo_no"],
                 "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
                 "linz:camera": asset_metadata["camera"],
-                "linz:camera_sequence_no": asset_metadata["camera_sequence_no"],
-                "linz:nominal_focal_length": asset_metadata["nominal_focal_length"],
                 "linz:altitude": asset_metadata["altitude"],
                 "linz:scale": asset_metadata["scale"],
                 "linz:photocentre_lat": asset_metadata["photocentre_lat"],
@@ -67,6 +67,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photo_version": asset_metadata["photo_version"],
             }
         )
+        self.add_camera_metadata(item, asset_metadata)
 
     def read_csv(self):
         self.raw_metadata = {}
@@ -83,3 +84,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 self.raw_metadata[released_filename] = row
 
         self.is_init = True
+
+    def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        camera_properties = {}
+        if asset_metadata["camera_sequence_no"]:
+            camera_properties["camera:sequence_number"] = convert_value(asset_metadata["camera_sequence_no"])
+        if asset_metadata["nominal_focal_length"]:
+            camera_properties["camera:nominal_focal_length"] = convert_value(asset_metadata["nominal_focal_length"])
+        if len(camera_properties) > 0:
+            item.properties.update(camera_properties)
+            item.add_extension(StacExtensions.camera.value)

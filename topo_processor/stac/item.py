@@ -3,6 +3,7 @@ from typing import List
 
 import pystac
 
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.util import Validity
 
 from .asset import Asset
@@ -12,7 +13,7 @@ from .collection import Collection
 class Item(Validity):
 
     id: str
-    gemoetry: str
+    geometry: str
     bbox: str
     datetime: datetime
     properties: dict
@@ -24,7 +25,7 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {}
-        self.stac_extensions = set(["https://stac-extensions.github.io/file/v2.0.0/schema.json"])
+        self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None
         self.assets = []
 
