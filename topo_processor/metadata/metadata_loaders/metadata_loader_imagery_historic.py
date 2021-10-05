@@ -18,7 +18,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         return True
 
-    async def load_metadata(self, asset: Asset) -> None:
+    def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
             self.read_csv()
 

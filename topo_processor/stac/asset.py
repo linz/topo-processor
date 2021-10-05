@@ -36,9 +36,9 @@ class Asset(Validity):
             return self.content_type
         return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
 
-    async def get_checksum(self) -> str:
+    def get_checksum(self) -> str:
         if "file:checksum" not in self.properties:
-            self.properties["file:checksum"] = await multihash_as_hex(self.source_path)
+            self.properties["file:checksum"] = multihash_as_hex(self.source_path)
         return self.properties["file:checksum"]
 
     def create_stac(self) -> pystac.Asset:

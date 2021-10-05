@@ -13,7 +13,7 @@ class MetadataValidatorImageryHistoric(MetadataValidator):
     def is_applicable(self, item: Item) -> bool:
         return True
 
-    async def validate_metadata(self, item: Item) -> None:
+    def validate_metadata(self, item: Item) -> None:
         for asset in item.assets:
             parent_folder = os.path.basename(os.path.dirname(asset.source_path))
             if not parent_folder == asset.item.collection.title:

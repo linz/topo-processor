@@ -14,5 +14,5 @@ class DataTransformer(ABC):
         pass
 
     @abstractmethod
-    async def transform_data(self, item: Item):
+    def transform_data(self, item: Item):
         pass

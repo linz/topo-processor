@@ -76,7 +76,7 @@ class Command:
             docker.arg(argument)
         return docker
 
-    async def run(self):
+    def run(self):
         if self.use_docker:
-            return await ExecutionDocker.run(self)
-        return await ExecutionLocal.run(self)
+            return ExecutionDocker.run(self)
+        return ExecutionLocal.run(self)

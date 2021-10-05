@@ -8,7 +8,7 @@ from topo_processor.file_system.write_json import write_json
 from topo_processor.stac import Collection
 
 
-async def transfer_collection(collection: Collection, target: str):
+def transfer_collection(collection: Collection, target: str):
     stac_collection = collection.create_stac()
     # pystac v1.1.0
     # Required to remove cwd from collection self_href,
@@ -37,7 +37,7 @@ async def transfer_collection(collection: Collection, target: str):
             if asset.href in existing_asset_hrefs:
                 raise Exception(f"{asset.href} already exists.")
             transfer_file(
-                asset.source_path, await asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
+                asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
             stac_item.add_asset(
                 key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()

@@ -3,8 +3,7 @@ import pytest
 from topo_processor.cog.create_cog import create_cog
 
 
-@pytest.mark.asyncio
-async def test_cog_command():
+def test_cog_command():
     input_path = "fake_input_dir/fake_input.tiff"
     output_path = "fake_input_dir/fake_output.tiff"
 

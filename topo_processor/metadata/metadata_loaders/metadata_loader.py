@@ -14,5 +14,5 @@ class MetadataLoader(ABC):
         pass
 
     @abstractmethod
-    async def load_metadata(self, asset: Asset):
+    def load_metadata(self, asset: Asset):
         pass

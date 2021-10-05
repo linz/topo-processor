@@ -1,4 +1,4 @@
-import asyncio
+import subprocess
 from typing import TYPE_CHECKING
 
 from linz_logger import get_log
@@ -13,22 +13,24 @@ class ExecutionLocal:
     cmd: "Command"
 
     @staticmethod
-    async def run(cmd: "Command"):
+    def run(cmd: "Command"):
         start_time = time_in_ms()
-        proc = await asyncio.create_subprocess_exec(
-            *cmd.to_full_command(), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        try:
+            proc = subprocess.run(
+            cmd.to_full_command(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        stdout, stderr = await proc.communicate()
-        if proc.returncode != 0:
-            get_log().trace("Ran command failed", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
-            raise Exception(stderr.decode())
-        get_log().trace("Ran command succeeded", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
-        return proc.returncode, stdout.decode(), stderr.decode()
-
+            if proc.returncode != 0:
+                get_log().trace("Ran command failed", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
+                raise Exception(proc.stderr.decode())
+            get_log().trace("Ran command succeeded", command=cmd.redacted_command(), duration=time_in_ms() - start_time)
+            return proc.returncode, proc.stdout.decode(), proc.stderr.decode()
+        except Exception as ex:
+            get_log().error("TEST PAUL", ex)
+        
 
 class ExecutionDocker:
     cmd: "Command"
 
     @staticmethod
-    async def run(cmd: "Command"):
-        return await ExecutionLocal.run(cmd.to_docker())
+    def run(cmd: "Command"):
+        return ExecutionLocal.run(cmd.to_docker())
