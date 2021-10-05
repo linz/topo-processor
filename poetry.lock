@@ -494,7 +494,7 @@ python-versions = "*"
 
 [[package]]
 name = "rasterio"
-version = "1.2.8"
+version = "1.2.9"
 description = "Fast and direct raster I/O for use with Numpy and SciPy"
 category = "main"
 optional = false
@@ -511,7 +511,7 @@ numpy = "*"
 snuggs = ">=1.4.1"
 
 [package.extras]
-all = ["sphinx", "ipython (>=2.0)", "packaging", "sphinx-rtd-theme", "numpydoc", "pytest (>=2.8.2)", "shapely", "pytest-cov (>=2.2.0)", "ghp-import", "hypothesis", "boto3 (>=1.2.4)", "matplotlib"]
+all = ["pytest (>=2.8.2)", "sphinx-rtd-theme", "hypothesis", "packaging", "shapely", "sphinx", "boto3 (>=1.2.4)", "matplotlib", "numpydoc", "ghp-import", "pytest-cov (>=2.2.0)", "ipython (>=2.0)"]
 docs = ["ghp-import", "numpydoc", "sphinx", "sphinx-rtd-theme"]
 ipython = ["ipython (>=2.0)"]
 plot = ["matplotlib"]
@@ -655,7 +655,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "05de874fa4f7891c1364d79c153fd6282dbeda20c8c4ef82b44277467aaf1372"
+content-hash = "45d47c043be6a378f74a248d4bd451dc269bf3acd3b0c5d1ed24b4136e00881c"
 
 [metadata.files]
 affine = [
@@ -933,15 +933,15 @@ python-ulid = [
     {file = "python_ulid-1.0.3-py3-none-any.whl", hash = "sha256:8704dc20f547f531fe3a41d4369842d737a0f275403b909d0872e7ea0fe8d6f2"},
 ]
 rasterio = [
-    {file = "rasterio-1.2.8-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:c1ca9bb81518d369cbeae57aff3608538f61dcf8e12cf4bfe92dd931bc263ade"},
-    {file = "rasterio-1.2.8-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:8b13e5f7c57512885bfede605b021bd025684b507dac7b5ac8aee5430930114c"},
-    {file = "rasterio-1.2.8-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:84cea32a0675f1b22924664169f0da4be406e790072501d505aa771da9662bca"},
-    {file = "rasterio-1.2.8-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:722f76a09091d22fd26200ff5a7820eeb263f1cd22151c77e25a3cc473d5af72"},
-    {file = "rasterio-1.2.8-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:74e80044767f41c84121fef373926f0d3e7411b944982429328d11442a649c0a"},
-    {file = "rasterio-1.2.8-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:c30caf0823811553ec45865697afc5e4a1fc4c6f30f8dada9067061cd8507af6"},
-    {file = "rasterio-1.2.8-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:b2d41b39e41a7011d1dba0cb8983336de69ad68fb17857ccbd11cde0fcfdb2e3"},
-    {file = "rasterio-1.2.8-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:f248a64f57a0db5b12eb50d9ac1ccd45a6085d979c3e73b406f9e6b5a8355080"},
-    {file = "rasterio-1.2.8.tar.gz", hash = "sha256:8196b7a71fea3c1573dd48d9ab0e78955e1d26e81848cce318c4930bd96782fe"},
+    {file = "rasterio-1.2.9-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:496b99443627b428612a8c3fabf2501a22a458a15390b5fdd9e83279de38f725"},
+    {file = "rasterio-1.2.9-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:0d5bb3374bb3568fcc31e8f29de8da2d65b268c53d3e0a4c979437883d46b9c9"},
+    {file = "rasterio-1.2.9-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:287e109172c7ba47fa90a85432f763597cbdfb63fe0da44ab1a15c3aeac59cbd"},
+    {file = "rasterio-1.2.9-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:ae0b4f435607d29594b99874665ae3ab910e68af10ec30d4a6e8a70a1a91cdc0"},
+    {file = "rasterio-1.2.9-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1131f088e2729d5a67dcb1fa26ab20c5964bbf655d6516da6f5921c625c9c4c8"},
+    {file = "rasterio-1.2.9-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:9b5200c1bfd6c02f37b5c98e03f12c96cb28494bd305e033fd1de2508fcb81c7"},
+    {file = "rasterio-1.2.9-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:7d5b8010fb62d496473bfc4d9171caf04e5274a10be1c1180e10287d63af9d36"},
+    {file = "rasterio-1.2.9-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:90388fe0229c66d7e3c14d54edc654d02c984ea76d532317ca620885ffff38c7"},
+    {file = "rasterio-1.2.9.tar.gz", hash = "sha256:012a4964d8db365be4fae0af9cbeba00e683e5904d5031e8ba42ccb6040cc887"},
 ]
 regex = [
     {file = "regex-2021.8.28-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9d05ad5367c90814099000442b2125535e9d77581855b9bee8780f1b41f2b1a2"},
