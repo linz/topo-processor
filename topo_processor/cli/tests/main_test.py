@@ -21,7 +21,6 @@ def setup():
     shutil.rmtree(target)
 
 
-
 def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))

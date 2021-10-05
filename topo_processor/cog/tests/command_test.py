@@ -3,7 +3,6 @@ import pytest
 from topo_processor.cog.command import Command
 
 
-
 def test_hello_world_local():
     cmd = Command("echo")
     cmd.arg("Hello World Local!!!")
@@ -11,7 +10,6 @@ def test_hello_world_local():
     assert stdout == "Hello World Local!!!\n"
     assert stderr == ""
     assert return_code == 0
-
 
 
 def test_hello_world_docker(mocker):
