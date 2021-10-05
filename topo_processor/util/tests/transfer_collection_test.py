@@ -19,8 +19,7 @@ def setup():
     shutil.rmtree(target)
 
 
-@pytest.mark.asyncio
-async def test_fail_on_duplicate_assets(setup):
+def test_fail_on_duplicate_assets(setup):
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"
@@ -38,4 +37,4 @@ async def test_fail_on_duplicate_assets(setup):
     item.add_asset(cog_2)
 
     with pytest.raises(Exception, match=r"./item_id.tiff already exists."):
-        await transfer_collection(item.collection, target)
+        transfer_collection(item.collection, target)

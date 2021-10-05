@@ -22,7 +22,7 @@ class MetadataValidatorTiff(MetadataValidator):
                 return True
         return False
 
-    async def validate_metadata(self, item: Item) -> None:
+    def validate_metadata(self, item: Item) -> None:
         photo_type = item.properties["linz:photo_type"]
         for asset in item.assets:
             if not is_tiff(asset.source_path):

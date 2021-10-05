@@ -6,8 +6,7 @@ from topo_processor.metadata.metadata_validators.metadata_validator_tiff import 
 from topo_processor.stac import Asset, Item
 
 
-@pytest.mark.asyncio
-async def test_check_validity():
+def test_check_validity():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")
@@ -17,4 +16,4 @@ async def test_check_validity():
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
     with pytest.raises(Exception, match=r"Wrong photo type of gray"):
-        await validator.validate_metadata(item)
+        validator.validate_metadata(item)

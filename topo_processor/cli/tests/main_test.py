@@ -21,8 +21,7 @@ def setup():
     shutil.rmtree(target)
 
 
-@pytest.mark.asyncio
-async def test_upload_local(setup):
+def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")

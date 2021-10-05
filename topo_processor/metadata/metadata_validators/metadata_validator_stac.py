@@ -16,7 +16,7 @@ class MetadataValidatorStac(MetadataValidator):
     def is_applicable(self, item: Item) -> bool:
         return True
 
-    async def validate_metadata(self, item: Item) -> None:
+    def validate_metadata(self, item: Item) -> None:
         try:
             item.create_stac().validate()
 

@@ -7,8 +7,7 @@ import topo_processor.stac as stac
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
 
 
-@pytest.mark.asyncio
-async def test_check_validity():
+def test_check_validity():
     """check fails due to string"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -21,4 +20,4 @@ async def test_check_validity():
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
-        await validator.validate_metadata(item)
+        validator.validate_metadata(item)

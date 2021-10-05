@@ -11,12 +11,11 @@ def test_is_applicable():
     assert metadata_loader_imagery_historic.is_applicable(asset)
 
 
-@pytest.mark.asyncio
-async def test_item_not_found_in_csv():
+def test_item_not_found_in_csv():
     source_path = "test_abc.tiff"
     asset = stac.Asset(source_path)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    await metadata_loader_imagery_historic.load_metadata(asset)
+    metadata_loader_imagery_historic.load_metadata(asset)
     error_msg = {
         "msg": "Asset not found in CSV file",
         "level": "error",
