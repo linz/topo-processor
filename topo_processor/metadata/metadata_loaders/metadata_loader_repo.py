@@ -1,4 +1,6 @@
-from typing import List
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, List
 
 from linz_logger import get_log
 
