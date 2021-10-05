@@ -1,10 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import rasterio
 from rasterio.enums import ColorInterp
 
-from topo_processor.stac import Item
 from topo_processor.util import is_tiff
 
 from .metadata_validator import MetadataValidator
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class MetadataValidatorTiff(MetadataValidator):

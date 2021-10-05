@@ -1,8 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pystac.errors import STACValidationError
 
-from topo_processor.stac import Item
-
 from .metadata_validator import MetadataValidator
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class MetadataValidatorStac(MetadataValidator):

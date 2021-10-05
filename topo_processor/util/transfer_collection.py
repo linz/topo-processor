@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 from linz_logger import get_log
 from pystac.catalog import CatalogType
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
-from topo_processor.stac import Collection
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Collection
 
 
 def transfer_collection(collection: Collection, target: str):

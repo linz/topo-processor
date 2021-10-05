@@ -1,11 +1,17 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import rasterio
 
+import topo_processor.stac as stac
 from topo_processor.file_system.get_fs import get_fs
-from topo_processor.stac import Asset
-from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Asset
 
 
 class MetadataLoaderTiff(MetadataLoader):
@@ -17,7 +23,8 @@ class MetadataLoaderTiff(MetadataLoader):
         return is_tiff(asset.source_path)
 
     def load_metadata(self, asset: Asset) -> None:
-        asset.item.add_extension(StacExtensions.projection.value)
+        asset.item.add_extension(stac.StacExtensions.projection.value)
+
         fs = get_fs(asset.source_path)
         with fs.open(asset.source_path) as f:
             with rasterio.open(f) as tiff:

@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import csv
 import os
-from typing import Dict
+from typing import TYPE_CHECKING, Dict
 
-from topo_processor.stac import Asset, Item
-from topo_processor.stac.stac_extensions import StacExtensions
+import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import convert_value
 
 from .metadata_loader import MetadataLoader
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Asset, Item
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
@@ -93,4 +97,4 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             camera_properties["camera:nominal_focal_length"] = convert_value(asset_metadata["nominal_focal_length"])
         if len(camera_properties) > 0:
             item.properties.update(camera_properties)
-            item.add_extension(StacExtensions.camera.value)
+            item.add_extension(stac.StacExtensions.camera.value)

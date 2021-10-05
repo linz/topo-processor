@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import os
 from shutil import rmtree
@@ -29,7 +31,7 @@ class Collection(Validity):
         self.title = title
         self.items = {}
 
-    def add_item(self, item: "Item"):
+    def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
             raise Exception(f"Remapping of collection? existing='{item.collection.title}' new='{self.title}' item='{item.id}'")
         if item.id in self.items:
