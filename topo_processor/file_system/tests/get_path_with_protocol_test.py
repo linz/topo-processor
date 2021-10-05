@@ -20,9 +20,7 @@ def test_get_path_with_protocol_local():
     path = "/home/username/dev/topo-processor/test_data/tiffs/SURVEY_1"
     fs = LocalFileSystem(auto_mkdir="True")
     full_path = get_path_with_protocol(source_dir=source_dir_with_forwardslash, source_fs=fs, path=path)
-    print(full_path)
     assert full_path == "/home/username/dev/topo-processor/test_data/tiffs/SURVEY_1"
     source_dir_without_forwardslash = "/home/username/dev/topo-processor/test_data/tiffs"
     full_path = get_path_with_protocol(source_dir=source_dir_without_forwardslash, source_fs=fs, path=path)
-    print(full_path)
     assert full_path == "/home/username/dev/topo-processor/test_data/tiffs/SURVEY_1"

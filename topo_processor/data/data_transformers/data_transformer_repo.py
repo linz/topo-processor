@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import asyncio
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from linz_logger import get_log
 
-from topo_processor.stac import Item
 from topo_processor.util import time_in_ms
 
 from .data_transformer import DataTransformer
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class DataTransformerRepository:

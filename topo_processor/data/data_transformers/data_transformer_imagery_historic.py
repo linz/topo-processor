@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 import pystac
 import ulid
 from linz_logger import get_log
 
+import topo_processor.stac as stac
 from topo_processor.cog.create_cog import create_cog
-from topo_processor.stac import Asset, Item
 from topo_processor.util import is_tiff, time_in_ms
 
 from .data_transformer import DataTransformer
+
+if TYPE_CHECKING:
+    from topo_processor.stac import Item
 
 
 class DataTransformerImageryHistoric(DataTransformer):
@@ -34,7 +40,7 @@ class DataTransformerImageryHistoric(DataTransformer):
 
             asset.needs_upload = False
 
-            cog_asset = Asset(output_path)
+            cog_asset = stac.Asset(output_path)
             cog_asset.content_type = pystac.MediaType.COG
             cog_asset.target = asset.target
             cog_asset_list.append(cog_asset)
