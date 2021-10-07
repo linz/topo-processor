@@ -47,3 +47,26 @@ def test_not_add_camera_sequence_number_metadata():
     assert stac.StacExtensions.camera.value in item.stac_extensions
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
+
+def test_scanning_metadata_not_added():
+    """Tests scanning metadata is not added if two empty strings"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"source": "", "when_scanned": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.scanning.value not in item.stac_extensions
+    assert "scan:is_original" not in item.properties.keys()
+    assert "scan:scanned" not in item.properties.keys()
+
+
+def test_not_add_scanning_is_original_metadata():
+    """Tests scanning metadata is added if one empty string"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"source": "ORIGINAL", "when_scanned": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
+    assert item.properties["scan:is_original"] == True
+    assert "scan:scanned" not in item.properties.keys()
