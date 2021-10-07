@@ -47,3 +47,31 @@ def test_not_add_camera_sequence_number_metadata():
     assert stac.StacExtensions.camera.value in item.stac_extensions
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
+
+
+def test_film_metadata_not_added():
+    """Tests film metadata is not added if metadata are empty strings"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"film": "", "film_sequence_no": "", "physical_film_condition": "", "format": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.film.value not in item.stac_extensions
+    assert "film:id" not in item.properties.keys()
+    assert "film:negative_sequence" not in item.properties.keys()
+    assert "film:physical_condition" not in item.properties.keys()
+    assert "film:physical_size" not in item.properties.keys()
+
+
+def test_film_metadata_added():
+    """Tests film metadata is is still added if one of them is an empty string"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"film": "123", "film_sequence_no": "234", "physical_film_condition": "", "format": "23 cm x 23 cm"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.film.value in item.stac_extensions
+    assert item.properties["film:id"] == "123"
+    assert item.properties["film:negative_sequence"] == 234
+    assert "film:physical_condition" not in item.properties.keys()
+    assert item.properties["film:physical_size"] == "23 cm x 23 cm"
