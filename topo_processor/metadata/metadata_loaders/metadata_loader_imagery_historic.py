@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import string_to_number, string_to_boolean, quarterdate_to_datetime
+from topo_processor.util import quarterdate_to_datetime, string_to_boolean, string_to_number
 
 from .metadata_loader import MetadataLoader
 
