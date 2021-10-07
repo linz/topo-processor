@@ -1,5 +1,5 @@
 import re
-import datetime
+
 
 def string_to_number(value):
     """If possible this function returns the int/float of the input value,
@@ -15,6 +15,7 @@ def string_to_number(value):
         except ValueError:
             return value
 
+
 def string_to_boolean(value):
     """If possible this function returns a boolean,
     if not it returns the original value string.
@@ -26,6 +27,7 @@ def string_to_boolean(value):
         newvalue = False
         return newvalue
     return value
+
 
 def quarterdate_to_datetime(value, datetype):
     """If possible this function converts to RFC3339 datetime format,
@@ -45,7 +47,7 @@ def quarterdate_to_datetime(value, datetype):
     }
 
     # Check the format is what we expect i.e in the form 2020/Q2
-    if re.match('^[0-9]{4}[/][qQ][1-4]', value):
+    if re.match("^[0-9]{4}[/][qQ][1-4]", value):
 
         date_parts = value.split("/")
 
