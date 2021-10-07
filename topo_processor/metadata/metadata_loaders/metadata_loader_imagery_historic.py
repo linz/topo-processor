@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import convert_value
+from topo_processor.util import string_to_number, string_to_boolean, quarterdate_to_datetime
 
 from .metadata_loader import MetadataLoader
 
@@ -61,10 +61,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:film_sequence_no": asset_metadata["film_sequence_no"],
                 "linz:photo_type": asset_metadata["photo_type"],
                 "linz:format": asset_metadata["format"],
-                "linz:source": asset_metadata["source"],
                 "linz:physical_film_condition": asset_metadata["physical_film_condition"],
                 "linz:image_anomalies": asset_metadata["image_anomalies"],
-                "linz:scanned": asset_metadata["scanned"],
                 "linz:raw_filename": asset_metadata["raw_filename"],
                 "linz:released_filename": asset_metadata["released_filename"],
                 "linz:when_scanned": asset_metadata["when_scanned"],
@@ -72,6 +70,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             }
         )
         self.add_camera_metadata(item, asset_metadata)
+        self.add_scanning_metadata(item, asset_metadata)
 
     def read_csv(self):
         self.raw_metadata = {}
@@ -92,9 +91,19 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
         if asset_metadata["camera_sequence_no"]:
-            camera_properties["camera:sequence_number"] = convert_value(asset_metadata["camera_sequence_no"])
+            camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
         if asset_metadata["nominal_focal_length"]:
-            camera_properties["camera:nominal_focal_length"] = convert_value(asset_metadata["nominal_focal_length"])
+            camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
         if len(camera_properties) > 0:
             item.properties.update(camera_properties)
             item.add_extension(stac.StacExtensions.camera.value)
+
+    def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        scanning_properties = {}
+        if asset_metadata["source"]:
+            scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"])
+        if asset_metadata["when_scanned"]:
+            scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"], "scan")
+        if len(scanning_properties) > 0:
+            item.properties.update(scanning_properties)
+            item.add_extension(stac.StacExtensions.scanning.value)
