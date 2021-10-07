@@ -22,11 +22,10 @@ def string_to_boolean(value):
     if value.strip().lower() == "original":
         newvalue = True
         return newvalue
-    elif value.strip().lower() == "copy":
+    if value.strip().lower() == "copy":
         newvalue = False
         return newvalue
-    else:
-        return value
+    return value
 
 def quarterdate_to_datetime(value, datetype):
     """If possible this function converts to RFC3339 datetime format,
