@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Dict
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import string_to_number
+from topo_processor.util import convert_value, remove_zero
 
 from .metadata_loader import MetadataLoader
 
@@ -48,12 +49,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:sufi": asset_metadata["sufi"],
                 "linz:survey": asset_metadata["survey"],
-                "linz:run": asset_metadata["run"],
                 "linz:photo_no": asset_metadata["photo_no"],
                 "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
                 "linz:camera": asset_metadata["camera"],
-                "linz:altitude": asset_metadata["altitude"],
-                "linz:scale": asset_metadata["scale"],
                 "linz:photocentre_lat": asset_metadata["photocentre_lat"],
                 "linz:photocentre_lon": asset_metadata["photocentre_lon"],
                 "linz:date": asset_metadata["date"],
@@ -69,6 +67,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         )
         self.add_camera_metadata(item, asset_metadata)
         self.add_film_metadata(item, asset_metadata)
+        self.add_aerial_photo_metadata(item, asset_metadata)
 
     def read_csv(self):
         self.raw_metadata = {}
@@ -112,3 +111,5 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.properties.update(film_properties)
 
         item.add_extension(stac.StacExtensions.film.value)
+
+            if value:

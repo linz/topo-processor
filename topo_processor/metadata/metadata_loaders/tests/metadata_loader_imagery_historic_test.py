@@ -35,7 +35,7 @@ def test_camera_extension_added_if_empty_metadata():
     assert stac.StacExtensions.camera.value in item.stac_extensions
 
 
-def test_not_add_camera_sequence_number_metadata():
+def test_camera_metadata_added():
     """Tests camera metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
@@ -69,3 +69,33 @@ def test_film_metadata_added():
     assert item.properties["film:negative_sequence"] == 234
     assert "film:physical_condition" not in item.properties.keys()
     assert item.properties["film:physical_size"] == "23 cm x 23 cm"
+
+
+def test_aerial_photo_metadata_not_added():
+    """Tests aerial-photo metadata is not added if empty strings or zero"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"run": "", "altitude": "0", "scale": "", "photo_no": "", "image_anomalies": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.aerial_photo.value not in item.stac_extensions
+    assert "aerial-photo:run" not in item.properties.keys()
+    assert "aerial-photo:altitude" not in item.properties.keys()
+    assert "aerial-photo:scale" not in item.properties.keys()
+    assert "aerial-photo:sequence_number" not in item.properties.keys()
+    assert "aerial-photo:anomalies" not in item.properties.keys()
+
+
+def test_aerial_photo_metadata_added():
+    """Test aerial-photo metadata is added if one is an empty string"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"run": "string", "altitude": "123", "scale": "123", "photo_no": "123", "image_anomalies": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
+    assert item.properties["aerial-photo:run"] == "string"
+    assert item.properties["aerial-photo:altitude"] == 123
+    assert item.properties["aerial-photo:scale"] == 123
+    assert item.properties["aerial-photo:sequence_number"] == 123
+    assert "aerial-photo:anomalies" not in item.properties.keys()
