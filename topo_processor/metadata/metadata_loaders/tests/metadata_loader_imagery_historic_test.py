@@ -48,6 +48,7 @@ def test_not_add_camera_sequence_number_metadata():
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
 
+
 def test_scanning_metadata_not_added():
     """Tests scanning metadata is not added if two empty strings"""
     source_path = "test_abc.tiff"
