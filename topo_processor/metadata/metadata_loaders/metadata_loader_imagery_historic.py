@@ -97,15 +97,22 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_extension(stac.StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        match_requirements = True
         film_properties = {}
+
         if asset_metadata["film"]:
             film_properties["film:id"] = asset_metadata["film"]
+        else:
+            match_requirements = False
         if asset_metadata["film_sequence_no"]:
             film_properties["film:negative_sequence"] = string_to_number(asset_metadata["film_sequence_no"])
+        else:
+            match_requirements = False
         if asset_metadata["physical_film_condition"]:
             film_properties["film:physical_condition"] = asset_metadata["physical_film_condition"]
         if asset_metadata["format"]:
             film_properties["film:physical_size"] = asset_metadata["format"]
-        if len(film_properties) > 0:
+
+        if match_requirements:
             item.properties.update(film_properties)
             item.add_extension(stac.StacExtensions.film.value)
