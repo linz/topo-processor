@@ -94,7 +94,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
         if len(camera_properties) > 0:
             item.properties.update(camera_properties)
-            
+
         item.add_extension(stac.StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
