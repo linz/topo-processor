@@ -73,9 +73,11 @@ def test_film_metadata_added():
 
 def test_aerial_photo_metadata_not_added():
     """Tests aerial-photo metadata is not added if empty strings or zero"""
+def test_aerial_photo_extension_added_if_empty_metadata():
+    """Tests aerial-photo extension is still added if empty metadata"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
-    metadata = {"run": "", "altitude": "0", "scale": "", "photo_no": "", "image_anomalies": ""}
+    metadata = {"run": "", "altitude": "", "scale": "", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
     assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
@@ -84,6 +86,17 @@ def test_aerial_photo_metadata_not_added():
     assert "aerial-photo:scale" not in item.properties.keys()
     assert "aerial-photo:sequence_number" not in item.properties.keys()
     assert "aerial-photo:anomalies" not in item.properties.keys()
+
+def test_aerial_photo_zero_altitude_scale():
+    """Tests aerial-photo extension added and no metadata with zero values for altitude and scale"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"run": "", "altitude": "0", "scale": "0", "photo_no": "", "image_anomalies": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
+    assert "aerial-photo:altitude" not in item.properties.keys()
+    assert "aerial-photo:scale" not in item.properties.keys()
 
 
 def test_aerial_photo_metadata_added():
