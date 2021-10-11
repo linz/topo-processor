@@ -95,6 +95,25 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.properties.update(camera_properties)
 
         item.add_extension(stac.StacExtensions.camera.value)
+    def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        aerial_photo_properties = {}
+        if asset_metadata["run"]:
+            aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
+        if asset_metadata["altitude"]:
+            value = remove_zero(convert_value(asset_metadata["altitude"]))
+            if value:
+                aerial_photo_properties["aerial-photo:altitude"] = value
+        if asset_metadata["scale"]:
+            value = remove_zero(convert_value(asset_metadata["scale"]))
+            if value:
+                aerial_photo_properties["aerial-photo:scale"] = value
+        if asset_metadata["photo_no"]:
+            aerial_photo_properties["aerial-photo:sequence_number"] = convert_value(asset_metadata["photo_no"])
+        if asset_metadata["image_anomalies"]:
+            aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
+        if len(aerial_photo_properties) > 0:
+            item.properties.update(aerial_photo_properties)
+        item.add_extension(stac.StacExtensions.aerial_photo.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}

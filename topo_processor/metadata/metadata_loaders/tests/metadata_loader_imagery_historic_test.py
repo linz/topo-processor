@@ -78,7 +78,7 @@ def test_aerial_photo_metadata_not_added():
     metadata = {"run": "", "altitude": "0", "scale": "", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
-    assert stac.StacExtensions.aerial_photo.value not in item.stac_extensions
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
     assert "aerial-photo:run" not in item.properties.keys()
     assert "aerial-photo:altitude" not in item.properties.keys()
     assert "aerial-photo:scale" not in item.properties.keys()
