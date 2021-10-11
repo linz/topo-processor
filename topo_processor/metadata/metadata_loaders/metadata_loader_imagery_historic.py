@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import string_to_number
-from topo_processor.util import convert_value, remove_zero
+from topo_processor.util import remove_zero, string_to_number
 
 from .metadata_loader import MetadataLoader
 
@@ -87,6 +86,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
+
         if asset_metadata["camera_sequence_no"]:
             camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
         if asset_metadata["nominal_focal_length"]:
@@ -95,25 +95,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.properties.update(camera_properties)
 
         item.add_extension(stac.StacExtensions.camera.value)
-    def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
-        aerial_photo_properties = {}
-        if asset_metadata["run"]:
-            aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
-        if asset_metadata["altitude"]:
-            value = remove_zero(convert_value(asset_metadata["altitude"]))
-            if value:
-                aerial_photo_properties["aerial-photo:altitude"] = value
-        if asset_metadata["scale"]:
-            value = remove_zero(convert_value(asset_metadata["scale"]))
-            if value:
-                aerial_photo_properties["aerial-photo:scale"] = value
-        if asset_metadata["photo_no"]:
-            aerial_photo_properties["aerial-photo:sequence_number"] = convert_value(asset_metadata["photo_no"])
-        if asset_metadata["image_anomalies"]:
-            aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
-        if len(aerial_photo_properties) > 0:
-            item.properties.update(aerial_photo_properties)
-        item.add_extension(stac.StacExtensions.aerial_photo.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}
@@ -131,4 +112,24 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.add_extension(stac.StacExtensions.film.value)
 
+    def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        aerial_photo_properties = {}
+
+        if asset_metadata["run"]:
+            aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
+        if asset_metadata["altitude"]:
+            value = remove_zero(string_to_number(asset_metadata["altitude"]))
             if value:
+                aerial_photo_properties["aerial-photo:altitude"] = value
+        if asset_metadata["scale"]:
+            value = remove_zero(string_to_number(asset_metadata["scale"]))
+            if value:
+                aerial_photo_properties["aerial-photo:scale"] = value
+        if asset_metadata["photo_no"]:
+            aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
+        if asset_metadata["image_anomalies"]:
+            aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
+        if len(aerial_photo_properties) > 0:
+            item.properties.update(aerial_photo_properties)
+
+        item.add_extension(stac.StacExtensions.aerial_photo.value)

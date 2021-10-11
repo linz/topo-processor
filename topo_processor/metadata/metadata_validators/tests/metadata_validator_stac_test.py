@@ -32,6 +32,7 @@ def test_check_validity_film_extension():
     item.properties.update({"film:sequence_number": "string"})
     item.add_extension(stac.StacExtensions.film.value)
 
+
 def test_check_validity_fails_on_string_aerial_photo_extension():
     """check fails due to string in place of expected integer"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")

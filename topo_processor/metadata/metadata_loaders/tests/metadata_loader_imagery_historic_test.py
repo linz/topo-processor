@@ -1,5 +1,3 @@
-import pytest
-
 import topo_processor.stac as stac
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 
@@ -73,6 +71,8 @@ def test_film_metadata_added():
 
 def test_aerial_photo_metadata_not_added():
     """Tests aerial-photo metadata is not added if empty strings or zero"""
+
+
 def test_aerial_photo_extension_added_if_empty_metadata():
     """Tests aerial-photo extension is still added if empty metadata"""
     source_path = "test_abc.tiff"
@@ -86,6 +86,7 @@ def test_aerial_photo_extension_added_if_empty_metadata():
     assert "aerial-photo:scale" not in item.properties.keys()
     assert "aerial-photo:sequence_number" not in item.properties.keys()
     assert "aerial-photo:anomalies" not in item.properties.keys()
+
 
 def test_aerial_photo_zero_altitude_scale():
     """Tests aerial-photo extension added and no metadata with zero values for altitude and scale"""
