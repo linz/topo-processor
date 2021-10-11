@@ -1,4 +1,4 @@
-def convert_value(value):
+def string_to_number(value):
     """If possible this function returns the int/float of the input value,
     if not it returns the string.
     """
