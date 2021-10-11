@@ -63,9 +63,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:format": asset_metadata["format"],
                 "linz:physical_film_condition": asset_metadata["physical_film_condition"],
                 "linz:image_anomalies": asset_metadata["image_anomalies"],
+                "linz:scanned": asset_metadata["scanned"],
                 "linz:raw_filename": asset_metadata["raw_filename"],
                 "linz:released_filename": asset_metadata["released_filename"],
-                "linz:when_scanned": asset_metadata["when_scanned"],
                 "linz:photo_version": asset_metadata["photo_version"],
             }
         )
