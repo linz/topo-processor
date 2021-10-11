@@ -25,16 +25,14 @@ def test_item_not_found_in_csv():
     assert error_msg in asset.log
 
 
-def test_camera_metadata_not_added():
-    """Tests camera metadata is not added if two empty strings"""
+def test_camera_extension_added_if_empty_metadata():
+    """Tests camera extension is still added is metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
-    assert stac.StacExtensions.camera.value not in item.stac_extensions
-    assert "camera:nominal_focal_length" not in item.properties.keys()
-    assert "camera:sequence_number" not in item.properties.keys()
+    assert stac.StacExtensions.camera.value in item.stac_extensions
 
 
 def test_not_add_camera_sequence_number_metadata():
@@ -49,18 +47,14 @@ def test_not_add_camera_sequence_number_metadata():
     assert "camera:sequence_number" not in item.properties.keys()
 
 
-def test_film_metadata_not_added():
-    """Tests film metadata is not added if metadata are empty strings"""
+def test_film_extension_added_if_empty_metadata():
+    """Tests film extension is still added even if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"film": "", "film_sequence_no": "", "physical_film_condition": "", "format": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
-    assert stac.StacExtensions.film.value not in item.stac_extensions
-    assert "film:id" not in item.properties.keys()
-    assert "film:negative_sequence" not in item.properties.keys()
-    assert "film:physical_condition" not in item.properties.keys()
-    assert "film:physical_size" not in item.properties.keys()
+    assert stac.StacExtensions.film.value in item.stac_extensions
 
 
 def test_film_metadata_added():
