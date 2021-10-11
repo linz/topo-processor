@@ -26,7 +26,7 @@ def test_item_not_found_in_csv():
 
 
 def test_camera_extension_added_if_empty_metadata():
-    """Tests camera extension is still added is metadata is empty"""
+    """Tests camera extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
