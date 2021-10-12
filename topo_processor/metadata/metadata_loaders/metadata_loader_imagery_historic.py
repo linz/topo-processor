@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import string_to_number
+from topo_processor.util import remove_empty_strings, string_to_number
 
 from .metadata_loader import MetadataLoader
 
@@ -87,55 +87,38 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}
 
-        if asset_metadata["camera_sequence_no"]:
-            camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
-        if asset_metadata["nominal_focal_length"]:
-            camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
-        if len(camera_properties) > 0:
-            item.properties.update(camera_properties)
+        camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
+        camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
 
+        item.properties.update(remove_empty_strings(camera_properties))
         item.add_extension(stac.StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}
 
-        if asset_metadata["film"]:
-            film_properties["film:id"] = asset_metadata["film"]
-        if asset_metadata["film_sequence_no"]:
-            film_properties["film:negative_sequence"] = string_to_number(asset_metadata["film_sequence_no"])
-        if asset_metadata["physical_film_condition"]:
-            film_properties["film:physical_condition"] = asset_metadata["physical_film_condition"]
-        if asset_metadata["format"]:
-            film_properties["film:physical_size"] = asset_metadata["format"]
-        if len(film_properties) > 0:
-            item.properties.update(film_properties)
+        film_properties["film:id"] = asset_metadata["film"]
+        film_properties["film:negative_sequence"] = string_to_number(asset_metadata["film_sequence_no"])
+        film_properties["film:physical_condition"] = asset_metadata["physical_film_condition"]
+        film_properties["film:physical_size"] = asset_metadata["format"]
 
+        item.properties.update(remove_empty_strings(film_properties))
         item.add_extension(stac.StacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         aerial_photo_properties = {}
-        if asset_metadata["run"]:
-            aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
-        if asset_metadata["photo_no"]:
-            aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
-        if asset_metadata["image_anomalies"]:
-            aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
-        if asset_metadata["altitude"]:
-            altitude = string_to_number(asset_metadata["altitude"])
-            if altitude == 0:
-                get_log().debug(
-                    "Value not loaded", metadata_loader=self.name, stac_field="aerial-photo:altitude", value=altitude
-                )
-            else:
-                aerial_photo_properties["aerial-photo:altitude"] = altitude
-        if asset_metadata["scale"]:
-            scale = string_to_number(asset_metadata["scale"])
-            if scale == 0:
-                get_log().debug("Value not loaded", metadata_loader=self.name, stac_field="aerial-photo:scale", value=scale)
-            else:
-                aerial_photo_properties["aerial-photo:scale"] = scale
+        aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
+        aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
+        aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
+        altitude = string_to_number(asset_metadata["altitude"])
+        if altitude == 0:
+            get_log().warning("Skipped record", metadata_loader=self.name, stac_field="aerial-photo:altitude", value=altitude)
+        else:
+            aerial_photo_properties["aerial-photo:altitude"] = altitude
+        scale = string_to_number(asset_metadata["scale"])
+        if scale == 0:
+            get_log().warning("Skipped record", metadata_loader=self.name, stac_field="aerial-photo:scale", value=scale)
+        else:
+            aerial_photo_properties["aerial-photo:scale"] = scale
 
-        if len(aerial_photo_properties) > 0:
-            item.properties.update(aerial_photo_properties)
-
+        item.properties.update(remove_empty_strings(aerial_photo_properties))
         item.add_extension(stac.StacExtensions.aerial_photo.value)
