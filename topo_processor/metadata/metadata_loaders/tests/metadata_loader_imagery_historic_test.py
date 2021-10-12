@@ -69,10 +69,6 @@ def test_film_metadata_added():
     assert item.properties["film:physical_size"] == "23 cm x 23 cm"
 
 
-def test_aerial_photo_metadata_not_added():
-    """Tests aerial-photo metadata is not added if empty strings or zero"""
-
-
 def test_aerial_photo_extension_added_if_empty_metadata():
     """Tests aerial-photo extension is still added if empty metadata"""
     source_path = "test_abc.tiff"

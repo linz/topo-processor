@@ -11,10 +11,3 @@ def string_to_number(value):
             return float_number
         except ValueError:
             return value
-
-
-def remove_zero(value):
-    """If the value is zero return None"""
-    if value == 0:
-        return None
-    return value

@@ -6,12 +6,14 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import remove_zero, string_to_number
+from topo_processor.util import string_to_number
 
 from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
     from topo_processor.stac import Asset, Item
+
+from linz_logger import get_log
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
@@ -48,7 +50,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:sufi": asset_metadata["sufi"],
                 "linz:survey": asset_metadata["survey"],
-                "linz:photo_no": asset_metadata["photo_no"],
                 "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
                 "linz:camera": asset_metadata["camera"],
                 "linz:photocentre_lat": asset_metadata["photocentre_lat"],
@@ -56,7 +57,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:date": asset_metadata["date"],
                 "linz:photo_type": asset_metadata["photo_type"],
                 "linz:source": asset_metadata["source"],
-                "linz:image_anomalies": asset_metadata["image_anomalies"],
                 "linz:scanned": asset_metadata["scanned"],
                 "linz:raw_filename": asset_metadata["raw_filename"],
                 "linz:released_filename": asset_metadata["released_filename"],
@@ -114,21 +114,27 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         aerial_photo_properties = {}
-
         if asset_metadata["run"]:
             aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
-        if asset_metadata["altitude"]:
-            value = remove_zero(string_to_number(asset_metadata["altitude"]))
-            if value:
-                aerial_photo_properties["aerial-photo:altitude"] = value
-        if asset_metadata["scale"]:
-            value = remove_zero(string_to_number(asset_metadata["scale"]))
-            if value:
-                aerial_photo_properties["aerial-photo:scale"] = value
         if asset_metadata["photo_no"]:
             aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
         if asset_metadata["image_anomalies"]:
             aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
+        if asset_metadata["altitude"]:
+            altitude = string_to_number(asset_metadata["altitude"])
+            if altitude == 0:
+                get_log().debug(
+                    "Value not loaded", metadata_loader=self.name, stac_field="aerial-photo:altitude", value=altitude
+                )
+            else:
+                aerial_photo_properties["aerial-photo:altitude"] = altitude
+        if asset_metadata["scale"]:
+            scale = string_to_number(asset_metadata["scale"])
+            if scale == 0:
+                get_log().debug("Value not loaded", metadata_loader=self.name, stac_field="aerial-photo:scale", value=scale)
+            else:
+                aerial_photo_properties["aerial-photo:scale"] = scale
+
         if len(aerial_photo_properties) > 0:
             item.properties.update(aerial_photo_properties)
 
