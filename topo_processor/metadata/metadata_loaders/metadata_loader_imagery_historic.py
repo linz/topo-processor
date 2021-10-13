@@ -110,13 +110,21 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
         aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
         altitude = string_to_number(asset_metadata["altitude"])
-        if altitude == 0:
-            get_log().warning("Skipped record", metadata_loader=self.name, stac_field="aerial-photo:altitude", value=altitude)
+        if isinstance(altitude, int) and altitude <= 0:
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'aerial-photo:altitude' has value: {altitude}"),
+            )
         else:
             aerial_photo_properties["aerial-photo:altitude"] = altitude
         scale = string_to_number(asset_metadata["scale"])
-        if scale == 0:
-            get_log().warning("Skipped record", metadata_loader=self.name, stac_field="aerial-photo:scale", value=scale)
+        if isinstance(scale, int) and scale <= 0:
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'aerial-photo:scale' has value: {scale}"),
+            )
         else:
             aerial_photo_properties["aerial-photo:scale"] = scale
 
