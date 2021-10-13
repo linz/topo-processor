@@ -54,7 +54,8 @@ def quarterdate_to_datetime(value, datetype):
     # Check the format is what we expect i.e in the form 2020/Q2
     if re.match("^[0-9]{4}[/][qQ][1-4]", value):
 
-        date_parts = value.split("/")
+        date_parts = value.upper().split("/")
+        print(date_parts)
 
         if datetype == "scan":
             try:
@@ -68,5 +69,6 @@ def quarterdate_to_datetime(value, datetype):
             month = quarter_dict.get(date_parts[1])
             rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
             return rfc3339_value
+
     else:
         return value
