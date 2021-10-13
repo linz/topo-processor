@@ -26,6 +26,8 @@ def transfer_collection(collection: Collection, target: str):
         if not item.is_valid():
             get_log().warning("Invalid item was not uploaded:", error=item.log)
             continue
+        if item.log:
+            get_log().warning(f"Item {item.id} contains warnings:", error=item.log)
 
         stac_collection.add_item(stac_item)
         # pystac v1.1.0
