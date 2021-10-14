@@ -21,30 +21,29 @@ def remove_empty_strings(properties: Dict) -> Dict:
     return {key: value for key, value in properties.items() if value != ""}
 
 
-def string_to_boolean(value):
+def copy_or_original(value):
     """If possible this function returns a boolean,
     if not it returns the original value string.
     """
-    if value.strip().lower() == "original":
-        newvalue = True
-        return newvalue
-    if value.strip().lower() == "copy":
-        newvalue = False
-        return newvalue
+    clean_value = value.strip().lower()
+    if clean_value == "original":
+        return True
+    if clean_value == "copy":
+        return False
     return value
 
 
-def quarterdate_to_datetime(value, datetype):
+def quarterdate_to_datetime(value):
     """If possible this function converts to RFC3339 datetime format,
     e.g. '2021-01-01T00:00:00.000Z', else returns original value string.
     """
-    # Dictionary for quarters to dates
+    # Dictionary for calendar year quarters to dates
     # Q1 - 2021-01-01T00:00:00.000Z
     # Q2 - 2021-04-01T00:00:00.000Z
     # Q3 - 2021-07-01T00:00:00.000Z
     # Q4 - 2021-10-01T00:00:00.000Z
 
-    quarter_dict = {
+    quarter_dict_calendar_year = {
         "Q1": "01",
         "Q2": "04",
         "Q3": "07",
@@ -52,23 +51,11 @@ def quarterdate_to_datetime(value, datetype):
     }
 
     # Check the format is what we expect i.e in the form 2020/Q2
-    if re.match("^[0-9]{4}[/][qQ][1-4]", value):
+    if re.fullmatch("[0-9]{4}[/][qQ][1-4]", value):
 
         date_parts = value.upper().split("/")
-        print(date_parts)
+        month = quarter_dict_calendar_year.get(date_parts[1])
+        rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
+        return rfc3339_value
 
-        if datetype == "scan":
-            try:
-                year = int(date_parts[0])
-                if year < 2014:
-                    return value
-            except ValueError:
-                return value
-
-        if date_parts[1] in quarter_dict:
-            month = quarter_dict.get(date_parts[1])
-            rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
-            return rfc3339_value
-
-    else:
-        return value
+    return value

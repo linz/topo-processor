@@ -111,19 +111,17 @@ def test_aerial_photo_metadata_added():
     assert "aerial-photo:anomalies" not in item.properties.keys()
 
 
-def test_scanning_metadata_not_added():
-    """Tests scanning metadata is not added if two empty strings"""
+def test_scanning_extension_added_if_empty_metadata():
+    """Tests scanning extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {"source": "", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
-    assert stac.StacExtensions.scanning.value not in item.stac_extensions
-    assert "scan:is_original" not in item.properties.keys()
-    assert "scan:scanned" not in item.properties.keys()
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
 
 
-def test_not_add_scanning_is_original_metadata():
+def test_scanning_metadata_added():
     """Tests scanning metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)

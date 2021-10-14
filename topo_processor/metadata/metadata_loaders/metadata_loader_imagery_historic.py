@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import csv
+import re
 import os
 from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number
+from topo_processor.util import copy_or_original, quarterdate_to_datetime, remove_empty_strings, string_to_number
 
 from .metadata_loader import MetadataLoader
 
@@ -134,9 +135,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         scanning_properties = {}
 
         if asset_metadata["source"]:
-            scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"])
+            scanning_properties["scan:is_original"] = copy_or_original(asset_metadata["source"])
         if asset_metadata["when_scanned"]:
-            scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"], "scan")
-        if len(scanning_properties) > 0:
-            item.properties.update(remove_empty_strings(scanning_properties))
-            item.add_extension(stac.StacExtensions.scanning.value)
+            convert_output_value = quarterdate_to_datetime(asset_metadata["when_scanned"])
+            if convert_output_value != asset_metadata["when_scanned"] and int(convert_output_value.split("-")[0]) > 2013:
+                scanning_properties["scan:scanned"] = convert_output_value
+            else:
+                scanning_properties["scan:scanned"] = asset_metadata["when_scanned"]
+
+        item.properties.update(remove_empty_strings(scanning_properties))
+        item.add_extension(stac.StacExtensions.scanning.value)
