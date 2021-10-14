@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import re
 import os
 from typing import TYPE_CHECKING, Dict
 
