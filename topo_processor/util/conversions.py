@@ -37,25 +37,36 @@ def quarterdate_to_datetime(value):
     """If possible this function converts to RFC3339 datetime format,
     e.g. '2021-01-01T00:00:00.000Z', else returns original value string.
     """
-    # Dictionary for calendar year quarters to dates
+    # Conversion for calendar year quarters to dates
     # Q1 - 2021-01-01T00:00:00.000Z
     # Q2 - 2021-04-01T00:00:00.000Z
     # Q3 - 2021-07-01T00:00:00.000Z
     # Q4 - 2021-10-01T00:00:00.000Z
 
     quarter_dict_calendar_year = {
-        "Q1": "01",
-        "Q2": "04",
-        "Q3": "07",
-        "Q4": "10",
+        "1": "01",
+        "2": "04",
+        "3": "07",
+        "4": "10",
     }
 
-    # Check the format is what we expect i.e in the form 2020/Q2
-    if re.fullmatch("[0-9]{4}[/][qQ][1-4]", value):
+    re_result = re.search(r"(\d{4})[/][qQ]([1-4])", value)
 
-        date_parts = value.upper().split("/")
-        month = quarter_dict_calendar_year.get(date_parts[1])
-        rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
+    # Check the format is what we expect i.e in the form 2020/Q2
+    if re_result is not None:
+
+        month = quarter_dict_calendar_year.get(re_result.group(2))
+        rfc3339_value = re_result.group(1) + "-" + month + "-01T00:00:00.000Z"
+        print(rfc3339_value)
         return rfc3339_value
 
     return value
+
+    # if re.fullmatch("[0-9]{4}[/][qQ][1-4]", value):
+
+    #     date_parts = value.upper().split("/")
+    #     month = quarter_dict_calendar_year.get(date_parts[1])
+    #     rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
+    #     return rfc3339_value
+
+    # return value

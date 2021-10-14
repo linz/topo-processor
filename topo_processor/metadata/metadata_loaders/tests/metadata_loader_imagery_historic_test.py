@@ -121,6 +121,30 @@ def test_scanning_extension_added_if_empty_metadata():
     assert stac.StacExtensions.scanning.value in item.stac_extensions
 
 
+def test_scanning_extension_invalid_values_date_wrong_format():
+    """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"source": "string", "when_scanned": "2012/Q4"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
+    assert item.properties["scan:is_original"] == "string"
+    assert item.properties["scan:scanned"] == "2012/Q4"
+
+
+def test_scanning_extension_invalid_values_date_too_early():
+    """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"source": "string", "when_scanned": "nzam_pilot"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
+    assert item.properties["scan:is_original"] == "string"
+    assert item.properties["scan:scanned"] == "nzam_pilot"
+
+
 def test_scanning_metadata_added():
     """Tests scanning metadata is added if one empty string"""
     source_path = "test_abc.tiff"
@@ -129,5 +153,5 @@ def test_scanning_metadata_added():
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
     assert stac.StacExtensions.scanning.value in item.stac_extensions
-    assert item.properties["scan:is_original"] == True
+    assert item.properties["scan:is_original"]
     assert "scan:scanned" not in item.properties.keys()

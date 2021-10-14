@@ -75,7 +75,7 @@ def test_check_validity_scanning_extension():
     item = stac.Item("item_id")
     item.add_asset(asset)
     item.properties.update({"scan:is_original": True})
-    item.properties.update({"scan:scanned": "2012/Q2"})
+    item.properties.update({"scan:scanned": "string"})
     item.add_extension(stac.StacExtensions.scanning.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
