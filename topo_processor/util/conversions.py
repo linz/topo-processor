@@ -57,16 +57,6 @@ def quarterdate_to_datetime(value):
 
         month = quarter_dict_calendar_year.get(re_result.group(2))
         rfc3339_value = re_result.group(1) + "-" + month + "-01T00:00:00.000Z"
-        print(rfc3339_value)
         return rfc3339_value
 
     return value
-
-    # if re.fullmatch("[0-9]{4}[/][qQ][1-4]", value):
-
-    #     date_parts = value.upper().split("/")
-    #     month = quarter_dict_calendar_year.get(date_parts[1])
-    #     rfc3339_value = date_parts[0] + "-" + month + "-01T00:00:00.000Z"
-    #     return rfc3339_value
-
-    # return value

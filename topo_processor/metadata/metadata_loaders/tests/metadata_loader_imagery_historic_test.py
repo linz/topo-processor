@@ -121,7 +121,7 @@ def test_scanning_extension_added_if_empty_metadata():
     assert stac.StacExtensions.scanning.value in item.stac_extensions
 
 
-def test_scanning_extension_invalid_values_date_wrong_format():
+def test_scanning_extension_invalid_values_date_too_early():
     """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
@@ -133,7 +133,7 @@ def test_scanning_extension_invalid_values_date_wrong_format():
     assert item.properties["scan:scanned"] == "2012/Q4"
 
 
-def test_scanning_extension_invalid_values_date_too_early():
+def test_scanning_extension_invalid_values_date_wrong_format():
     """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
