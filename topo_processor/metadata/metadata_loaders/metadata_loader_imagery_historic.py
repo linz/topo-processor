@@ -134,13 +134,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         scanning_properties = {}
 
         if asset_metadata["source"]:
-            scanning_properties["scan:is_original"] = copy_or_original(asset_metadata["source"])
+            scanning_properties["scan:is_original"] = copy_or_original(asset_metadata["source"], ["original"], ["copy"])
         if asset_metadata["when_scanned"]:
-            convert_output_value = quarterdate_to_datetime(asset_metadata["when_scanned"])
-            if convert_output_value != asset_metadata["when_scanned"] and int(convert_output_value.split("-")[0]) > 2013:
-                scanning_properties["scan:scanned"] = convert_output_value
-            else:
-                scanning_properties["scan:scanned"] = asset_metadata["when_scanned"]
+            scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
