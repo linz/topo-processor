@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import copy_or_original, quarterdate_to_datetime, remove_empty_strings, string_to_number
+from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number
 
 from .metadata_loader import MetadataLoader
 
@@ -134,7 +134,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         scanning_properties = {}
 
         if asset_metadata["source"]:
-            scanning_properties["scan:is_original"] = copy_or_original(asset_metadata["source"], ["original"], ["copy"])
+            scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"], ["original"], ["copy"])
         if asset_metadata["when_scanned"]:
             scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"])
 

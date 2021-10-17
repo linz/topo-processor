@@ -21,7 +21,7 @@ def remove_empty_strings(properties: Dict) -> Dict:
     return {key: value for key, value in properties.items() if value != ""}
 
 
-def copy_or_original(value, true_values, false_values):
+def string_to_boolean(value, true_values, false_values):
     #     """Find value in lists and return boolean,
     #     else returns the original value string.
     #     """
