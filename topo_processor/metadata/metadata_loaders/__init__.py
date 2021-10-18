@@ -5,3 +5,5 @@ from .metadata_loader_tiff import MetadataLoaderTiff
 metadata_loader_repo = MetadataLoaderRepository()
 metadata_loader_repo.append(MetadataLoaderImageryHistoric())
 metadata_loader_repo.append(MetadataLoaderTiff())
+
+metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()

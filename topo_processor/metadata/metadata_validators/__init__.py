@@ -9,3 +9,5 @@ metadata_validator_repo = MetadataValidatorRepository()
 metadata_validator_repo.append(MetadataValidatorTiff())
 metadata_validator_repo.append(MetadataValidatorImageryHistoric())
 metadata_validator_repo.append(MetadataValidatorStac())
+
+metadata_validator_stac = MetadataValidatorStac()

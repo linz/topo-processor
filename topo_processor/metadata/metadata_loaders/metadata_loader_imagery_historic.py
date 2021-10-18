@@ -37,10 +37,23 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
 
-        collection = get_collection(asset_metadata["survey"])
-        item = get_item(asset_metadata["sufi"])
+        self.populate_item(asset_metadata, asset)
+
+    def load_all_metadata(self, metadata_file: str) -> None:
+        if not self.is_init:
+            self.read_csv(metadata_file)
+
+        for metadata in self.raw_metadata.values():
+            self.populate_item(metadata)
+
+    def populate_item(self, metadata_row, asset: Asset = None) -> None:
+        collection = get_collection(metadata_row["survey"])
+        item = get_item(metadata_row["sufi"])
         collection.add_item(item)
-        item.add_asset(asset)
+
+        if asset:
+            item.add_asset(asset)
+
         item.collection = collection
 
         collection.license = "CC-BY-4.0"
@@ -48,38 +61,44 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(
             {
-                "linz:sufi": asset_metadata["sufi"],
-                "linz:survey": asset_metadata["survey"],
-                "linz:alternate_survey_name": asset_metadata["alternate_survey_name"],
-                "linz:camera": asset_metadata["camera"],
-                "linz:photocentre_lat": asset_metadata["photocentre_lat"],
-                "linz:photocentre_lon": asset_metadata["photocentre_lon"],
-                "linz:date": asset_metadata["date"],
-                "linz:photo_type": asset_metadata["photo_type"],
-                "linz:scanned": asset_metadata["scanned"],
-                "linz:raw_filename": asset_metadata["raw_filename"],
-                "linz:released_filename": asset_metadata["released_filename"],
-                "linz:photo_version": asset_metadata["photo_version"],
+                "linz:sufi": metadata_row["sufi"],
+                "linz:survey": metadata_row["survey"],
+                "linz:alternate_survey_name": metadata_row["alternate_survey_name"],
+                "linz:camera": metadata_row["camera"],
+                "linz:photocentre_lat": metadata_row["photocentre_lat"],
+                "linz:photocentre_lon": metadata_row["photocentre_lon"],
+                "linz:date": metadata_row["date"],
+                "linz:photo_type": metadata_row["photo_type"],
+                "linz:scanned": metadata_row["scanned"],
+                "linz:raw_filename": metadata_row["raw_filename"],
+                "linz:released_filename": metadata_row["released_filename"],
+                "linz:photo_version": metadata_row["photo_version"],
             }
         )
-        self.add_camera_metadata(item, asset_metadata)
-        self.add_film_metadata(item, asset_metadata)
-        self.add_aerial_photo_metadata(item, asset_metadata)
-        self.add_scanning_metadata(item, asset_metadata)
+        self.add_camera_metadata(item, metadata_row)
+        self.add_film_metadata(item, metadata_row)
+        self.add_aerial_photo_metadata(item, metadata_row)
+        self.add_scanning_metadata(item, metadata_row)
 
-    def read_csv(self):
+    def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
-        csv_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
+        if not metadata_file:
+            metadata_file = "historical_aerial_photos_metadata.csv"
+
+        csv_path = os.path.join(os.getcwd(), "test_data", metadata_file)
         if not os.path.isfile(csv_path):
-            raise Exception('Missing "historical_aerial_photos_metadata.csv"')
+            raise Exception(f'Cannot find "{csv_path}"')
 
         with open(csv_path, "r") as csv_path:
             reader = csv.DictReader(csv_path, delimiter=",")
             for row in reader:
-                released_filename = row["released_filename"]
-                if released_filename in self.raw_metadata:
-                    raise Exception(f'Duplicate file "{released_filename}" found in metadata csv')
-                self.raw_metadata[released_filename] = row
+                if row["released_filename"]:
+                    released_filename = row["released_filename"]
+                    if not metadata_file and released_filename in self.raw_metadata:
+                        raise Exception(f'Duplicate file "{released_filename}" found in metadata csv')
+                    self.raw_metadata[released_filename] = row
+                else:
+                    self.raw_metadata[row["sufi"]] = row
 
         self.is_init = True
 

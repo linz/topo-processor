@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List
 
 from linz_logger import get_log
+from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
+from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
 
 from topo_processor.util import time_in_ms
 
@@ -35,3 +37,17 @@ class MetadataLoaderRepository:
                     loader=loader.name,
                     duration=time_in_ms() - start_time,
                 )
+
+    def load_all_metadata(self, metadata_file: str) -> None:
+        for loader in self.loaders:
+            start_time = time_in_ms()
+            try:
+                loader.load_all_metadata(metadata_file)
+            except Exception as e:
+                get_log().warning(f"Metadata Load Failed: {e}", loader=loader.name)
+                return
+            get_log().debug(
+                "Metadata Loaded",
+                loader=loader.name,
+                duration=time_in_ms() - start_time,
+            )
