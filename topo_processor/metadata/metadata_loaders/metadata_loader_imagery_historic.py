@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import remove_empty_strings, string_to_number
+from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number
 
 from .metadata_loader import MetadataLoader
 
@@ -56,17 +56,16 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:photocentre_lon": asset_metadata["photocentre_lon"],
                 "linz:date": asset_metadata["date"],
                 "linz:photo_type": asset_metadata["photo_type"],
-                "linz:source": asset_metadata["source"],
                 "linz:scanned": asset_metadata["scanned"],
                 "linz:raw_filename": asset_metadata["raw_filename"],
                 "linz:released_filename": asset_metadata["released_filename"],
-                "linz:when_scanned": asset_metadata["when_scanned"],
                 "linz:photo_version": asset_metadata["photo_version"],
             }
         )
         self.add_camera_metadata(item, asset_metadata)
         self.add_film_metadata(item, asset_metadata)
         self.add_aerial_photo_metadata(item, asset_metadata)
+        self.add_scanning_metadata(item, asset_metadata)
 
     def read_csv(self):
         self.raw_metadata = {}
@@ -130,3 +129,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
         item.add_extension(stac.StacExtensions.aerial_photo.value)
+
+    def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+        scanning_properties = {}
+
+        if asset_metadata["source"]:
+            scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"], ["original"], ["copy"])
+        if asset_metadata["when_scanned"]:
+            scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"])
+
+        item.properties.update(remove_empty_strings(scanning_properties))
+        item.add_extension(stac.StacExtensions.scanning.value)

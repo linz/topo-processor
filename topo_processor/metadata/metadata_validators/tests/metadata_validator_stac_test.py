@@ -66,3 +66,18 @@ def test_check_validity_fails_on_required_field_aerial_photo_extension():
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
         validator.validate_metadata(item)
+
+
+def test_check_validity_scanning_extension():
+    """check fails due date string format"""
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = stac.Asset(source_path)
+    item = stac.Item("item_id")
+    item.add_asset(asset)
+    item.properties.update({"scan:is_original": True})
+    item.properties.update({"scan:scanned": "string"})
+    item.add_extension(stac.StacExtensions.scanning.value)
+    validator = MetadataValidatorStac()
+    assert validator.is_applicable(item)
+    with pytest.raises(STACValidationError):
+        validator.validate_metadata(item)
