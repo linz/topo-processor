@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 import json
 import urllib
 from typing import TYPE_CHECKING, Any, Dict
 
-from pystac.errors import STACValidationError
 import fastjsonschema
+from pystac.errors import STACValidationError
 from linz_logger import get_log
-from jsonschema_rs import JSONSchema, ValidationError, is_valid, validate
+from jsonschema_rs import JSONSchema, ValidationError
 
 from .metadata_validator import MetadataValidator
 
