@@ -61,7 +61,7 @@ class MetadataValidatorStac(MetadataValidator):
                     validate(data=stac_item)
                 except fastjsonschema.JsonSchemaException as err:
                     get_log().warn(f"{self.name}:validate_metadata_fast", itemId=stac_item["id"], error=err)
-                    print (err)
+                    print(err)
                     errorsReport[schema_uri] = err.message
 
         return errorsReport
