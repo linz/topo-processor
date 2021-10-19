@@ -20,7 +20,10 @@ def process_directory(source_dir: str) -> None:
 
 def process_metadata(metadata_file: str) -> None:
     start_time = time_in_ms()
-    errors_per_item: Dict[str, Dict[str, int]] = {}
+    #{schema_uri, [{error, nbOccurences}]}
+    errors_per_schema: Dict[str, Dict[str, int]] = {}
+    #{item_id, [{schema_uri, error}]}
+    errors_per_item: Dict[str, Dict[str,str]] = {}
     total_items_processed = 0
 
     # Load metadata from metadata csv file
@@ -30,24 +33,37 @@ def process_metadata(metadata_file: str) -> None:
     # Validate item against schema
     for item in item_store.values():
         if item.is_valid():
-            errors_per_item[item.id] = metadata_validator_stac.validate_metadata_fast(item)
+            errors_per_item[item.id] = metadata_validator_stac.validate_metadata_veryfast(item)
             total_items_processed = total_items_processed + 1
 
     # Build errors report
     total_errors_per_schema: Dict[str, int] = {}
+    #total_errors_per_type: Dict[str, Dict[str, int]] = {}
     for errors_item in errors_per_item.values():
         for schema_uri in errors_item:
+            #total errors per schemas
             if schema_uri in total_errors_per_schema:
-                total_errors_per_schema[schema_uri] = total_errors_per_schema[schema_uri] + errors_item[schema_uri]
+                total_errors_per_schema[schema_uri] = total_errors_per_schema[schema_uri] + 1
             else:
-                total_errors_per_schema[schema_uri] = errors_item[schema_uri]
+                total_errors_per_schema[schema_uri] = 1
+            
+            if schema_uri in errors_per_schema:
+                if errors_item[schema_uri] in errors_per_schema[schema_uri]:
+                    errors_per_schema[schema_uri][errors_item[schema_uri]] = errors_per_schema[schema_uri][errors_item[schema_uri]] + 1
+                else:
+                    errors_per_schema[schema_uri][errors_item[schema_uri]] = 1
+            else:
+                errors_per_schema[schema_uri] = {errors_item[schema_uri]: 1}
+
 
     get_log().debug(
         "Metadata Validated",
         metadata_file=metadata_file,
         nbItemsProcessed=total_items_processed,
         duration=time_in_ms() - start_time,
-        errorsPerSchema=total_errors_per_schema
+        nbErrorsPerSchema=total_errors_per_schema,
+        errorsPerItem=errors_per_item,
+        errorsPerSchema=errors_per_schema
     )
 
 
