@@ -20,7 +20,8 @@ def process_directory(source_dir: str) -> None:
 
 def process_metadata(metadata_file: str) -> None:
     start_time = time_in_ms()
-    errors_per_item: Dict[str, Dict[str, int]] = {}
+    errors_per_item: Dict[str, Dict[str, list]] = {}
+    errors_per_type: Dict[str, Dict[str, int]] = {}
     total_items_processed = 0
 
     # Load metadata from metadata csv file
@@ -30,24 +31,26 @@ def process_metadata(metadata_file: str) -> None:
     # Validate item against schema
     for item in item_store.values():
         if item.is_valid():
-            errors_per_item[item.id] = metadata_validator_stac.validate_metadata_fast(item)
+            errors_per_item[item.id] = metadata_validator_stac.validate_metadata_with_report(item)
             total_items_processed = total_items_processed + 1
 
     # Build errors report
-    total_errors_per_schema: Dict[str, int] = {}
     for errors_item in errors_per_item.values():
         for schema_uri in errors_item:
-            if schema_uri in total_errors_per_schema:
-                total_errors_per_schema[schema_uri] = total_errors_per_schema[schema_uri] + errors_item[schema_uri]
-            else:
-                total_errors_per_schema[schema_uri] = errors_item[schema_uri]
+            if schema_uri not in errors_per_type:
+                errors_per_type[schema_uri] = {}
+            for error in errors_item[schema_uri]:
+                if error in errors_per_type[schema_uri]:
+                    errors_per_type[schema_uri][error] = errors_per_type[schema_uri][error] + 1
+                else:
+                    errors_per_type[schema_uri][error] = 1
 
-    get_log().debug(
+    get_log().info(
         "Metadata Validated",
         metadata_file=metadata_file,
         nbItemsProcessed=total_items_processed,
         duration=time_in_ms() - start_time,
-        errorsPerSchema=total_errors_per_schema
+        errors=errors_per_type,
     )
 
 

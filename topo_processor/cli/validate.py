@@ -35,7 +35,7 @@ def main(source, target, verbose):
     if verbose:
         set_level(LogLevel.trace)
     else:
-        set_level(LogLevel.warn)
+        set_level(LogLevel.info)
 
     start_time = time_in_ms()
 
