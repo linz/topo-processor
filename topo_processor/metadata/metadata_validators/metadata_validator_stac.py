@@ -4,9 +4,9 @@ import json
 import urllib
 from typing import TYPE_CHECKING, Any, Dict
 
-from pystac.errors import STACValidationError
-from jsonschema import validators, exceptions
+from jsonschema import exceptions, validators
 from linz_logger import get_log
+from pystac.errors import STACValidationError
 
 from .metadata_validator import MetadataValidator
 

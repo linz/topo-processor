@@ -1,10 +1,11 @@
 from typing import Dict
+
 from linz_logger import get_log
 
 from topo_processor.data.data_transformers import data_transformer_repo
 from topo_processor.file_system.get_fs import get_fs
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
-from topo_processor.metadata.metadata_loaders import metadata_loader_repo, metadata_loader_imagery_historic
+from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic, metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo, metadata_validator_stac
 from topo_processor.stac.store import get_asset, item_store
 from topo_processor.util import time_in_ms

@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List
 
 from linz_logger import get_log
+
 from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
-
 from topo_processor.util import time_in_ms
 
 from .metadata_loader import MetadataLoader

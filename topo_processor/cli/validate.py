@@ -2,8 +2,8 @@ import os
 from functools import wraps
 
 import click
-from linz_logger import LogLevel, get_log, logger, set_level
 import linz_logger
+from linz_logger import LogLevel, get_log, logger, set_level
 
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import DataType, collection_store, process_directory
