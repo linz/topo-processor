@@ -68,6 +68,11 @@ The following source and target combinations can be used:
 
 ### Validate
 
+This command runs a validation against a metadata csv file. It generates a STAC object on the fly for each metadata and run a JSON schema validation. It outputs the errors and their recurrences grouped by JSON schemas as:
+```json
+"errors": {"https://linz.github.io/stac/v0.0.7/aerial-photo/schema.json": {"'aerial-photo:run' is a required property": 4, "'aerial-photo:sequence_number' is a required property": 10}
+```
+
 ```shell
 # Run in a virtual environment (poetry shell):
 ./validate --source metadata_file.csv
