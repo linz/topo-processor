@@ -43,7 +43,7 @@ poetry install
 ### Upload
 
 ```shell
-# Run in a virtual environment (poetry shell).
+# Run in a virtual environment (poetry shell):
 ./upload --source source_path --datatype data.type --target target_folder
 ```
 
@@ -65,3 +65,25 @@ The following source and target combinations can be used:
 | s3            | local         |
 | local         | local         |
 | local         | s3            |
+
+### Validate
+
+```shell
+# Run in a virtual environment (poetry shell):
+./validate --source metadata_file.csv
+```
+
+```shell
+# For help:
+./validate --help
+```
+
+```shell
+# To see all logs in a tidy format, use pretty-json-log:
+./validate --source metadata_file.csv --verbose | pjl
+```
+
+```shell
+# To record the output in an external file:
+./validate --source metadata_file.csv | tee output.file
+```

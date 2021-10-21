@@ -20,18 +20,12 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The name of the metadata csv file to import",
 )
 @click.option(
-    "-t",
-    "--target",
-    required=True,
-    help="The target directory path or bucket name to write the output",
-)
-@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source, target, verbose):
+def main(source, verbose):
     if verbose:
         set_level(LogLevel.trace)
     else:
@@ -44,7 +38,7 @@ def main(source, target, verbose):
 
     process_metadata(source)
     get_log().debug(
-        "Job Completed",
-        location=target,
+        "validate completed",
+        file=source,
         duration=time_in_ms() - start_time,
     )
