@@ -271,6 +271,14 @@ format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors
 format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
 
 [[package]]
+name = "jsonschema-rs"
+version = "0.12.3"
+description = "Fast JSON Schema validation for Python implemented in Rust"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "lazy-object-proxy"
 version = "1.6.0"
 description = "A fast and thorough lazy object proxy."
@@ -666,7 +674,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "83ef1395a1c3dff791543e17ae78d0ba663c0dd7616127edde11a791d4012d1e"
+content-hash = "ccdfe575b0cc37e3c7a2fb7847bd423a0035c9a845a408beedd8de50abdfda6c"
 
 [metadata.files]
 affine = [
@@ -798,6 +806,21 @@ jmespath = [
 jsonschema = [
     {file = "jsonschema-3.2.0-py2.py3-none-any.whl", hash = "sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163"},
     {file = "jsonschema-3.2.0.tar.gz", hash = "sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"},
+]
+jsonschema-rs = [
+    {file = "jsonschema_rs-0.12.3-cp36-cp36m-macosx_10_15_x86_64.whl", hash = "sha256:d2bd70a6895802e1dec6f870ed5337b7ca6ed843bfee8cc4775f12c617a19552"},
+    {file = "jsonschema_rs-0.12.3-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fe31f6ed39f57858e3d8e6da0629e91fab329a02aaec9a5197c2729945609b14"},
+    {file = "jsonschema_rs-0.12.3-cp36-cp36m-win_amd64.whl", hash = "sha256:03daf03ccf65eeb176393828c0f7e9c7388273de60004b08dcf35992ea518445"},
+    {file = "jsonschema_rs-0.12.3-cp37-cp37m-macosx_10_15_x86_64.whl", hash = "sha256:736f5db928af1ab3b93b413f3a84955bf3fe8d88061e4b03e76ca64b5396a9b6"},
+    {file = "jsonschema_rs-0.12.3-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8c23c70cbb2c811129d5d11c8b30b75f514f00562935f39eec79a6aa2b74bb38"},
+    {file = "jsonschema_rs-0.12.3-cp37-cp37m-win_amd64.whl", hash = "sha256:37faf28528180abd1f650b12ab38ebd9cebf6137bc8da71493c3305d351b9e85"},
+    {file = "jsonschema_rs-0.12.3-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:268d8f0dca5817490f3d2e2b262c31f8c115eeb8a5281a08cea9623f6d49f020"},
+    {file = "jsonschema_rs-0.12.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:af5ef407f09365758d2a8201442ebb0e59da128cf898aecf53af5a1223da3c08"},
+    {file = "jsonschema_rs-0.12.3-cp38-cp38-win_amd64.whl", hash = "sha256:d882478b5f30afd7e8e8bf7064039ad7551eab1a1831580ee611b683f363f70b"},
+    {file = "jsonschema_rs-0.12.3-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:0aca16150eede373d4bd25a885b5bce1d9e4b7fc417461ae6bb87eddd00314fc"},
+    {file = "jsonschema_rs-0.12.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b4d22ae55a9a1f1a0c64a3bd136d23aafb1f206c4330f28b2bba5216542170b5"},
+    {file = "jsonschema_rs-0.12.3-cp39-cp39-win_amd64.whl", hash = "sha256:058d5c5766144f098820dda6f378c147c2114dcc5900bdc2c29225ca45d0953b"},
+    {file = "jsonschema_rs-0.12.3.tar.gz", hash = "sha256:e82b7c8824161e7ced0171c85a1a98b837eba47667443994e8730c8d1a46db8f"},
 ]
 lazy-object-proxy = [
     {file = "lazy-object-proxy-1.6.0.tar.gz", hash = "sha256:489000d368377571c6f982fba6497f2aa13c6d1facc40660963da62f5c379726"},
