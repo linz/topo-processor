@@ -4,7 +4,7 @@ import json
 import urllib
 from typing import TYPE_CHECKING, Any, Dict
 
-from jsonschema import exceptions, validators
+import jsonschema_rs
 from linz_logger import get_log
 from pystac.errors import STACValidationError
 
@@ -16,17 +16,17 @@ if TYPE_CHECKING:
 
 class MetadataValidatorStac(MetadataValidator):
     name = "validator.stac"
-    schema_cache: Dict[str, Dict[str, Any]] = {}
+    validator_cache: Dict[str, Any] = {}
 
-    def get_schema_from_uri(self, schema_uri: str) -> Dict[str, Any]:
-        if schema_uri not in self.schema_cache:
+    def get_validator_from_uri(self, schema_uri: str) -> Any:
+        if schema_uri not in self.validator_cache:
             response = urllib.request.urlopen(schema_uri)
             s = json.loads(response.read())
-            self.schema_cache[schema_uri] = s
+            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema(s)
 
-        schema = self.schema_cache[schema_uri]
+        validator = self.validator_cache[schema_uri]
 
-        return schema
+        return validator
 
     def is_applicable(self, item: Item) -> bool:
         return True
@@ -45,18 +45,9 @@ class MetadataValidatorStac(MetadataValidator):
 
         for schema_uri in stac_item["stac_extensions"]:
             current_errors = []
-            schema = self.get_schema_from_uri(schema_uri)
-            cls = validators.validator_for(schema)
+            v = self.get_validator_from_uri(schema_uri)
 
-            try:
-                cls.check_schema(schema)
-            except exceptions.SchemaError as e:
-                get_log().error(
-                    f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"], schemaURI=schema_uri, error=e
-                )
-
-            v = cls(schema)
-            errors = sorted(v.iter_errors(stac_item), key=lambda e: e.path)
+            errors = v.iter_errors(stac_item)
 
             for error in errors:
                 current_errors.append(error.message)
