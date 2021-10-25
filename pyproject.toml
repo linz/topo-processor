@@ -15,6 +15,7 @@ python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.6.1"}
 pystac = "^1.1.0"
 jsonschema = "^3.2.0"
+fastjsonschema = "^2.15.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.6b0"
@@ -35,7 +36,4 @@ line-length = 127
 [tool.isort]
 line_length = 127
 case_sensitive = true
-use_parentheses = true
-include_trailing_comma = true
-multi_line_output = 3
-force_grid_wrap = 0
+profile = "black"

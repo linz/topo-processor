@@ -35,3 +35,6 @@ class MetadataLoaderTiff(MetadataLoader):
                 else:
                     crs = None
                 asset.item.properties.update({"proj:epsg": crs})
+
+    def load_all_metadata(self, metadata_file: str) -> None:
+        pass
