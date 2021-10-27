@@ -51,6 +51,16 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
+    def get_bounding_boxes(self):
+        bboxes = []
+        for item in self.items.values():
+            if item.geometry_poly is None:
+                continue
+            bboxes.append(item.geometry_poly.bounds)
+        if len(bboxes) == 0:
+            return None
+        return bboxes
+
     def delete_temp_dir(self):
         global TEMP_DIR
         if TEMP_DIR:
@@ -66,7 +76,7 @@ class Collection(Validity):
             license=self.license,
             providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(
-                pystac.SpatialExtent(bboxes=[[0, 0, 0, 0]]),
+                pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[datetime.datetime.now(), datetime.datetime.now()]),
             ),
         )

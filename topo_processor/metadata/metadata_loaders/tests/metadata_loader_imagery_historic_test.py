@@ -143,3 +143,46 @@ def test_scanning_metadata_added():
     assert stac.StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"]
     assert "scan:scanned" not in item.properties.keys()
+
+
+def test_spatial_metadata_empty():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
+    assert item.geometry_poly is None
+
+
+def test_spatial_metadata_polygon_empty():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"WKT": "POLYGON EMPTY"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
+    assert item.geometry_poly is None
+    assert item.log[0]["msg"] == "Geometry is missing"
+    assert item.log[0]["level"] == "warning"
+
+
+def test_spatial_metadata_polygon_invalid():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"WKT": "POLYGON POLYGON ((177.168157744315 -38.7538525409217))"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
+    assert item.geometry_poly is None
+    assert item.log[0]["msg"] == "Geometry is invalid"
+    assert item.log[0]["level"] == "error"
+
+
+def test_spatial_metadata_polygon():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {
+        "WKT": "POLYGON ((177.168157744315 -38.7538525409217,177.23423558687 -38.7514276946524,177.237358655351 -38.8031681573174,177.17123348276 -38.8055953066942,177.168157744315 -38.7538525409217))"
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
+    assert item.geometry_poly is not None
+    assert item.geometry_poly.bounds == (177.16816, -38.8056, 177.23736, -38.75143)
