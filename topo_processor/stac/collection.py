@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Dict, List
 import pystac
 import ulid
 from linz_logger import get_log
+from shapely.ops import unary_union
 
 from topo_processor.util import Validity
 
@@ -52,14 +53,15 @@ class Collection(Validity):
         return temp_dir
 
     def get_bounding_boxes(self):
-        bboxes = []
-        for item in self.items.values():
-            if item.geometry_poly is None:
-                continue
-            bboxes.append(item.geometry_poly.bounds)
-        if len(bboxes) == 0:
+        """
+        create a union of all item bounding boxes inside the collection
+        """
+        polys = [x.geometry_poly for x in self.items.values() if x.geometry_poly is not None]
+
+        if len(polys) == 0:
             return None
-        return bboxes
+        union_poly = unary_union(polys)
+        return [union_poly.bounds]
 
     def delete_temp_dir(self):
         global TEMP_DIR
