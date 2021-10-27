@@ -3,10 +3,11 @@ from __future__ import annotations
 import csv
 import os
 from typing import TYPE_CHECKING, Dict
+from topo_processor import metadata
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number
+from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number, nzt_datetime_to_utc_datetime
 
 from .metadata_loader import MetadataLoader
 
@@ -67,7 +68,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:camera": metadata_row["camera"],
                 "linz:photocentre_lat": metadata_row["photocentre_lat"],
                 "linz:photocentre_lon": metadata_row["photocentre_lon"],
-                "linz:date": metadata_row["date"],
                 "linz:photo_type": metadata_row["photo_type"],
                 "linz:scanned": metadata_row["scanned"],
                 "linz:raw_filename": metadata_row["raw_filename"],
@@ -79,6 +79,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_film_metadata(item, metadata_row)
         self.add_aerial_photo_metadata(item, metadata_row)
         self.add_scanning_metadata(item, metadata_row)
+        self.add_datetime_property(item, metadata_row)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -159,3 +160,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
+
+    def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
+        item_date = asset_metadata.get("date", None)
+
+        if item_date:
+            item.datetime = nzt_datetime_to_utc_datetime(item_date)
+        else:
+            item.datetime = None

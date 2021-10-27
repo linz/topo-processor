@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from typing import List
 
 import pystac
@@ -15,7 +15,7 @@ class Item(Validity):
     id: str
     geometry: str
     bbox: str
-    datetime: datetime
+    datetime: datetime.datetime
     properties: dict
     stac_extensions: set
     collection: Collection
@@ -24,6 +24,7 @@ class Item(Validity):
     def __init__(self, item_id: str):
         super().__init__()
         self.id = item_id
+        self.datetime = datetime.datetime.now()
         self.properties = {}
         self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None
@@ -51,7 +52,7 @@ class Item(Validity):
             id=self.id,
             geometry=None,
             bbox=None,
-            datetime=datetime.now(),
+            datetime=self.datetime,
             properties=self.properties,
             stac_extensions=list(self.stac_extensions),
         )

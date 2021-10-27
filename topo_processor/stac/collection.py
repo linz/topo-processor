@@ -1,6 +1,6 @@
 from __future__ import annotations
+from datetime import datetime
 
-import datetime
 import os
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -51,6 +51,18 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
+    def get_temporal_extent(self) -> List[datetime | None]:
+        intervals: List[datetime | None] = [None, None]
+        datetimes = []
+
+        for item in self.items.values():
+            datetimes.append(item.datetime)
+        
+        if datetimes:
+            intervals = [min(datetimes), max(datetimes)]
+        
+        return intervals
+
     def delete_temp_dir(self):
         global TEMP_DIR
         if TEMP_DIR:
@@ -67,7 +79,7 @@ class Collection(Validity):
             providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=[[0, 0, 0, 0]]),
-                pystac.TemporalExtent(intervals=[datetime.datetime.now(), datetime.datetime.now()]),
+                pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
         )
         return stac

@@ -143,3 +143,28 @@ def test_scanning_metadata_added():
     assert stac.StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"]
     assert "scan:scanned" not in item.properties.keys()
+
+def test_add_datetime_property():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"date": "1952-04-23T00:00:00.000"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_datetime_property(item, asset_metadata=metadata)
+    assert item.datetime is not None
+    assert item.datetime.isoformat() == "1952-04-22T12:00:00+00:00"
+
+def test_add_datetime_property_empty():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"date": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_datetime_property(item, asset_metadata=metadata)
+    assert item.datetime is None
+
+def test_add_datetime_property_not_date():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {"date": "toto"}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_datetime_property(item, asset_metadata=metadata)
+    assert item.datetime is None
