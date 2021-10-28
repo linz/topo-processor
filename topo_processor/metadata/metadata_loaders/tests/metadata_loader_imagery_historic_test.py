@@ -172,7 +172,7 @@ def test_add_datetime_property_not_date():
     metadata_loader_imagery_historic.add_datetime_property(item, asset_metadata=metadata)
     assert item.datetime is None
 
-    
+
 def test_spatial_metadata_empty():
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
