@@ -24,7 +24,7 @@ class Item(Validity):
     def __init__(self, item_id: str):
         super().__init__()
         self.id = item_id
-        self.datetime = datetime.datetime.now()
+        self.datetime = None
         self.properties = {}
         self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None

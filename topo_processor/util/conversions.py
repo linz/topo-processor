@@ -57,11 +57,16 @@ def quarterdate_to_datetime(value):
 
     return value
 
-def nzt_datetime_to_utc_datetime(date: str) -> datetime:
-    utc_tz = tz.gettz('UTC')
-    nz_tz = tz.gettz('Pacific/Auckland')
 
-    nz_time = parser.parse(date).replace(tzinfo=nz_tz)
+def nzt_datetime_to_utc_datetime(date: str) -> datetime:
+    utc_tz = tz.gettz("UTC")
+    nz_tz = tz.gettz("Pacific/Auckland")
+
+    try:
+        nz_time = parser.parse(date).replace(tzinfo=nz_tz)
+    except parser.ParserError as err:
+        raise Exception(f"Not a valid date: {err}") from err
+
     utc_time = nz_time.astimezone(utc_tz)
 
     return utc_time

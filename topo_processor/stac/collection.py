@@ -56,11 +56,12 @@ class Collection(Validity):
         datetimes = []
 
         for item in self.items.values():
-            datetimes.append(item.datetime)
-        
+            if item.datetime:
+                datetimes.append(item.datetime)
+
         if datetimes:
             intervals = [min(datetimes), max(datetimes)]
-        
+
         return intervals
 
     def delete_temp_dir(self):

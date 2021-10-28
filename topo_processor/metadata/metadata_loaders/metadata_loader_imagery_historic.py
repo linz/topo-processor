@@ -7,7 +7,13 @@ from topo_processor import metadata
 
 import topo_processor.stac as stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number, nzt_datetime_to_utc_datetime
+from topo_processor.util import (
+    quarterdate_to_datetime,
+    remove_empty_strings,
+    string_to_boolean,
+    string_to_number,
+    nzt_datetime_to_utc_datetime,
+)
 
 from .metadata_loader import MetadataLoader
 
@@ -165,6 +171,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item_date = asset_metadata.get("date", None)
 
         if item_date:
-            item.datetime = nzt_datetime_to_utc_datetime(item_date)
+            try:
+                item.datetime = nzt_datetime_to_utc_datetime(item_date)
+            except Exception as e:
+                item.add_error(msg="Invalid date", cause=self.name, e=e)
         else:
-            item.datetime = None
+            item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))

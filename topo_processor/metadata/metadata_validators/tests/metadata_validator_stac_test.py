@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from typing import Dict
 
@@ -13,6 +14,7 @@ def test_check_validity_camera_extension():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
+    item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"camera:nominal_focal_length": "string"})
     item.properties.update({"camera:sequence_number": 1234})
@@ -39,6 +41,7 @@ def test_check_validity_fails_on_string_aerial_photo_extension():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
+    item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"aerial-photo:run": "string"})
     item.properties.update({"aerial-photo:altitude": "string"})
@@ -57,6 +60,7 @@ def test_check_validity_fails_on_required_field_aerial_photo_extension():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
+    item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"aerial-photo:altitude": 1234})
     item.properties.update({"aerial-photo:scale": 1234})
@@ -74,6 +78,7 @@ def test_check_validity_scanning_extension():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
+    item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"scan:is_original": True})
     item.properties.update({"scan:scanned": "string"})
@@ -90,6 +95,7 @@ def test_validate_metadata_with_report():
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
+    item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"film:id": "1234"})
     item.properties.update({"film:negative_sequence": "string"})

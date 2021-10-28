@@ -27,6 +27,7 @@ def test_fail_on_duplicate_assets(setup):
     collection.description = "fake_description"
     collection.license = "face_license"
     item = Item("item_id")
+    item.datetime = datetime.now()
     collection.add_item(item)
     item.collection = collection
 

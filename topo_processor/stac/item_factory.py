@@ -31,7 +31,7 @@ def process_metadata(metadata_file: str) -> None:
 
     # Validate item against schema
     for item in item_store.values():
-        if item.is_valid():
+        if item.is_valid():  # type: ignore[no-untyped-call]
             errors_per_item[item.id] = metadata_validator_stac.validate_metadata_with_report(item)
             total_items_processed = total_items_processed + 1
 

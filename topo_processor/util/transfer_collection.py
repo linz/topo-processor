@@ -21,14 +21,13 @@ def transfer_collection(collection: Collection, target: str):
     stac_collection.catalog_type = CatalogType.SELF_CONTAINED
 
     for item in collection.items.values():
-        stac_item = item.create_stac()
-
         if not item.is_valid():
             get_log().warning("Invalid item was not uploaded:", error=item.log)
             continue
         if item.log:
             get_log().warning(f"Item {item.id} contains warnings:", error=item.log)
 
+        stac_item = item.create_stac()
         stac_collection.add_item(stac_item)
         # pystac v1.1.0
         # Required to change the pystac default of ./{id}/{id}.json
