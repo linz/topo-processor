@@ -4,6 +4,8 @@ import csv
 import os
 from typing import TYPE_CHECKING, Dict
 
+import shapely.wkt
+
 import topo_processor.stac as stac
 from topo_processor import metadata
 from topo_processor.stac.store import get_collection, get_item
@@ -86,6 +88,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_aerial_photo_metadata(item, metadata_row)
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
+        self.add_spatial_extent(item, metadata_row)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -108,6 +111,21 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                     self.raw_metadata[row["sufi"]] = row
 
         self.is_init = True
+
+    def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
+        wkt = asset_metadata.get("WKT", None)
+        if wkt is None or wkt.lower() == "polygon empty":
+            item.add_warning("Geometry is missing", "")
+            return
+
+        try:
+            # EPSG:4167 -> EPSG:4326 is mostly a null conversion, in the future if we support additional projections we should reproject this
+            poly = shapely.wkt.loads(wkt)
+            # Reduce the precision of all the coordinates to approx 1M resolution
+            poly = shapely.wkt.loads(shapely.wkt.dumps(poly, rounding_precision=5))
+            item.geometry_poly = poly
+        except shapely.errors.WKTReadingError as e:
+            item.add_error("Geometry is invalid", "", e)
 
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         camera_properties = {}

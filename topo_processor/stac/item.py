@@ -2,6 +2,7 @@ import datetime
 from typing import List
 
 import pystac
+import shapely.geometry
 
 from topo_processor.util import Validity
 
@@ -13,8 +14,7 @@ from .stac_extensions import StacExtensions
 class Item(Validity):
 
     id: str
-    geometry: str
-    bbox: str
+    geometry_poly: shapely.geometry.Polygon
     datetime: datetime.datetime
     properties: dict
     stac_extensions: set
@@ -28,6 +28,7 @@ class Item(Validity):
         self.properties = {}
         self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None
+        self.geometry_poly = None
         self.assets = []
 
     def is_valid(self):
@@ -40,7 +41,7 @@ class Item(Validity):
 
     def add_asset(self, asset: Asset):
         if asset.item:
-            raise Exception(f"Asset is already assoiciated with an item: existing item='{asset.item.id}' new item='{self.id}'")
+            raise Exception(f"Asset is already associated with an item: existing item='{asset.item.id}' new item='{self.id}'")
         self.assets.append(asset)
         asset.item = self
 
@@ -48,10 +49,19 @@ class Item(Validity):
         self.stac_extensions.add(ext)
 
     def create_stac(self) -> pystac.Item:
+        geometry = None
+        bbox = None
+        if self.geometry_poly is not None:
+            geometry = shapely.geometry.mapping(self.geometry_poly)
+            bbox = self.geometry_poly.bounds
+
         stac = pystac.Item(
             id=self.id,
             geometry=None,
             bbox=None,
+            datetime=self.datetime,
+            geometry=geometry,
+            bbox=bbox,
             datetime=self.datetime,
             properties=self.properties,
             stac_extensions=list(self.stac_extensions),
