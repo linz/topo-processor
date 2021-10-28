@@ -57,9 +57,6 @@ class Item(Validity):
 
         stac = pystac.Item(
             id=self.id,
-            geometry=None,
-            bbox=None,
-            datetime=self.datetime,
             geometry=geometry,
             bbox=bbox,
             datetime=self.datetime,
