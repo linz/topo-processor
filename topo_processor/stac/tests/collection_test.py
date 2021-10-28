@@ -36,7 +36,7 @@ def test_create_stac():
 
 def test_polygon_union_empty():
     collection = Collection("fake_collection")
-    assert collection.get_bounding_boxes() is None
+    assert collection.get_bounding_boxes() is [(0.0, 0.0, 0.0, 0.0)]
 
 
 def test_polygon_union():
