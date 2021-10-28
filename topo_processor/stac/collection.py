@@ -53,17 +53,22 @@ class Collection(Validity):
         return temp_dir
 
     def get_temporal_extent(self) -> List[datetime | None]:
-        intervals: List[datetime | None] = [None, None]
-        datetimes = []
+        min_date = None
+        max_date = None
 
         for item in self.items.values():
             if item.datetime:
-                datetimes.append(item.datetime)
+                if not min_date:
+                    min_date = item.datetime
+                elif item.datetime < min_date:
+                    min_date = item.datetime
 
-        if datetimes:
-            intervals = [min(datetimes), max(datetimes)]
+                if not max_date:
+                    max_date = item.datetime
+                elif item.datetime > max_date:
+                    max_date = item.datetime
 
-        return intervals
+        return [min_date, max_date]
 
     def get_bounding_boxes(self):
         """

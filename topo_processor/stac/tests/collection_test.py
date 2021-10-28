@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 import shapely.wkt
 
@@ -51,3 +53,32 @@ def test_polygon_union():
     collection.add_item(item_b)
     item_b.geometry_poly = shapely.wkt.loads("POLYGON ((5 6,5 8,7 8,7 6,5 6))")
     assert collection.get_bounding_boxes() == [(1.0, 2.0, 7.0, 8.0)]
+
+
+def test_get_temporal_extent():
+    collection = Collection("fake_collection")
+    datetime_earliest = datetime.strptime("1918-11-11", "%Y-%m-%d")
+    datetime_mid = datetime.strptime("1945-05-08", "%Y-%m-%d")
+    datetime_latest = datetime.strptime("1989-11-09", "%Y-%m-%d")
+
+    item_x = Item("id_0")
+    item_x.datetime = None
+    collection.add_item(item_x)
+
+    item_a = Item("id_1")
+    item_a.datetime = datetime_latest
+    collection.add_item(item_a)
+
+    item_b = Item("id_2")
+    item_b.datetime = datetime_earliest
+    collection.add_item(item_b)
+
+    item_c = Item("id_3")
+    item_c.datetime = None
+    collection.add_item(item_c)
+
+    item_d = Item("id_4")
+    item_d.datetime = datetime_mid
+    collection.add_item(item_d)
+
+    assert collection.get_temporal_extent() == [datetime_earliest, datetime_latest]
