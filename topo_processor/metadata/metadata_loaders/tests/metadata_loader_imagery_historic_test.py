@@ -196,6 +196,5 @@ def test_spatial_metadata_collection_polygon():
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
 
-    itemB = stac.Item("test_def.tiff")
     assert item.geometry_poly is not None
     assert item.geometry_poly.bounds == (177.16816, -38.8056, 177.23736, -38.75143)
