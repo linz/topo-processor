@@ -59,7 +59,7 @@ class Collection(Validity):
         polys = [x.geometry_poly for x in self.items.values() if x.geometry_poly is not None]
 
         if len(polys) == 0:
-            return None
+            return [(0.0, 0.0, 0.0, 0.0)]
         union_poly = unary_union(polys)
         return [union_poly.bounds]
 
