@@ -1,8 +1,8 @@
-from datetime import date, datetime
 import shutil
+from datetime import date, datetime
 from tempfile import mkdtemp
-import dateutil
 
+import dateutil
 import pytest
 
 from topo_processor.stac import Asset, Collection, Item

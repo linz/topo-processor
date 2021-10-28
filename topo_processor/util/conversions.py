@@ -1,6 +1,7 @@
-from datetime import datetime
 import re
+from datetime import datetime
 from typing import Dict
+
 from dateutil import parser, tz
 
 

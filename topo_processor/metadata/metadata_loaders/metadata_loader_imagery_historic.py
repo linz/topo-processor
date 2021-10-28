@@ -3,16 +3,16 @@ from __future__ import annotations
 import csv
 import os
 from typing import TYPE_CHECKING, Dict
-from topo_processor import metadata
 
 import topo_processor.stac as stac
+from topo_processor import metadata
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
+    nzt_datetime_to_utc_datetime,
     quarterdate_to_datetime,
     remove_empty_strings,
     string_to_boolean,
     string_to_number,
-    nzt_datetime_to_utc_datetime,
 )
 
 from .metadata_loader import MetadataLoader
