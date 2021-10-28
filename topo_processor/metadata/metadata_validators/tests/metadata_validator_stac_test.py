@@ -102,5 +102,5 @@ def test_validate_metadata_with_report():
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     errors_report = validator.validate_metadata_with_report(item)
-    assert "'string' is not of type 'integer'" in errors_report[stac.StacExtensions.film.value]
-    assert "'aerial-photo:run' is a required property" in errors_report[stac.StacExtensions.aerial_photo.value]
+    assert '"string" is not of type "integer"' in errors_report[stac.StacExtensions.film.value]
+    assert '"aerial-photo:run" is a required property' in errors_report[stac.StacExtensions.aerial_photo.value]
