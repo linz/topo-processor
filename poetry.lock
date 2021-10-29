@@ -676,7 +676,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fbf916f5a7c5cd191a9f60b5aa0d3473d79d82dd12a8dfebee73e27ad69d4dc2"
+content-hash = "2a1630439aa99aa3617a6d0d23cc7b99cc50fd3e8c6a7a577a3fd8c27240f329"
 
 [metadata.files]
 affine = [

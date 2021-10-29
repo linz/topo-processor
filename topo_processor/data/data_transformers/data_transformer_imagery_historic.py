@@ -7,7 +7,7 @@ import pystac
 import ulid
 from linz_logger import get_log
 
-import topo_processor.stac as stac
+from topo_processor import stac
 from topo_processor.cog.create_cog import create_cog
 from topo_processor.util import is_tiff, time_in_ms
 

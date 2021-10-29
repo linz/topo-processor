@@ -1,15 +1,11 @@
 import os
-from functools import wraps
 
 import click
-import linz_logger
-from linz_logger import LogLevel, get_log, logger, set_level
+from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.stac.item_factory import process_metadata
 from topo_processor.util import time_in_ms
-from topo_processor.util.transfer_collection import transfer_collection
 
 
 @click.command()

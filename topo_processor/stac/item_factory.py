@@ -56,7 +56,6 @@ def process_metadata(metadata_file: str) -> None:
 
 
 def _create_assets(source_dir: str) -> None:
-    assets_to_process = []
     fs = get_fs(source_dir)
     for (path, _, files) in fs.walk(source_dir):
         if not files:
@@ -64,16 +63,15 @@ def _create_assets(source_dir: str) -> None:
         for file_ in files:
             asset_path = get_path_with_protocol(source_dir, fs, path)
             asset = get_asset(f"{asset_path}/{file_}")
-            assets_to_process.append(metadata_loader_repo.load_metadata(asset))
+            metadata_loader_repo.load_metadata(asset)
 
 
-def _create_items():
-    items_to_process = []
+def _create_items() -> None:
     for item in item_store.values():
-        items_to_process.append(_process_item(item))
+        _process_item(item)
 
 
-def _process_item(item):
+def _process_item(item) -> None:
     if item.is_valid():
         metadata_validator_repo.validate_metadata(item)
     if item.is_valid():
