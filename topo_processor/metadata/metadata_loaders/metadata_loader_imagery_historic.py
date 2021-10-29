@@ -67,19 +67,18 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(
             {
-                "linz:sufi": metadata_row["sufi"],
-                "linz:survey": metadata_row["survey"],
-                "linz:alternate_survey_name": metadata_row["alternate_survey_name"],
-                "linz:camera": metadata_row["camera"],
-                "linz:photocentre_lat": metadata_row["photocentre_lat"],
-                "linz:photocentre_lon": metadata_row["photocentre_lon"],
-                "linz:photo_type": metadata_row["photo_type"],
+                "platform": "fixed-wing aircraft",
+                "instruments": [metadata_row["camera"]],
+                "linz:date": metadata_row["date"],  # needs to use correct date format
+                "linz:photo_type": metadata_row["photo_type"],  # changed to eo:bands prob separate function
                 "linz:scanned": metadata_row["scanned"],
                 "linz:raw_filename": metadata_row["raw_filename"],
                 "linz:released_filename": metadata_row["released_filename"],
                 "linz:photo_version": metadata_row["photo_version"],
             }
         )
+        self.add_centroid(item, metadata_row)
+        self.add_mission(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
         self.add_aerial_photo_metadata(item, metadata_row)
@@ -108,6 +107,32 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                     self.raw_metadata[row["sufi"]] = row
 
         self.is_init = True
+
+    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
+        centroid = {
+            "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
+            "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
+        }
+        if not all(centroid.values()) or "" in centroid.values():
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'proj:centroid' has None values: {centroid}"),
+            )
+        else:
+            item.properties.update({"proj:centroid": centroid})
+            if stac.StacExtensions.projection.value not in item.stac_extensions:
+                item.add_extension(stac.StacExtensions.projection.value)
+
+    def add_mission(self, item: Item, asset_metadata: Dict[str, str]):
+        survey = asset_metadata.get("survey", None)
+        if not survey or survey == "0" or survey == "":
+            alternative_survey = asset_metadata.get("alternative_survey", None)
+            if alternative_survey:
+                item.properties.update(remove_empty_strings({"mission": alternative_survey}))
+                return
+        else:
+            item.properties.update({"mission": survey})
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
         wkt = asset_metadata.get("WKT", None)
