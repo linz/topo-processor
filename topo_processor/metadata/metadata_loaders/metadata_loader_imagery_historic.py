@@ -64,21 +64,15 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
-
+        
+        self.add_mission(item, metadata_row)
         item.properties.update(
             {
                 "platform": "fixed-wing aircraft",
                 "instruments": [metadata_row["camera"]],
-                "linz:date": metadata_row["date"],  # needs to use correct date format
-                "linz:photo_type": metadata_row["photo_type"],  # changed to eo:bands prob separate function
-                "linz:scanned": metadata_row["scanned"],
-                "linz:raw_filename": metadata_row["raw_filename"],
-                "linz:released_filename": metadata_row["released_filename"],
-                "linz:photo_version": metadata_row["photo_version"],
             }
         )
         self.add_centroid(item, metadata_row)
-        self.add_mission(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
         self.add_aerial_photo_metadata(item, metadata_row)
