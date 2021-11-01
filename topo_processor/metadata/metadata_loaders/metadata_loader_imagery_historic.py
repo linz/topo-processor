@@ -8,7 +8,13 @@ import shapely.wkt
 
 from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import quarterdate_to_datetime, remove_empty_strings, string_to_boolean, string_to_number
+from topo_processor.util import (
+    nzt_datetime_to_utc_datetime,
+    quarterdate_to_datetime,
+    remove_empty_strings,
+    string_to_boolean,
+    string_to_number,
+)
 
 from .metadata_loader import MetadataLoader
 
@@ -67,7 +73,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:camera": metadata_row["camera"],
                 "linz:photocentre_lat": metadata_row["photocentre_lat"],
                 "linz:photocentre_lon": metadata_row["photocentre_lon"],
-                "linz:date": metadata_row["date"],
                 "linz:photo_type": metadata_row["photo_type"],
                 "linz:scanned": metadata_row["scanned"],
                 "linz:raw_filename": metadata_row["raw_filename"],
@@ -79,6 +84,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_film_metadata(item, metadata_row)
         self.add_aerial_photo_metadata(item, metadata_row)
         self.add_scanning_metadata(item, metadata_row)
+        self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
 
     def read_csv(self, metadata_file: str = "") -> None:
@@ -175,3 +181,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
+
+    def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
+        item_date = asset_metadata.get("date", None)
+
+        if item_date:
+            try:
+                item.datetime = nzt_datetime_to_utc_datetime(item_date)
+            except Exception as e:
+                item.add_error(msg="Invalid date", cause=self.name, e=e)
+        else:
+            item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import datetime
 import os
+from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
 from typing import TYPE_CHECKING, Dict, List
@@ -52,6 +52,24 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
+    def get_temporal_extent(self) -> List[datetime | None]:
+        min_date = None
+        max_date = None
+
+        for item in self.items.values():
+            if item.datetime:
+                if not min_date:
+                    min_date = item.datetime
+                elif item.datetime < min_date:
+                    min_date = item.datetime
+
+                if not max_date:
+                    max_date = item.datetime
+                elif item.datetime > max_date:
+                    max_date = item.datetime
+
+        return [min_date, max_date]
+
     def get_bounding_boxes(self):
         """
         create a union of all item bounding boxes inside the collection
@@ -79,7 +97,7 @@ class Collection(Validity):
             providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
-                pystac.TemporalExtent(intervals=[datetime.datetime.now(), datetime.datetime.now()]),
+                pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
         )
         return stac
