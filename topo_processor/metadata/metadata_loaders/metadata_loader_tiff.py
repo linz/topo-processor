@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import rasterio
 
-import topo_processor.stac as stac
+from topo_processor import stac
 from topo_processor.file_system.get_fs import get_fs
 from topo_processor.util import is_tiff
 

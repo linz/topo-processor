@@ -1,5 +1,4 @@
 import os
-from functools import wraps
 
 import click
 from linz_logger import LogLevel, get_log, set_level

@@ -6,8 +6,7 @@ from typing import TYPE_CHECKING, Dict
 
 import shapely.wkt
 
-import topo_processor.stac as stac
-from topo_processor import metadata
+from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
     nzt_datetime_to_utc_datetime,
@@ -21,8 +20,6 @@ from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
     from topo_processor.stac import Asset, Item
-
-from linz_logger import get_log
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
