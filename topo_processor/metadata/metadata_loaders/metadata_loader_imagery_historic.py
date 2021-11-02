@@ -119,8 +119,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             )
         else:
             item.properties.update({"proj:centroid": centroid})
-            if stac.StacExtensions.projection.value not in item.stac_extensions:
-                item.add_extension(stac.StacExtensions.projection.value)
+            item.add_extension(stac.StacExtensions.projection.value)
 
     def add_mission(self, item: Item, asset_metadata: Dict[str, str]):
         survey = asset_metadata.get("survey", None)
