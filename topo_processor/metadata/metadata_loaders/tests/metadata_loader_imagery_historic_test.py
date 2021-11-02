@@ -226,3 +226,43 @@ def test_spatial_metadata_collection_polygon():
 
     assert item.geometry_poly is not None
     assert item.geometry_poly.bounds == (177.16816, -38.8056, 177.23736, -38.75143)
+
+
+def test_centroid_metadata_added():
+    """Tests centroid metadata is added correctly"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {
+        "photocentre_lat": "123.456",
+        "photocentre_lon": "789.123",
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_centroid(item, asset_metadata=metadata)
+    assert item.properties["proj:centroid"] == {"lat": 123.456, "lon": 789.123}
+    assert stac.HistoricalStacExtensions.projection.value in item.stac_extensions
+
+
+def test_mission_metadata_added_by_survey():
+    """Tests mission metadata is added by survey value"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {
+        "survey": "12345",
+        "alternative_survey": "",
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
+    assert item.properties["mission"] == "12345"
+
+
+def test_mission_metadata_added_by_alternative_survey():
+    """Tests mission metadata is added by survey value"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {
+        "survey": "0",
+        "alternative_survey": "67890",
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
+    assert item.properties["mission"] == "67890"
