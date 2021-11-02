@@ -8,7 +8,7 @@ from topo_processor.util import Validity
 
 from .asset import Asset
 from .collection import Collection
-from .stac_extensions import StacExtensions
+from .stac_extensions import HistoricalStacExtensions
 
 
 class Item(Validity):
@@ -26,7 +26,7 @@ class Item(Validity):
         self.id = item_id
         self.datetime = None
         self.properties = {}
-        self.stac_extensions = set([StacExtensions.file.value])
+        self.stac_extensions = set([HistoricalStacExtensions.file.value])
         self.collection = None
         self.geometry_poly = None
         self.assets = []

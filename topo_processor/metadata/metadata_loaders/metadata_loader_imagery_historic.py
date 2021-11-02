@@ -115,8 +115,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             )
         else:
             item.properties.update({"proj:centroid": centroid})
-            if stac.StacExtensions.projection.value not in item.stac_extensions:
-                item.add_extension(stac.StacExtensions.projection.value)
+            if stac.HistoricalStacExtensions.projection.value not in item.stac_extensions:
+                item.add_extension(stac.HistoricalStacExtensions.projection.value)
 
     def add_mission(self, item: Item, asset_metadata: Dict[str, str]):
         survey = asset_metadata.get("survey", None)
@@ -150,7 +150,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
 
         item.properties.update(remove_empty_strings(camera_properties))
-        item.add_extension(stac.StacExtensions.camera.value)
+        item.add_extension(stac.HistoricalStacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}
@@ -161,7 +161,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         film_properties["film:physical_size"] = asset_metadata["format"]
 
         item.properties.update(remove_empty_strings(film_properties))
-        item.add_extension(stac.StacExtensions.film.value)
+        item.add_extension(stac.HistoricalStacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         aerial_photo_properties = {}
@@ -188,7 +188,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             aerial_photo_properties["aerial-photo:scale"] = scale
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
-        item.add_extension(stac.StacExtensions.aerial_photo.value)
+        item.add_extension(stac.HistoricalStacExtensions.aerial_photo.value)
 
     def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         scanning_properties = {}
@@ -199,7 +199,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
-        item.add_extension(stac.StacExtensions.scanning.value)
+        item.add_extension(stac.HistoricalStacExtensions.scanning.value)
 
     def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
         item_date = asset_metadata.get("date", None)
