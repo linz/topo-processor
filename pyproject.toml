@@ -24,7 +24,7 @@ isort = "^5.9.1"
 pylint = "^2.11.1"
 pytest = "^6.2.4"
 rope = "^0.19.0"
-pytest-cov = "^2.12.1"
+pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
 
