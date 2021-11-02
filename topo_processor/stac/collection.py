@@ -26,11 +26,13 @@ class Collection(Validity):
     license: str
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
+    stac_extensions: set
 
     def __init__(self, title: str):
         super().__init__()
         self.title = title
         self.items = {}
+        self.stac_extensions = set([])
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -41,6 +43,9 @@ class Collection(Validity):
                 raise Exception(f"Remapping of item id in collection='{self.title}' item='{item.id}'")
             return
         self.items[item.id] = item
+
+    def add_extension(self, ext: str):
+        self.stac_extensions.add(ext)
 
     def get_temp_dir(self):
         global TEMP_DIR
@@ -99,5 +104,6 @@ class Collection(Validity):
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
+            stac_extensions=list(self.stac_extensions),
         )
         return stac
