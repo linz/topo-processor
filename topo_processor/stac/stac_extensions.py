@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class HistoricalStacExtensions(Enum):
+class StacExtensions(Enum):
     aerial_photo = "https://linz.github.io/stac/v0.0.10/aerial-photo/schema.json"
     camera = "https://linz.github.io/stac/v0.0.10/camera/schema.json"
     projection = "https://stac-extensions.github.io/projection/v1.0.0/schema.json"

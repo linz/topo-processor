@@ -43,12 +43,12 @@ class MetadataLoaderTiff(MetadataLoader):
         else:
             crs = None
         asset.item.properties.update({"proj:epsg": crs})
-        asset.item.add_extension(stac.HistoricalStacExtensions.projection.value)
+        asset.item.add_extension(stac.StacExtensions.projection.value)
 
     def add_eo_metadata(self, tiff, asset):
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties.update({"eo:bands": [{"name": ColorInterp.gray.name, "common_name": "pan"}]})
-            asset.item.add_extension(stac.HistoricalStacExtensions.eo.value)
+            asset.item.add_extension(stac.StacExtensions.eo.value)
         elif all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
             asset.properties.update(
                 {
@@ -59,7 +59,7 @@ class MetadataLoaderTiff(MetadataLoader):
                     ],
                 }
             )
-            asset.item.add_extension(stac.HistoricalStacExtensions.eo.value)
+            asset.item.add_extension(stac.StacExtensions.eo.value)
         else:
             asset.item.add_warning(
                 msg="Skipped Asset Record",

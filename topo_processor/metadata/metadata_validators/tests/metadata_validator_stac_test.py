@@ -18,7 +18,7 @@ def test_check_validity_camera_extension():
     item.add_asset(asset)
     item.properties.update({"camera:nominal_focal_length": "string"})
     item.properties.update({"camera:sequence_number": 1234})
-    item.add_extension(stac.HistoricalStacExtensions.camera.value)
+    item.add_extension(stac.StacExtensions.camera.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
@@ -33,7 +33,7 @@ def test_check_validity_film_extension():
     item.add_asset(asset)
     item.properties.update({"film:id": "1234"})
     item.properties.update({"film:negative_sequence": "string"})
-    item.add_extension(stac.HistoricalStacExtensions.film.value)
+    item.add_extension(stac.StacExtensions.film.value)
 
 
 def test_check_validity_fails_on_string_aerial_photo_extension():
@@ -48,7 +48,7 @@ def test_check_validity_fails_on_string_aerial_photo_extension():
     item.properties.update({"aerial-photo:scale": 1234})
     item.properties.update({"aerial-photo:sequence_number": 1234})
     item.properties.update({"aerial-photo:anomalies": ""})
-    item.add_extension(stac.HistoricalStacExtensions.aerial_photo.value)
+    item.add_extension(stac.StacExtensions.aerial_photo.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
@@ -66,7 +66,7 @@ def test_check_validity_fails_on_required_field_aerial_photo_extension():
     item.properties.update({"aerial-photo:scale": 1234})
     item.properties.update({"aerial-photo:sequence_number": 1234})
     item.properties.update({"aerial-photo:anomalies": "Cloud"})
-    item.add_extension(stac.HistoricalStacExtensions.aerial_photo.value)
+    item.add_extension(stac.StacExtensions.aerial_photo.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
@@ -82,7 +82,7 @@ def test_check_validity_scanning_extension():
     item.add_asset(asset)
     item.properties.update({"scan:is_original": True})
     item.properties.update({"scan:scanned": "string"})
-    item.add_extension(stac.HistoricalStacExtensions.scanning.value)
+    item.add_extension(stac.StacExtensions.scanning.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
@@ -99,14 +99,14 @@ def test_validate_metadata_with_report():
     item.add_asset(asset)
     item.properties.update({"film:id": "1234"})
     item.properties.update({"film:negative_sequence": "string"})
-    item.add_extension(stac.HistoricalStacExtensions.film.value)
+    item.add_extension(stac.StacExtensions.film.value)
     item.properties.update({"aerial-photo:altitude": 1234})
     item.properties.update({"aerial-photo:scale": 1234})
     item.properties.update({"aerial-photo:sequence_number": 1234})
     item.properties.update({"aerial-photo:anomalies": "Cloud"})
-    item.add_extension(stac.HistoricalStacExtensions.aerial_photo.value)
+    item.add_extension(stac.StacExtensions.aerial_photo.value)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     errors_report = validator.validate_metadata_with_report(item)
-    assert '"string" is not of type "integer"' in errors_report[stac.HistoricalStacExtensions.film.value]
-    assert '"aerial-photo:run" is a required property' in errors_report[stac.HistoricalStacExtensions.aerial_photo.value]
+    assert '"string" is not of type "integer"' in errors_report[stac.StacExtensions.film.value]
+    assert '"aerial-photo:run" is a required property' in errors_report[stac.StacExtensions.aerial_photo.value]

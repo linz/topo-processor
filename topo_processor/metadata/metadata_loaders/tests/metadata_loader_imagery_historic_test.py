@@ -30,7 +30,7 @@ def test_camera_extension_added_if_empty_metadata():
     metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.camera.value in item.stac_extensions
+    assert stac.StacExtensions.camera.value in item.stac_extensions
 
 
 def test_camera_metadata_added():
@@ -40,7 +40,7 @@ def test_camera_metadata_added():
     metadata = {"camera_sequence_no": "", "nominal_focal_length": "508"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.camera.value in item.stac_extensions
+    assert stac.StacExtensions.camera.value in item.stac_extensions
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
 
@@ -52,7 +52,7 @@ def test_film_extension_added_if_empty_metadata():
     metadata = {"film": "", "film_sequence_no": "", "physical_film_condition": "", "format": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.film.value in item.stac_extensions
+    assert stac.StacExtensions.film.value in item.stac_extensions
 
 
 def test_film_metadata_added():
@@ -62,7 +62,7 @@ def test_film_metadata_added():
     metadata = {"film": "123", "film_sequence_no": "234", "physical_film_condition": "", "format": "23 cm x 23 cm"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.film.value in item.stac_extensions
+    assert stac.StacExtensions.film.value in item.stac_extensions
     assert item.properties["film:id"] == "123"
     assert item.properties["film:negative_sequence"] == 234
     assert "film:physical_condition" not in item.properties.keys()
@@ -76,7 +76,7 @@ def test_aerial_photo_extension_added_if_empty_metadata():
     metadata = {"run": "", "altitude": "", "scale": "", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.aerial_photo.value in item.stac_extensions
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
     assert "aerial-photo:run" not in item.properties.keys()
     assert "aerial-photo:altitude" not in item.properties.keys()
     assert "aerial-photo:scale" not in item.properties.keys()
@@ -91,7 +91,7 @@ def test_aerial_photo_zero_altitude_scale():
     metadata = {"run": "", "altitude": "0", "scale": "0", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.aerial_photo.value in item.stac_extensions
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
     assert "aerial-photo:altitude" not in item.properties.keys()
     assert "aerial-photo:scale" not in item.properties.keys()
 
@@ -103,7 +103,7 @@ def test_aerial_photo_metadata_added():
     metadata = {"run": "string", "altitude": "123", "scale": "123", "photo_no": "123", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.aerial_photo.value in item.stac_extensions
+    assert stac.StacExtensions.aerial_photo.value in item.stac_extensions
     assert item.properties["aerial-photo:run"] == "string"
     assert item.properties["aerial-photo:altitude"] == 123
     assert item.properties["aerial-photo:scale"] == 123
@@ -118,7 +118,7 @@ def test_scanning_extension_added_if_empty_metadata():
     metadata = {"source": "", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.scanning.value in item.stac_extensions
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
 
 
 def test_scanning_extension_invalid_values_date_wrong_format():
@@ -128,7 +128,7 @@ def test_scanning_extension_invalid_values_date_wrong_format():
     metadata = {"source": "string", "when_scanned": "nzam_pilot"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.scanning.value in item.stac_extensions
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"] == "string"
     assert item.properties["scan:scanned"] == "nzam_pilot"
 
@@ -140,7 +140,7 @@ def test_scanning_metadata_added():
     metadata = {"source": "ORIGINAL", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
-    assert stac.HistoricalStacExtensions.scanning.value in item.stac_extensions
+    assert stac.StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"]
     assert "scan:scanned" not in item.properties.keys()
 
@@ -239,7 +239,7 @@ def test_centroid_metadata_added():
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_centroid(item, asset_metadata=metadata)
     assert item.properties["proj:centroid"] == {"lat": 123.456, "lon": 789.123}
-    assert stac.HistoricalStacExtensions.projection.value in item.stac_extensions
+    assert stac.StacExtensions.projection.value in item.stac_extensions
 
 
 def test_mission_metadata_added_by_survey():

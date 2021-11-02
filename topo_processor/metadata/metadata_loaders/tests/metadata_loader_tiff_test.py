@@ -14,7 +14,7 @@ def test_load_metadata():
 
     loader.load_metadata(asset)
     assert item.properties["proj:epsg"] is None
-    assert stac.HistoricalStacExtensions.projection.value in item.stac_extensions
+    assert stac.StacExtensions.projection.value in item.stac_extensions
     assert len(item.assets) == 1
     assert item.assets[0].properties["eo:bands"] == [{"name": "gray", "common_name": "pan"}]
-    assert stac.HistoricalStacExtensions.eo.value in item.stac_extensions
+    assert stac.StacExtensions.eo.value in item.stac_extensions
