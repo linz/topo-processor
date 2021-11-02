@@ -64,7 +64,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
-        
+        collection.add_extension(stac.HistoricalStacExtensions.historical_imagery.value)
+
         self.add_mission(item, metadata_row)
         item.properties.update(
             {
@@ -80,6 +81,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
+
+        item.add_extension(stac.HistoricalStacExtensions.historical_imagery.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
