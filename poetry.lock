@@ -557,14 +557,14 @@ python-versions = "*"
 
 [[package]]
 name = "rope"
-version = "0.19.0"
+version = "0.21.0"
 description = "a python refactoring library..."
 category = "dev"
 optional = false
 python-versions = "*"
 
 [package.extras]
-dev = ["pytest"]
+dev = ["pytest", "pytest-timeout"]
 
 [[package]]
 name = "s3fs"
@@ -697,7 +697,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6afba94f6bc97e172facabbd1759c4a33a80c1f0aedf9c68c5ba38816a23b61d"
+content-hash = "d850577981d63ba55fba86974e7935fd30baa8e1c341a74249b46b2b722c1942"
 
 [metadata.files]
 affine = [
@@ -1063,7 +1063,7 @@ regex = [
     {file = "regex-2021.8.28.tar.gz", hash = "sha256:f585cbbeecb35f35609edccb95efd95a3e35824cd7752b586503f7e6087303f1"},
 ]
 rope = [
-    {file = "rope-0.19.0.tar.gz", hash = "sha256:64e6d747532e1f5c8009ec5aae3e5523a5bcedf516f39a750d57d8ed749d90da"},
+    {file = "rope-0.21.0.tar.gz", hash = "sha256:366789e069a267296889b2ee7631f9278173b5e7d468f2ea08abe26069a52aef"},
 ]
 s3fs = [
     {file = "s3fs-0.4.2-py3-none-any.whl", hash = "sha256:91c1dfb45e5217bd441a7a560946fe865ced6225ff7eb0fb459fe6e601a95ed3"},
