@@ -70,6 +70,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "platform": "fixed-wing aircraft",
                 "instruments": [metadata_row["camera"]],
+                "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
             }
         )
         self.add_centroid(item, metadata_row)
