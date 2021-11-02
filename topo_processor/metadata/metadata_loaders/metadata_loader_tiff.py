@@ -30,7 +30,7 @@ class MetadataLoaderTiff(MetadataLoader):
         with fs.open(asset.source_path) as f:
             with rasterio.open(f) as tiff:
                 self.add_epsg(tiff, asset)
-                self.add_eo_metadata(tiff, asset)
+                self.add_bands(tiff, asset)
 
     def load_all_metadata(self, metadata_file: str) -> None:
         pass
@@ -45,7 +45,7 @@ class MetadataLoaderTiff(MetadataLoader):
         asset.item.properties.update({"proj:epsg": crs})
         asset.item.add_extension(stac.StacExtensions.projection.value)
 
-    def add_eo_metadata(self, tiff, asset):
+    def add_bands(self, tiff, asset):
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties.update({"eo:bands": [{"name": ColorInterp.gray.name, "common_name": "pan"}]})
             asset.item.add_extension(stac.StacExtensions.eo.value)
