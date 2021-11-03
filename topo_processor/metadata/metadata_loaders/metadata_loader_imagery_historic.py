@@ -201,7 +201,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))
 
     def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
-        
+
         centroid = {
             "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
             "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
@@ -220,16 +220,16 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         if any(isinstance(value, str) for value in centroid.values()):
             item.add_warning(
-            msg="Skipped Record",
-            cause=self.name,
-            e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
-        )
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
+            )
         elif not -90 <= centroid["lat"] <= 90:
             item.add_warning(
-            msg="Skipped Record",
-            cause=self.name,
-            e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
-        )
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
+            )
             return False
         elif not -180 <= centroid["lon"] <= 180:
             item.add_warning(
