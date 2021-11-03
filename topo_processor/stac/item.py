@@ -31,7 +31,7 @@ class Item(Validity):
         self.collection = None
         self.geometry_poly = None
         self.assets = []
-        self.schema = 'https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json'
+        self.schema = "https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json"
 
     def is_valid(self):
         if not super().is_valid():
