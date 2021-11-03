@@ -3,6 +3,7 @@ from typing import List
 
 import pystac
 import shapely.geometry
+from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
 from topo_processor.util import Validity
 
@@ -31,7 +32,7 @@ class Item(Validity):
         self.collection = None
         self.geometry_poly = None
         self.assets = []
-        self.schema = "https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json"
+        self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.ITEM, pystac.get_stac_version())
 
     def is_valid(self):
         if not super().is_valid():
