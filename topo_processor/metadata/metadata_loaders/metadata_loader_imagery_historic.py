@@ -112,7 +112,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             alternative_survey = asset_metadata.get("alternative_survey", None)
             if alternative_survey and alternative_survey != "":
                 item.properties.update(remove_empty_strings({"mission": alternative_survey}))
-                return
         else:
             item.properties["mission"] = survey
 
