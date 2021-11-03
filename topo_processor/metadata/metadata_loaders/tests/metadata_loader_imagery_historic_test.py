@@ -233,12 +233,12 @@ def test_centroid_metadata_added():
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {
-        "photocentre_lat": "123.456",
-        "photocentre_lon": "789.123",
+        "photocentre_lat": "-41.28509",
+        "photocentre_lon": "174.77442",
     }
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_centroid(item, asset_metadata=metadata)
-    assert item.properties["proj:centroid"] == {"lat": 123.456, "lon": 789.123}
+    assert item.properties["proj:centroid"] == {"lat": -41.28509, "lon": 174.77442}
     assert stac.StacExtensions.projection.value in item.stac_extensions
 
 
@@ -256,7 +256,7 @@ def test_mission_metadata_added_by_survey():
 
 
 def test_mission_metadata_added_by_alternative_survey():
-    """Tests mission metadata is added by survey value"""
+    """Tests mission metadata is added by alternative survey value"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
     metadata = {
@@ -266,3 +266,16 @@ def test_mission_metadata_added_by_alternative_survey():
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
     assert item.properties["mission"] == "67890"
+
+
+def test_mission_metadata_not_added():
+    """Tests mission metadata is not added"""
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    metadata = {
+        "survey": "0",
+        "alternative_survey": "",
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
+    assert "mission" not in item.properties.keys()

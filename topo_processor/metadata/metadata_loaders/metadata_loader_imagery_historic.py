@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import os
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 import shapely.wkt
 
@@ -106,21 +106,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.is_init = True
 
-    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
-        centroid = {
-            "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
-            "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
-        }
-        if not all(centroid.values()) or "" in centroid.values():
-            item.add_warning(
-                msg="Skipped Record",
-                cause=self.name,
-                e=Exception(f"stac field 'proj:centroid' has None values: {centroid}"),
-            )
-        else:
-            item.properties.update({"proj:centroid": centroid})
-            item.add_extension(stac.StacExtensions.projection.value)
-
     def add_mission(self, item: Item, asset_metadata: Dict[str, str]):
         survey = asset_metadata.get("survey", None)
         if not survey or survey == "0" or survey == "":
@@ -129,7 +114,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 item.properties.update(remove_empty_strings({"mission": alternative_survey}))
                 return
         else:
-            item.properties.update({"mission": survey})
+            item.properties["mission"] = survey
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
         wkt = asset_metadata.get("WKT", None)
@@ -214,3 +199,44 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 item.add_error(msg="Invalid date", cause=self.name, e=e)
         else:
             item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))
+
+    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
+        
+        centroid = {
+            "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
+            "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
+        }
+        if self.is_valid_centroid(item, centroid):
+            item.properties["proj:centroid"] = centroid
+            item.add_extension(stac.StacExtensions.projection.value)
+
+    def is_valid_centroid(self, item: Item, centroid) -> bool:
+        if not all(centroid.values()) or "" in centroid.values():
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'proj:centroid' has None values: {centroid}"),
+            )
+            return False
+        if any(isinstance(value, str) for value in centroid.values()):
+            item.add_warning(
+            msg="Skipped Record",
+            cause=self.name,
+            e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
+        )
+        elif not -90 <= centroid["lat"] <= 90:
+            item.add_warning(
+            msg="Skipped Record",
+            cause=self.name,
+            e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}"),
+        )
+            return False
+        elif not -180 <= centroid["lon"] <= 180:
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(f"stac field 'proj:centroid' has invalid lon value: {centroid['lon']}"),
+            )
+            return False
+        else:
+            return True
