@@ -133,17 +133,6 @@ def test_scanning_extension_invalid_values_date_wrong_format():
     assert item.properties["scan:scanned"] == "nzam_pilot"
 
 
-def test_scanning_extension_quarter_date_to_utc():
-    """Tests scanning extension scanned date converted to RFC3339 UTC"""
-    source_path = "test_abc.tiff"
-    item = stac.Item(source_path)
-    metadata = {"source": "", "when_scanned": "2020/Q1"}
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
-    assert stac.StacExtensions.scanning.value in item.stac_extensions
-    assert item.properties["scan:scanned"] == "2019-12-31T11:00:00Z"
-
-
 def test_scanning_metadata_added():
     """Tests scanning metadata is added if one empty string"""
     source_path = "test_abc.tiff"
