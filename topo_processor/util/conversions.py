@@ -50,7 +50,7 @@ def nzt_datetime_to_utc_datetime(date: str) -> datetime:
     return utc_time
 
 
-def quarterdate_to_datetime(value):
+def quarterdate_to_date_string(value: str) -> str:
     """If possible this function converts quarter e.g. 'Q3' to RFC3339 format,
     e.g. '2021-03-01T00:00:00.000Z', then to UTC, else returns original value string.
     """
@@ -61,8 +61,8 @@ def quarterdate_to_datetime(value):
         year = re_result.group(1)
         month = (3 * (int(re_result.group(2)))) - 2
 
-        date_nz = year + "-" + str(month) + "-01T00:00:00.000"
-        datetime_utc = nzt_datetime_to_utc_datetime(date_nz)
+        date_string_nz = year + "-" + str(month) + "-01T00:00:00.000"
+        datetime_utc = nzt_datetime_to_utc_datetime(date_string_nz)
         date_string_utc = datetime_utc.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         return date_string_utc
 
