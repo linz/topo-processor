@@ -1,8 +1,8 @@
 import datetime
 from typing import List
 
-import pystac
 import shapely.geometry
+from pystac import pystac
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
 from topo_processor.util import Validity
