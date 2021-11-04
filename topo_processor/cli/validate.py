@@ -21,7 +21,19 @@ from topo_processor.util import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source, verbose):
+@click.option(
+    "-i",
+    "--item",
+    is_flag=True,
+    help="Use item to validate items only",
+)
+@click.option(
+    "-c",
+    "--collection",
+    is_flag=True,
+    help="Use collection to validate collections only",
+)
+def main(source, verbose, item, collection):
     if verbose:
         set_level(LogLevel.trace)
     else:
@@ -32,7 +44,11 @@ def main(source, verbose):
     if not is_s3_path(source):
         source = os.path.abspath(source)
 
-    validate_stac(source)
+    if item == collection:
+        validate_stac(source)
+    else:
+        validate_stac(source, item, collection)
+
     get_log().debug(
         "validate completed",
         file=source,

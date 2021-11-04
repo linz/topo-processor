@@ -9,7 +9,7 @@ class ValidateReport:
     def __init__(self):
         self.total = 0
         self.errors_per_object = {}
-        self.errors_per_type = {}
+        self.report_per_error_type = {}
 
     def add_errors(self, object_id: str, errors_per_schema: Dict[str, List[str]]) -> None:
         if errors_per_schema:
@@ -19,10 +19,10 @@ class ValidateReport:
     def build_report(self):
         for errors_stac_object in self.errors_per_object.values():
             for schema_uri in errors_stac_object:
-                if schema_uri not in self.errors_per_type:
-                    self.errors_per_type[schema_uri] = {}
+                if schema_uri not in self.report_per_error_type:
+                    self.report_per_error_type[schema_uri] = {}
                 for error in errors_stac_object[schema_uri]:
-                    if error in self.errors_per_type[schema_uri]:
-                        self.errors_per_type[schema_uri][error] = self.errors_per_type[schema_uri][error] + 1
+                    if error in self.report_per_error_type[schema_uri]:
+                        self.report_per_error_type[schema_uri][error] = self.report_per_error_type[schema_uri][error] + 1
                     else:
-                        self.errors_per_type[schema_uri][error] = 1
+                        self.report_per_error_type[schema_uri][error] = 1

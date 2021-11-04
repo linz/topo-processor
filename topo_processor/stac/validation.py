@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 from linz_logger import get_log
 
@@ -30,7 +30,6 @@ def validate_stac(metadata_file: str, validate_item: bool = True, validate_colle
         collection_report.build_report()
 
     # Print report
-    # FIXME: case when only item or only collection
     get_log().info(
         "Metadata Validated",
         metadata_file=metadata_file,
@@ -42,11 +41,11 @@ def validate_stac(metadata_file: str, validate_item: bool = True, validate_colle
     )
 
 
-def validate_store(store: Union[list(Item), list(Collection)]) -> ValidateReport:
+def validate_store(store: List[Union[Item, Collection]]) -> ValidateReport:
     validate_report: ValidateReport = ValidateReport()
 
     for stac_object in store.values():
         if stac_object.is_valid():
-            validate_report.add_errors(metadata_validator_stac.validate_metadata_with_report(stac_object))
+            validate_report.add_errors(stac_object.id, metadata_validator_stac.validate_metadata_with_report(stac_object))
 
     return validate_report

@@ -42,23 +42,23 @@ class MetadataValidatorStac(MetadataValidator):
         Return an error report [{schemaURI, [errors]}]
         """
         errors_report: Dict[str, list[str]] = {}
-        stac_item = stac_object.create_stac().to_dict(include_self_link=False)
+        stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
         # get `json.dumps` to convert `tuple` into `array` to allow `jsonschema-rs` to validate
-        stac_item = json.loads(json.dumps(stac_item))
-        schema_uris: list[str] = [item.schema] + stac_item["stac_extensions"]
+        stac_dict = json.loads(json.dumps(stac_dict))
+        schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
-        get_log().debug(f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"])
+        get_log().debug(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"])
 
         for schema_uri in schema_uris:
             get_log().trace(f"{self.name}:validate_metadata_with_report", schema=schema_uri)
             current_errors = []
             v = self.get_validator_from_uri(schema_uri)
 
-            errors = v.iter_errors(stac_item)
+            errors = v.iter_errors(stac_dict)
 
             for error in errors:
                 current_errors.append(error.message)
-                get_log().warn(f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"], error=error.message)
+                get_log().warn(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"], error=error.message)
 
             if current_errors:
                 errors_report[schema_uri] = current_errors
