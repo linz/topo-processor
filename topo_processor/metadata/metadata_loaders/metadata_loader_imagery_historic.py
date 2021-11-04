@@ -213,16 +213,20 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_valid_centroid(self, item: Item, centroid) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
             item.add_warning(
-                    msg="Skipped Record",
-                    cause=self.name,
-                    e=Exception(f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}, instance: {type(centroid['lat'])}"),
-                )
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(
+                    f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}, instance: {type(centroid['lat'])}"
+                ),
+            )
             return False
         if not isinstance(centroid["lon"], numbers.Number) or centroid["lon"] > 180 or centroid["lon"] < -180:
             item.add_warning(
-                    msg="Skipped Record",
-                    cause=self.name,
-                    e=Exception(f"stac field 'proj:centroid' has invalid lon value: {centroid['lon']}, instance: {type(centroid['lat'])}"),
-                )
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(
+                    f"stac field 'proj:centroid' has invalid lon value: {centroid['lon']}, instance: {type(centroid['lat'])}"
+                ),
+            )
             return False
         return True
