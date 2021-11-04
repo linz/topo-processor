@@ -4,7 +4,7 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.stac.item_factory import process_metadata
+from topo_processor.stac.validation import validate_stac
 from topo_processor.util import time_in_ms
 
 
@@ -32,7 +32,7 @@ def main(source, verbose):
     if not is_s3_path(source):
         source = os.path.abspath(source)
 
-    process_metadata(source)
+    validate_stac(source)
     get_log().debug(
         "validate completed",
         file=source,

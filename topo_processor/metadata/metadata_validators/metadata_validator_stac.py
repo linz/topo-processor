@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import json
 import urllib
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Union
 
 import jsonschema_rs
 from linz_logger import get_log
 from pystac.errors import STACValidationError
 
-from .metadata_validator import MetadataValidator
+from topo_processor.stac import Collection, Item
 
-if TYPE_CHECKING:
-    from topo_processor.stac import Item
+from .metadata_validator import MetadataValidator
 
 
 class MetadataValidatorStac(MetadataValidator):
@@ -38,9 +37,12 @@ class MetadataValidatorStac(MetadataValidator):
         except STACValidationError as e:
             raise STACValidationError(message=f"Not valid STAC: {e}")
 
-    def validate_metadata_with_report(self, item: Item) -> Dict[str, list[str]]:
+    def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
+        """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
+        Return an error report [{schemaURI, [errors]}]
+        """
         errors_report: Dict[str, list[str]] = {}
-        stac_item = item.create_stac().to_dict(include_self_link=False)
+        stac_item = stac_object.create_stac().to_dict(include_self_link=False)
         # get `json.dumps` to convert `tuple` into `array` to allow `jsonschema-rs` to validate
         stac_item = json.loads(json.dumps(stac_item))
 
