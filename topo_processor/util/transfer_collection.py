@@ -45,9 +45,9 @@ def transfer_collection(collection: Collection, target: str):
             transfer_file(
                 asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
-            stac_item.add_asset(
-                key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
-            )
+            # key is set to "visual" for geotiffs, else the content type, file extension or checksum.
+            # Other key values will be added in future sprints.
+            stac_item.add_asset(key=asset.get_key(), asset=asset.create_stac())
             existing_asset_hrefs[asset.href] = asset
 
         # pystac v1.1.0

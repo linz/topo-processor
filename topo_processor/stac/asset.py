@@ -41,6 +41,16 @@ class Asset(Validity):
             self.properties["file:checksum"] = multihash_as_hex(self.source_path)
         return self.properties["file:checksum"]
 
+    def get_key(self) -> str:
+        if self.content_type:
+            if self.content_type == "image/tiff; application=geotiff; profile=cloud-optimized":
+                return "visual"
+            else:
+                return self.get_content_type()
+        if self.file_ext():
+            return self.file_ext()
+        return self.get_checksum()
+
     def create_stac(self) -> pystac.Asset:
         stac = pystac.Asset(href=self.href, extra_fields=self.properties, media_type=self.get_content_type())
         return stac
