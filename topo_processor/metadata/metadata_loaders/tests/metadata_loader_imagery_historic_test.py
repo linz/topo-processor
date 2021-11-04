@@ -242,6 +242,41 @@ def test_centroid_metadata_added():
     assert stac.StacExtensions.projection.value in item.stac_extensions
 
 
+def test_invalid_centroid_lat():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    centroid = {
+        "lat": 174.77442,
+        "lon": 174.77442,
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    assert not metadata_loader_imagery_historic.is_valid_centroid(item, centroid)
+    assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lat value: 174.77442, instance: <class 'float'>"
+
+
+def test_invalid_centroid_lon():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    centroid = {
+        "lat": -41.28509,
+        "lon": -190.0000,
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    assert not metadata_loader_imagery_historic.is_valid_centroid(item, centroid)
+    assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lon value: -190.0, instance: <class 'float'>"
+
+def test_invalid_centroid_string():
+    source_path = "test_abc.tiff"
+    item = stac.Item(source_path)
+    centroid = {
+        "lat": "-41.28509",
+        "lon": "174.77442"
+    }
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    assert not metadata_loader_imagery_historic.is_valid_centroid(item, centroid)
+    assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lat value: -41.28509, instance: <class 'str'>"
+
+
 def test_mission_metadata_added_by_survey():
     """Tests mission metadata is added by survey value"""
     source_path = "test_abc.tiff"
