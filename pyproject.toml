@@ -20,7 +20,7 @@ Shapely = "^1.8.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.10b0"
-isort = "^5.9.1"
+isort = "^5.10.0"
 pylint = "^2.11.1"
 pytest = "^6.2.4"
 rope = "^0.21.0"
