@@ -61,7 +61,7 @@ def quarterdate_to_date_string(value: str) -> str:
         year = re_result.group(1)
         month = (3 * (int(re_result.group(2)))) - 2
 
-        date_string_nz = year + "-" + str(month) + "-01T00:00:00.000"
+        date_string_nz = f"{year}-{month}-01T00:00:00.000"
         datetime_utc = nzt_datetime_to_utc_datetime(date_string_nz)
         date_string_utc = datetime_utc.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         return date_string_utc
