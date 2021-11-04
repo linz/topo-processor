@@ -45,10 +45,12 @@ class MetadataValidatorStac(MetadataValidator):
         stac_item = stac_object.create_stac().to_dict(include_self_link=False)
         # get `json.dumps` to convert `tuple` into `array` to allow `jsonschema-rs` to validate
         stac_item = json.loads(json.dumps(stac_item))
+        schema_uris: list[str] = [item.schema] + stac_item["stac_extensions"]
 
         get_log().debug(f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"])
 
-        for schema_uri in stac_item["stac_extensions"]:
+        for schema_uri in schema_uris:
+            get_log().trace(f"{self.name}:validate_metadata_with_report", schema=schema_uri)
             current_errors = []
             v = self.get_validator_from_uri(schema_uri)
 
