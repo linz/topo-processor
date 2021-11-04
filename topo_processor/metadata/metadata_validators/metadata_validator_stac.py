@@ -20,8 +20,8 @@ class MetadataValidatorStac(MetadataValidator):
     def get_validator_from_uri(self, schema_uri: str) -> Any:
         if schema_uri not in self.validator_cache:
             response = urllib.request.urlopen(schema_uri)
-            s = json.loads(response.read())
-            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema(s)
+            schema = response.read()
+            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema.from_str(schema.decode("utf8"))
 
         validator = self.validator_cache[schema_uri]
 
@@ -43,8 +43,6 @@ class MetadataValidatorStac(MetadataValidator):
         """
         errors_report: Dict[str, list[str]] = {}
         stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
-        # get `json.dumps` to convert `tuple` into `array` to allow `jsonschema-rs` to validate
-        stac_dict = json.loads(json.dumps(stac_dict))
         schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
         get_log().debug(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"])

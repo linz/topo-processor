@@ -36,29 +36,6 @@ def string_to_boolean(value, true_values, false_values):
     return value
 
 
-def quarterdate_to_datetime(value):
-    """If possible this function converts quarter e.g. 'Q3' to RFC3339 format,
-    e.g. '2021-03-01T00:00:00.000Z', else returns original value string.
-    """
-
-    quarter_dict_calendar_year = {
-        "1": "01",
-        "2": "04",
-        "3": "07",
-        "4": "10",
-    }
-
-    re_result = re.search(r"(\d{4})[/][qQ]([1-4])", value)
-
-    if re_result is not None:
-
-        month = quarter_dict_calendar_year.get(re_result.group(2))
-        rfc3339_value = re_result.group(1) + "-" + month + "-01T00:00:00.000Z"
-        return rfc3339_value
-
-    return value
-
-
 def nzt_datetime_to_utc_datetime(date: str) -> datetime:
     utc_tz = tz.gettz("UTC")
     nz_tz = tz.gettz("Pacific/Auckland")
@@ -71,3 +48,22 @@ def nzt_datetime_to_utc_datetime(date: str) -> datetime:
     utc_time = nz_time.astimezone(utc_tz)
 
     return utc_time
+
+
+def quarterdate_to_date_string(value: str) -> str:
+    """If possible this function converts quarter e.g. 'Q3' to RFC3339 format,
+    e.g. '2021-03-01T00:00:00.000Z', then to UTC, else returns original value string.
+    """
+    re_result = re.search(r"(\d{4})[/][qQ]([1-4])", value)
+
+    if re_result is not None:
+
+        year = re_result.group(1)
+        month = (3 * (int(re_result.group(2)))) - 2
+
+        date_string_nz = f"{year}-{month}-01T00:00:00.000"
+        datetime_utc = nzt_datetime_to_utc_datetime(date_string_nz)
+        date_string_utc = datetime_utc.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+        return date_string_utc
+
+    return value

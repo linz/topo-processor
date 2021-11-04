@@ -1,7 +1,7 @@
 from .checksum import multihash_as_hex
 from .conversions import (
     nzt_datetime_to_utc_datetime,
-    quarterdate_to_datetime,
+    quarterdate_to_date_string,
     remove_empty_strings,
     string_to_boolean,
     string_to_number,

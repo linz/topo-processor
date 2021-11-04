@@ -10,7 +10,7 @@ from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
     nzt_datetime_to_utc_datetime,
-    quarterdate_to_datetime,
+    quarterdate_to_date_string,
     remove_empty_strings,
     string_to_boolean,
     string_to_number,
@@ -177,7 +177,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if asset_metadata["source"]:
             scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"], ["original"], ["copy"])
         if asset_metadata["when_scanned"]:
-            scanning_properties["scan:scanned"] = quarterdate_to_datetime(asset_metadata["when_scanned"])
+            scanning_properties["scan:scanned"] = quarterdate_to_date_string(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
