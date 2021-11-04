@@ -22,7 +22,7 @@ class MetadataValidatorStac(MetadataValidator):
         if schema_uri not in self.validator_cache:
             response = urllib.request.urlopen(schema_uri)
             schema = response.read()
-            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema.from_str(schema)
+            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema.from_str(schema.decode("utf8"))
 
         validator = self.validator_cache[schema_uri]
 
