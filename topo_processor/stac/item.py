@@ -1,8 +1,9 @@
 import datetime
 from typing import List
 
-import pystac
 import shapely.geometry
+from pystac import pystac
+from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
 from topo_processor.util import Validity
 
@@ -20,6 +21,7 @@ class Item(Validity):
     stac_extensions: set
     collection: Collection
     assets: List[Asset]
+    schema: str
 
     def __init__(self, item_id: str):
         super().__init__()
@@ -30,6 +32,7 @@ class Item(Validity):
         self.collection = None
         self.geometry_poly = None
         self.assets = []
+        self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.ITEM, pystac.get_stac_version())
 
     def is_valid(self):
         if not super().is_valid():
