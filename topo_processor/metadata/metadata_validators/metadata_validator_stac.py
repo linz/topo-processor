@@ -43,6 +43,10 @@ class MetadataValidatorStac(MetadataValidator):
         """
         errors_report: Dict[str, list[str]] = {}
         stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
+        #FIXME: Work around pystac `to_dict` serialization issue with links
+        if stac_dict['type'] == "Collection":
+            stac_dict['links'] = json.loads(json.dumps(stac_dict['links']))
+            
         schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
         get_log().debug(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"])
@@ -51,7 +55,6 @@ class MetadataValidatorStac(MetadataValidator):
             get_log().trace(f"{self.name}:validate_metadata_with_report", schema=schema_uri)
             current_errors = []
             v = self.get_validator_from_uri(schema_uri)
-
             errors = v.iter_errors(stac_dict)
 
             for error in errors:
