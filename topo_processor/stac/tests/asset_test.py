@@ -13,3 +13,21 @@ def test_asset():
     checksum = asset.get_checksum()
     json_asset = asset.create_stac().to_dict()
     assert json_asset["file:checksum"] == checksum
+
+
+def test_asset_key_visual():
+    """validate value of asset object key for a tiff"""
+    source_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff"))
+    asset = Asset(source_path)
+    asset.content_type = "image/tiff; application=geotiff; profile=cloud-optimized"
+    key = asset.get_key()
+    assert key == "visual"
+
+
+def test_asset_key_no_content_type():
+    """validate value of asset object key for an unknown content type with an extension"""
+    source_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff"))
+    asset = Asset(source_path)
+    asset.content_type = ""
+    key = asset.get_key()
+    assert key == ".tiff"
