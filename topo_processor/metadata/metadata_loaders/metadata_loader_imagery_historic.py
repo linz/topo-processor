@@ -6,6 +6,7 @@ import os
 from typing import TYPE_CHECKING, Any, Dict
 
 import shapely.wkt
+from linz_logger.logger import get_log
 
 from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
@@ -54,7 +55,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             self.populate_item(metadata)
 
     def populate_item(self, metadata_row, asset: Asset = None) -> None:
-        collection = get_collection(metadata_row["survey"])
+        title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
+        if not title:
+            get_log().warning(
+                "Null collection title value", message="asset has null 'survey' and 'alternate_survey_name' values"
+            )
+            return
+        collection = get_collection(title)
+
         item = get_item(metadata_row["sufi"])
         collection.add_item(item)
 
@@ -67,14 +75,15 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.description = "Historical Imagery"
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
 
-        self.add_mission(item, metadata_row)
         item.properties.update(
             {
+                "mission": title,
                 "platform": "fixed-wing aircraft",
                 "instruments": [metadata_row["camera"]],
                 "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
             }
         )
+
         self.add_centroid(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
@@ -107,14 +116,12 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.is_init = True
 
-    def add_mission(self, item: Item, asset_metadata: Dict[str, str]):
-        survey = asset_metadata.get("survey", None)
+    def get_title(self, survey: str, alternate_survey_name: str):
         if not survey or survey == "0" or survey == "":
-            alternative_survey = asset_metadata.get("alternative_survey", None)
-            if alternative_survey and alternative_survey != "":
-                item.properties.update(remove_empty_strings({"mission": alternative_survey}))
+            if alternate_survey_name and alternate_survey_name != "":
+                return alternate_survey_name
         else:
-            item.properties["mission"] = survey
+            return survey
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
         wkt = asset_metadata.get("WKT", None)

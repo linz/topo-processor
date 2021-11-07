@@ -97,13 +97,14 @@ class Collection(Validity):
         stac = pystac.Collection(
             id=str(ulid.ULID()),
             description=self.description,
-            href="./collection.json",
-            license=self.license,
-            providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
+            title=self.title,
             stac_extensions=list(self.stac_extensions),
+            href="./collection.json",
+            license=self.license,
+            providers=GLOBAL_PROVIDERS,
         )
         return stac

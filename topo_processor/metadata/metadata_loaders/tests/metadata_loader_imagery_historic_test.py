@@ -279,38 +279,32 @@ def test_invalid_centroid_string():
 
 def test_mission_metadata_added_by_survey():
     """Tests mission metadata is added by survey value"""
-    source_path = "test_abc.tiff"
-    item = stac.Item(source_path)
     metadata = {
         "survey": "12345",
-        "alternative_survey": "",
+        "alternate_survey_name": "",
     }
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
-    assert item.properties["mission"] == "12345"
+    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
+    assert title == "12345"
 
 
-def test_mission_metadata_added_by_alternative_survey():
-    """Tests mission metadata is added by alternative survey value"""
-    source_path = "test_abc.tiff"
-    item = stac.Item(source_path)
+def test_mission_metadata_added_by_alternate_survey_name():
+    """Tests mission metadata is added by alternate survey value"""
     metadata = {
         "survey": "0",
-        "alternative_survey": "67890",
+        "alternate_survey_name": "67890",
     }
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
-    assert item.properties["mission"] == "67890"
+    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
+    assert title == "67890"
 
 
 def test_mission_metadata_not_added():
     """Tests mission metadata is not added"""
-    source_path = "test_abc.tiff"
-    item = stac.Item(source_path)
     metadata = {
         "survey": "0",
-        "alternative_survey": "",
+        "alternate_survey_name": "",
     }
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_mission(item, asset_metadata=metadata)
-    assert "mission" not in item.properties.keys()
+    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
+    assert title is None
