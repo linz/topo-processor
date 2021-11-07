@@ -78,7 +78,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(
             {
                 "mission": title,
-                "platform": "fixed-wing aircraft",
+                "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
             }

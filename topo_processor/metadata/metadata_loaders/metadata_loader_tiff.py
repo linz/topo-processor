@@ -46,16 +46,15 @@ class MetadataLoaderTiff(MetadataLoader):
         asset.item.add_extension(stac.StacExtensions.projection.value)
 
     def add_bands(self, tiff, asset):
+        asset.item.add_extension(stac.StacExtensions.eo.value)
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
-            asset.item.add_extension(stac.StacExtensions.eo.value)
         elif all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
             asset.properties["eo:bands"] = [
                 {"name": ColorInterp.red.name, "common_name": "red"},
                 {"name": ColorInterp.green.name, "common_name": "green"},
                 {"name": ColorInterp.blue.name, "common_name": "blue"},
             ]
-            asset.item.add_extension(stac.StacExtensions.eo.value)
         else:
             asset.item.add_warning(
                 msg="Skipped Asset Record",
