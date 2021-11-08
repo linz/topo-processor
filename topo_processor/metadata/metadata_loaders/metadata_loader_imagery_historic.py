@@ -5,6 +5,7 @@ import numbers
 import os
 from typing import TYPE_CHECKING, Any, Dict
 
+import pystac
 import shapely.wkt
 from linz_logger.logger import get_log
 
@@ -23,6 +24,11 @@ from .metadata_loader import MetadataLoader
 if TYPE_CHECKING:
     from topo_processor.stac import Asset, Item
 
+NZAM = pystac.Provider(
+    name="NZ Aerial Mapping",
+    description="Aerial survey and geospatial services firm. Went into liquidation in 2014.",
+    roles=[pystac.ProviderRole.PRODUCER],
+)
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
@@ -74,6 +80,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
+        collection.add_provider(NZAM)
 
         item.properties.update(
             {
