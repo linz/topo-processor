@@ -12,8 +12,9 @@ def test_check_validity():
     item = Item("item_id")
     item.add_asset(asset)
     item.properties.update({"linz:photo_type": "COLOUR"})
+    asset.properties.update({"eo:bands": [{"name": "gray", "common_name": "pan"}]})
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    with pytest.raises(Exception, match=r"Wrong photo type of gray"):
+    with pytest.raises(Exception, match=r"Wrong 'linz:photo_type' of COLOUR when bands = gray"):
         validator.validate_metadata(item)

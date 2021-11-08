@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import csv
+import numbers
 import os
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 import shapely.wkt
+from linz_logger.logger import get_log
 
 from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
@@ -53,7 +55,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             self.populate_item(metadata)
 
     def populate_item(self, metadata_row, asset: Asset = None) -> None:
-        collection = get_collection(metadata_row["survey"])
+        title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
+        if not title:
+            get_log().warning(
+                "Null collection title value", message="asset has null 'survey' and 'alternate_survey_name' values"
+            )
+            return
+        collection = get_collection(title)
+
         item = get_item(metadata_row["sufi"])
         collection.add_item(item)
 
@@ -64,28 +73,26 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
+        collection.add_extension(stac.StacExtensions.historical_imagery.value)
 
         item.properties.update(
             {
-                "linz:sufi": metadata_row["sufi"],
-                "linz:survey": metadata_row["survey"],
-                "linz:alternate_survey_name": metadata_row["alternate_survey_name"],
-                "linz:camera": metadata_row["camera"],
-                "linz:photocentre_lat": metadata_row["photocentre_lat"],
-                "linz:photocentre_lon": metadata_row["photocentre_lon"],
-                "linz:photo_type": metadata_row["photo_type"],
-                "linz:scanned": metadata_row["scanned"],
-                "linz:raw_filename": metadata_row["raw_filename"],
-                "linz:released_filename": metadata_row["released_filename"],
-                "linz:photo_version": metadata_row["photo_version"],
+                "mission": title,
+                "platform": "Fixed-wing Aircraft",
+                "instruments": [metadata_row["camera"]],
+                "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
             }
         )
+
+        self.add_centroid(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
         self.add_aerial_photo_metadata(item, metadata_row)
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
+
+        item.add_extension(stac.StacExtensions.historical_imagery.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -108,6 +115,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                     self.raw_metadata[row["sufi"]] = row
 
         self.is_init = True
+
+    def get_title(self, survey: str, alternate_survey_name: str):
+        if not survey or survey == "0" or survey == "":
+            if alternate_survey_name and alternate_survey_name != "":
+                return alternate_survey_name
+        else:
+            return survey
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
         wkt = asset_metadata.get("WKT", None)
@@ -192,3 +206,34 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 item.add_error(msg="Invalid date", cause=self.name, e=e)
         else:
             item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))
+
+    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
+
+        centroid = {
+            "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
+            "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
+        }
+        if self.is_valid_centroid(item, centroid):
+            item.properties["proj:centroid"] = centroid
+            item.add_extension(stac.StacExtensions.projection.value)
+
+    def is_valid_centroid(self, item: Item, centroid) -> bool:
+        if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(
+                    f"stac field 'proj:centroid' has invalid lat value: {centroid['lat']}, instance: {type(centroid['lat'])}"
+                ),
+            )
+            return False
+        if not isinstance(centroid["lon"], numbers.Number) or centroid["lon"] > 180 or centroid["lon"] < -180:
+            item.add_warning(
+                msg="Skipped Record",
+                cause=self.name,
+                e=Exception(
+                    f"stac field 'proj:centroid' has invalid lon value: {centroid['lon']}, instance: {type(centroid['lat'])}"
+                ),
+            )
+            return False
+        return True
