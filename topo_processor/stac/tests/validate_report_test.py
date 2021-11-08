@@ -1,11 +1,9 @@
-from logging import error
 import os
+from logging import error
 
 import pytest
 
 from topo_processor.stac.validate_report import ValidateReport
-
-
 
 
 def test_increment_error():
