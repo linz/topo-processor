@@ -40,7 +40,6 @@ class Collection(Validity):
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
 
-
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
             raise Exception(f"Remapping of collection? existing='{item.collection.title}' new='{self.title}' item='{item.id}'")
