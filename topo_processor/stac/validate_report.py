@@ -10,14 +10,14 @@ class ValidateReport:
         self.report_per_error_type = {}
 
     def add_errors(self, errors_per_schema: Dict[str, List[str]]) -> None:
-        if errors_per_schema:
             for schema_uri in errors_per_schema:
-                if schema_uri not in self.report_per_error_type:
-                    self.report_per_error_type[schema_uri] = {}
                 for error in errors_per_schema[schema_uri]:
-                    if error in self.report_per_error_type[schema_uri]:
-                        self.report_per_error_type[schema_uri][error] = self.report_per_error_type[schema_uri][error] + 1
-                    else:
-                        self.report_per_error_type[schema_uri][error] = 1
+                    self.increment_error(schema_uri, error)
+            self.total = self.total + 1
 
-        self.total = self.total + 1
+    def increment_error(self, schema, error) -> None:
+        existing = self.report_per_error_type.get(schema)
+        if existing is None:
+            self.report_per_error_type[schema] = existing = {}
+        
+        existing[error] = existing.get(error, 0) + 1
