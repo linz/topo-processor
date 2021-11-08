@@ -27,7 +27,7 @@ class MetadataValidatorStac(MetadataValidator):
 
         return validator
 
-    def is_applicable(self, item: Item) -> bool:
+    def is_applicable(self, stac_object: Union[Item, Collection]) -> bool:
         return True
 
     def validate_metadata(self, item: Item) -> None:
@@ -43,16 +43,14 @@ class MetadataValidatorStac(MetadataValidator):
         """
         errors_report: Dict[str, list[str]] = {}
         stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
-        #FIXME: Work around pystac `to_dict` serialization issue with links
-        if stac_dict['type'] == "Collection":
-            stac_dict['links'] = json.loads(json.dumps(stac_dict['links']))
-            
+        # FIXME: Work around pystac `to_dict` serialization issue with links (https://github.com/stac-utils/pystac/issues/652)
+        if stac_dict["type"] == "Collection":
+            stac_dict["links"] = json.loads(json.dumps(stac_dict["links"]))
+
         schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
-        get_log().debug(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"])
-
         for schema_uri in schema_uris:
-            get_log().trace(f"{self.name}:validate_metadata_with_report", schema=schema_uri)
+            get_log().trace(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"], schema=schema_uri)
             current_errors = []
             v = self.get_validator_from_uri(schema_uri)
             errors = v.iter_errors(stac_dict)

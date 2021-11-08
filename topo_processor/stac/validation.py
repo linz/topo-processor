@@ -24,10 +24,8 @@ def validate_stac(metadata_file: str, validate_item: bool = True, validate_colle
     # Validate metadata from stored STAC objects
     if validate_item:
         item_report = validate_store(item_store)
-        item_report.build_report()
     if validate_collection:
         collection_report = validate_store(collection_store)
-        collection_report.build_report()
 
     # Print report
     get_log().info(
@@ -46,6 +44,6 @@ def validate_store(store: List[Union[Item, Collection]]) -> ValidateReport:
 
     for stac_object in store.values():
         if stac_object.is_valid():
-            validate_report.add_errors(stac_object.id, metadata_validator_stac.validate_metadata_with_report(stac_object))
+            validate_report.add_errors(metadata_validator_stac.validate_metadata_with_report(stac_object))
 
     return validate_report

@@ -19,7 +19,7 @@ from topo_processor.util import time_in_ms
     "-v",
     "--verbose",
     is_flag=True,
-    help="Use verbose to display trace logs",
+    help="Use verbose to display trace logs (it might be slower)",
 )
 @click.option(
     "-i",

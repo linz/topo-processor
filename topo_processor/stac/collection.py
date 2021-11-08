@@ -22,7 +22,6 @@ TEMP_DIR = None
 
 
 class Collection(Validity):
-    # FIXME: id duplicate title
     id: str
     title: str
     description: str
@@ -33,7 +32,8 @@ class Collection(Validity):
 
     def __init__(self, title: str):
         super().__init__()
-        self.id = title
+        # FIXME: Do we want to generate this id like this?
+        self.id = str(ulid.ULID())
         self.title = title
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
@@ -96,7 +96,7 @@ class Collection(Validity):
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
-            id=str(ulid.ULID()),
+            id=self.id,
             description=self.description,
             href="./collection.json",
             license=self.license,
