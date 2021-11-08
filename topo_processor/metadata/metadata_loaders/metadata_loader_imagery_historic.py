@@ -30,6 +30,7 @@ NZAM = pystac.Provider(
     roles=[pystac.ProviderRole.PRODUCER],
 )
 
+
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
     is_init = False
