@@ -310,7 +310,7 @@ def test_mission_metadata_not_added():
     assert title is None
 
 
-def test_test():
+def test_provider_added():
     source_path = "test_abc.tiff"
     asset = stac.Asset(source_path)
     metadata = {
