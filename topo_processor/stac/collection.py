@@ -29,6 +29,7 @@ class Collection(Validity):
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
     schema: str
+    stac_extensions: set
 
     def __init__(self, title: str):
         super().__init__()
@@ -37,6 +38,8 @@ class Collection(Validity):
         self.title = title
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
+        self.stac_extensions = set([])
+
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -47,6 +50,9 @@ class Collection(Validity):
                 raise Exception(f"Remapping of item id in collection='{self.title}' item='{item.id}'")
             return
         self.items[item.id] = item
+
+    def add_extension(self, ext: str):
+        self.stac_extensions.add(ext)
 
     def get_temp_dir(self):
         global TEMP_DIR
@@ -98,12 +104,14 @@ class Collection(Validity):
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
-            href="./collection.json",
-            license=self.license,
-            providers=GLOBAL_PROVIDERS,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
+            title=self.title,
+            stac_extensions=list(self.stac_extensions),
+            href="./collection.json",
+            license=self.license,
+            providers=GLOBAL_PROVIDERS,
         )
         return stac
