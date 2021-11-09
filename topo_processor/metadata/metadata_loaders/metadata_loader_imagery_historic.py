@@ -3,13 +3,13 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Dict
 
-import pystac
 import shapely.wkt
 from linz_logger.logger import get_log
 
 from topo_processor import stac
+from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
     nzt_datetime_to_utc_datetime,
@@ -23,13 +23,6 @@ from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
     from topo_processor.stac import Asset, Item
-
-NZAM = pystac.Provider(
-    name="NZ Aerial Mapping",
-    description="Aerial survey and geospatial services firm. Went into liquidation in 2014.",
-    roles=[pystac.ProviderRole.PRODUCER],
-)
-
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
@@ -81,7 +74,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
-        collection.add_provider(NZAM)
+        collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(
             {

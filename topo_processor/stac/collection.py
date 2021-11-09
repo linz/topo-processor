@@ -14,14 +14,8 @@ from shapely.ops import unary_union
 
 from topo_processor.util import Validity
 
-GLOBAL_PROVIDERS = [
-    pystac.Provider(
-        name="Toitū Te Whenua LINZ",
-        description="The New Zealand Government's lead agency for location and property information, Crown land and managing overseas investment.",
-        roles=[pystac.ProviderRole.HOST, pystac.ProviderRole.LICENSOR, pystac.ProviderRole.PROCESSOR],
-        url="https://www.linz.govt.nz/about-linz/what-were-doing/projects/crown-aerial-film-archive-historical-imagery-scanning-project",
-    )
-]
+from .providers import Providers
+
 if TYPE_CHECKING:
     from .item import Item
 
@@ -46,7 +40,7 @@ class Collection(Validity):
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
-        self.providers = []
+        self.providers = [Providers.TTW.value]
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -123,6 +117,6 @@ class Collection(Validity):
             stac_extensions=list(self.stac_extensions),
             href="./collection.json",
             license=self.license,
-            providers=GLOBAL_PROVIDERS + self.providers,
+            providers=self.providers,
         )
         return stac
