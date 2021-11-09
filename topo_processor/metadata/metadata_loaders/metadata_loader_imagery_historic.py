@@ -24,6 +24,7 @@ from .metadata_loader import MetadataLoader
 if TYPE_CHECKING:
     from topo_processor.stac import Asset, Item
 
+
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
     is_init = False

@@ -11,7 +11,7 @@ class Providers(Enum):
         url="https://www.linz.govt.nz/about-linz/what-were-doing/projects/crown-aerial-film-archive-historical-imagery-scanning-project",
     )
     NZAM = pystac.Provider(
-    name="NZ Aerial Mapping",
-    description="Aerial survey and geospatial services firm. Went into liquidation in 2014.",
-    roles=[pystac.ProviderRole.PRODUCER],
-)
+        name="NZ Aerial Mapping",
+        description="Aerial survey and geospatial services firm. Went into liquidation in 2014.",
+        roles=[pystac.ProviderRole.PRODUCER],
+    )
