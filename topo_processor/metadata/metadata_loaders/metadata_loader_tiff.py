@@ -8,6 +8,7 @@ from rasterio.enums import ColorInterp
 
 from topo_processor import stac
 from topo_processor.file_system.get_fs import get_fs
+from topo_processor.stac.store import get_item
 from topo_processor.util import is_tiff
 
 from .metadata_loader import MetadataLoader
@@ -34,6 +35,12 @@ class MetadataLoaderTiff(MetadataLoader):
 
     def load_all_metadata(self, metadata_file: str) -> None:
         pass
+
+    def load_base_metadata(self, metadata_row):
+        item = get_item(metadata_row["sufi"])
+        item.properties["proj:epsg"] = None
+        item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+        item.add_extension(stac.stac_extensions.StacExtensions.eo.value)
 
     def add_epsg(self, tiff, asset):
         if tiff.crs:

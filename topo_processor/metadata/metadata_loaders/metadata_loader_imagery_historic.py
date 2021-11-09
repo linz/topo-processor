@@ -50,9 +50,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def load_all_metadata(self, metadata_file: str) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
+        from . import metadata_loader_tiff
 
         for metadata in self.raw_metadata.values():
             self.populate_item(metadata)
+            metadata_loader_tiff.load_base_metadata(metadata)
 
     def populate_item(self, metadata_row, asset: Asset = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
