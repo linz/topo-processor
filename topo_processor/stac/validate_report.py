@@ -15,7 +15,7 @@ class ValidateReport:
                 self.increment_error(schema_uri, error)
         self.total = self.total + 1
 
-    def increment_error(self, schema, error) -> None:
+    def increment_error(self, schema: str, error: str) -> None:
         existing = self.report_per_error_type.get(schema)
         if existing is None:
             self.report_per_error_type[schema] = existing = {}
