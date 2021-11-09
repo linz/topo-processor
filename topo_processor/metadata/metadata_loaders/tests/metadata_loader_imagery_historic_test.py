@@ -9,6 +9,13 @@ def test_is_applicable():
     assert metadata_loader_imagery_historic.is_applicable(asset)
 
 
+def test_is_applicable_his():
+    source_path = "test_abc.tiff.his"
+    asset = stac.Asset(source_path)
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    assert metadata_loader_imagery_historic.is_applicable(asset) is False
+
+
 def test_item_not_found_in_csv():
     source_path = "test_abc.tiff"
     asset = stac.Asset(source_path)

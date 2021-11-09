@@ -17,6 +17,7 @@ from topo_processor.util import (
     string_to_boolean,
     string_to_number,
 )
+from topo_processor.util.tiff import is_tiff
 
 from .metadata_loader import MetadataLoader
 
@@ -30,7 +31,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
     def is_applicable(self, asset: Asset) -> bool:
-        return True
+        return is_tiff(asset.source_path)
 
     def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
@@ -44,7 +45,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         asset_metadata = self.raw_metadata[filename]
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
-
         self.populate_item(asset_metadata, asset)
 
     def load_all_metadata(self, metadata_file: str) -> None:
