@@ -33,15 +33,6 @@ class MetadataLoaderTiff(MetadataLoader):
                 self.add_epsg(tiff, asset)
                 self.add_bands(tiff, asset)
 
-    def load_all_metadata(self, metadata_file: str) -> None:
-        pass
-
-    def load_base_metadata(self, metadata_row):
-        item = get_item(metadata_row["sufi"])
-        item.properties["proj:epsg"] = None
-        item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
-        item.add_extension(stac.stac_extensions.StacExtensions.eo.value)
-
     def add_epsg(self, tiff, asset):
         if tiff.crs:
             if not tiff.crs.is_epsg_code:

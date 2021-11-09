@@ -47,14 +47,12 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.populate_item(asset_metadata, asset)
 
-    def load_all_metadata(self, metadata_file: str) -> None:
+    def load_metadata_from_csv(self, metadata_file: str) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
-        from . import metadata_loader_tiff
 
         for metadata in self.raw_metadata.values():
             self.populate_item(metadata)
-            metadata_loader_tiff.load_base_metadata(metadata)
 
     def populate_item(self, metadata_row, asset: Asset = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
@@ -70,6 +68,12 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         if asset:
             item.add_asset(asset)
+        else:
+            # Required in the historical-imagery STAC extension
+            # and not added in case of 'validate' because not based on 'tiff' files
+            item.properties["proj:epsg"] = None
+            item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+            item.add_extension(stac.stac_extensions.StacExtensions.eo.value)
 
         item.collection = collection
 
@@ -99,6 +103,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
         if not metadata_file:
+            # FIXME: we should not hardcode this file
             metadata_file = "historical_aerial_photos_metadata.csv"
 
         csv_path = os.path.join(os.getcwd(), "test_data", metadata_file)

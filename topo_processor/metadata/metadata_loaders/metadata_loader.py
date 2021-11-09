@@ -20,7 +20,3 @@ class MetadataLoader(ABC):
     @abstractmethod
     def load_metadata(self, asset: Asset) -> None:
         pass
-
-    @abstractmethod
-    def load_all_metadata(self, metadata_file: str) -> None:
-        pass
