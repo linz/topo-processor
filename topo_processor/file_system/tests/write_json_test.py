@@ -21,6 +21,6 @@ def setup():
 
 def test_write_json(setup):
     my_dict = {"foo": "foo", "bar": 1}
-    target = setup + '/test.json'
+    target = setup + "/test.json"
     write_json(my_dict, target)
     assert os.path.isfile(target)
