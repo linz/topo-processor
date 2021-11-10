@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import json
 import urllib
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Union
 
 import jsonschema_rs
 from linz_logger import get_log
 from pystac.errors import STACValidationError
 
-from .metadata_validator import MetadataValidator
+from topo_processor.stac import Collection, Item
 
-if TYPE_CHECKING:
-    from topo_processor.stac import Item
+from .metadata_validator import MetadataValidator
 
 
 class MetadataValidatorStac(MetadataValidator):
@@ -28,7 +27,7 @@ class MetadataValidatorStac(MetadataValidator):
 
         return validator
 
-    def is_applicable(self, item: Item) -> bool:
+    def is_applicable(self, stac_object: Union[Item, Collection]) -> bool:
         return True
 
     def validate_metadata(self, item: Item) -> None:
@@ -38,23 +37,27 @@ class MetadataValidatorStac(MetadataValidator):
         except STACValidationError as e:
             raise STACValidationError(message=f"Not valid STAC: {e}")
 
-    def validate_metadata_with_report(self, item: Item) -> Dict[str, list[str]]:
+    def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
+        """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
+        Return an error report [{schemaURI, [errors]}]
+        """
         errors_report: Dict[str, list[str]] = {}
-        stac_item = item.create_stac().to_dict(include_self_link=False)
-        schema_uris: list[str] = [item.schema] + stac_item["stac_extensions"]
+        stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
+        # FIXME: Work around pystac `to_dict` serialization issue with links (https://github.com/stac-utils/pystac/issues/652)
+        if stac_dict["type"] == "Collection":
+            stac_dict["links"] = json.loads(json.dumps(stac_dict["links"]))
 
-        get_log().debug(f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"])
+        schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
         for schema_uri in schema_uris:
-            get_log().trace(f"{self.name}:validate_metadata_with_report", schema=schema_uri)
+            get_log().trace(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"], schema=schema_uri)
             current_errors = []
             v = self.get_validator_from_uri(schema_uri)
-
-            errors = v.iter_errors(stac_item)
+            errors = v.iter_errors(stac_dict)
 
             for error in errors:
                 current_errors.append(error.message)
-                get_log().warn(f"{self.name}:validate_metadata_with_report", itemId=stac_item["id"], error=error.message)
+                get_log().warn(f"{self.name}:validate_metadata_with_report", stacId=stac_dict["id"], error=error.message)
 
             if current_errors:
                 errors_report[schema_uri] = current_errors

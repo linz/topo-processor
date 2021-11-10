@@ -6,9 +6,10 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from typing import TYPE_CHECKING, Dict, List
 
-import pystac
 import ulid
 from linz_logger import get_log
+from pystac import pystac
+from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
 from topo_processor.util import Validity
@@ -21,17 +22,22 @@ TEMP_DIR = None
 
 
 class Collection(Validity):
+    id: str
     title: str
     description: str
     license: str
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
+    schema: str
     stac_extensions: set
 
     def __init__(self, title: str):
         super().__init__()
+        # FIXME: Do we want to generate this id like this?
+        self.id = str(ulid.ULID())
         self.title = title
         self.items = {}
+        self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
 
     def add_item(self, item: Item):
@@ -95,7 +101,7 @@ class Collection(Validity):
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
-            id=str(ulid.ULID()),
+            id=self.id,
             description=self.description,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
