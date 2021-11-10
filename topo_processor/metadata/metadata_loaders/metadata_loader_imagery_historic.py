@@ -3,12 +3,13 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Dict
 
 import shapely.wkt
 from linz_logger.logger import get_log
 
 from topo_processor import stac
+from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
     nzt_datetime_to_utc_datetime,
@@ -74,6 +75,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
+        collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(
             {

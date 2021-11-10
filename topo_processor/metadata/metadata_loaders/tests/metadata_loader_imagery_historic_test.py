@@ -315,3 +315,53 @@ def test_mission_metadata_not_added():
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
     assert title is None
+
+
+def test_provider_added():
+    source_path = "test_abc.tiff"
+    asset = stac.Asset(source_path)
+    metadata = {
+        "WKT": "",
+        "sufi": "",
+        "survey": "SURVEY_1",
+        "run": "",
+        "photo_no": "",
+        "alternate_survey_name": "",
+        "camera": "",
+        "camera_sequence_no": "",
+        "nominal_focal_length": "",
+        "altitude": "",
+        "scale": "",
+        "photocentre_lat": "",
+        "photocentre_lon": "",
+        "date": "",
+        "film": "",
+        "film_sequence_no": "",
+        "photo_type": "",
+        "format": "",
+        "source": "",
+        "physical_film_condition": "",
+        "image_anomalies": "",
+        "when_scanned": "",
+    }
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.populate_item(metadata, asset)
+    collection = asset.item.collection.create_stac()
+    assert len(collection.providers) == 2
+    LINZ_provider = collection.providers[0]
+    assert LINZ_provider.name == "Toitū Te Whenua LINZ"
+    assert (
+        LINZ_provider.description
+        == "The New Zealand Government's lead agency for location and property information, Crown land and managing overseas investment."
+    )
+    assert (
+        LINZ_provider.url
+        == "https://www.linz.govt.nz/about-linz/what-were-doing/projects/crown-aerial-film-archive-historical-imagery-scanning-project"
+    )
+    assert LINZ_provider.roles == ["host", "licensor", "processor"]
+
+    NZAM_provider = collection.providers[1]
+    assert NZAM_provider.name == "NZ Aerial Mapping"
+    assert NZAM_provider.description == "Aerial survey and geospatial services firm. Went into liquidation in 2014."
+    assert NZAM_provider.roles == ["producer"]
