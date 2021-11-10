@@ -68,6 +68,12 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         if asset:
             item.add_asset(asset)
+        else:
+            # Required in the historical-imagery STAC extension
+            # and not added in case of 'validate' because not based on 'tiff' files
+            item.properties["proj:epsg"] = None
+            item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+            item.add_extension(stac.stac_extensions.StacExtensions.eo.value)
 
         item.collection = collection
 
