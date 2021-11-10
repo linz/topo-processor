@@ -185,7 +185,7 @@ toml = ["tomli"]
 
 [[package]]
 name = "fsspec"
-version = "2021.10.1"
+version = "2021.11.0"
 description = "File-system specification"
 category = "main"
 optional = false
@@ -696,7 +696,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "bb6cab2d2c09e8467ceebf3f7c6b3894feec5a4fd14af04b4571b35b9fdb5a21"
+content-hash = "d25cdbb0431a1f375d8fb1909edfbff40d9743b7bc580a040af1c88c741da414"
 
 [metadata.files]
 affine = [
@@ -800,8 +800,8 @@ coverage = [
     {file = "coverage-6.1.1.tar.gz", hash = "sha256:b8e4f15b672c9156c1154249a9c5746e86ac9ae9edc3799ee3afebc323d9d9e0"},
 ]
 fsspec = [
-    {file = "fsspec-2021.10.1-py3-none-any.whl", hash = "sha256:7164a488f3f5bf6a0fb39674978b756dda84e011a5db411a79791b7c38a36ff7"},
-    {file = "fsspec-2021.10.1.tar.gz", hash = "sha256:c245626e3cb8de5cd91485840b215a385fa6f2b0f6ab87978305e99e2d842753"},
+    {file = "fsspec-2021.11.0-py3-none-any.whl", hash = "sha256:8843f31c7a7bb1afc4add371948f10701814594d407ee1b0bb4facec8b517efa"},
+    {file = "fsspec-2021.11.0.tar.gz", hash = "sha256:cbb7bafd59aa33684a92e843877f4adc0109fb0722b1a26e7d08f5a6e2500904"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
