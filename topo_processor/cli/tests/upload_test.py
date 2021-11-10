@@ -21,6 +21,7 @@ def setup():
     shutil.rmtree(target)
 
 
+@pytest.mark.slow
 def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
