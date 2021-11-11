@@ -36,7 +36,6 @@ def transfer_collection(collection: Collection, target: str):
 
         existing_asset_hrefs = {}
 
-
         for asset in item.assets:
 
             if not asset.needs_upload:
@@ -48,9 +47,7 @@ def transfer_collection(collection: Collection, target: str):
                 asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
             if asset.key_name:
-                stac_item.add_asset(
-                    key=asset.key_name, asset=asset.create_stac()
-                )
+                stac_item.add_asset(key=asset.key_name, asset=asset.create_stac())
             else:
                 stac_item.add_asset(
                     key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
