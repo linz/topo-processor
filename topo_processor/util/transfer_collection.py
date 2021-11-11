@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from topo_processor.stac import Collection
 
 
-def transfer_collection(collection: Collection, target: str):
+def transfer_collection(collection: Collection, target: str, datatype: str):
     stac_collection = collection.create_stac()
     # pystac v1.1.0
     # Required to remove cwd from collection self_href,
@@ -45,9 +45,12 @@ def transfer_collection(collection: Collection, target: str):
             transfer_file(
                 asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
-            stac_item.add_asset(
-                key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
-            )
+            if datatype == "imagery.historic":
+                stac_item.add_asset(key="visual", asset=asset.create_stac())
+            else:
+                stac_item.add_asset(
+                    key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
+                )
             existing_asset_hrefs[asset.href] = asset
 
         # pystac v1.1.0
