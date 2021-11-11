@@ -49,7 +49,7 @@ def main(source, datatype, target, verbose):
 
     try:
         for collection in collection_store.values():
-            transfer_collection(collection, target)
+            transfer_collection(collection, target, data_type.value)
 
     finally:
         for collection in collection_store.values():
