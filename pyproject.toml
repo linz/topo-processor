@@ -49,3 +49,8 @@ module = [
     "linz_logger",
 ]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow",
+]

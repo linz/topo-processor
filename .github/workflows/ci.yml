@@ -29,4 +29,4 @@ jobs:
           poetry run isort -rc . --check --diff
       - name: Test
         run: |
-          poetry run pytest --cov topo_processor
+          poetry run pytest --slow --cov topo_processor
