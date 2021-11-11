@@ -15,7 +15,7 @@ python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.11.0"}
 pystac = "^1.1.0"
 jsonschema = "^4.2.1"
-jsonschema-rs = "^0.13.0"
+jsonschema-rs = "^0.13.1"
 Shapely = "^1.8.0"
 
 [tool.poetry.dev-dependencies]
