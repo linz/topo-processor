@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Dict
 
 import shapely.wkt
 from linz_logger.logger import get_log
+from rasterio.enums import ColorInterp
 
 from topo_processor import stac
 from topo_processor.stac.store import get_collection, get_item
@@ -92,8 +93,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
         self.add_projection_extent(item)
+        self.add_bands_extent(item, asset)
 
-        item.add_extension(stac.StacExtensions.eo.value)
         item.add_extension(stac.StacExtensions.historical_imagery.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
@@ -222,6 +223,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_projection_extent(self, item: Item):
         item.properties["proj:epsg"] = None
         item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+
+    def add_bands_extent(self, item: Item, asset: Asset):
+        item.add_extension(stac.StacExtensions.eo.value)
+
+        if asset:
+            # default value
+            asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
 
     def is_valid_centroid(self, item: Item, centroid) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
