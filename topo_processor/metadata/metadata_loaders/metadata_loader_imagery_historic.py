@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
+    asset_key_name = "visual"
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
@@ -47,6 +48,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         asset_metadata = self.raw_metadata[filename]
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
+        asset.key_name = self.asset_key_name
         self.populate_item(asset_metadata, asset)
 
     def load_all_metadata(self, metadata_file: str) -> None:

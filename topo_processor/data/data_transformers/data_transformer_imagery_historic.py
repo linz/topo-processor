@@ -42,6 +42,7 @@ class DataTransformerImageryHistoric(DataTransformer):
 
             cog_asset = stac.Asset(output_path)
             cog_asset.content_type = pystac.MediaType.COG
+            cog_asset.key_name = asset.key_name
             cog_asset.target = asset.target
             cog_asset.properties = asset.properties
             cog_asset_list.append(cog_asset)
