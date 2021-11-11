@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Dict
 
 import shapely.wkt
 from linz_logger.logger import get_log
@@ -68,12 +68,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         if asset:
             item.add_asset(asset)
-        else:
-            # Required in the historical-imagery STAC extension
-            # and not added in case of 'validate' because not based on 'tiff' files
-            item.properties["proj:epsg"] = None
-            item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
-            item.add_extension(stac.stac_extensions.StacExtensions.eo.value)
 
         item.collection = collection
 
@@ -97,7 +91,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
+        self.add_projection_extent(item)
 
+        item.add_extension(stac.StacExtensions.eo.value)
         item.add_extension(stac.StacExtensions.historical_imagery.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
@@ -222,6 +218,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if self.is_valid_centroid(item, centroid):
             item.properties["proj:centroid"] = centroid
             item.add_extension(stac.StacExtensions.projection.value)
+
+    def add_projection_extent(self, item: Item):
+        item.properties["proj:epsg"] = None
+        item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
 
     def is_valid_centroid(self, item: Item, centroid) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
