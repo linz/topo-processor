@@ -10,6 +10,7 @@ from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor import stac
+from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
@@ -29,7 +30,6 @@ if TYPE_CHECKING:
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
-    asset_key_name = "visual"
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
@@ -48,7 +48,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         asset_metadata = self.raw_metadata[filename]
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
-        asset.key_name = self.asset_key_name
+        asset.key_name = AssetKey.Visual.value
         self.populate_item(asset_metadata, asset)
 
     def load_all_metadata(self, metadata_file: str) -> None:
