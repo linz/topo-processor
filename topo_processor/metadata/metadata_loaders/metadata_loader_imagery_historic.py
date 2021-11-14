@@ -48,7 +48,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         asset_metadata = self.raw_metadata[filename]
 
         asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
-        asset.key_name = AssetKey.Visual.value
+        asset.key_name = AssetKey.Visual
         self.populate_item(asset_metadata, asset)
 
     def load_all_metadata(self, metadata_file: str) -> None:
