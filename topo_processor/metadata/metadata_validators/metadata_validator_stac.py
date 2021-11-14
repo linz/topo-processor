@@ -43,10 +43,6 @@ class MetadataValidatorStac(MetadataValidator):
         """
         errors_report: Dict[str, list[str]] = {}
         stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
-        # FIXME: Work around pystac `to_dict` serialization issue with links (https://github.com/stac-utils/pystac/issues/652)
-        if stac_dict["type"] == "Collection":
-            stac_dict["links"] = json.loads(json.dumps(stac_dict["links"]))
-            stac_dict["providers"] = json.loads(json.dumps(stac_dict["providers"]))
 
         schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
