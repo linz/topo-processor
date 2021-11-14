@@ -34,12 +34,12 @@ def test_fail_on_duplicate_assets(setup):
 
     cog_1 = Asset("./test_data/tiffs/SURVEY_1/CONTROL.tiff")
     cog_1.target = "fake_title/fake_target.tiff"
-    cog_1.key_name = AssetKey.Visual.value
+    cog_1.key_name = AssetKey.Visual
     item.add_asset(cog_1)
 
     cog_2 = Asset("test_data/tiffs/SURVEY_1/MULTIPLE_ASSET.tiff")
     cog_2.target = "fake_title/fake_target.tiff"
-    cog_2.key_name = AssetKey.Visual.value
+    cog_2.key_name = AssetKey.Visual
     item.add_asset(cog_2)
 
     with pytest.raises(Exception, match=r"./item_id.tiff already exists."):
