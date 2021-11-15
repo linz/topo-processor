@@ -104,9 +104,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
         if not metadata_file:
-            metadata_file = "historical_aerial_photos_metadata.csv"
+            metadata_file = "test_data/historical_aerial_photos_metadata.csv"
 
-        csv_path = os.path.join(os.getcwd(), "test_data", metadata_file)
+        csv_path = os.path.join(os.getcwd(), metadata_file)
         if not os.path.isfile(csv_path):
             raise Exception(f'Cannot find "{csv_path}"')
 

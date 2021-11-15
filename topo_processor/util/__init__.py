@@ -1,4 +1,5 @@
 from .checksum import multihash_as_hex
+from .configuration import configuration
 from .conversions import (
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
