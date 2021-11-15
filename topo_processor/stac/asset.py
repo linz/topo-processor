@@ -6,6 +6,8 @@ import pystac
 
 from topo_processor.util import Validity, multihash_as_hex
 
+from .asset_key import AssetKey
+
 if TYPE_CHECKING:
     from .item import Item
 
@@ -18,6 +20,7 @@ class Asset(Validity):
     href: str
     properties = dict
     item: "Item"
+    key_name: AssetKey
 
     def __init__(self, source_path: str):
         super().__init__()
@@ -27,6 +30,7 @@ class Asset(Validity):
         self.needs_upload = True
         self.properties = {}
         self.item = None
+        self.key_name = None
 
     def file_ext(self) -> str:
         return path.splitext(self.target if self.target else self.source_path)[1]

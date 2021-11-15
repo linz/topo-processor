@@ -8,6 +8,7 @@ from pystac.catalog import CatalogType
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
+from topo_processor.stac.asset_key import AssetKey
 
 if TYPE_CHECKING:
     from topo_processor.stac import Collection
@@ -37,6 +38,7 @@ def transfer_collection(collection: Collection, target: str):
         existing_asset_hrefs = {}
 
         for asset in item.assets:
+
             if not asset.needs_upload:
                 continue
             asset.href = f"./{item.id}{asset.file_ext()}"
@@ -45,9 +47,11 @@ def transfer_collection(collection: Collection, target: str):
             transfer_file(
                 asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
-            stac_item.add_asset(
-                key=(asset.get_content_type() if asset.get_content_type() else asset.file_ext()), asset=asset.create_stac()
-            )
+            if not asset.key_name:
+                raise Exception(f"No asset key set for asset {asset.href}")
+            else:
+                stac_item.add_asset(key=asset.key_name, asset=asset.create_stac())
+
             existing_asset_hrefs[asset.href] = asset
 
         # pystac v1.1.0
