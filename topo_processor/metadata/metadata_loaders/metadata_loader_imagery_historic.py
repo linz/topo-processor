@@ -78,7 +78,19 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
+        collection.extra_fields.update(
+            {
+                "linz_history": "placeholder",
+                "linz_lifecycle": "completed",
+                "linz_security_classification": "unclassified",
+                "processing:software": "placeholder",
+            }
+        )
+
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
+        collection.add_extension(stac.StacExtensions.linz.value)
+        collection.add_extension(stac.StacExtensions.quality.value)
+        collection.add_extension(stac.StacExtensions.processing.value)
         collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(
@@ -87,7 +99,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
-                "processing:software": "Topo Processor", # add hash of commit
             }
         )
 
