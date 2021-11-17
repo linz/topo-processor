@@ -59,18 +59,19 @@ poetry install
 
 The following source and target combinations can be used:
 
-| Source        | Target        |
-| ------------- |:-------------:|
-| s3            | s3            |
-| s3            | local         |
-| local         | local         |
-| local         | s3            |
+| Source | Target |
+| ------ | :----: |
+| s3     |   s3   |
+| s3     | local  |
+| local  | local  |
+| local  |   s3   |
 
 ### Validate
 
 This command runs a validation against a metadata csv file. It generates the corresponding STAC objects on the fly for each metadata and run a JSON schema validation (using [jsonschema-rs](https://github.com/Stranger6667/jsonschema-rs)) for the `Items` and `Collections`. It outputs the errors and their recurrences grouped by JSON schemas as:
+
 ```json
-"errors": {"https://linz.github.io/stac/v0.0.7/aerial-photo/schema.json": {"'aerial-photo:run' is a required property": 4, "'aerial-photo:sequence_number' is a required property": 10}
+"errors": {"https://stac.linz.govt.nz/v0.0.11/aerial-photo/schema.json": {"'aerial-photo:run' is a required property": 4, "'aerial-photo:sequence_number' is a required property": 10}
 ```
 
 ```shell
