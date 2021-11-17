@@ -30,6 +30,7 @@ class Collection(Validity):
     items: Dict[str, "Item"]
     providers: List[pystac.Provider]
     schema: str
+    extra_fields: Dict[str, str]
     stac_extensions: set
 
     def __init__(self, title: str):
@@ -40,7 +41,9 @@ class Collection(Validity):
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
+        self.extra_fields = dict([])
         self.providers = [Providers.TTW.value]
+
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -109,6 +112,7 @@ class Collection(Validity):
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
+            extra_fields=dict(self.extra_fields),
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
