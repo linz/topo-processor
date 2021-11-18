@@ -19,9 +19,14 @@ class MetadataValidatorStac(MetadataValidator):
 
     def get_validator_from_uri(self, schema_uri: str) -> Any:
         if schema_uri not in self.validator_cache:
-            response = urllib.request.urlopen(schema_uri)
-            schema = response.read()
-            self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema.from_str(schema.decode("utf8"))
+            if schema_uri.startswith("http"):
+                response = urllib.request.urlopen(schema_uri)
+                schema = response.read()
+                self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema.from_str(schema.decode("utf8"))
+            else:
+                with open(schema_uri) as file:
+                    schema = json.load(file)
+                    self.validator_cache[schema_uri] = jsonschema_rs.JSONSchema(schema)
 
         validator = self.validator_cache[schema_uri]
 
