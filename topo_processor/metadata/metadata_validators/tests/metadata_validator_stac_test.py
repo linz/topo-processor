@@ -91,30 +91,31 @@ def test_check_validity_scanning_extension():
 
 
 # FIXME: validators need to return all errors not just schema match error
-# def test_validate_metadata_with_report_item():
-#     """check that the method return a report of the errors for an item validation"""
-#     validate_report: ValidateReport = ValidateReport()
-#     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
-#     asset = stac.Asset(source_path)
-#     item = stac.Item("item_id")
-#     item.datetime = datetime.now()
-#     item.add_asset(asset)
-#     item.properties.update({"film:id": "1234"})
-#     item.properties.update({"film:negative_sequence": "string"})
-#     item.add_extension(stac.StacExtensions.film.value)
-#     item.properties.update({"aerial-photo:altitude": 1234})
-#     item.properties.update({"aerial-photo:scale": 1234})
-#     item.properties.update({"aerial-photo:sequence_number": 1234})
-#     item.properties.update({"aerial-photo:anomalies": "Cloud"})
-#     item.add_extension(stac.StacExtensions.aerial_photo.value)
-#     validator = MetadataValidatorStac()
-#     assert validator.is_applicable(item)
-#     validate_report.add_errors(validator.validate_metadata_with_report(item))
-#     assert '"string" is not of type "integer"' in validate_report.report_per_error_type[stac.StacExtensions.film.value]
-#     assert (
-#         '"aerial-photo:run" is a required property'
-#         in validate_report.report_per_error_type[stac.StacExtensions.aerial_photo.value]
-#     )
+@pytest.mark.skip(reason="schema change to include collection causes this test to fail")
+def test_validate_metadata_with_report_item():
+    """check that the method return a report of the errors for an item validation"""
+    validate_report: ValidateReport = ValidateReport()
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = stac.Asset(source_path)
+    item = stac.Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"film:id": "1234"})
+    item.properties.update({"film:negative_sequence": "string"})
+    item.add_extension(stac.StacExtensions.film.value)
+    item.properties.update({"aerial-photo:altitude": 1234})
+    item.properties.update({"aerial-photo:scale": 1234})
+    item.properties.update({"aerial-photo:sequence_number": 1234})
+    item.properties.update({"aerial-photo:anomalies": "Cloud"})
+    item.add_extension(stac.StacExtensions.aerial_photo.value)
+    validator = MetadataValidatorStac()
+    assert validator.is_applicable(item)
+    validate_report.add_errors(validator.validate_metadata_with_report(item))
+    assert '"string" is not of type "integer"' in validate_report.report_per_error_type[stac.StacExtensions.film.value]
+    assert (
+        '"aerial-photo:run" is a required property'
+        in validate_report.report_per_error_type[stac.StacExtensions.aerial_photo.value]
+    )
 
 
 def test_validate_metadata_with_report_collection():
