@@ -132,7 +132,8 @@ def test_validate_metadata_with_report_collection():
 
 def test_validate_against_local_schema():
     """check that the method return a report of the errors for an item validation"""
-    source = os.path.join(os.getcwd(), "test_data", "schemas")
+    # https://datatracker.ietf.org/doc/html/rfc8089#appendix-B
+    source = "file://" + os.getcwd() + "/test_data" + "/schemas"
     validate_report: ValidateReport = ValidateReport()
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
