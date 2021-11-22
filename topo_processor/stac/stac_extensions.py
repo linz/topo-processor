@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class StacExtensions(str, Enum):
-    linz = "https:///stac.linz.govt.nz/v0.0.10/linz/schema.json"
-    quality = "https:///stac.linz.govt.nz/v0.0.10/quality/schema.json"
+    linz = "https:///stac.linz.govt.nz/v0.0.11/linz/schema.json"
+    quality = "https:///stac.linz.govt.nz/v0.0.11/quality/schema.json"
     historical_imagery = "https://stac.linz.govt.nz/v0.0.11/historical-imagery/schema.json"
     aerial_photo = "https://stac.linz.govt.nz/v0.0.11/aerial-photo/schema.json"
     camera = "https://stac.linz.govt.nz/v0.0.11/camera/schema.json"
