@@ -18,7 +18,7 @@ def s3_download(source_path: str, dest_path: str, role_arn: str):
     try:
         s3.Bucket(bucket_name).download_file(object_name, dest_path)
     except Exception as e:
-        get_log().error(f"An error has occurred while downloading {source_path}: {e}")
+        get_log().error("Download failed", file=source_path, error=e)
         raise e
 
 
