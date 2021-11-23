@@ -44,12 +44,13 @@ class Collection(Validity):
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
-        self.extra_fields = dict({
-            "linz:security_classification": "unclassified",
-            })
+        self.extra_fields = dict(
+            {
+                "linz:security_classification": "unclassified",
+            }
+        )
         self.linz_providers = []
         self.providers = [Providers.TTW.value]
-
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -119,11 +120,11 @@ class Collection(Validity):
                 TEMP_DIR = None
 
     def create_stac(self) -> pystac.Collection:
-        self.extra_fields["linz:providers"] = self.linz_providers
+        if self.linz_providers:
+            self.extra_fields["linz:providers"] = self.linz_providers
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
-            extra_fields=self.extra_fields,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
@@ -132,6 +133,7 @@ class Collection(Validity):
             stac_extensions=list(self.stac_extensions),
             href="./collection.json",
             license=self.license,
+            extra_fields=self.extra_fields,
             providers=self.providers,
         )
         return stac

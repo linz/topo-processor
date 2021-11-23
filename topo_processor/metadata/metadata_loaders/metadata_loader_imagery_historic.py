@@ -82,11 +82,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:history": "placeholder",
                 "linz:lifecycle": "completed",
-                "processing:software": "placeholder",
-                "version:version": "1.0"
+                "processing:software": {"Topo Processor": "placeholder"},
+                "version:version": "1.0",
             }
         )
-
 
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
         collection.add_extension(stac.StacExtensions.linz.value)
@@ -102,6 +101,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
+                "processing:software": {"Topo Processor": "placeholder"},
             }
         )
 
@@ -271,3 +271,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             )
             return False
         return True
+
+    def add_geospatial_type_collection:
+        

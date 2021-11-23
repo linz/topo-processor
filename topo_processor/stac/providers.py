@@ -23,7 +23,4 @@ class Providers(Enum):
         roles=LinzProviderRole.CUSTODIAN,
         url="https://www.linz.govt.nz/about-linz/what-were-doing/projects/crown-aerial-film-archive-historical-imagery-scanning-project",
     )
-    LMPP = LinzProvider(
-        name="Manager Partnership Programmes",
-        roles=LinzProviderRole.MANAGER
-    )
+    LMPP = LinzProvider(name="Manager Partnership Programmes", roles=LinzProviderRole.MANAGER)
