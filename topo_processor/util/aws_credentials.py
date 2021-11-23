@@ -46,13 +46,3 @@ def assumed_role_session(role_arn: str, base_session: botocore.session.Session =
     botocore_session = botocore.session.Session()
     botocore_session._credentials = credentials
     return boto3.Session(botocore_session=botocore_session)
-
-
-def assume_role(bucket_role, sts_client):
-    assumed_role_object = sts_client.assume_role(RoleArn=bucket_role, RoleSessionName="AssumeRoleSessionRead")
-
-    credentials = assumed_role_object["Credentials"]
-
-    os.environ["AWS_ACCESS_KEY_ID"] = credentials["AccessKeyId"]
-    os.environ["AWS_SECRET_ACCESS_KEY"] = credentials["SecretAccessKey"]
-    os.environ["AWS_SESSION_TOKEN"] = credentials["SessionToken"]
