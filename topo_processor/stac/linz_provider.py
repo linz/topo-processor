@@ -27,12 +27,10 @@ class LinzProvider:
         self.roles = roles
         self.url = url
 
-
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, LinzProvider):
             return NotImplemented
         return self.to_dict() == o.to_dict()
-
 
     def to_dict(self) -> Dict[str, Any]:
         """Generate a dictionary representing the JSON of this Provider.
@@ -49,7 +47,6 @@ class LinzProvider:
             d["url"] = self.url
 
         return d
-
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "LinzProvider":

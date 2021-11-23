@@ -11,7 +11,7 @@ class StacExtensions(str, Enum):
     scanning = "https://stac.linz.govt.nz/v0.0.11/scanning/schema.json"
     eo = "https://stac-extensions.github.io/eo/v1.0.0/schema.json"
     file = "https://stac-extensions.github.io/file/v2.0.0/schema.json"
-    processing ="https://stac-extensions.github.io/processing/v1.0.0/schema.json"
+    processing = "https://stac-extensions.github.io/processing/v1.0.0/schema.json"
     projection = "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
     timestamps = "https://stac-extensions.github.io/timestamps/v1.0.0/schema.json"
     version = "https://stac-extensions.github.io/version/v1.0.0/schema.json"
