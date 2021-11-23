@@ -79,17 +79,20 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.description = "Historical Imagery"
         collection.extra_fields.update(
             {
-                "linz_history": "placeholder",
-                "linz_lifecycle": "completed",
-                "linz_security_classification": "unclassified",
+                "linz:history": "placeholder",
+                "linz:lifecycle": "completed",
                 "processing:software": "placeholder",
+                "version:version": "1.0"
             }
         )
+
 
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
         collection.add_extension(stac.StacExtensions.linz.value)
         collection.add_extension(stac.StacExtensions.quality.value)
         collection.add_extension(stac.StacExtensions.processing.value)
+        collection.add_linz_provider(Providers.LTTW.value)
+        collection.add_linz_provider(Providers.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(

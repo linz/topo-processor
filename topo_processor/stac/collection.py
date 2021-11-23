@@ -14,6 +14,7 @@ from shapely.ops import unary_union
 
 from topo_processor.util import Validity
 
+from .linz_provider import LinzProvider
 from .providers import Providers
 
 if TYPE_CHECKING:
@@ -28,9 +29,11 @@ class Collection(Validity):
     description: str
     license: str
     items: Dict[str, "Item"]
+    linz_providers: List[LinzProvider]
     providers: List[pystac.Provider]
     schema: str
-    extra_fields: Dict[str, str]
+    extra_fields: Dict[str, Any]
+
     stac_extensions: set
 
     def __init__(self, title: str):
@@ -41,7 +44,10 @@ class Collection(Validity):
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
-        self.extra_fields = dict([])
+        self.extra_fields = dict({
+            "linz:security_classification": "unclassified",
+            })
+        self.linz_providers = []
         self.providers = [Providers.TTW.value]
 
 
@@ -61,6 +67,10 @@ class Collection(Validity):
     def add_provider(self, provider: pystac.Provider):
         if provider not in self.providers:
             self.providers.append(provider)
+
+    def add_linz_provider(self, linz_provider: LinzProvider):
+        if linz_provider.to_dict() not in self.linz_providers:
+            self.linz_providers.append(linz_provider.to_dict())
 
     def get_temp_dir(self):
         global TEMP_DIR
@@ -109,10 +119,11 @@ class Collection(Validity):
                 TEMP_DIR = None
 
     def create_stac(self) -> pystac.Collection:
+        self.extra_fields["linz:providers"] = self.linz_providers
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
-            extra_fields=dict(self.extra_fields),
+            extra_fields=self.extra_fields,
             extent=pystac.Extent(
                 pystac.SpatialExtent(bboxes=self.get_bounding_boxes()),
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
