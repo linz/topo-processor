@@ -1,7 +1,10 @@
+from tempfile import mkdtemp
+from typing import Dict
+
 from dotenv import dotenv_values
 
 configuration = dotenv_values(".env")
 
-lds_cache_bucket = configuration["LDS_CACHE_BUCKET"]
-lds_cache_read_role = configuration["LDS_CACHE_READ_ROLE"]
-lds_cache_local_tmp_folder = configuration["LDS_CACHE_LOCAL_TMP_FOLDER"]
+lds_cache_bucket: str = configuration["LDS_CACHE_BUCKET"]
+aws_roles_config: str = configuration["AWS_ROLES_CONFIG"]
+temp_folder: str = mkdtemp()

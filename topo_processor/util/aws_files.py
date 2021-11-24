@@ -4,22 +4,40 @@ from urllib.parse import urlparse
 import boto3
 from linz_logger import get_log
 
-from topo_processor.util.aws_credentials import assumed_role_session
+from topo_processor.util.aws_credentials import get_credentials
+from topo_processor.util.configuration import lds_cache_bucket
+from topo_processor.util.time import time_in_ms
 
 
 def s3_download(source_path: str, dest_path: str, role_arn: str):
-    get_log().debug("s3_download", objectPath=source_path, destinationPath=dest_path, roleArn=role_arn)
+    start_time = time_in_ms()
+    get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path, roleArn=role_arn)
+
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     object_name = url_o.path[1:]
+    credentials = get_credentials(bucket_name)
 
-    session = assumed_role_session(role_arn)
-    s3 = session.resource("s3")
+    s3 = boto3.resource(
+        "s3",
+        aws_access_key_id=credentials["access_key"],
+        aws_secret_access_key=credentials["secret_key"],
+        aws_session_token=credentials["token"],
+    )
+
     try:
         s3.Bucket(bucket_name).download_file(object_name, dest_path)
     except Exception as e:
-        get_log().error("Download failed", file=source_path, error=e)
+        get_log().error("s3_download failed", objectPath=source_path, error=e)
         raise e
+    finally:
+        get_log().debug(
+            "s3_download ended",
+            objectPath=source_path,
+            destinationPath=dest_path,
+            roleArn=role_arn,
+            duration=time_in_ms() - start_time,
+        )
 
 
 def load_file_content(bucket_name: str, object_path: str, role_arn: str):

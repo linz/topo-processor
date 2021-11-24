@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
+    layer_id = "51002"
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
