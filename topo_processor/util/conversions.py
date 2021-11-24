@@ -67,3 +67,16 @@ def quarterdate_to_date_string(value: str) -> str:
         return date_string_utc
 
     return value
+
+
+def convert_string_to_linz_geospatial_type(value: str, bw_values, col_values) -> str:
+    """Find value in lists and return linz geospatial_type,
+    else return the original value string.
+    """
+
+    clean_value = value.strip().upper()
+    if clean_value in bw_values:
+        return "black and white image"
+    if clean_value in col_values:
+        return "color image"
+    return value
