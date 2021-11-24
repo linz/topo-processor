@@ -4,25 +4,25 @@ from urllib.parse import urlparse
 import boto3
 from linz_logger import get_log
 
-from topo_processor.util.aws_credentials import get_credentials
+from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.configuration import lds_cache_bucket
 from topo_processor.util.time import time_in_ms
 
 
-def s3_download(source_path: str, dest_path: str, role_arn: str):
+def s3_download(source_path: str, dest_path: str) -> None:
     start_time = time_in_ms()
-    get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path, roleArn=role_arn)
+    get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
 
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     object_name = url_o.path[1:]
-    credentials = get_credentials(bucket_name)
+    credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(
         "s3",
-        aws_access_key_id=credentials["access_key"],
-        aws_secret_access_key=credentials["secret_key"],
-        aws_session_token=credentials["token"],
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
     )
 
     try:
@@ -35,20 +35,26 @@ def s3_download(source_path: str, dest_path: str, role_arn: str):
             "s3_download ended",
             objectPath=source_path,
             destinationPath=dest_path,
-            roleArn=role_arn,
             duration=time_in_ms() - start_time,
         )
 
 
-def load_file_content(bucket_name: str, object_path: str, role_arn: str):
-    session: boto3.Session = assumed_role_session(role_arn)
-    s3 = session.client("s3")
-    object_content = s3.get_object(Bucket=bucket_name, Key=object_path)
+def load_file_content(bucket_name: str, object_path: str) -> None:
+    credentials: Credentials = get_credentials(bucket_name)
+
+    s3 = boto3.resource(
+        "s3",
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
+    )
+
+    object_content = s3.Object(bucket_name=bucket_name, key=object_path)
 
     if object_path.endswith(".json"):
-        return json.loads(object_content["Body"].read().decode("utf-8"))
+        return json.loads(object_content.get()["Body"].read().decode("utf-8"))
 
-    return object_content["Body"].read().decode("utf-8")
+    return object_content.get()["Body"].read().decode("utf-8")
 
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:

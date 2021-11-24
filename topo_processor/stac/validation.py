@@ -9,7 +9,7 @@ from topo_processor.stac.lds_cache import LdsCache
 from topo_processor.stac.validate_report import ValidateReport
 from topo_processor.util import time_in_ms
 from topo_processor.util.aws_files import s3_download
-from topo_processor.util.configuration import lds_cache_bucket, lds_cache_local_tmp_folder, lds_cache_read_role
+from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 
 from .collection import Collection
 from .item import Item
@@ -21,14 +21,14 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
     start_time = time_in_ms()
     item_report: ValidateReport = ValidateReport()
     collection_report: ValidateReport = ValidateReport()
-    lds_cache: LdsCache = LdsCache(lds_cache_bucket, lds_cache_read_role)
+    lds_cache: LdsCache = LdsCache(lds_cache_bucket)
 
     get_log().debug("validate_stac", bucketName=lds_cache_bucket, layer=metadata_loader_imagery_historic.layer_id)
 
     if not metadata_file:
         metadata_file = lds_cache.get_layer(metadata_loader_imagery_historic.layer_id)
     elif is_s3_path(metadata_file):
-        s3_download(metadata_file, lds_cache_local_tmp_folder)
+        s3_download(metadata_file, temp_folder)
 
     # Load metadata from metadata csv file
     metadata_loader_imagery_historic.load_all_metadata(metadata_file)

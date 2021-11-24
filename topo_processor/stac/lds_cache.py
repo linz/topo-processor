@@ -3,32 +3,25 @@ import os
 import pystac
 
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
-from topo_processor.util.configuration import lds_cache_local_tmp_folder
+from topo_processor.util.configuration import temp_folder
 from topo_processor.util.files import decompress_file, is_gzip_file
 
 
 class LdsCache:
     bucket: str
-    role: str
 
-    def __init__(self, bucket_name: str, role_arn: str):
+    def __init__(self, bucket_name: str):
         self.bucket = bucket_name
-        self.role = role_arn
 
-    def get_layer(self, layer: str, version_number: str = None) -> str:
+    def get_layer(self, layer: str) -> str:
         """Download and return local path to the metadata file for the layer. If no version specified, get the latest version"""
 
-        if not version_number:
-            collection: pystac.Collection = self.get_collection(layer)
-            version_number = self.get_last_version(collection)
+        collection: pystac.Collection = self.get_collection(layer)
+        version_number = self.get_last_version(collection)
 
         metadata_file_name = self.get_metadata_file_name(layer, version_number)
-        metadata_file_path = lds_cache_local_tmp_folder + "/" + metadata_file_name
-        s3_download(
-            build_s3_path(self.bucket, layer + "/" + metadata_file_name),
-            metadata_file_path,
-            self.role,
-        )
+        metadata_file_path = temp_folder + "/" + metadata_file_name
+        s3_download(build_s3_path(self.bucket, layer + "/" + metadata_file_name), metadata_file_path)
 
         if os.path.isfile(metadata_file_path):
             if is_gzip_file(metadata_file_path):
@@ -38,7 +31,7 @@ class LdsCache:
             raise Exception(f"{metadata_file_path} not found")
 
     def get_collection(self, layer: str) -> pystac.Collection:
-        return pystac.Collection.from_dict(load_file_content(self.bucket, layer + "/collection.json", role_arn=self.role))
+        return pystac.Collection.from_dict(load_file_content(self.bucket, layer + "/collection.json"))
 
     @staticmethod
     def get_last_version(collection: pystac.Collection) -> str:
