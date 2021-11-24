@@ -1,10 +1,11 @@
+import json
 import os
 from typing import Dict
 
 import boto3
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
-from topo_processor.util.configuration import aws_roles_config
+from topo_processor.util.configuration import aws_role_config_path
 
 
 class Credentials:
@@ -26,7 +27,7 @@ bucket_roles = {}
 
 def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
-        load_roles(aws_roles_config)
+        load_roles(json.load(open(aws_role_config_path)))
 
     if bucket_name in bucket_roles:
         if not bucket_roles[bucket_name]["client"]:
