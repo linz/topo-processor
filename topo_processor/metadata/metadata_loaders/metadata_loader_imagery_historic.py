@@ -14,6 +14,7 @@ from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
+    convert_string_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
     remove_empty_strings,
@@ -99,11 +100,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "mission": title,
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
-                "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
                 "processing:software": {"Topo Processor": "placeholder"},
             }
         )
 
+        self.add_linz_geospatial_type_collection(item, metadata_row["photo_type"])
         self.add_centroid(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
@@ -115,6 +116,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_bands_extent(item, asset)
 
         item.add_extension(stac.StacExtensions.historical_imagery.value)
+        # item.add_extension(stac.StacExtensions.linz.value)
+        # item.add_extension(stac.StacExtensions.quality.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -271,5 +274,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    def add_geospatial_type_collection:
-        
+    def add_linz_geospatial_type_collection(self, item: Item, photo_type) -> None:
+        linz_geospatial_type_properties = {}
+        linz_geospatial_type_properties["linz:geospatial_type"] = convert_string_to_linz_geospatial_type(
+            photo_type, ["B&W", "B&W IR"], ["COLOUR", "COLOUR IR"]
+        )
+        item.properties.update(remove_empty_strings(linz_geospatial_type_properties))

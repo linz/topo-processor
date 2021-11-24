@@ -23,7 +23,8 @@ class MetadataValidatorTiff(MetadataValidator):
         return False
 
     def validate_metadata(self, item: Item) -> None:
-        geospatial_type = item.properties["linz:photo_type"]
+
+        geospatial_type = item.properties["linz:geospatial_type"]
         for asset in item.assets:
             if not is_tiff(asset.source_path):
                 continue
@@ -31,10 +32,10 @@ class MetadataValidatorTiff(MetadataValidator):
             with rasterio.open(asset.source_path) as tiff:
                 # black and white
                 if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
-                    # check linz:photo_type matches colorinterp
-                    if geospatial_type != "B&W":
+                    # check linz:geospatial_type matches colorinterp
+                    if geospatial_type != "black and white image":
                         raise Exception(
-                            f"Wrong 'linz:photo_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                            f"Wrong 'linz:geospatial_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
                     # check eo:bands matches colorinterp
                     if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
@@ -44,10 +45,10 @@ class MetadataValidatorTiff(MetadataValidator):
                 # color
                 if all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
                     common_names = [common_names["common_name"] for common_names in eo_bands]
-                    # check linz:photo_type matches colorinterp
-                    if geospatial_type != "COLOUR":
+                    # check linz:geospatial_type matches colorinterp
+                    if geospatial_type != "color image":
                         raise Exception(
-                            f"Wrong 'linz:photo_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                            f"Wrong 'linz:geospatial_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
                     # check eo:bands matches colorinterp
                     if (
