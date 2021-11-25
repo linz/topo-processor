@@ -38,6 +38,24 @@ poetry shell
 poetry install
 ```
 
+## Configuration
+
+The global user configuration is defined in the `.env` file located at the `root` of the project.
+
+### AWS
+
+To allow the system to perform AWS request, you'll need an AWS roles `json` configuration file as follow:
+
+```json
+{
+  "s3://example-bucket": {
+    "roleArn": "arn:aws:iam::0123456789:role/example-read"
+  }
+}
+```
+
+This configuration file must be referenced in the `.env` file as `AWS_ROLES_CONFIG`
+
 ## Usage
 
 ### Upload
