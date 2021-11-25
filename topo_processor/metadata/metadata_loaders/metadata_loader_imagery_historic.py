@@ -105,7 +105,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             }
         )
 
-        self.add_linz_geospatial_type_collection(item, metadata_row["photo_type"])
+        self.add_linz_geospatial_type(item, metadata_row["photo_type"])
         self.add_centroid(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
@@ -275,7 +275,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    def add_linz_geospatial_type_collection(self, item: Item, photo_type) -> None:
+    def add_linz_geospatial_type(self, item: Item, photo_type) -> None:
         linz_geospatial_type_properties = {}
         linz_geospatial_type_properties["linz:geospatial_type"] = h_i_photo_type_to_linz_geospatial_type(photo_type)
         item.properties.update(remove_empty_strings(linz_geospatial_type_properties))

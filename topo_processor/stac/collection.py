@@ -33,6 +33,7 @@ class Collection(Validity):
     providers: List[pystac.Provider]
     schema: str
     extra_fields: Dict[str, Any]
+    linz_geospatial_type: str
 
     stac_extensions: set
 
@@ -51,6 +52,7 @@ class Collection(Validity):
         )
         self.linz_providers = []
         self.providers = [Providers.TTW.value]
+        self.linz_geospatial_type = None
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -112,6 +114,11 @@ class Collection(Validity):
         union_poly = unary_union(polys)
         return [union_poly.bounds]
 
+    def get_geospatial_type(self) -> str:
+        geospatial_type_set = set(x.properties['linz:geospatial_type'] for x in self.items.values() if x.properties['linz:geospatial_type'])
+        geospatial_type_string = ', '.join(geospatial_type_set)
+        return geospatial_type_string
+
     def delete_temp_dir(self):
         global TEMP_DIR
         if TEMP_DIR:
@@ -122,6 +129,7 @@ class Collection(Validity):
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:
             self.extra_fields["linz:providers"] = self.linz_providers
+        self.extra_fields["linz:geospatial_type"] = self.get_geospatial_type()
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
