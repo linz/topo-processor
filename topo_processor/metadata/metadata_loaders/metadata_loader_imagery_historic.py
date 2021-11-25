@@ -14,7 +14,7 @@ from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
-    convert_string_to_linz_geospatial_type,
+    h_i_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
     remove_empty_strings,
@@ -277,7 +277,5 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_linz_geospatial_type_collection(self, item: Item, photo_type) -> None:
         linz_geospatial_type_properties = {}
-        linz_geospatial_type_properties["linz:geospatial_type"] = convert_string_to_linz_geospatial_type(
-            photo_type, ["B&W", "B&W IR"], ["COLOUR", "COLOUR IR"]
-        )
+        linz_geospatial_type_properties["linz:geospatial_type"] = h_i_photo_type_to_linz_geospatial_type(photo_type)
         item.properties.update(remove_empty_strings(linz_geospatial_type_properties))
