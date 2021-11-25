@@ -117,6 +117,7 @@ class Collection(Validity):
     def get_geospatial_type(self) -> str:
         geospatial_type_set = set(x.properties['linz:geospatial_type'] for x in self.items.values() if x.properties['linz:geospatial_type'])
         geospatial_type_string = ', '.join(geospatial_type_set)
+        # TODO: remove Item level linz:geospatial_type
         return geospatial_type_string
 
     def delete_temp_dir(self):

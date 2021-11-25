@@ -80,10 +80,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.description = "Historical Imagery"
         collection.extra_fields.update(
             {
-                "linz:history": "placeholder",
                 "linz:lifecycle": "completed",
+                "linz:history": "placeholder",
                 "processing:software": {"Topo Processor": "placeholder"},
-                "version:version": "1.0",
+                "version:version": "placeholder",
             }
         )
 
@@ -101,6 +101,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "processing:software": {"Topo Processor": "placeholder"},
+                "version:version": "placeholder",
             }
         )
 
@@ -277,4 +278,4 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_linz_geospatial_type(self, item: Item, photo_type) -> None:
         linz_geospatial_type_properties = {}
         linz_geospatial_type_properties["linz:geospatial_type"] = h_i_photo_type_to_linz_geospatial_type(photo_type)
-        item.properties.update(remove_empty_strings(linz_geospatial_type_properties))
+        item.properties.update(linz_geospatial_type_properties)
