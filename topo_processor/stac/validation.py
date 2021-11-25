@@ -1,3 +1,4 @@
+import os
 from typing import List, Union
 
 from linz_logger import get_log
@@ -10,6 +11,7 @@ from topo_processor.stac.validate_report import ValidateReport
 from topo_processor.util import time_in_ms
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
+from topo_processor.util.gzip import decompress_file, is_gzip_file
 
 from .collection import Collection
 from .item import Item
@@ -27,8 +29,13 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
 
     if not metadata_file:
         metadata_file = lds_cache.get_layer(metadata_loader_imagery_historic.layer_id)
-    elif is_s3_path(metadata_file):
-        s3_download(metadata_file, temp_folder)
+    else:
+        if is_s3_path(metadata_file):
+            local_metadata_file = temp_folder + "/" + os.path.basename(metadata_file)
+            s3_download(metadata_file, local_metadata_file)
+            metadata_file = local_metadata_file
+        if is_gzip_file(metadata_file):
+            decompress_file(metadata_file)
 
     # Load metadata from metadata csv file
     metadata_loader_imagery_historic.load_all_metadata(metadata_file)

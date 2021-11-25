@@ -29,7 +29,6 @@ assume_role_cache: dict = {}
 def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
         load_roles(json.load(open(aws_role_config_path)))
-    print(session.profile_name)
     if bucket_name in bucket_roles:
         if not "credentials" in bucket_roles[bucket_name]:
             assumed_role_object = client.assume_role(

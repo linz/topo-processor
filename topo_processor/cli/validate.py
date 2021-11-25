@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import click
 from linz_logger import LogLevel, get_log, set_level
@@ -7,7 +8,6 @@ from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac.validation import validate_stac
 from topo_processor.util import time_in_ms
 from topo_processor.util.configuration import temp_folder
-from topo_processor.util.files import empty_dir
 
 
 @click.command()
@@ -52,10 +52,9 @@ def main(item, collection, metadata, verbose):
         validate_stac(metadata, item, collection)
 
     # Cleanup
-    empty_dir(os.path.abspath(os.path.join(os.getcwd(), temp_folder)))
+    shutil.rmtree(temp_folder)
 
     get_log().info(
         "validate completed",
-        metadataFile=metadata,
         duration=time_in_ms() - start_time,
     )

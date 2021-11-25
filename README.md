@@ -68,25 +68,36 @@ The following source and target combinations can be used:
 
 ### Validate
 
-This command runs a validation against a metadata csv file. It generates the corresponding STAC objects on the fly for each metadata and run a JSON schema validation (using [jsonschema-rs](https://github.com/Stranger6667/jsonschema-rs)) for the `Items` and `Collections`. It outputs the errors and their recurrences grouped by JSON schemas as:
+**_NOTE:_** This command is currently only implemented for `Historical Imagery`. Other layers will come later.
+
+This command runs a validation against a layer. It gets the layer last version metadata and generates the corresponding STAC objects on the fly. Then, it runs a JSON schema validation (using [jsonschema-rs](https://github.com/Stranger6667/jsonschema-rs)) for the `Items` and `Collections`. It outputs the errors and their recurrences grouped by JSON schemas as:
 
 ```json
 "errors": {"https://stac.linz.govt.nz/v0.0.11/aerial-photo/schema.json": {"'aerial-photo:run' is a required property": 4, "'aerial-photo:sequence_number' is a required property": 10}
 ```
 
+To validate another version than the latest one, specify the metadata csv file wanted to be validated by using the `--metadata` argument.
+
+The following command have to be run in a virtual environment (poetry shell):
+
 ```shell
-# Run in a virtual environment (poetry shell):
-./validate --source metadata_file.csv
+# Run default:
+./validate
+```
+
+```shell
+# Run against a specific version (can be a s3 or local file):
+./validate --metadata s3://bucket/layer_id/metadata_file.csv
 ```
 
 ```shell
 # Run against the `Items` only:
-./validate --source metadata_file.csv --item
+./validate --item
 ```
 
 ```shell
 # Run against the `Collections` only:
-./validate --source metadata_file.csv --collection
+./validate --collection
 ```
 
 ```shell
@@ -96,10 +107,10 @@ This command runs a validation against a metadata csv file. It generates the cor
 
 ```shell
 # To see all logs in a tidy format, use pretty-json-log:
-./validate --source metadata_file.csv --verbose | pjl
+./validate --verbose | pjl
 ```
 
 ```shell
 # To record the output in an external file:
-./validate --source metadata_file.csv | tee output.file
+./validate | tee output.file
 ```

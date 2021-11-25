@@ -5,7 +5,6 @@ import boto3
 from linz_logger import get_log
 
 from topo_processor.util.aws_credentials import Credentials, get_credentials
-from topo_processor.util.configuration import lds_cache_bucket
 from topo_processor.util.time import time_in_ms
 
 
@@ -52,9 +51,9 @@ def load_file_content(bucket_name: str, object_path: str) -> None:
     object_content = s3.Object(bucket_name=bucket_name, key=object_path)
 
     if object_path.endswith(".json"):
-        return json.loads(object_content.get()["Body"].read().decode("utf-8"))
+        return json.loads(object_content.get()["Body"].read())
 
-    return object_content.get()["Body"].read().decode("utf-8")
+    return object_content.get()["Body"].read()
 
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:

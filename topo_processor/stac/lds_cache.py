@@ -4,7 +4,7 @@ import pystac
 
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import temp_folder
-from topo_processor.util.files import decompress_file, is_gzip_file
+from topo_processor.util.gzip import decompress_file, is_gzip_file
 
 
 class LdsCache:

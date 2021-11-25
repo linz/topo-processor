@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 
 import pytest
 
-from topo_processor.util.files import is_gzip_file
+from topo_processor.util.gzip import is_gzip_file
 
 
 @pytest.fixture(autouse=True)
