@@ -20,7 +20,7 @@ from topo_processor.util.transfer_collection import transfer_collection
     "-d",
     "--datatype",
     required=True,
-    type=click.Choice([data_type.value for data_type in DataType], case_sensitive=True),
+    type=click.Choice([data_type for data_type in DataType], case_sensitive=True),
     help="The Datatype of the upload",
 )
 @click.option(
@@ -57,6 +57,6 @@ def main(source, datatype, target, verbose):
         get_log().debug(
             "Job Completed",
             location=target,
-            data_type=data_type.value,
+            data_type=data_type,
             duration=time_in_ms() - start_time,
         )

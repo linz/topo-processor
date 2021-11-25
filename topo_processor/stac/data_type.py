@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class DataType(Enum):
+class DataType(str, Enum):
     ImageryHistoric = "imagery.historic"
     ImageryAerial = "imagery.aerial"
     LidarDSM = "lidar.dsm"
