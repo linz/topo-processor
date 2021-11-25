@@ -1,5 +1,5 @@
 import json
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import boto3
 from linz_logger import get_log
@@ -57,4 +57,4 @@ def load_file_content(bucket_name: str, object_path: str) -> None:
 
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:
-    return "s3://" + bucket_name + "/" + (object_path[1:] if object_path.startswith("/") else object_path)
+    return f"s3://{bucket_name}/" + object_path[1:] if object_path.startswith("/") else object_path

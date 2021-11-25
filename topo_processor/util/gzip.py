@@ -8,7 +8,6 @@ def is_gzip_file(file_path: str) -> bool:
     with open(file_path, "rb") as file:
         # gzip magic number == "1f 8b"
         return file.read(2) == b"\x1f\x8b"
-        # FIXME: check Header
 
 
 def decompress_file(file_path: str) -> None:
