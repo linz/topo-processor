@@ -16,5 +16,5 @@ def test_check_validity():
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    with pytest.raises(Exception, match=r"Wrong 'linz:geospatial_type' of color image when bands = gray"):
+    with pytest.raises(Exception, match=r"Wrong 'linz:geospatial_type' of 'color image' when bands = gray"):
         validator.validate_metadata(item)

@@ -1,6 +1,6 @@
 from .checksum import multihash_as_hex
 from .conversions import (
-    convert_string_to_linz_geospatial_type,
+    h_i_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
     remove_empty_strings,

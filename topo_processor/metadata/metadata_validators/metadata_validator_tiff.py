@@ -35,12 +35,12 @@ class MetadataValidatorTiff(MetadataValidator):
                     # check linz:geospatial_type matches colorinterp
                     if geospatial_type != "black and white image":
                         raise Exception(
-                            f"Wrong 'linz:geospatial_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                            f"Wrong 'linz:geospatial_type' of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
                     # check eo:bands matches colorinterp
                     if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
                         raise Exception(
-                            f"Wrong 'eo:bands' with common name: {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                            f"Wrong 'eo:bands' with common name: '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
                 # color
                 if all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
@@ -48,7 +48,7 @@ class MetadataValidatorTiff(MetadataValidator):
                     # check linz:geospatial_type matches colorinterp
                     if geospatial_type != "color image":
                         raise Exception(
-                            f"Wrong 'linz:geospatial_type' of {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                            f"Wrong 'linz:geospatial_type' of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
                     # check eo:bands matches colorinterp
                     if (
