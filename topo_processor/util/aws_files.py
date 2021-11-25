@@ -29,13 +29,13 @@ def s3_download(source_path: str, dest_path: str) -> None:
     except Exception as e:
         get_log().error("s3_download failed", objectPath=source_path, error=e)
         raise e
-    finally:
-        get_log().debug(
-            "s3_download ended",
-            objectPath=source_path,
-            destinationPath=dest_path,
-            duration=time_in_ms() - start_time,
-        )
+
+    get_log().debug(
+        "s3_download ended",
+        objectPath=source_path,
+        destinationPath=dest_path,
+        duration=time_in_ms() - start_time,
+    )
 
 
 def load_file_content(bucket_name: str, object_path: str) -> None:
