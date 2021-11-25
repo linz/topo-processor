@@ -23,7 +23,6 @@ default_credentials: Credentials
 session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
 client: boto3.client = session.client("sts")
 bucket_roles: Dict = {}
-assume_role_cache: Dict = {}
 
 
 def get_credentials(bucket_name: str) -> Credentials:
