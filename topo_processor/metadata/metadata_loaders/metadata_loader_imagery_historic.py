@@ -83,7 +83,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:lifecycle": "completed",
                 "linz:history": "placeholder",
                 "processing:software": {"Topo Processor": "placeholder"},
-                "version:version": "placeholder",
+                "version:version": "1",
             }
         )
 
@@ -101,7 +101,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "processing:software": {"Topo Processor": "placeholder"},
-                "version:version": "placeholder",
+                "version:version": "1",
             }
         )
 
