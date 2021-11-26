@@ -10,6 +10,7 @@ from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor import stac
+from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
@@ -39,7 +40,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
-            self.read_csv()
+            metadata_file = lds_cache.get_layer(self.layer_id)
+            self.read_csv(metadata_file)
 
         filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 
