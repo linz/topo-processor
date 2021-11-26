@@ -52,7 +52,6 @@ class Collection(Validity):
         )
         self.linz_providers = []
         self.providers = [Providers.TTW.value]
-        self.linz_geospatial_type = None
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -118,9 +117,9 @@ class Collection(Validity):
         geospatial_type_set = set(
             x.properties["linz:geospatial_type"] for x in self.items.values() if x.properties["linz:geospatial_type"]
         )
-        geospatial_type_string = ", ".join(geospatial_type_set)
+        geospatial_type_str = ", ".join(geospatial_type_set)
         # TODO: remove Item level linz:geospatial_type
-        return geospatial_type_string
+        return geospatial_type_str
 
     def delete_temp_dir(self):
         global TEMP_DIR
