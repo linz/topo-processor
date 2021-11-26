@@ -9,6 +9,7 @@ class LinzProviderRole(str, Enum):
 
 
 class LinzProvider:
+    # Credit to pyStac as this is mostly the same code as the pystac Provider class
 
     name: str
     description: Optional[str]
