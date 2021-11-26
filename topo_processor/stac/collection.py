@@ -113,7 +113,6 @@ class Collection(Validity):
         summarizer = Summarizer()
         self.summaries = summarizer.summarize(collection)
         collection.summaries = self.summaries
-        
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
