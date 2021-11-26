@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Dict, List
 import ulid
 from linz_logger import get_log
 from pystac import pystac
+from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
@@ -31,6 +32,7 @@ class Collection(Validity):
     providers: List[pystac.Provider]
     schema: str
     stac_extensions: set
+    summaries: Summaries
 
     def __init__(self, title: str):
         super().__init__()
@@ -41,6 +43,7 @@ class Collection(Validity):
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.stac_extensions = set([])
         self.providers = [Providers.TTW.value]
+        self.summaries = Summaries.empty()
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -104,6 +107,13 @@ class Collection(Validity):
             if os.path.exists(TEMP_DIR):
                 rmtree(TEMP_DIR)
                 TEMP_DIR = None
+
+    def generate_summaries(self, collection: pystac.Collection):
+        """Note: does not work with custom extensions"""
+        summarizer = Summarizer()
+        self.summaries = summarizer.summarize(collection)
+        collection.summaries = self.summaries
+        
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
