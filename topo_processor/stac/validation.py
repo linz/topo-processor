@@ -3,10 +3,10 @@ from typing import List, Union
 
 from linz_logger import get_log
 
+import topo_processor.stac.lds_cache as lds_cache
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
 from topo_processor.metadata.metadata_validators import metadata_validator_stac
-from topo_processor.stac.lds_cache import lds_cache
 from topo_processor.stac.validate_report import ValidateReport
 from topo_processor.util import time_in_ms
 from topo_processor.util.aws_files import s3_download

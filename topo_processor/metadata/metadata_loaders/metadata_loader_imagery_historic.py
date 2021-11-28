@@ -9,6 +9,7 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
+import topo_processor.stac.lds_cache as lds_cache
 from topo_processor import stac
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
@@ -38,10 +39,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         return is_tiff(asset.source_path)
 
-    def load_metadata(self, asset: Asset) -> None:
+    def load_metadata(self, asset: Asset, local: bool = False) -> None:
         if not self.is_init:
-            metadata_file = lds_cache.get_layer(self.layer_id)
-            self.read_csv(metadata_file)
+            if local:
+                self.read_csv()
+            else:
+                metadata_file = lds_cache.get_layer(self.layer_id)
+                self.read_csv(metadata_file)
 
         filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 

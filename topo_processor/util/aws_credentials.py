@@ -19,7 +19,6 @@ class Credentials:
         self.token = token
 
 
-default_credentials: Credentials
 session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
 client: boto3.client = session.client("sts")
 bucket_roles: Dict = {}
@@ -40,11 +39,11 @@ def get_credentials(bucket_name: str) -> Credentials:
             )
         return bucket_roles[bucket_name]["credentials"]
 
-    if not default_credentials:
-        session_credentials = session.get_credentials()
-        default_credentials = Credentials(
-            session_credentials.access_key, session_credentials.secret_key, session_credentials.token
-        )
+    session_credentials = session.get_credentials()
+    default_credentials = Credentials(
+        session_credentials.access_key, session_credentials.secret_key, session_credentials.token
+    )
+
     return default_credentials
 
 

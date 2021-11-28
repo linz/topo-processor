@@ -7,15 +7,15 @@ from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 from topo_processor.util.gzip import decompress_file, is_gzip_file
 
 
-def get_layer(self, layer: str) -> str:
+def get_layer(layer: str) -> str:
     """Download and return local path to the metadata file for the layer. If no version specified, get the latest version"""
 
-    collection: pystac.Collection = self.get_collection(layer)
-    version_number = self.get_last_version(collection)
+    collection: pystac.Collection = get_collection(layer)
+    version_number = get_last_version(collection)
 
-    metadata_file_name = self.get_metadata_file_name(layer, version_number)
+    metadata_file_name = get_metadata_file_name(layer, version_number)
     metadata_file_path = temp_folder + "/" + metadata_file_name
-    s3_download(build_s3_path(self.bucket, layer + "/" + metadata_file_name), metadata_file_path)
+    s3_download(build_s3_path(lds_cache_bucket, layer + "/" + metadata_file_name), metadata_file_path)
 
     if os.path.isfile(metadata_file_path):
         if is_gzip_file(metadata_file_path):
@@ -25,7 +25,7 @@ def get_layer(self, layer: str) -> str:
         raise Exception(f"{metadata_file_path} not found")
 
 
-def get_collection(self, layer: str) -> pystac.Collection:
+def get_collection(layer: str) -> pystac.Collection:
     return pystac.Collection.from_dict(load_file_content(lds_cache_bucket, layer + "/collection.json"))
 
 
