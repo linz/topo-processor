@@ -46,7 +46,7 @@ class Asset(Validity):
         return self.properties["file:checksum"]
 
     # TODO: when there is an update process this will need to be changed to add a proper updated value
-    def set_file_dates(self, output_path: str) -> None:
+    def set_output_asset_dates(self, output_path: str) -> None:
         if "created" not in self.properties:
             self.properties["created"] = file_dates(output_path)
             self.properties["updated"] = self.properties["created"]
