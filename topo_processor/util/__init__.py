@@ -8,6 +8,7 @@ from .conversions import (
     string_to_boolean,
     string_to_number,
 )
+from .file_dates import file_dates
 from .tiff import is_tiff
 from .time import time_in_ms
 from .valid import Validity
