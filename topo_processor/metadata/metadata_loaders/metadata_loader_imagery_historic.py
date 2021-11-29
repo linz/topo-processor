@@ -154,6 +154,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(camera_properties))
         item.add_extension(stac.StacExtensions.camera.value)
+        item.collection.add_extension(stac.StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}
@@ -165,6 +166,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(film_properties))
         item.add_extension(stac.StacExtensions.film.value)
+        item.collection.add_extension(stac.StacExtensions.film.value)
+
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         aerial_photo_properties = {}
@@ -192,6 +195,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
         item.add_extension(stac.StacExtensions.aerial_photo.value)
+        item.collection.add_extension(stac.StacExtensions.aerial_photo.value)
+
 
     def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         scanning_properties = {}
@@ -203,6 +208,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
+        item.collection.add_extension(stac.StacExtensions.scanning.value)
+
 
     def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
         item_date = asset_metadata.get("date", None)
@@ -224,13 +231,17 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if self.is_valid_centroid(item, centroid):
             item.properties["proj:centroid"] = centroid
             item.add_extension(stac.StacExtensions.projection.value)
+            item.collection.add_extension(stac.StacExtensions.projection.value)
 
     def add_projection_extent(self, item: Item):
         item.properties["proj:epsg"] = None
         item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+        item.collection.add_extension(stac.StacExtensions.projection.value)
+
 
     def add_bands_extent(self, item: Item, asset: Asset):
         item.add_extension(stac.StacExtensions.eo.value)
+        item.collection.add_extension(stac.StacExtensions.eo.value)
 
         if asset:
             # default value

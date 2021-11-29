@@ -43,9 +43,11 @@ class MetadataLoaderTiff(MetadataLoader):
             crs = None
         asset.item.properties["proj:epsg"] = crs
         asset.item.add_extension(stac.StacExtensions.projection.value)
+        asset.item.collection.add_extension(stac.StacExtensions.projection.value)
 
     def add_bands(self, tiff, asset):
         asset.item.add_extension(stac.StacExtensions.eo.value)
+        asset.item.collection.add_extension(stac.StacExtensions.eo.value)
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
         elif all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):

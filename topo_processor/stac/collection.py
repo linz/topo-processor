@@ -16,6 +16,7 @@ from shapely.ops import unary_union
 from topo_processor.util import Validity
 
 from .providers import Providers
+from .stac_extensions import StacExtensions
 
 if TYPE_CHECKING:
     from .item import Item
@@ -41,7 +42,7 @@ class Collection(Validity):
         self.title = title
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
-        self.stac_extensions = set([])
+        self.stac_extensions = set([StacExtensions.file.value])
         self.providers = [Providers.TTW.value]
         self.summaries = Summaries.empty()
 
