@@ -33,7 +33,7 @@ class MetadataLoaderRepository:
                 get_log().debug(
                     "Metadata Loaded",
                     loader=loader.name,
-                    asset=asset,
+                    asset=asset.source_path,
                     duration=time_in_ms() - start_time,
                 )
 
