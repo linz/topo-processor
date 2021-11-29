@@ -22,8 +22,7 @@ if TYPE_CHECKING:
     from .item import Item
 
 TEMP_DIR = None
-
-
+FIELDS_JSON_URL = "https://gist.githubusercontent.com/MDavidson17/21f898ca75c50a8bc311505f4a19d841/raw/de26059c810e240a2a6b57d789ac823ebad4bdf5/field.json"
 class Collection(Validity):
     id: str
     title: str
@@ -111,7 +110,7 @@ class Collection(Validity):
 
     def generate_summaries(self, collection: pystac.Collection):
         """Note: does not work with custom extensions"""
-        summarizer = Summarizer()
+        summarizer = Summarizer(fields=FIELDS_JSON_URL)
         self.summaries = summarizer.summarize(collection)
         collection.summaries = self.summaries
 
