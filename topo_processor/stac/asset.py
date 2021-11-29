@@ -45,7 +45,7 @@ class Asset(Validity):
             self.properties["file:checksum"] = multihash_as_hex(self.source_path)
         return self.properties["file:checksum"]
 
-    #TODO: when there is an update process this will need to be changed to add a proper updated value
+    # TODO: when there is an update process this will need to be changed to add a proper updated value
     def set_file_dates(self, output_path: str) -> None:
         if "created" not in self.properties:
             self.properties["created"] = file_dates(output_path)
