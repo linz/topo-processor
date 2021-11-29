@@ -120,11 +120,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         with open(csv_path, "r") as csv_path:
             reader = csv.DictReader(csv_path, delimiter=",")
             for row in reader:
-                if row["released_filename"]:
-                    released_filename = row["released_filename"]
-                    if not metadata_file and released_filename in self.raw_metadata:
-                        raise Exception(f'Duplicate file "{released_filename}" found in metadata csv')
-                    self.raw_metadata[released_filename] = row
+                if row["raw_filename"]:
+                    raw_filename = row["raw_filename"]
+                    if not metadata_file and raw_filename in self.raw_metadata:
+                        raise Exception(f'Duplicate file "{raw_filename}" found in metadata csv')
+                    self.raw_metadata[raw_filename] = row
                 else:
                     self.raw_metadata[row["sufi"]] = row
 
