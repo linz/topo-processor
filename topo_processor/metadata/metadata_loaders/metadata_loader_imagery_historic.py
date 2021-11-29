@@ -11,6 +11,7 @@ from rasterio.enums import ColorInterp
 
 import topo_processor.stac.lds_cache as lds_cache
 from topo_processor import stac
+from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
@@ -39,9 +40,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         return is_tiff(asset.source_path)
 
-    def load_metadata(self, asset: Asset, local: bool = False) -> None:
+    def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
-            if local:
+            if not is_s3_path(asset.source_path):
                 self.read_csv()
             else:
                 metadata_file = lds_cache.get_layer(self.layer_id)
