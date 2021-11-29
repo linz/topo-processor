@@ -37,27 +37,24 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         return is_tiff(asset.source_path)
 
-    def load_metadata(self, asset: Asset) -> None:
-        if not self.is_init:
-            self.read_csv()
-
-        filename = os.path.splitext(os.path.basename(asset.source_path))[0]
-
-        if filename not in self.raw_metadata:
-            asset.add_error("Asset not found in CSV file", self.name)
-            return
-        asset_metadata = self.raw_metadata[filename]
-
-        asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
-        asset.key_name = AssetKey.Visual
-        self.populate_item(asset_metadata, asset)
-
-    def load_all_metadata(self, metadata_file: str) -> None:
+    def load_metadata(self, asset: Asset = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
 
-        for metadata in self.raw_metadata.values():
-            self.populate_item(metadata)
+        if is_load_all:
+            for metadata in self.raw_metadata.values():
+                self.populate_item(metadata)
+        else:
+            filename = os.path.splitext(os.path.basename(asset.source_path))[0]
+
+            if filename not in self.raw_metadata:
+                asset.add_error("Asset not found in CSV file", self.name)
+                return
+            asset_metadata = self.raw_metadata[filename]
+
+            asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
+            asset.key_name = AssetKey.Visual
+            self.populate_item(asset_metadata, asset)
 
     def populate_item(self, metadata_row, asset: Asset = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
