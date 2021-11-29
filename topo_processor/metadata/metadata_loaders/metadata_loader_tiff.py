@@ -27,6 +27,8 @@ class MetadataLoaderTiff(MetadataLoader):
     def load_metadata(self, asset: Asset) -> None:
 
         fs = get_fs(asset.source_path)
+        # FIXME: Should we download the file first as we could need it to do the coggification later?
+        # This process takes quiet a long time locally.
         with fs.open(asset.source_path) as f:
             with rasterio.open(f) as tiff:
                 self.add_epsg(tiff, asset)
