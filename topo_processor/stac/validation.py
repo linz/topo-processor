@@ -3,14 +3,14 @@ from typing import List, Union
 
 from linz_logger import get_log
 
+import topo_processor.stac.lds_cache as lds_cache
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
 from topo_processor.metadata.metadata_validators import metadata_validator_stac
-from topo_processor.stac.lds_cache import LdsCache
 from topo_processor.stac.validate_report import ValidateReport
 from topo_processor.util import time_in_ms
 from topo_processor.util.aws_files import s3_download
-from topo_processor.util.configuration import lds_cache_bucket, temp_folder
+from topo_processor.util.configuration import temp_folder
 from topo_processor.util.gzip import decompress_file, is_gzip_file
 
 from .collection import Collection
@@ -23,9 +23,8 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
     start_time = time_in_ms()
     item_report: ValidateReport = ValidateReport()
     collection_report: ValidateReport = ValidateReport()
-    lds_cache: LdsCache = LdsCache(lds_cache_bucket)
 
-    get_log().debug("validate_stac", bucketName=lds_cache_bucket, layer=metadata_loader_imagery_historic.layer_id)
+    get_log().debug("validate_stac", layer=metadata_loader_imagery_historic.layer_id)
 
     if not metadata_file:
         metadata_file = lds_cache.get_layer(metadata_loader_imagery_historic.layer_id)
