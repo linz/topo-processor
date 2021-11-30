@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from .item import Item
 
 TEMP_DIR = None
-FIELDS_JSON_URL = "https://gist.githubusercontent.com/MDavidson17/21f898ca75c50a8bc311505f4a19d841/raw/de26059c810e240a2a6b57d789ac823ebad4bdf5/field.json"
+FIELDS_JSON_URL = "https://gist.githubusercontent.com/MDavidson17/21f898ca75c50a8bc311505f4a19d841/raw/12a7a9be01947cb8ca6c6acfe1d4ef11464b315f/field.json"
 
 
 class Collection(Validity):
