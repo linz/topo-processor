@@ -18,7 +18,7 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    def load_metadata(self, asset: Asset) -> None:
+    def load_metadata(self, asset: Asset, metadata: str) -> None:
         for loader in self.loaders:
             if loader.is_applicable(asset):
                 start_time = time_in_ms()
