@@ -60,6 +60,10 @@ This configuration file must be referenced in the `.env` file as `AWS_ROLES_CONF
 
 ### Upload
 
+**_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
+
+The user has to specify the survey path (where the data is) as a `--source` and it will be validated against the latest version of metadata. The `--datatype` has to be `historical.imagery`. The user also have to specify a target folder for the output.
+
 ```shell
 # Run in a virtual environment (poetry shell):
 ./upload --source source_path --datatype data.type --target target_folder
