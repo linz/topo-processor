@@ -1,7 +1,7 @@
 import pystac
 import pytest
 
-from topo_processor.stac.lds_cache import LdsCache
+import topo_processor.stac.lds_cache as lds_cache
 
 
 def test_get_last_version():
@@ -12,8 +12,8 @@ def test_get_last_version():
     link_d: pystac.Link = pystac.Link(rel=pystac.RelType.ITEM, target="./1234_100001.json")
     collection.add_links((link_a, link_b, link_c, link_d))
 
-    assert LdsCache.get_last_version(collection) == "100001"
+    assert lds_cache.get_last_version(collection) == "100001"
 
 
 def test_get_metadata_file_path():
-    assert LdsCache.get_metadata_file_name("12345", "123456") == "12345_123456.csv"
+    assert lds_cache.get_metadata_file_name("12345", "123456") == "12345_123456.csv"
