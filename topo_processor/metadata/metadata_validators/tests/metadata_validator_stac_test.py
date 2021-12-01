@@ -117,6 +117,7 @@ def test_validate_metadata_with_report_item():
         in validate_report.report_per_error_type[stac.StacExtensions.aerial_photo.value]
     )
 
+
 def test_validate_metadata_with_report_item_local():
     source = "file://" + os.getcwd() + "/test_data" + "/schemas"
     validate_report: ValidateReport = ValidateReport()
@@ -266,7 +267,9 @@ def test_validate_against_local_schema_aerial():
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     validate_report.add_errors(validator.validate_metadata_with_report(item))
-    assert '"string" is not of type "integer"' in validate_report.report_per_error_type[source + "/" + "aerial-photo-schema.json"]
+    assert (
+        '"string" is not of type "integer"' in validate_report.report_per_error_type[source + "/" + "aerial-photo-schema.json"]
+    )
 
 
 @pytest.mark.skip(reason="use this test for local schema testing")
@@ -326,4 +329,7 @@ def test_validate_against_local_schema_scanning_date():
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     validate_report.add_errors(validator.validate_metadata_with_report(item))
-    assert '"string" does not match "(\\+00:00|Z)$"' in validate_report.report_per_error_type[source + "/" + "scanning-schema.json"]
+    assert (
+        '"string" does not match "(\\+00:00|Z)$"'
+        in validate_report.report_per_error_type[source + "/" + "scanning-schema.json"]
+    )
