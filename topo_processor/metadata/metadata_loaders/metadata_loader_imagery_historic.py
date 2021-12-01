@@ -42,6 +42,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def load_metadata(self, asset: Asset = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         if not self.is_init:
+            if not metadata_file:
+                metadata_file = lds_cache.get_layer(self.layer_id)
             self.read_csv(metadata_file)
 
         if is_load_all:

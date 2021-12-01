@@ -18,12 +18,12 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    def load_metadata(self, asset: Asset, metadata: str) -> None:
+    def load_metadata(self, asset: Asset = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         for loader in self.loaders:
             if loader.is_applicable(asset):
                 start_time = time_in_ms()
                 try:
-                    loader.load_metadata(asset)
+                    loader.load_metadata(asset, metadata_file, is_load_all)
                     if not asset.is_valid:
                         break
                 except Exception as e:

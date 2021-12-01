@@ -60,6 +60,7 @@ def main(source, datatype, target, metadata, verbose):
             local_metadata_file = temp_folder + "/" + os.path.basename(metadata)
             s3_download(metadata, local_metadata_file)
             metadata = local_metadata_file
+
         metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
         metadata_loader_imagery_historic.read_csv(metadata)
 
