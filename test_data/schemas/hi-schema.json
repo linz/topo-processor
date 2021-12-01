@@ -74,41 +74,6 @@
               "contains": {
                 "const": "file:///home/afage/dev/topo-processor/test_data/schemas/hi-schema.json"
               }
-            },
-            {
-              "contains": {
-                "const": "https://stac-extensions.github.io/eo/v1.0.0/schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "https://stac-extensions.github.io/file/v2.0.0/schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/aerial-photo-schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/camera-schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/film-schema.json"
-              }
-            },
-            {
-              "contains": {
-                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/scanning-schema.json"
-              }
             }
           ]
         }

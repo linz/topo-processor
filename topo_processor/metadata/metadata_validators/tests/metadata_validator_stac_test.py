@@ -145,6 +145,24 @@ def test_validate_metadata_with_report_item_local():
     )
 
 
+@pytest.mark.skip(reason="use this test for local schema testing")
+def test_validate_metadata_with_report_item_hi_local():
+    source = "file://" + os.getcwd() + "/test_data" + "/schemas"
+    validate_report: ValidateReport = ValidateReport()
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = stac.Asset(source_path)
+    item = stac.Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"mission": "string"})
+    item.properties.update({"platform": "string"})
+    item.add_extension(source + "/" + "hi-schema.json")
+    validator = MetadataValidatorStac()
+    assert validator.is_applicable(item)
+    validate_report.add_errors(validator.validate_metadata_with_report(item))
+    assert not validate_report.report_per_error_type
+
+
 def test_validate_metadata_with_report_collection():
     """check that the method return a report of the errors for a collection validation"""
     """check that the method return a report of the errors for an item validation"""
@@ -156,24 +174,6 @@ def test_validate_metadata_with_report_collection():
     assert validator.is_applicable(collection)
     validate_report.add_errors(validator.validate_metadata_with_report(collection))
     assert validate_report.total == 1
-    assert not validate_report.report_per_error_type
-
-
-@pytest.mark.skip(reason="use this test for local schema testing")
-def test_check_validity_local_hi_extension():
-    source = "file://" + os.getcwd() + "/test_data" + "/schemas"
-    validate_report: ValidateReport = ValidateReport()
-    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
-    asset = stac.Asset(source_path)
-    item = stac.Item("item_id")
-    item.datetime = datetime.now()
-    item.add_asset(asset)
-    item.properties.update({"film:id": "1234"})
-    item.properties.update({"film:negative_sequence": 1234})
-    item.add_extension(source + "/" + "hi-schema.json")
-    validator = MetadataValidatorStac()
-    assert validator.is_applicable(item)
-    validate_report.add_errors(validator.validate_metadata_with_report(item))
     assert not validate_report.report_per_error_type
 
 
