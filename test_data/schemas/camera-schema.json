@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stac.linz.govt.nz/_STAC_VERSION_/film/schema.json",
-  "title": "Film Extension",
-  "description": "STAC Film Extension for STAC Items, and Collection Summaries.",
+  "$id": "https://stac.linz.govt.nz/_STAC_VERSION_/camera/schema.json",
+  "title": "Camera Extension",
+  "description": "STAC Camera Extension for STAC Items, and Collection Summaries.",
   "allOf": [
     {
       "$ref": "#/definitions/stac_extensions"
@@ -23,14 +23,7 @@
             "required": ["type", "properties", "assets"],
             "properties": {
               "properties": {
-                "allOf": [
-                  {
-                    "required": ["film:id", "film:negative_sequence"]
-                  },
-                  {
-                    "$ref": "#/definitions/fields"
-                  }
-                ]
+                "$ref": "#/definitions/fields"
               },
               "assets": {
                 "type": "object",
@@ -55,7 +48,7 @@
           "type": "object",
           "allOf": [
             {
-              "required": ["type", "summaries"]
+              "required": ["type"]
             },
             {
               "$ref": "#/definitions/fields"
@@ -74,7 +67,7 @@
         "stac_extensions": {
           "type": "array",
           "contains": {
-            "const": "file:///home/afage/dev/topo-processor/test_data/schemas/film-schema.json"
+            "const": "file:///home/afage/dev/topo-processor/test_data/schemas/camera-schema.json"
           }
         }
       }
@@ -82,66 +75,50 @@
     "fields": {
       "type": "object",
       "properties": {
-        "film:id": {
-          "title": "Film ID",
-          "type": "string"
+        "camera:sequence_number": {
+          "title": "Sequence Number",
+          "type": ["integer"]
         },
-        "film:negative_sequence": {
-          "title": "Negative Sequence Number",
-          "type": "integer"
-        },
-        "film:physical_condition": {
-          "title": "Physical Film Condition",
-          "type": "string"
-        },
-        "film:physical_size": {
-          "title": "Physical Size Format",
-          "type": "string"
+        "camera:nominal_focal_length": {
+          "title": "Nominal Focal Length",
+          "type": ["integer"]
         },
         "summaries": {
           "type": "object",
-          "required": ["film:id", "film:negative_sequence"],
           "properties": {
-            "film:id": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
-            },
-            "film:negative_sequence": {
+            "camera:sequence_number": {
               "type": "object",
               "required": ["minimum", "maximum"],
               "properties": {
                 "minimum": {
-                  "title": "Lowest negative sequence number",
+                  "title": "Lowest sequence number",
                   "type": "integer"
                 },
                 "maximum": {
-                  "title": "Highest negative sequence number",
+                  "title": "Highest sequence number",
                   "type": "integer"
                 }
               }
             },
-            "film:physical_condition": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
-            },
-            "film:physical_size": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
+            "camera:nominal_focal_length": {
+              "type": "object",
+              "required": ["minimum", "maximum"],
+              "properties": {
+                "minimum": {
+                  "title": "Lowest nominal focal length",
+                  "type": "integer"
+                },
+                "maximum": {
+                  "title": "Highest nominal focal length",
+                  "type": "integer"
+                }
+              }
             }
           }
         }
       },
       "patternProperties": {
-        "^(?!film:)": {}
+        "^(?!camera:)": {}
       },
       "additionalProperties": false
     }

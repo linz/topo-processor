@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stac.linz.govt.nz/_STAC_VERSION_/historical-imagery/schema.json",
+  "title": "Historical Imagery Extension",
+  "description": "STAC Historical Imagery Extension for STAC Items and STAC Collections.",
+  "allOf": [
+    {
+      "$ref": "#/definitions/stac_extensions"
+    },
+    {
+      "$ref": "#/definitions/fields"
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "Feature"
+          }
+        }
+      },
+      "then": {
+        "$comment": "This is the schema for STAC Items.",
+        "allOf": [
+          {
+            "type": "object",
+            "required": ["type", "properties", "assets"],
+            "properties": {
+              "properties": {
+                "type": "object",
+                "$comment": "Require fields here for Item Properties.",
+                "required": ["platform", "mission"]
+              },
+              "assets": {
+                "type": "object",
+                "$comment": "Require fields here for Item Asset Properties.",
+                "additionalProperties": {
+                  "required": ["eo:bands"]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "else": {
+        "if": {
+          "properties": {
+            "type": {
+              "const": "Collection"
+            }
+          }
+        },
+        "then": {
+          "$comment": "This is the schema for STAC Collections. Require fields here for Collections (top-level).",
+          "allOf": [
+            {
+              "type": "object",
+              "required": ["type", "title", "providers", "summaries"]
+            }
+          ]
+        },
+        "else": false
+      }
+    }
+  ],
+  "definitions": {
+    "stac_extensions": {
+      "type": "object",
+      "required": ["stac_extensions"],
+      "properties": {
+        "stac_extensions": {
+          "type": "array",
+          "allOf": [
+            {
+              "contains": {
+                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/hi-schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "https://stac-extensions.github.io/eo/v1.0.0/schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "https://stac-extensions.github.io/file/v2.0.0/schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/aerial-photo-schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/camera-schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/film-schema.json"
+              }
+            },
+            {
+              "contains": {
+                "const": "file:///home/afage/dev/topo-processor/test_data/schemas/scanning-schema.json"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "$comment": "Remove licensor and producer when validation against linz STAC extension is included.",
+      "properties": {
+        "providers": {
+          "allOf": [
+            {
+              "contains": {
+                "properties": {
+                  "roles": {
+                    "contains": {
+                      "const": "licensor"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "roles": {
+                    "contains": {
+                      "const": "producer"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "roles": {
+                    "contains": {
+                      "const": "processor"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "roles": {
+                    "contains": {
+                      "const": "host"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "summaries": {
+          "required": ["platform", "mission", "proj:epsg"],
+          "properties": {
+            "platform": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "mission": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "instruments": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "proj:epsg": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

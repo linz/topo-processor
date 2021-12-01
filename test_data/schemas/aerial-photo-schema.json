@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stac.linz.govt.nz/_STAC_VERSION_/film/schema.json",
-  "title": "Film Extension",
-  "description": "STAC Film Extension for STAC Items, and Collection Summaries.",
+  "$id": "https://stac.linz.govt.nz/_STAC_VERSION_/aerial-photo/schema.json",
+  "title": "Aerial Photography Extension",
+  "description": "STAC Aerial Photography Extension for STAC Items, and Collection Summaries.",
   "allOf": [
     {
       "$ref": "#/definitions/stac_extensions"
@@ -25,7 +25,7 @@
               "properties": {
                 "allOf": [
                   {
-                    "required": ["film:id", "film:negative_sequence"]
+                    "required": ["aerial-photo:run", "aerial-photo:sequence_number"]
                   },
                   {
                     "$ref": "#/definitions/fields"
@@ -74,7 +74,7 @@
         "stac_extensions": {
           "type": "array",
           "contains": {
-            "const": "file:///home/afage/dev/topo-processor/test_data/schemas/film-schema.json"
+            "const": "file:///home/afage/dev/topo-processor/test_data/schemas/aerial-photo-schema.json"
           }
         }
       }
@@ -82,55 +82,80 @@
     "fields": {
       "type": "object",
       "properties": {
-        "film:id": {
-          "title": "Film ID",
+        "aerial-photo:run": {
+          "title": "Straight line/pass of sequential imagery",
           "type": "string"
         },
-        "film:negative_sequence": {
-          "title": "Negative Sequence Number",
+        "aerial-photo:altitude": {
+          "title": "Altitude in feet",
           "type": "integer"
         },
-        "film:physical_condition": {
-          "title": "Physical Film Condition",
-          "type": "string"
+        "aerial-photo:scale": {
+          "title": "Scale denominator",
+          "type": "integer"
         },
-        "film:physical_size": {
-          "title": "Physical Size Format",
+        "aerial-photo:sequence_number": {
+          "title": "Sequential order",
+          "type": "integer"
+        },
+        "aerial-photo:anomalies": {
+          "title": "Image anomalies",
           "type": "string"
         },
         "summaries": {
           "type": "object",
-          "required": ["film:id", "film:negative_sequence"],
+          "required": ["aerial-photo:run", "aerial-photo:sequence_number"],
           "properties": {
-            "film:id": {
+            "aerial-photo:run": {
               "type": "array",
               "items": {
                 "type": "string"
               },
               "minItems": 1
             },
-            "film:negative_sequence": {
+            "aerial-photo:sequence_number": {
               "type": "object",
               "required": ["minimum", "maximum"],
               "properties": {
                 "minimum": {
-                  "title": "Lowest negative sequence number",
+                  "title": "Lowest sequence number",
                   "type": "integer"
                 },
                 "maximum": {
-                  "title": "Highest negative sequence number",
+                  "title": "Highest sequence number",
                   "type": "integer"
                 }
               }
             },
-            "film:physical_condition": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
+            "aerial-photo:altitude": {
+              "type": "object",
+              "required": ["minimum", "maximum"],
+              "properties": {
+                "minimum": {
+                  "title": "Lowest altitude",
+                  "type": "integer"
+                },
+                "maximum": {
+                  "title": "Highest altitude",
+                  "type": "integer"
+                }
+              }
             },
-            "film:physical_size": {
+            "aerial-photo:scale": {
+              "type": "object",
+              "required": ["minimum", "maximum"],
+              "properties": {
+                "minimum": {
+                  "title": "Minimum scale",
+                  "type": "integer"
+                },
+                "maximum": {
+                  "title": "Maximum scale",
+                  "type": "integer"
+                }
+              }
+            },
+            "aerial-photo:anomalies": {
               "type": "array",
               "items": {
                 "type": "string"
@@ -141,7 +166,7 @@
         }
       },
       "patternProperties": {
-        "^(?!film:)": {}
+        "^(?!aerial-photo:)": {}
       },
       "additionalProperties": false
     }
