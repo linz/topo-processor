@@ -9,7 +9,10 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
+import topo_processor.stac.lds_cache as lds_cache
 from topo_processor import stac
+from topo_processor.file_system.get_fs import is_s3_path
+from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
@@ -40,7 +43,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def load_metadata(self, asset: Asset) -> None:
         if not self.is_init:
-            self.read_csv()
+            if not is_s3_path(asset.source_path):
+                self.read_csv()
+            else:
+                metadata_file = lds_cache.get_layer(self.layer_id)
+                self.read_csv(metadata_file)
 
         filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 
@@ -135,11 +142,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         with open(csv_path, "r") as csv_path:
             reader = csv.DictReader(csv_path, delimiter=",")
             for row in reader:
-                if row["released_filename"]:
-                    released_filename = row["released_filename"]
-                    if not metadata_file and released_filename in self.raw_metadata:
-                        raise Exception(f'Duplicate file "{released_filename}" found in metadata csv')
-                    self.raw_metadata[released_filename] = row
+                if row["raw_filename"]:
+                    raw_filename = row["raw_filename"]
+                    if not metadata_file and raw_filename in self.raw_metadata:
+                        raise Exception(f'Duplicate file "{raw_filename}" found in metadata csv')
+                    self.raw_metadata[raw_filename] = row
                 else:
                     self.raw_metadata[row["sufi"]] = row
 
