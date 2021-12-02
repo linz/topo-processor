@@ -40,7 +40,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         return is_tiff(asset.source_path)
 
-    def load_metadata(self, asset: Asset = None, metadata_file: str = "", is_load_all: bool = False) -> None:
+    def load_metadata(self, metadata_file: str, asset: Asset = None, is_load_all: bool = False) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
 
@@ -102,10 +102,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.add_extension(stac.StacExtensions.historical_imagery.value)
 
-    def read_csv(self, metadata_file: str = "") -> None:
+    def read_csv(self, metadata_file: str) -> None:
         self.raw_metadata = {}
-        if not metadata_file:
-            metadata_file = "test_data/historical_aerial_photos_metadata.csv"
 
         csv_path = os.path.join(os.getcwd(), metadata_file)
         if not os.path.isfile(csv_path):

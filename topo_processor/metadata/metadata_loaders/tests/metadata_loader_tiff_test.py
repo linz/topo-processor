@@ -12,7 +12,7 @@ def test_load_metadata():
     loader = MetadataLoaderTiff()
     assert loader.is_applicable(asset)
 
-    loader.load_metadata(asset)
+    loader.load_metadata("", asset)
     assert item.properties["proj:epsg"] is None
     assert stac.StacExtensions.projection.value in item.stac_extensions
     assert len(item.assets) == 1

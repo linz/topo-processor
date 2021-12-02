@@ -4,7 +4,8 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.stac import DataType, collection_store, process_directory
+from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
+from topo_processor.stac import DataType, collection_store, lds_cache, process_directory
 from topo_processor.util import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
 
@@ -30,22 +31,30 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
+    "--metadata",
+    required=False,
+    help="(OPTIONAL) The path of the metadata csv file to validate.",
+)
+@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source, datatype, target, verbose):
+def main(source, datatype, target, metadata, verbose):
     if verbose:
         set_level(LogLevel.trace)
 
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
+    if not metadata:
+        metadata = lds_cache.get_layer(metadata_loader_imagery_historic.layer_id)
+
     if not is_s3_path(source):
         source = os.path.abspath(source)
 
-    process_directory(source)
+    process_directory(source, metadata)
 
     try:
         for collection in collection_store.values():

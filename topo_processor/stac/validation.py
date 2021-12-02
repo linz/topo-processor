@@ -37,7 +37,7 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
             decompress_file(metadata_file)
 
     # Load metadata from metadata csv file
-    metadata_loader_imagery_historic.load_metadata(None, metadata_file, True)
+    metadata_loader_imagery_historic.load_metadata(metadata_file, None, True)
     get_log().debug("Metadata Loaded", metadata_file=metadata_file, duration=time_in_ms() - start_time)
 
     # Validate metadata from stored STAC objects

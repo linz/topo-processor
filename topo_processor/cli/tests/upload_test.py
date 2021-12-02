@@ -26,7 +26,20 @@ def test_upload_local(setup):
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")
-    subprocess.run([command, "-s", source, "-d", "imagery.historic", "-t", target], check=True)
+    subprocess.run(
+        [
+            command,
+            "-s",
+            source,
+            "-d",
+            "imagery.historic",
+            "-t",
+            target,
+            "--metadata",
+            "test_data/historical_aerial_photos_metadata.csv",
+        ],
+        check=True,
+    )
 
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.json"))
     assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.tiff"))

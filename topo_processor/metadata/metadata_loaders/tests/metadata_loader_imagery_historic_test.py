@@ -20,7 +20,7 @@ def test_item_not_found_in_csv():
     source_path = "test_abc.tiff"
     asset = stac.Asset(source_path)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.load_metadata(asset)
+    metadata_loader_imagery_historic.load_metadata("test_data/historical_aerial_photos_metadata.csv", asset)
     error_msg = {
         "msg": "Asset not found in CSV file",
         "level": "error",

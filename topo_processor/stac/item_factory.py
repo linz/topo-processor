@@ -9,15 +9,15 @@ from topo_processor.stac.store import get_asset, item_store
 from topo_processor.util import time_in_ms
 
 
-def process_directory(source_dir: str) -> None:
+def process_directory(source_dir: str, metadata_file: str) -> None:
     start_time = time_in_ms()
-    _create_assets(source_dir)
+    _create_assets(source_dir, metadata_file)
     get_log().debug("Assets Created", source_dir=source_dir, duration=time_in_ms() - start_time)
     _create_items()
     get_log().debug("Items Created", source_dir=source_dir, duration=time_in_ms() - start_time)
 
 
-def _create_assets(source_dir: str) -> None:
+def _create_assets(source_dir: str, metadata_file: str) -> None:
     fs = get_fs(source_dir)
     for (path, _, files) in fs.walk(source_dir):
         if not files:
@@ -25,7 +25,7 @@ def _create_assets(source_dir: str) -> None:
         for file_ in files:
             asset_path = get_path_with_protocol(source_dir, fs, path)
             asset = get_asset(f"{asset_path}/{file_}")
-            metadata_loader_repo.load_metadata(asset)
+            metadata_loader_repo.load_metadata(metadata_file, asset)
 
 
 def _create_items() -> None:
