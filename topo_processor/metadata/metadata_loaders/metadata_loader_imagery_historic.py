@@ -89,10 +89,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         )
 
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
-        # collection.add_extension(stac.StacExtensions.linz.value)
-        # collection.add_extension(stac.StacExtensions.quality.value)
+        collection.add_extension(stac.StacExtensions.linz.value)
+        collection.add_extension(stac.StacExtensions.quality.value)
         collection.add_extension(stac.StacExtensions.processing.value)
-        # collection.add_extension(stac.StacExtensions.version.value)
+        collection.add_extension(stac.StacExtensions.version.value)
         collection.add_linz_provider(Providers.LTTW.value)
         collection.add_linz_provider(Providers.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
