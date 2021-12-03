@@ -14,6 +14,7 @@ from topo_processor import stac
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.linz_providers import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
@@ -100,8 +101,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.add_extension(stac.StacExtensions.quality.value)
         collection.add_extension(stac.StacExtensions.processing.value)
         collection.add_extension(stac.StacExtensions.version.value)
-        collection.add_linz_provider(Providers.LTTW.value)
-        collection.add_linz_provider(Providers.LMPP.value)
+        collection.add_linz_provider(LinzProviders.LTTW.value)
+        collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(
