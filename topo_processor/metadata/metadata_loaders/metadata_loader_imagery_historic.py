@@ -92,7 +92,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "linz:lifecycle": "completed",
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
                 "processing:software": {"Topo Processor": "0.1.0"},
-                "version:version": "1",
+                "version": "1",
             }
         )
 
@@ -111,7 +111,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
                 "processing:software": {"Topo Processor": "0.1.0"},
-                "version:version": "1",
+                "version": "1",
             }
         )
 
@@ -127,9 +127,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_bands_extent(item, asset)
 
         item.add_extension(stac.StacExtensions.historical_imagery.value)
-        # item.add_extension(stac.StacExtensions.linz.value)
-        # item.add_extension(stac.StacExtensions.version.value)
-        # item.add_extension(stac.StacExtensions.quality.value)
+        item.add_extension(stac.StacExtensions.linz.value)
+        item.add_extension(stac.StacExtensions.version.value)
+        item.add_extension(stac.StacExtensions.processing.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
