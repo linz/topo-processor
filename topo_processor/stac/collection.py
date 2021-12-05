@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 TEMP_DIR = None
 FIELDS_JSON_URL = "https://gist.githubusercontent.com/MDavidson17/2fe878960e240b9938cc7f364b6a39be/raw/6643a93606c36c6fa9d03854324327c1fff51552/fields-test.json"
 
+
 class Collection(Validity):
     id: str
     title: str
