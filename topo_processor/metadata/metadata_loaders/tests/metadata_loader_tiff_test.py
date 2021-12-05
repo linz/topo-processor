@@ -9,6 +9,7 @@ def test_load_metadata():
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
     item.add_asset(asset)
+    item.collection = stac.Collection("Collection")
     loader = MetadataLoaderTiff()
     assert loader.is_applicable(asset)
 
