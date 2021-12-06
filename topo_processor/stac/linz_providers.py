@@ -1,7 +1,5 @@
 from enum import Enum
 
-import pystac
-
 from .linz_provider import LinzProvider, LinzProviderRole
 
 
