@@ -287,6 +287,5 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         return True
 
     def add_linz_geospatial_type(self, item: Item, photo_type) -> None:
-        linz_geospatial_type_properties = {}
-        linz_geospatial_type_properties["linz:geospatial_type"] = h_i_photo_type_to_linz_geospatial_type(photo_type)
-        item.properties.update(linz_geospatial_type_properties)
+
+        item.linz_geospatial_type = h_i_photo_type_to_linz_geospatial_type(photo_type)

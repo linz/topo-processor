@@ -28,7 +28,7 @@ def test_fail_on_duplicate_assets(setup):
     collection.license = "fake_license"
     item = Item("item_id")
     item.datetime = datetime.now()
-    item.properties["linz:geospatial_type"] = "black and white image"
+    item.linz_geospatial_type = "black and white image"
     collection.add_item(item)
     item.collection = collection
 
@@ -53,7 +53,7 @@ def test_asset_key_not_in_list(setup):
     collection.license = "fake_license"
     item = Item("item_id")
     item.datetime = datetime.now()
-    item.properties["linz:geospatial_type"] = "black and white image"
+    item.linz_geospatial_type = "black and white image"
     collection.add_item(item)
     item.collection = collection
 

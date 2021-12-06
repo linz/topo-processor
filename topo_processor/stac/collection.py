@@ -107,11 +107,8 @@ class Collection(Validity):
         return [union_poly.bounds]
 
     def get_geospatial_type(self) -> str:
-        geospatial_type_set = set(
-            x.properties["linz:geospatial_type"] for x in self.items.values() if x.properties["linz:geospatial_type"]
-        )
+        geospatial_type_set = set(x.linz_geospatial_type for x in self.items.values() if x.linz_geospatial_type)
         geospatial_type_str = ", ".join(geospatial_type_set)
-        # TODO: remove Item level linz:geospatial_type
         return geospatial_type_str
 
     def get_linz_asset_summaries(self) -> Dict:

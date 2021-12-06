@@ -11,10 +11,10 @@ def test_check_validity():
     asset = Asset(source_path)
     item = Item("item_id")
     item.add_asset(asset)
-    item.properties.update({"linz:geospatial_type": "color image"})
+    item.linz_geospatial_type = "color image"
     asset.properties.update({"eo:bands": [{"name": "gray", "common_name": "pan"}]})
 
     validator = MetadataValidatorTiff()
     assert validator.is_applicable(item)
-    with pytest.raises(Exception, match=r"Wrong 'linz:geospatial_type' of 'color image' when bands = gray"):
+    with pytest.raises(Exception, match=r"Wrong linz_geospatial_type of 'color image' when bands = gray"):
         validator.validate_metadata(item)

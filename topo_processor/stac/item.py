@@ -16,6 +16,7 @@ class Item(Validity):
 
     id: str
     geometry_poly: shapely.geometry.Polygon
+    linz_geospatial_type: str
     datetime: datetime.datetime
     properties: dict
     stac_extensions: set
@@ -31,6 +32,7 @@ class Item(Validity):
         self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None
         self.geometry_poly = None
+        self.linz_geospatial_type = None
         self.assets = []
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.ITEM, pystac.get_stac_version())
 
