@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pystac
 
-from topo_processor.util import Validity, file_dates, multihash_as_hex
+from topo_processor.util import Validity, get_file_update_time, multihash_as_hex
 
 from .asset_key import AssetKey
 
@@ -18,7 +18,7 @@ class Asset(Validity):
     content_type: str
     needs_upload = bool
     href: str
-    properties = dict
+    properties: dict
     item: "Item"
     key_name: AssetKey
 
@@ -45,11 +45,12 @@ class Asset(Validity):
             self.properties["file:checksum"] = multihash_as_hex(self.source_path)
         return self.properties["file:checksum"]
 
-    # TODO: when there is an update process this will need to be changed to add a proper updated value
     def set_output_asset_dates(self, output_path: str) -> None:
         if "created" not in self.properties:
-            self.properties["created"] = file_dates(output_path)
+            self.properties["created"] = get_file_update_time(output_path)
             self.properties["updated"] = self.properties["created"]
+        else:
+            self.properties["updated"] = get_file_update_time(output_path)
 
     def create_stac(self) -> pystac.Asset:
         stac = pystac.Asset(href=self.href, extra_fields=self.properties, media_type=self.get_content_type())

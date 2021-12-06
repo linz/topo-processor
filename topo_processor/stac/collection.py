@@ -12,7 +12,9 @@ from pystac import pystac
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
+from topo_processor.stac.asset import Asset
 from topo_processor.util import Validity
+from topo_processor.util.time import get_min_max_interval
 
 from .linz_provider import LinzProvider
 from .providers import Providers
@@ -84,23 +86,14 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
-    def get_temporal_extent(self) -> List[datetime | None]:
-        min_date = None
-        max_date = None
+    def get_temporal_extent(self) -> List[datetime]:
+        dates: List[datetime] = []
 
         for item in self.items.values():
             if item.datetime:
-                if not min_date:
-                    min_date = item.datetime
-                elif item.datetime < min_date:
-                    min_date = item.datetime
+                dates.append(item.datetime)
 
-                if not max_date:
-                    max_date = item.datetime
-                elif item.datetime > max_date:
-                    max_date = item.datetime
-
-        return [min_date, max_date]
+        return get_min_max_interval(dates)
 
     def get_bounding_boxes(self):
         """
@@ -121,6 +114,27 @@ class Collection(Validity):
         # TODO: remove Item level linz:geospatial_type
         return geospatial_type_str
 
+    def get_linz_asset_summaries(self) -> Dict:
+        assets_checked: List[Asset] = []
+        dates_created: List[datetime] = []
+        dates_updated: List[datetime] = []
+
+        for item in self.items.values():
+            for asset in item.assets:
+                if not asset in assets_checked:
+                    if "created" in asset.properties:
+                        dates_created.append(asset.properties["created"])
+                        dates_updated.append(asset.properties["updated"])
+                    assets_checked.append(asset)
+
+        interval_created = get_min_max_interval(dates_created)
+        interval_updated = get_min_max_interval(dates_updated)
+
+        return {
+            "created": {"minimum": interval_created[0], "maximum": interval_created[1]},
+            "updated": {"minimum": interval_updated[0], "maximum": interval_updated[1]},
+        }
+
     def delete_temp_dir(self):
         global TEMP_DIR
         if TEMP_DIR:
@@ -132,6 +146,7 @@ class Collection(Validity):
         if self.linz_providers:
             self.extra_fields["linz:providers"] = self.linz_providers
         self.extra_fields["linz:geospatial_type"] = self.get_geospatial_type()
+        self.extra_fields["linz:asset_summaries"] = self.get_linz_asset_summaries()
         stac = pystac.Collection(
             id=self.id,
             description=self.description,

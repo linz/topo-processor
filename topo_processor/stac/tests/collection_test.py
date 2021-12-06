@@ -4,6 +4,7 @@ import pytest
 import shapely.wkt
 
 from topo_processor.stac import Collection, Item
+from topo_processor.stac.asset import Asset
 
 
 def test_duplicate_item():
@@ -82,3 +83,24 @@ def test_get_temporal_extent():
     collection.add_item(item_d)
 
     assert collection.get_temporal_extent() == [datetime_earliest, datetime_latest]
+
+
+def test_get_linz_asset_summaries():
+    collection = Collection("fake_title")
+    item = Item("item_id")
+    collection.add_item(item)
+
+    cog_1 = Asset("testa")
+    cog_1.properties["created"] = "1999-01-01T00:00:00Z"
+    cog_1.properties["updated"] = "1999-01-01T00:00:00Z"
+    item.add_asset(cog_1)
+
+    cog_2 = Asset("testb")
+    cog_2.properties["created"] = "2010-01-01T00:00:00Z"
+    cog_2.properties["updated"] = "2010-03-01T00:00:00Z"
+    item.add_asset(cog_2)
+
+    assert collection.get_linz_asset_summaries() == {
+        "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
+        "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
+    }
