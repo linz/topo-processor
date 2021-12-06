@@ -22,7 +22,7 @@ aiohttp = "^3.8.1"
 python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
-black = "^21.11b1"
+black = "^21.12b0"
 isort = "^5.10.1"
 pylint = "^2.12.1"
 pytest = "^6.2.4"
