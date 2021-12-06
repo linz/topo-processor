@@ -14,7 +14,7 @@ from topo_processor import stac
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
-from topo_processor.stac.linz_providers import LinzProviders
+from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
