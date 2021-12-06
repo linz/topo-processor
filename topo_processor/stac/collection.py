@@ -108,7 +108,10 @@ class Collection(Validity):
 
     def get_geospatial_type(self) -> str:
         geospatial_type_set = set(x.linz_geospatial_type for x in self.items.values() if x.linz_geospatial_type)
-        geospatial_type_str = ", ".join(geospatial_type_set)
+        if len(geospatial_type_set) != 1:
+            get_log().warning(f"Invalid 'linz:geospatial_type' collection='{self.title}'")
+            return "invalid geospatial type"
+        geospatial_type_str = geospatial_type_set.pop()
         return geospatial_type_str
 
     def get_linz_asset_summaries(self) -> Dict:
@@ -142,6 +145,7 @@ class Collection(Validity):
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:
             self.extra_fields["linz:providers"] = self.linz_providers
+
         self.extra_fields["linz:geospatial_type"] = self.get_geospatial_type()
         self.extra_fields["linz:asset_summaries"] = self.get_linz_asset_summaries()
         stac = pystac.Collection(
