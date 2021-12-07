@@ -33,7 +33,7 @@ class MetadataValidatorTiff(MetadataValidator):
                 # black and white
                 if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
                     # check linz_geospatial_type matches colorinterp
-                    if geospatial_type != "black and white image" or geospatial_type != "black and white infrared image":
+                    if geospatial_type not in ["black and white image", "black and white infrared image"]:
                         raise Exception(
                             f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
@@ -46,7 +46,7 @@ class MetadataValidatorTiff(MetadataValidator):
                 if all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
                     common_names = [common_names["common_name"] for common_names in eo_bands]
                     # check linz_geospatial_type matches colorinterp
-                    if geospatial_type != "color image" or geospatial_type != "color infrared image":
+                    if geospatial_type not in ["color image", "color infrared image"]:
                         raise Exception(
                             f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
                         )
