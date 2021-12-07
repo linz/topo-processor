@@ -104,3 +104,51 @@ def test_get_linz_asset_summaries():
         "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
         "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
     }
+
+
+def test_single_geospatial_types():
+    """Single photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = "color image"
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = "color image"
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "color image"
+
+
+def test_multiple_geospatial_types():
+    """Multiple photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = "black and white image"
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = "black and white infrared image"
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "invalid geospatial type"
+
+
+def test_empty_geospatial_types():
+    """Empty photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = ""
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = ""
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "invalid geospatial type"

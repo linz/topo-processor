@@ -106,7 +106,7 @@ class Collection(Validity):
         union_poly = unary_union(polys)
         return [union_poly.bounds]
 
-    def get_geospatial_type(self) -> str:
+    def get_linz_geospatial_type(self) -> str:
         geospatial_type_set = set(x.linz_geospatial_type for x in self.items.values() if x.linz_geospatial_type)
         if len(geospatial_type_set) != 1:
             get_log().warning(f"Invalid 'linz:geospatial_type' collection='{self.title}'")
@@ -145,8 +145,7 @@ class Collection(Validity):
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:
             self.extra_fields["linz:providers"] = self.linz_providers
-
-        self.extra_fields["linz:geospatial_type"] = self.get_geospatial_type()
+        self.extra_fields["linz:geospatial_type"] = self.get_linz_geospatial_type()
         self.extra_fields["linz:asset_summaries"] = self.get_linz_asset_summaries()
         stac = pystac.Collection(
             id=self.id,
