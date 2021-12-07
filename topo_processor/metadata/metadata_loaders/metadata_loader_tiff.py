@@ -20,7 +20,7 @@ class MetadataLoaderTiff(MetadataLoader):
     name = "metadata.loader.imagery.tiff"
 
     def is_applicable(self, asset: Asset) -> bool:
-        if asset.item is None:
+        if asset is None or asset.item is None:
             return False
         return is_tiff(asset.source_path)
 
@@ -33,9 +33,6 @@ class MetadataLoaderTiff(MetadataLoader):
             with rasterio.open(f) as tiff:
                 self.add_epsg(tiff, asset)
                 self.add_bands(tiff, asset)
-
-    def load_all_metadata(self, metadata_file: str) -> None:
-        pass
 
     def add_epsg(self, tiff, asset):
         if tiff.crs:
