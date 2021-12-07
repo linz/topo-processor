@@ -72,76 +72,58 @@ def test_generate_summaries(setup):
     collection = Collection("fake_title")
     collection.description = "fake_description"
     collection.license = "face_license"
-    item_1 = Item("item_1_id")
-    metadata = {
-        "WKT": "POLYGON ((177.168157744315 -38.7538525409217,177.23423558687 -38.7514276946524,177.237358655351 -38.8031681573174,177.17123348276 -38.8055953066942,177.168157744315 -38.7538525409217))"
+    test_geom = {
+        "WKT": "POLYGON ((177.168157744315 -38.7538525409217,"
+        "177.23423558687 -38.7514276946524,"
+        "177.237358655351 -38.8031681573174,"
+        "177.17123348276 -38.8055953066942,"
+        "177.168157744315 -38.7538525409217))"
     }
+    test_datetime = datetime.strptime("1918-11-11", "%Y-%m-%d")
 
+    item_1 = Item("item_1_id")
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_spatial_extent(item_1, asset_metadata=metadata)
-    datetime_earliest = datetime.strptime("1918-11-11", "%Y-%m-%d")
-    item_1.datetime = datetime_earliest
+    metadata_loader_imagery_historic.add_spatial_extent(item_1, asset_metadata=test_geom)
+    item_1.datetime = test_datetime
     item_1.properties = {
         "mission": "SURVEY_1",
-        "platform": "Fixed-wing Aircraft",
-        "instruments": ["EAGLE IV"],
-        "linz:photo_type": "B&W",
         "proj:centroid": {"lat": -45.8079, "lon": 170.5548},
         "camera:sequence_number": 89555,
         "film:id": "731",
-        "film:negative_sequence": 113,
-        "film:physical_condition": "Not Film 222",
-        "film:physical_size": "18cm x 23cm",
-        "aerial-photo:run": "E",
-        "aerial-photo:sequence_number": 49,
-        "aerial-photo:altitude": 11000,
         "aerial-photo:scale": 6600,
-        "scan:is_original": True,
         "scan:scanned": "2014-06-30T12:00:00Z",
         "proj:epsg": "null",
-        "datetime": "1952-04-22T12:00:00Z",
     }
     collection.add_item(item_1)
     item_1.collection = collection
+
     item_2 = Item("item_2_id")
-    metadata = {
-        "WKT": "POLYGON ((177.168157744315 -38.7538525409217,177.23423558687 -38.7514276946524,177.237358655351 -38.8031681573174,177.17123348276 -38.8055953066942,177.168157744315 -38.7538525409217))"
-    }
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_spatial_extent(item_2, asset_metadata=metadata)
-    datetime_latest = datetime.strptime("1989-11-09", "%Y-%m-%d")
-    item_2.datetime = datetime_latest
+    metadata_loader_imagery_historic.add_spatial_extent(item_2, asset_metadata=test_geom)
+    item_2.datetime = test_datetime
     item_2.properties = {
         "mission": "SURVEY_1",
-        "platform": "Fixed-wing Aircraft",
-        "instruments": ["EAGLE IV"],
-        "linz:photo_type": "B&W",
         "proj:centroid": {"lat": -45.8079, "lon": 170.5599},
         "camera:sequence_number": 89554,
-        "camera:nominal_focal_length": 508,
         "film:id": "731",
-        "film:negative_sequence": 112,
-        "film:physical_condition": "Metadata manually populated",
-        "film:physical_size": "18cm x 23cm",
-        "aerial-photo:run": "E",
-        "aerial-photo:sequence_number": 50,
-        "aerial-photo:altitude": 11000,
         "aerial-photo:scale": 5600,
-        "scan:is_original": True,
         "scan:scanned": "2019-12-31T11:00:00Z",
         "proj:epsg": "null",
-        "datetime": "1952-04-22T12:00:00Z",
     }
     collection.add_item(item_2)
     item_2.collection = collection
 
     transfer_collection(item_1.collection, target)
+
     with open(os.path.join(target, "fake_title", "collection.json")) as collection_json_file:
         collection_metadata = json.load(collection_json_file)
         assert collection_metadata["summaries"]["mission"] == ["SURVEY_1"]
         assert collection_metadata["summaries"]["film:id"] == ["731"]
         assert collection_metadata["summaries"]["proj:epsg"] == ["null"]
-        assert collection_metadata["summaries"]["aerial-photo:scale"] == {'minimum': 5600, 'maximum': 6600}
-        assert collection_metadata["summaries"]["scan:scanned"] == {'minimum': '2014-06-30T12:00:00Z', 'maximum': '2019-12-31T11:00:00Z'}
-        assert collection_metadata["summaries"]["camera:sequence_number"] == {'minimum': 89554, 'maximum': 89555}
+        assert collection_metadata["summaries"]["aerial-photo:scale"] == {"minimum": 5600, "maximum": 6600}
+        assert collection_metadata["summaries"]["scan:scanned"] == {
+            "minimum": "2014-06-30T12:00:00Z",
+            "maximum": "2019-12-31T11:00:00Z",
+        }
+        assert collection_metadata["summaries"]["camera:sequence_number"] == {"minimum": 89554, "maximum": 89555}
         assert "proj:centroid" not in collection_metadata["summaries"].keys()

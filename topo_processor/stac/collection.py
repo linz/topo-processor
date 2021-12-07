@@ -6,9 +6,9 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from typing import TYPE_CHECKING, Dict, List
 
+import pystac
 import ulid
 from linz_logger import get_log
-from pystac import pystac
 from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
@@ -22,7 +22,8 @@ if TYPE_CHECKING:
     from .item import Item
 
 TEMP_DIR = None
-FIELDS_JSON_URL = "https://gist.githubusercontent.com/MDavidson17/2fe878960e240b9938cc7f364b6a39be/raw/6643a93606c36c6fa9d03854324327c1fff51552/fields-test.json"
+FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/feat/fields-json/fields/fields.json"
+# TODO: replace with: "https://raw.githubusercontent.com/linz/stac/master/fields/fields.json"
 
 
 class Collection(Validity):
