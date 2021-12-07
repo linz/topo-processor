@@ -36,17 +36,3 @@ class MetadataLoaderRepository:
                     asset=asset.source_path,
                     duration=time_in_ms() - start_time,
                 )
-
-    def load_all_metadata(self, metadata_file: str) -> None:
-        for loader in self.loaders:
-            start_time = time_in_ms()
-            try:
-                loader.load_all_metadata(metadata_file)
-            except Exception as e:
-                get_log().warning(f"Metadata Load Failed: {e}", loader=loader.name)
-                return
-            get_log().debug(
-                "Metadata Loaded",
-                loader=loader.name,
-                duration=time_in_ms() - start_time,
-            )
