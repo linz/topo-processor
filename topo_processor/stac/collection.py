@@ -112,10 +112,8 @@ class Collection(Validity):
                 TEMP_DIR = None
 
     def generate_summaries(self, collection: pystac.Collection):
-        """Note: does not work with custom extensions"""
         summarizer = Summarizer(fields=FIELDS_JSON_URL)
-        self.summaries = summarizer.summarize(collection)
-        collection.summaries = self.summaries
+        collection.summaries = summarizer.summarize(collection)
 
     def create_stac(self) -> pystac.Collection:
         stac = pystac.Collection(
