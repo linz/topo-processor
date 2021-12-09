@@ -22,8 +22,7 @@ if TYPE_CHECKING:
     from .item import Item
 
 TEMP_DIR = None
-FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/feat/fields-json/fields/fields.json"
-# TODO: replace with: "https://raw.githubusercontent.com/linz/stac/master/fields/fields.json"
+FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/master/fields/fields.json"
 
 
 class Collection(Validity):
