@@ -130,6 +130,13 @@ class Collection(Validity):
         interval_created = get_min_max_interval(dates_created)
         interval_updated = get_min_max_interval(dates_updated)
 
+        # to pass metadata-only validation as there are no assets to populate mandatory linz:asset_summaries
+        if not assets_checked:
+            return {
+                "created": {"minimum": "0000-01-01T00:00:00Z", "maximum": "0000-01-01T00:00:00Z"},
+                "updated": {"minimum": "0000-01-01T00:00:00Z", "maximum": "0000-01-01T00:00:00Z"},
+            }
+
         return {
             "created": {"minimum": interval_created[0], "maximum": interval_created[1]},
             "updated": {"minimum": interval_updated[0], "maximum": interval_updated[1]},

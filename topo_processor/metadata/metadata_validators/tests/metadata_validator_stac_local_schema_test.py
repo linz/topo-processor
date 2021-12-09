@@ -5,8 +5,6 @@ import pytest
 
 import topo_processor.stac as stac
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
-from topo_processor.stac.linz_provider import LinzProviders
-from topo_processor.stac.providers import Providers
 from topo_processor.stac.validate_report import ValidateReport
 
 

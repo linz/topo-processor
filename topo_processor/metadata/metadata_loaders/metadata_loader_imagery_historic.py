@@ -83,17 +83,24 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.extra_fields.update(
             {
                 "linz:lifecycle": "completed",
-                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
+                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
                 "processing:software": {"Topo Processor": "0.1.0"},
                 "version": "1",
             }
         )
-
+        # FIXME: tidy adding extensions and only add Collection level extensions once for a Collection
         collection.add_extension(stac.StacExtensions.historical_imagery.value)
         collection.add_extension(stac.StacExtensions.linz.value)
         collection.add_extension(stac.StacExtensions.quality.value)
         collection.add_extension(stac.StacExtensions.processing.value)
+        collection.add_extension(stac.StacExtensions.projection.value)
         collection.add_extension(stac.StacExtensions.version.value)
+        collection.add_extension(stac.StacExtensions.aerial_photo.value)
+        collection.add_extension(stac.StacExtensions.camera.value)
+        collection.add_extension(stac.StacExtensions.film.value)
+        collection.add_extension(stac.StacExtensions.scanning.value)
+        collection.add_extension(stac.StacExtensions.file.value)
+        collection.add_extension(stac.StacExtensions.eo.value)
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
