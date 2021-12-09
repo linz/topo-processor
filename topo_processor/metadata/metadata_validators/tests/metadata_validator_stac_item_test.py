@@ -93,6 +93,7 @@ def test_check_validity_scanning_extension():
     with pytest.raises(STACValidationError):
         validator.validate_metadata(item)
 
+
 @pytest.mark.skip(reason="failing test")
 def test_validate_metadata_with_report_item():
     """check that the method return a report of the errors for an item validation"""
