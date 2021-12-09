@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 import pystac
 
+from topo_processor import stac
 from topo_processor.util import Validity, get_file_update_time, multihash_as_hex
 
 from .asset_key import AssetKey
@@ -48,6 +49,7 @@ class Asset(Validity):
     def set_output_asset_dates(self, output_path: str) -> None:
         if "created" not in self.properties:
             self.properties["created"] = get_file_update_time(output_path)
+            # TODO: process for COG updates not created yet
             self.properties["updated"] = self.properties["created"]
         else:
             self.properties["updated"] = get_file_update_time(output_path)
