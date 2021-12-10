@@ -52,7 +52,7 @@ def test_upload_local(setup):
     assert item_metadata["id"] == "72352"
     assert (
         item_metadata["assets"]["visual"]["file:checksum"]
-        == "1220b8f2e22e2d8059ec7c4b327bb695f6a8dc55bdb5f5865b0d2628867f16dca840"
+        == "1220e3e67b095835c5ae8d7b311af25606d3dc0915219f34838e1f0c78b980697ca4"
     )
     assert (item_metadata["assets"]["visual"]["href"]) == "./72352.tiff"
     assert len(item_metadata["links"]) == 3
