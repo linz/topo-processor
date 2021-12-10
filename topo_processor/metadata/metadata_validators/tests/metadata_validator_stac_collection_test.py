@@ -90,6 +90,7 @@ def test_validate_metadata_linz_collection_no_linz_providers(mocker):
     validate_report.add_errors(validator.validate_metadata_with_report(collection))
     assert '"linz:providers" is a required property' in validate_report.report_per_error_type[stac.StacExtensions.linz.value]
 
+
 def test_validate_metadata_linz_collection_missing_linz_fields(mocker):
     """check that the linz collection schema gives error missing linz:providers"""
     validate_report: ValidateReport = ValidateReport()
