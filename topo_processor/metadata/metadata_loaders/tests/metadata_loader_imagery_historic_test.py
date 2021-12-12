@@ -34,6 +34,7 @@ def test_camera_extension_added_if_empty_metadata():
     """Tests camera extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
@@ -44,6 +45,7 @@ def test_camera_metadata_added():
     """Tests camera metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"camera_sequence_no": "", "nominal_focal_length": "508"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
@@ -56,6 +58,7 @@ def test_film_extension_added_if_empty_metadata():
     """Tests film extension is still added even if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"film": "", "film_sequence_no": "", "physical_film_condition": "", "format": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
@@ -66,6 +69,7 @@ def test_film_metadata_added():
     """Tests film metadata is is still added if one of them is an empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"film": "123", "film_sequence_no": "234", "physical_film_condition": "", "format": "23 cm x 23 cm"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
@@ -80,6 +84,7 @@ def test_aerial_photo_extension_added_if_empty_metadata():
     """Tests aerial-photo extension is still added if empty metadata"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"run": "", "altitude": "", "scale": "", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
@@ -95,6 +100,7 @@ def test_aerial_photo_zero_altitude_scale():
     """Tests aerial-photo extension added and no metadata with zero values for altitude and scale"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"run": "", "altitude": "0", "scale": "0", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
@@ -107,6 +113,7 @@ def test_aerial_photo_metadata_added():
     """Test aerial-photo metadata is added if one is an empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"run": "string", "altitude": "123", "scale": "123", "photo_no": "123", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
@@ -122,6 +129,7 @@ def test_scanning_extension_added_if_empty_metadata():
     """Tests scanning extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"source": "", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
@@ -132,6 +140,7 @@ def test_scanning_extension_invalid_values_date_wrong_format():
     """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"source": "string", "when_scanned": "nzam_pilot"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
@@ -144,6 +153,7 @@ def test_scanning_metadata_added():
     """Tests scanning metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {"source": "ORIGINAL", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
@@ -239,6 +249,7 @@ def test_centroid_metadata_added():
     """Tests centroid metadata is added correctly"""
     source_path = "test_abc.tiff"
     item = stac.Item(source_path)
+    item.collection = stac.Collection("Collection")
     metadata = {
         "photocentre_lat": "-41.28509",
         "photocentre_lon": "174.77442",
