@@ -6,9 +6,10 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from typing import TYPE_CHECKING, Dict, List
 
+import pystac
 import ulid
 from linz_logger import get_log
-from pystac import pystac
+from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
@@ -18,11 +19,13 @@ from topo_processor.util.time import get_min_max_interval
 
 from .linz_provider import LinzProvider
 from .providers import Providers
+from .stac_extensions import StacExtensions
 
 if TYPE_CHECKING:
     from .item import Item
 
 TEMP_DIR = None
+FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/master/fields/fields.json"
 
 
 class Collection(Validity):
@@ -38,6 +41,7 @@ class Collection(Validity):
     linz_geospatial_type: str
 
     stac_extensions: set
+    summaries: Summaries
 
     def __init__(self, title: str):
         super().__init__()
@@ -53,7 +57,9 @@ class Collection(Validity):
             }
         )
         self.linz_providers = []
+        self.stac_extensions = set([StacExtensions.file.value])
         self.providers = [Providers.TTW.value]
+        self.summaries = Summaries.empty()
 
     def add_item(self, item: Item):
         if item.collection is not None and item.collection != self:
@@ -148,6 +154,10 @@ class Collection(Validity):
             if os.path.exists(TEMP_DIR):
                 rmtree(TEMP_DIR)
                 TEMP_DIR = None
+
+    def generate_summaries(self, collection: pystac.Collection):
+        summarizer = Summarizer(fields=FIELDS_JSON_URL)
+        collection.summaries = summarizer.summarize(collection)
 
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:

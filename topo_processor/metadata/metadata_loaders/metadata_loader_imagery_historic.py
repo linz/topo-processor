@@ -91,18 +91,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             }
         )
         # FIXME: tidy adding extensions and only add Collection level extensions once for a Collection
-        collection.add_extension(stac.StacExtensions.historical_imagery.value)
-        collection.add_extension(stac.StacExtensions.linz.value)
+
         collection.add_extension(stac.StacExtensions.quality.value)
-        collection.add_extension(stac.StacExtensions.processing.value)
-        collection.add_extension(stac.StacExtensions.projection.value)
-        collection.add_extension(stac.StacExtensions.version.value)
-        collection.add_extension(stac.StacExtensions.aerial_photo.value)
-        collection.add_extension(stac.StacExtensions.camera.value)
-        collection.add_extension(stac.StacExtensions.film.value)
-        collection.add_extension(stac.StacExtensions.scanning.value)
-        collection.add_extension(stac.StacExtensions.file.value)
-        collection.add_extension(stac.StacExtensions.eo.value)
+
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)

@@ -43,7 +43,15 @@ class MetadataValidatorStac(MetadataValidator):
         Return an error report [{schemaURI, [errors]}]
         """
         errors_report: Dict[str, list[str]] = {}
-        stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
+        if isinstance(stac_object, Collection):
+            stac_collection = stac_object.create_stac()
+            for item in stac_object.items:
+                stac_item = stac_object.items[item].create_stac()
+                stac_collection.add_item(stac_item)
+            stac_object.generate_summaries(stac_collection)
+            stac_dict = stac_collection.to_dict(include_self_link=False)
+        else:
+            stac_dict = stac_object.create_stac().to_dict(include_self_link=False)
 
         schema_uris: list[str] = [stac_object.schema] + stac_dict["stac_extensions"]
 
