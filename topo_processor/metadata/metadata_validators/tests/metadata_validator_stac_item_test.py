@@ -41,7 +41,6 @@ def test_check_validity_film_extension():
         validator.validate_metadata(item)
 
 
-
 def test_check_validity_fails_on_string_aerial_photo_extension():
     """check fails due to string in place of expected integer"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -128,7 +127,7 @@ def test_check_validity_version_extension():
     item = stac.Item("item_id")
     item.datetime = datetime.now()
     item.add_asset(asset)
-    item.add_extension(stac.StacExtensions.version.value)
+    item.add_extension(stac.StacExtensions.version.value, add_to_collection=False)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
@@ -144,7 +143,7 @@ def test_check_validity_processing_extension():
     item.datetime = datetime.now()
     item.add_asset(asset)
     item.properties.update({"processing:software": {"Topo Processor": "0.1.0"}})
-    item.add_extension(stac.StacExtensions.processing.value)
+    item.add_extension(stac.StacExtensions.processing.value, add_to_collection=False)
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     validate_report.add_errors(validator.validate_metadata_with_report(item))
