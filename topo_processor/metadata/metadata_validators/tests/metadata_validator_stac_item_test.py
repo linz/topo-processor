@@ -9,38 +9,6 @@ from topo_processor.metadata.metadata_validators.metadata_validator_stac import 
 from topo_processor.stac.validate_report import ValidateReport
 
 
-def test_check_validity_camera_extension():
-    """check fails due to string"""
-    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
-    asset = stac.Asset(source_path)
-    item = stac.Item("item_id")
-    item.datetime = datetime.now()
-    item.add_asset(asset)
-    item.properties.update({"camera:nominal_focal_length": "string"})
-    item.properties.update({"camera:sequence_number": 1234})
-    item.add_extension(stac.StacExtensions.camera.value)
-    validator = MetadataValidatorStac()
-    assert validator.is_applicable(item)
-    with pytest.raises(STACValidationError):
-        validator.validate_metadata(item)
-
-
-def test_check_validity_film_extension():
-    """check fails due to string"""
-    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
-    asset = stac.Asset(source_path)
-    item = stac.Item("item_id")
-    item.datetime = datetime.now()
-    item.add_asset(asset)
-    item.properties.update({"film:id": "1234"})
-    item.properties.update({"film:negative_sequence": "string"})
-    item.add_extension(stac.StacExtensions.film.value)
-    validator = MetadataValidatorStac()
-    assert validator.is_applicable(item)
-    with pytest.raises(STACValidationError):
-        validator.validate_metadata(item)
-
-
 def test_check_validity_fails_on_string_aerial_photo_extension():
     """check fails due to string in place of expected integer"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -78,6 +46,38 @@ def test_check_validity_fails_on_required_field_aerial_photo_extension():
         validator.validate_metadata(item)
 
 
+def test_check_validity_camera_extension():
+    """check fails due to string"""
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = stac.Asset(source_path)
+    item = stac.Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"camera:nominal_focal_length": "string"})
+    item.properties.update({"camera:sequence_number": 1234})
+    item.add_extension(stac.StacExtensions.camera.value)
+    validator = MetadataValidatorStac()
+    assert validator.is_applicable(item)
+    with pytest.raises(STACValidationError):
+        validator.validate_metadata(item)
+
+
+def test_check_validity_film_extension():
+    """check fails due to string"""
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = stac.Asset(source_path)
+    item = stac.Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"film:id": "1234"})
+    item.properties.update({"film:negative_sequence": "string"})
+    item.add_extension(stac.StacExtensions.film.value)
+    validator = MetadataValidatorStac()
+    assert validator.is_applicable(item)
+    with pytest.raises(STACValidationError):
+        validator.validate_metadata(item)
+
+
 def test_check_validity_scanning_extension():
     """check fails due date string format"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -94,7 +94,6 @@ def test_check_validity_scanning_extension():
         validator.validate_metadata(item)
 
 
-@pytest.mark.skip(reason="failing test")
 def test_validate_metadata_with_report_item():
     """check that the method return a report of the errors for an item validation"""
     validate_report: ValidateReport = ValidateReport()
