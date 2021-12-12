@@ -59,7 +59,11 @@ def transfer_collection(collection: Collection, target: str):
         json_item = stac_item.to_dict(include_self_link=False)
         write_json(json_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
 
+    # after all items have been processed generate summaries
+    collection.generate_summaries(stac_collection)
+
     # pystac v1.1.0
     # Required to not add a self link with an 'absolute' link from the cwd
     json_collection = stac_collection.to_dict(include_self_link=False)
+
     write_json(json_collection, os.path.join(target, collection.title, "collection.json"))

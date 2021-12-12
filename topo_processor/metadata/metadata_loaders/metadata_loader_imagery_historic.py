@@ -78,7 +78,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
-        collection.add_extension(stac.StacExtensions.historical_imagery.value)
         collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(

@@ -48,8 +48,10 @@ class Item(Validity):
         self.assets.append(asset)
         asset.item = self
 
-    def add_extension(self, ext: str):
+    def add_extension(self, ext: str, add_to_collection: bool = True):
         self.stac_extensions.add(ext)
+        if add_to_collection:
+            self.collection.add_extension(ext)
 
     def create_stac(self) -> pystac.Item:
         geometry = None
