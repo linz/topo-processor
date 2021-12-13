@@ -45,6 +45,7 @@ class DataTransformerImageryHistoric(DataTransformer):
             cog_asset.key_name = asset.key_name
             cog_asset.target = asset.target
             cog_asset.properties = asset.properties
+            cog_asset.set_output_asset_dates(output_path)
             cog_asset_list.append(cog_asset)
 
         for asset in cog_asset_list:

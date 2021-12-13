@@ -1,6 +1,10 @@
 import pytest
 
-from topo_processor.util import nzt_datetime_to_utc_datetime, quarterdate_to_date_string
+from topo_processor.util import (
+    historical_imagery_photo_type_to_linz_geospatial_type,
+    nzt_datetime_to_utc_datetime,
+    quarterdate_to_date_string,
+)
 
 
 def test_nzt_datetime_to_utc_datetime_daylight_saving_on():
@@ -21,3 +25,13 @@ def test_quarter_date_to_utc_correct_format():
 def test_quarter_date_to_utc_incorrect_format():
     returned_string = quarterdate_to_date_string("nzam_pilot")
     assert returned_string == "nzam_pilot"
+
+
+def test_historical_imagery_photo_type_to_linz_geospatial_type_empty_string():
+    returned_string = historical_imagery_photo_type_to_linz_geospatial_type("")
+    assert returned_string == ""
+
+
+def test_historical_imagery_photo_type_to_linz_geospatial_type_whitespace_case():
+    returned_string = historical_imagery_photo_type_to_linz_geospatial_type(" B&w IR    ")
+    assert returned_string == "black and white infrared image"

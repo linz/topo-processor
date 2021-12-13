@@ -4,6 +4,7 @@ import pytest
 import shapely.wkt
 
 from topo_processor.stac import Collection, Item
+from topo_processor.stac.asset import Asset
 
 
 def test_duplicate_item():
@@ -82,3 +83,72 @@ def test_get_temporal_extent():
     collection.add_item(item_d)
 
     assert collection.get_temporal_extent() == [datetime_earliest, datetime_latest]
+
+
+def test_get_linz_asset_summaries():
+    collection = Collection("fake_title")
+    item = Item("item_id")
+    collection.add_item(item)
+
+    cog_1 = Asset("testa")
+    cog_1.properties["created"] = "1999-01-01T00:00:00Z"
+    cog_1.properties["updated"] = "1999-01-01T00:00:00Z"
+    item.add_asset(cog_1)
+
+    cog_2 = Asset("testb")
+    cog_2.properties["created"] = "2010-01-01T00:00:00Z"
+    cog_2.properties["updated"] = "2010-03-01T00:00:00Z"
+    item.add_asset(cog_2)
+
+    assert collection.get_linz_asset_summaries() == {
+        "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
+        "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
+    }
+
+
+def test_single_geospatial_types():
+    """Single photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = "color image"
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = "color image"
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "color image"
+
+
+def test_multiple_geospatial_types():
+    """Multiple photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = "black and white image"
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = "black and white infrared image"
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "invalid geospatial type"
+
+
+def test_empty_geospatial_types():
+    """Empty photo_type"""
+
+    collection = Collection("fake_collection")
+
+    item_a = Item("id_0")
+    item_a.linz_geospatial_type = ""
+    collection.add_item(item_a)
+
+    item_b = Item("id_1")
+    item_b.linz_geospatial_type = ""
+    collection.add_item(item_b)
+
+    assert collection.get_linz_geospatial_type() == "invalid geospatial type"
