@@ -90,7 +90,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "version": "1",
             }
         )
-        # FIXME: tidy adding extensions and only add Collection level extensions once for a Collection
 
         collection.add_extension(stac.StacExtensions.quality.value)
 
