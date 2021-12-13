@@ -130,6 +130,7 @@ def test_check_validity_version_extension():
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")
     item.datetime = datetime.now()
+    item.properties.pop("version")
     item.add_asset(asset)
     item.add_extension(stac.StacExtensions.version.value, add_to_collection=False)
     validator = MetadataValidatorStac()
