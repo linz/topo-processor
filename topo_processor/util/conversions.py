@@ -69,7 +69,7 @@ def quarterdate_to_date_string(value: str) -> str:
     return value
 
 
-def h_i_photo_type_to_linz_geospatial_type(photo_type: str) -> str:
+def historical_imagery_photo_type_to_linz_geospatial_type(photo_type: str) -> str:
     """Find value in dict and return linz_geospatial_type,
     else return the original value string.
     """

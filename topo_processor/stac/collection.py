@@ -141,6 +141,7 @@ class Collection(Validity):
         interval_updated = get_min_max_interval(dates_updated)
 
         # to pass metadata-only validation as there are no assets to populate mandatory linz:asset_summaries
+        # TODO: review this workaround once validation command has been combined into upload command
         if not assets_checked:
             return {
                 "created": {"minimum": "0000-01-01T00:00:00Z", "maximum": "0000-01-01T00:00:00Z"},
