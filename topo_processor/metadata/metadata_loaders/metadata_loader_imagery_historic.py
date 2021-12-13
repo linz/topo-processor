@@ -14,9 +14,11 @@ from topo_processor import stac
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.store import get_collection, get_item
 from topo_processor.util import (
+    historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
     remove_empty_strings,
@@ -78,6 +80,17 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         collection.license = "CC-BY-4.0"
         collection.description = "Historical Imagery"
+        collection.extra_fields.update(
+            {
+                "linz:lifecycle": "completed",
+                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
+            }
+        )
+
+        collection.add_extension(stac.StacExtensions.quality.value)
+
+        collection.add_linz_provider(LinzProviders.LTTW.value)
+        collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
 
         item.properties.update(
@@ -85,10 +98,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "mission": title,
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
-                "linz:photo_type": metadata_row["photo_type"],  # to be replaced by Linz:geospatial_type
             }
         )
 
+        self.add_linz_geospatial_type(item, metadata_row["photo_type"])
         self.add_centroid(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
@@ -100,6 +113,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_bands_extent(item, asset)
 
         item.add_extension(stac.StacExtensions.historical_imagery.value)
+        item.add_extension(stac.StacExtensions.linz.value)
+        item.add_extension(stac.StacExtensions.version.value)
+        item.add_extension(stac.StacExtensions.processing.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -255,3 +271,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             )
             return False
         return True
+
+    def add_linz_geospatial_type(self, item: Item, photo_type) -> None:
+
+        item.linz_geospatial_type = historical_imagery_photo_type_to_linz_geospatial_type(photo_type)

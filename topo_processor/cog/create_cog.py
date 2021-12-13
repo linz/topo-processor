@@ -21,5 +21,11 @@ def create_cog(input_path: str, output_path: str, compression_method: str) -> st
     cmd.arg("-co", f"COMPRESS={compression_method}")
     cmd.arg("-co", "NUM_THREADS=ALL_CPUS")
     cmd.arg("-co", "PREDICTOR=2")
+    cmd.arg("-co", f"OVERVIEW_COMPRESS={compression_method}")
+    cmd.arg("-co", "BIGTIFF=YES")
+    cmd.arg("-co", "OVERVIEW_RESAMPLING=LANCZOS")
+    cmd.arg("-co", "BLOCKSIZE=512")
+    cmd.arg("-co", "QUALITY=90")
+    cmd.arg("-co", "SPARSE_OK=TRUE")
     cmd.arg(output_path)
     return cmd
