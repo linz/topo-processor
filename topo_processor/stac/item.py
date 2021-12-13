@@ -28,7 +28,12 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.datetime = None
-        self.properties = {}
+        self.properties = {
+                # TODO: [TDE-237] to generate release versioning
+                "processing:software": {"Topo Processor": "0.1.0"},
+                # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
+                "version": "1",
+        }
         self.stac_extensions = set([StacExtensions.file.value])
         self.collection = None
         self.geometry_poly = None

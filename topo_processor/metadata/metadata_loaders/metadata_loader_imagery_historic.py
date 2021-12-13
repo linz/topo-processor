@@ -84,10 +84,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:lifecycle": "completed",
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
-                # TODO: [TDE-237] to generate release versioning
-                "processing:software": {"Topo Processor": "0.1.0"},
-                # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
-                "version": "1",
             }
         )
 
@@ -102,8 +98,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 "mission": title,
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
-                "processing:software": {"Topo Processor": "0.1.0"},
-                "version": "1",
             }
         )
 
