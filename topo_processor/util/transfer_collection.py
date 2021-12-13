@@ -8,7 +8,6 @@ from pystac.catalog import CatalogType
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
-from topo_processor.stac.asset_key import AssetKey
 
 if TYPE_CHECKING:
     from topo_processor.stac import Collection

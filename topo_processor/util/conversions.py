@@ -67,3 +67,21 @@ def quarterdate_to_date_string(value: str) -> str:
         return date_string_utc
 
     return value
+
+
+def historical_imagery_photo_type_to_linz_geospatial_type(photo_type: str) -> str:
+    """Find value in dict and return linz_geospatial_type,
+    else return the original value string.
+    """
+    geospatial_type_conversion_table = {
+        "B&W": "black and white image",
+        "B&W IR": "black and white infrared image",
+        "COLOUR": "color image",
+        "COLOUR IR": "color infrared image",
+    }
+
+    lgs_value = geospatial_type_conversion_table.get(photo_type.strip().upper())
+    if lgs_value:
+        return lgs_value
+    else:
+        return photo_type
