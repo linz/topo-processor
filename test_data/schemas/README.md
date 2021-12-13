@@ -2,7 +2,8 @@
 # Notes for Developers
 
 You can put local schemas here for testing against. See the example tests in:
-topo_processor/metadata/metadata_validators/tests/metadata_validator_stac_test.py
+`topo_processor/metadata/metadata_validators/tests/metadata_validator_stac_test.py`
+
 For LINZ STAC extensions you will need to alter the stac_extensions stanza, e.g. change
 
 
