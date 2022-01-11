@@ -27,5 +27,6 @@ def create_cog(input_path: str, output_path: str, compression_method: str, overv
     cmd.arg("-co", "BLOCKSIZE=512")
     cmd.arg("-co", "OVERVIEW_QUALITY=90")
     cmd.arg("-co", "SPARSE_OK=TRUE")
+    cmd.arg("-co", "GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR")
     cmd.arg(output_path)
     return cmd
