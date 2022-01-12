@@ -31,7 +31,5 @@ def test_cog_command():
         "OVERVIEW_QUALITY=90",
         "-co",
         "SPARSE_OK=TRUE",
-        "-co",
-        "GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR",
         "fake_input_dir/fake_output.tiff",
     ]
