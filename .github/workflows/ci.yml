@@ -30,3 +30,6 @@ jobs:
       - name: Test
         run: |
           poetry run pytest --slow --cov topo_processor
+      - name: Mypy
+        run: |
+          poetry run mypy .
