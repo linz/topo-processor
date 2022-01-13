@@ -2,9 +2,9 @@ import json
 from typing import Dict
 
 import boto3
-from configuration import aws_profile, aws_role_config_path
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
+from topo_processor.util.configuration import aws_profile, aws_role_config_path
 
 
 class Credentials:
