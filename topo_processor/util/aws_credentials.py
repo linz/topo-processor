@@ -3,6 +3,7 @@ import os
 from typing import Dict
 
 import boto3
+from linz_logger import get_log
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
 from topo_processor.util.configuration import aws_role_config_path
@@ -19,7 +20,12 @@ class Credentials:
         self.token = token
 
 
-session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
+aws_profile: str = ""
+if os.getenv("AWS_PROFILE"):
+    aws_profile = os.getenv("AWS_PROFILE")
+else:
+    get_log().warning("Environment variable not set", envVariableName="AWS_PROFILE")
+session: boto3.Session = boto3.Session(profile_name=aws_profile)
 client: boto3.client = session.client("sts")
 bucket_roles: Dict = {}
 

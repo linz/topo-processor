@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import pystac
 import ulid
@@ -34,7 +34,7 @@ class Collection(Validity):
     description: str
     license: str
     items: Dict[str, "Item"]
-    linz_providers: List[LinzProvider]
+    linz_providers: List[Dict[str, Any]]
     providers: List[pystac.Provider]
     schema: str
     extra_fields: Dict[str, Any]
@@ -96,7 +96,7 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
-    def get_temporal_extent(self) -> List[datetime]:
+    def get_temporal_extent(self) -> List[Optional[datetime]]:
         dates: List[datetime] = []
 
         for item in self.items.values():
