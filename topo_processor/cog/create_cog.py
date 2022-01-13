@@ -12,8 +12,9 @@ def create_cog(input_path: str, output_path: str, compression_method: str, overv
         cmd.env(f"AWS_ACCESS_KEY_ID={credentials.access_key}")
         cmd.env(f"AWS_SECRET_ACCESS_KEY={credentials.secret_key}")
         cmd.env(f"AWS_SESSION_TOKEN={credentials.token}")
-        cmd.env("GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR")
         input_path = f"/vsis3/{input_path.replace('s3://', '')}"
+
+    cmd.env("GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR")
 
     cmd.mount(input_path)
     cmd.mount(os.path.dirname(output_path))
