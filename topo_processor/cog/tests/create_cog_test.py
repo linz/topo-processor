@@ -7,7 +7,7 @@ def test_cog_command():
     input_path = "fake_input_dir/fake_input.tiff"
     output_path = "fake_input_dir/fake_output.tiff"
 
-    cmd = create_cog(input_path, output_path, "LZW")
+    cmd = create_cog(input_path, output_path)
     assert cmd.to_full_command() == [
         "gdal_translate",
         "fake_input_dir/fake_input.tiff",
@@ -20,7 +20,7 @@ def test_cog_command():
         "-co",
         "PREDICTOR=2",
         "-co",
-        "OVERVIEW_COMPRESS=LZW",
+        "OVERVIEW_COMPRESS=JPEG",
         "-co",
         "BIGTIFF=YES",
         "-co",
@@ -28,7 +28,7 @@ def test_cog_command():
         "-co",
         "BLOCKSIZE=512",
         "-co",
-        "QUALITY=90",
+        "OVERVIEW_QUALITY=90",
         "-co",
         "SPARSE_OK=TRUE",
         "fake_input_dir/fake_output.tiff",
