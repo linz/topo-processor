@@ -7,7 +7,7 @@ def test_cog_command():
     input_path = "fake_input_dir/fake_input.tiff"
     output_path = "fake_input_dir/fake_output.tiff"
 
-    cmd = create_cog(input_path, output_path, "LZW", "JPEG")
+    cmd = create_cog(input_path, output_path)
     assert cmd.to_full_command() == [
         "gdal_translate",
         "fake_input_dir/fake_input.tiff",
