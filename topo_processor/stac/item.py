@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, List, Set
 
 import shapely.geometry
@@ -16,7 +17,7 @@ class Item(Validity):
     id: str
     geometry_poly: shapely.geometry.Polygon
     linz_geospatial_type: str
-    datetime: datetime.datetime
+    datetime: datetime
     properties: Dict[str, Any]
     stac_extensions: Set[str]
     collection: Collection
