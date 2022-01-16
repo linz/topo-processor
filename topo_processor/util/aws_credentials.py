@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict
+from typing import Any, Dict
 
 import boto3
 
@@ -21,7 +21,7 @@ class Credentials:
 
 session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
 client: boto3.client = session.client("sts")
-bucket_roles: Dict = {}
+bucket_roles: Dict[str, Any] = {}
 
 
 def get_credentials(bucket_name: str) -> Credentials:

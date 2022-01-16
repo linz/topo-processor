@@ -1,6 +1,6 @@
 from mimetypes import MimeTypes
 from os import path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
 import pystac
 
@@ -19,7 +19,7 @@ class Asset(Validity):
     content_type: str
     needs_upload = bool
     href: str
-    properties: dict
+    properties: Dict[str, str]
     item: "Item"
     key_name: AssetKey
 
