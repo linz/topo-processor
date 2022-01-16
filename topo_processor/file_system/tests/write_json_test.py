@@ -8,7 +8,7 @@ from topo_processor.file_system.write_json import write_json
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -19,7 +19,7 @@ def setup():
     shutil.rmtree(target)
 
 
-def test_write_json(setup):
+def test_write_json(setup) -> None: # type: ignore
     my_dict = {"foo": "foo", "bar": 1}
     target = setup + "/test.json"
     write_json(my_dict, target)

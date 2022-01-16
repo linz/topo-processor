@@ -13,7 +13,7 @@ from topo_processor.util.transfer_collection import transfer_collection
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -24,7 +24,7 @@ def setup():
     shutil.rmtree(target)
 
 
-def test_fail_on_duplicate_assets(setup):
+def test_fail_on_duplicate_assets(setup) -> None: # type: ignore
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"
@@ -49,7 +49,7 @@ def test_fail_on_duplicate_assets(setup):
         transfer_collection(item.collection, target)
 
 
-def test_asset_key_not_in_list(setup):
+def test_asset_key_not_in_list(setup) -> None: # type: ignore
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"
@@ -69,7 +69,7 @@ def test_asset_key_not_in_list(setup):
         transfer_collection(item.collection, target)
 
 
-def test_generate_summaries(setup):
+def test_generate_summaries(setup) -> None: # type: ignore
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"

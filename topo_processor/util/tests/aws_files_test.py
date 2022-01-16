@@ -7,7 +7,7 @@ from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_d
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -21,5 +21,5 @@ def setup():
 # Add test with AWS mock
 
 
-def test_build_s3_path():
+def test_build_s3_path() -> None:
     assert build_s3_path("test-bucket", "/test-folder/object.ext") == "s3://test-bucket/test-folder/object.ext"

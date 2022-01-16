@@ -9,7 +9,7 @@ from topo_processor.util.gzip import is_gzip_file
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -20,7 +20,7 @@ def setup():
     shutil.rmtree(target)
 
 
-def test_is_gzip_file_true(setup):
+def test_is_gzip_file_true(setup) -> None: # type: ignore
     compressed_file = os.path.abspath(os.path.join(setup, "file.gz"))
     cf = gzip.open(compressed_file, "wb")
     cf.write("test".encode("utf-8"))
@@ -29,7 +29,7 @@ def test_is_gzip_file_true(setup):
     assert is_gzip_file(compressed_file) == True
 
 
-def test_is_gzip_file_false(setup):
+def test_is_gzip_file_false(setup) -> None: # type: ignore
     file = os.path.abspath(os.path.join(setup, "file.txt"))
     cf = open(file, "wb")
     cf.write("test".encode("utf-8"))

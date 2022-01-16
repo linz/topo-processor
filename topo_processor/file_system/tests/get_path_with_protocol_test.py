@@ -4,7 +4,7 @@ from s3fs import S3FileSystem
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
 
 
-def test_get_path_with_protocol_aws():
+def test_get_path_with_protocol_aws() -> None:
     source_dir_with_forwardslash = "s3://bucketname/folder/"
     path = "bucketname/folder/subfolder/subfolder2"
     fs = S3FileSystem()
@@ -15,7 +15,7 @@ def test_get_path_with_protocol_aws():
     assert full_path == "s3://bucketname/folder/subfolder/subfolder2"
 
 
-def test_get_path_with_protocol_local():
+def test_get_path_with_protocol_local() -> None:
     source_dir_with_forwardslash = "/home/username/dev/topo-processor/test_data/tiffs/"
     path = "/home/username/dev/topo-processor/test_data/tiffs/SURVEY_1"
     fs = LocalFileSystem(auto_mkdir="True")

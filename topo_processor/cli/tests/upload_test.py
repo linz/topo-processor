@@ -10,7 +10,7 @@ import topo_processor.stac as stac
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -22,7 +22,7 @@ def setup():
 
 
 @pytest.mark.slow
-def test_upload_local(setup):
+def test_upload_local(setup) -> None: # type: ignore
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")
