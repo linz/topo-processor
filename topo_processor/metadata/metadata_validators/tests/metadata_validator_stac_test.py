@@ -171,7 +171,7 @@ def test_validate_metadata_with_report_collection() -> None:
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection(mocker) -> None: # type: ignore
+def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
     """check that the linz collection schema validates"""
     validate_report: ValidateReport = ValidateReport()
     collection = stac.Collection("title_col")
@@ -207,7 +207,7 @@ def test_validate_metadata_linz_collection(mocker) -> None: # type: ignore
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None: # type: ignore
+def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None:  # type: ignore
     """check that the linz collection schema gives error missing linz fields"""
     validate_report: ValidateReport = ValidateReport()
     collection = stac.Collection("title_col")

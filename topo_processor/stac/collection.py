@@ -65,7 +65,7 @@ class Collection(Validity):
         self.providers = [Providers.TTW.value]
         self.summaries = Summaries.empty()
 
-    def add_item(self, item: Item):
+    def add_item(self, item: Item) -> None:
         if item.collection is not None and item.collection != self:
             raise Exception(f"Remapping of collection? existing='{item.collection.title}' new='{self.title}' item='{item.id}'")
         if item.id in self.items:
@@ -75,18 +75,18 @@ class Collection(Validity):
             return
         self.items[item.id] = item
 
-    def add_extension(self, ext: str):
+    def add_extension(self, ext: str) -> None:
         self.stac_extensions.add(ext)
 
-    def add_provider(self, provider: pystac.Provider):
+    def add_provider(self, provider: pystac.Provider) -> None:
         if provider not in self.providers:
             self.providers.append(provider)
 
-    def add_linz_provider(self, linz_provider: LinzProvider):
+    def add_linz_provider(self, linz_provider: LinzProvider) -> None:
         if linz_provider.to_dict() not in self.linz_providers:
             self.linz_providers.append(linz_provider.to_dict())
 
-    def get_temp_dir(self):
+    def get_temp_dir(self) -> str:
         global TEMP_DIR
         if not TEMP_DIR:
             TEMP_DIR = mkdtemp()
@@ -153,14 +153,14 @@ class Collection(Validity):
             "updated": {"minimum": interval_updated[0], "maximum": interval_updated[1]},
         }
 
-    def delete_temp_dir(self):
+    def delete_temp_dir(self) -> None:
         global TEMP_DIR
         if TEMP_DIR:
             if os.path.exists(TEMP_DIR):
                 rmtree(TEMP_DIR)
                 TEMP_DIR = None
 
-    def generate_summaries(self, collection: pystac.Collection):
+    def generate_summaries(self, collection: pystac.Collection) -> None:
         summarizer = Summarizer(fields=FIELDS_JSON_URL)
         collection.summaries = summarizer.summarize(collection)
 

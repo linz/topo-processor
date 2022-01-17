@@ -19,7 +19,7 @@ def setup() -> None:
     shutil.rmtree(target)
 
 
-def test_write_json(setup) -> None: # type: ignore
+def test_write_json(setup) -> None:  # type: ignore
     my_dict = {"foo": "foo", "bar": 1}
     target = setup + "/test.json"
     write_json(my_dict, target)

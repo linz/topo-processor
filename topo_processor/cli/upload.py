@@ -35,7 +35,7 @@ from topo_processor.util.transfer_collection import transfer_collection
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source, datatype, target, verbose):
+def main(source, datatype, target, verbose) -> None:
     if verbose:
         set_level(LogLevel.trace)
 

@@ -20,7 +20,7 @@ def setup() -> None:
     shutil.rmtree(target)
 
 
-def test_transfer_local(setup) -> None: # type: ignore
+def test_transfer_local(setup) -> None:  # type: ignore
     dest_path = f"{setup}/test.tiff"
     input_path = os.path.join(os.getcwd(), "test_data/tiffs/SURVEY_1/CONTROL.tiff")
     transfer_file(input_path, "fakechecksum", "image/tiff", dest_path)

@@ -34,7 +34,7 @@ class MetadataLoaderTiff(MetadataLoader):
                 self.add_epsg(tiff, asset)
                 self.add_bands(tiff, asset)
 
-    def add_epsg(self, tiff, asset):
+    def add_epsg(self, tiff, asset: Asset) -> None:
         if tiff.crs:
             if not tiff.crs.is_epsg_code:
                 raise Exception("The code is not a valid EPSG code.")
@@ -44,7 +44,7 @@ class MetadataLoaderTiff(MetadataLoader):
         asset.item.properties["proj:epsg"] = crs
         asset.item.add_extension(stac.StacExtensions.projection.value)
 
-    def add_bands(self, tiff, asset):
+    def add_bands(self, tiff, asset: Asset) -> None:
         asset.item.add_extension(stac.StacExtensions.eo.value)
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]

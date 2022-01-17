@@ -22,7 +22,7 @@ def setup() -> None:
 
 
 @pytest.mark.slow
-def test_upload_local(setup) -> None: # type: ignore
+def test_upload_local(setup) -> None:  # type: ignore
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")
