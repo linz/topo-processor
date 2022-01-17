@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import rasterio
 from linz_logger.logger import get_log
@@ -22,7 +22,7 @@ class MetadataLoaderTiff(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         if asset is None or asset.item is None:
             return False
-        return is_tiff(asset.source_path)
+        return cast(bool, is_tiff(asset.source_path))
 
     def load_metadata(self, asset: Asset) -> None:
 

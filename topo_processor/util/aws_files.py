@@ -1,5 +1,6 @@
 import json
-from urllib.parse import urljoin, urlparse
+from typing import Any
+from urllib.parse import urlparse
 
 import boto3
 from linz_logger import get_log
@@ -38,7 +39,7 @@ def s3_download(source_path: str, dest_path: str) -> None:
     )
 
 
-def load_file_content(bucket_name: str, object_path: str) -> None:
+def load_file_content(bucket_name: str, object_path: str) -> bytes | Any:
     credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(

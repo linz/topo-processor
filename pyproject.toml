@@ -53,6 +53,7 @@ disable_error_code = [
     "operator",
     "misc",
     "assignment",
+    "type-arg",
     "import",
     "var-annotated",
     "list-item",

@@ -3,7 +3,7 @@ from tempfile import mkdtemp
 
 import pytest
 
-from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
+from topo_processor.util.aws_files import build_s3_path
 
 
 @pytest.fixture(autouse=True)
