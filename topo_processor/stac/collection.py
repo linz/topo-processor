@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pystac
 import ulid
@@ -105,7 +105,7 @@ class Collection(Validity):
 
         return get_min_max_interval(dates)
 
-    def get_bounding_boxes(self) -> List[tuple[float]]:
+    def get_bounding_boxes(self) -> List[List[float]]:
         """
         create a union of all item bounding boxes inside the collection
         """

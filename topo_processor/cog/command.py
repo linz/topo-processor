@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional, TypedDict
+from typing import List, Literal, Optional, Tuple, TypedDict
 
 from topo_processor.cog.execution import ExecutionDocker, ExecutionLocal
 
@@ -76,7 +76,7 @@ class Command:
             docker.arg(argument)
         return docker
 
-    def run(self):
+    def run(self) -> Tuple[Literal[0], str, str]:
         if self.use_docker:
             return ExecutionDocker.run(self)
         return ExecutionLocal.run(self)

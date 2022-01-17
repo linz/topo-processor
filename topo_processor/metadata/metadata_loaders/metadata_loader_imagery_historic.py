@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, Union
 
 import shapely.wkt
 from linz_logger.logger import get_log
@@ -139,10 +139,12 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.is_init = True
 
-    def get_title(self, survey: str, alternate_survey_name: str) -> str:
+    def get_title(self, survey: str, alternate_survey_name: str) -> Union[str, None]:
         if not survey or survey == "0" or survey == "":
             if alternate_survey_name and alternate_survey_name != "":
                 return alternate_survey_name
+            else:
+                return None
         else:
             return survey
 
