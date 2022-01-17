@@ -1,5 +1,5 @@
 import subprocess
-from typing import TYPE_CHECKING, Literal, Tuple
+from typing import TYPE_CHECKING, Tuple
 
 from linz_logger import get_log
 

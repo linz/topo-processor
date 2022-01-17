@@ -1,5 +1,5 @@
 import os
-from typing import List, Literal, Optional, Tuple, TypedDict
+from typing import List, Optional, Tuple, TypedDict
 
 from topo_processor.cog.execution import ExecutionDocker, ExecutionLocal
 

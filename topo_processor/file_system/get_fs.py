@@ -3,8 +3,6 @@ from typing import Any
 from fsspec.implementations.local import LocalFileSystem
 from s3fs import S3FileSystem
 
-from topo_processor import file_system
-
 
 def is_s3_path(path: str) -> bool:
     if path.startswith("s3://"):

@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict, Union
+from typing import Dict, List, Union
 
 from dateutil import parser, tz
 
@@ -24,7 +24,7 @@ def remove_empty_strings(properties: Dict) -> Dict:
     return {key: value for key, value in properties.items() if value != ""}
 
 
-def string_to_boolean(value: str, true_values: list, false_values: list) -> Union[bool, str]:
+def string_to_boolean(value: str, true_values: List[str], false_values: List[str]) -> Union[bool, str]:
     """Find value in lists and return boolean,
     else returns the original value string.
     """
