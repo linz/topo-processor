@@ -64,7 +64,6 @@ disable_error_code = [
     "return-value",
     "valid-type",
     "func-returns-value",
-    "union-attr",
     "arg-type",
 ]
 
