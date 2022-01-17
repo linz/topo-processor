@@ -13,7 +13,7 @@ class ExecutionLocal:
     cmd: "Command"
 
     @staticmethod
-    def run(cmd: "Command") -> Tuple[Literal[0], str, str]:
+    def run(cmd: "Command") -> Tuple[int, str, str]:
         start_time = time_in_ms()
 
         proc = subprocess.run(cmd.to_full_command(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -28,5 +28,5 @@ class ExecutionDocker:
     cmd: "Command"
 
     @staticmethod
-    def run(cmd: "Command") -> Tuple[Literal[0], str, str]:
+    def run(cmd: "Command") -> Tuple[int, str, str]:
         return ExecutionLocal.run(cmd.to_docker())

@@ -76,7 +76,7 @@ class Command:
             docker.arg(argument)
         return docker
 
-    def run(self) -> Tuple[Literal[0], str, str]:
+    def run(self) -> Tuple[int, str, str]:
         if self.use_docker:
             return ExecutionDocker.run(self)
         return ExecutionLocal.run(self)
