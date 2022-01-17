@@ -1,7 +1,3 @@
-from getopt import error
-from sqlite3 import Error
-
-
 class Validity:
     def __init__(self) -> None:
         self.log = []
