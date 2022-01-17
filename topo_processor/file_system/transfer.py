@@ -1,6 +1,6 @@
 from linz_logger import get_log
 
-from topo_processor.util import time_in_ms
+from topo_processor.util.time import time_in_ms
 
 from .get_fs import get_fs
 

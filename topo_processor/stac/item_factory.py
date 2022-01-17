@@ -6,7 +6,7 @@ from topo_processor.file_system.get_path_with_protocol import get_path_with_prot
 from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac.store import get_asset, item_store
-from topo_processor.util import time_in_ms
+from topo_processor.util.time import time_in_ms
 
 
 def process_directory(source_dir: str) -> None:

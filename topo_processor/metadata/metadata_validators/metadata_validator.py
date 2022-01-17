@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Item
+    from topo_processor.stac.item import Item
 
 
 class MetadataValidator(ABC):

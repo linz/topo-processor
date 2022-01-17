@@ -1,6 +1,6 @@
 import pytest
 
-from topo_processor.util import (
+from topo_processor.util.conversions import (
     historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,

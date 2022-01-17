@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from topo_processor.stac import Asset
+from topo_processor.stac.asset import Asset
 
 
 def test_asset():

@@ -3,8 +3,9 @@ from datetime import datetime
 import pytest
 import shapely.wkt
 
-from topo_processor.stac import Collection, Item
 from topo_processor.stac.asset import Asset
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.item import Item
 
 
 def test_duplicate_item():

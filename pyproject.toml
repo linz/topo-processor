@@ -47,7 +47,6 @@ profile = "black"
 show_error_codes = true
 strict = true
 disable_error_code = [
-    "attr-defined",
     "no-untyped-def",
     "no-untyped-call",
     "no-any-return",

@@ -10,7 +10,7 @@ from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Collection
+    from topo_processor.stac.collection import Collection
 
 
 def transfer_collection(collection: Collection, target: str):

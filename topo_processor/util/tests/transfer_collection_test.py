@@ -7,8 +7,10 @@ from tempfile import mkdtemp
 import pytest
 
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
-from topo_processor.stac import Asset, Collection, Item
+from topo_processor.stac.asset import Asset
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.item import Item
 from topo_processor.util.transfer_collection import transfer_collection
 
 

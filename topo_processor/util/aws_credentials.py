@@ -2,7 +2,8 @@ import json
 import os
 from typing import Dict
 
-import boto3
+from boto3 import client
+from boto3.session import Session
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
 from topo_processor.util.configuration import aws_role_config_path
@@ -19,8 +20,8 @@ class Credentials:
         self.token = token
 
 
-session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
-client: boto3.client = session.client("sts")
+session: Session = Session(profile_name=os.getenv("AWS_PROFILE"))
+client_sts: client = session.client("sts")
 bucket_roles: Dict = {}
 
 
@@ -29,7 +30,7 @@ def get_credentials(bucket_name: str) -> Credentials:
         load_roles(json.load(open(aws_role_config_path)))
     if bucket_name in bucket_roles:
         if not "credentials" in bucket_roles[bucket_name]:
-            assumed_role_object = client.assume_role(
+            assumed_role_object = client_sts.assume_role(
                 RoleArn=bucket_roles[bucket_name]["roleArn"], RoleSessionName="TopoProcessor"
             )
             bucket_roles[bucket_name]["credentials"] = Credentials(

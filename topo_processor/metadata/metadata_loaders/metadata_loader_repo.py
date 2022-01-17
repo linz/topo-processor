@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING, List
 
 from linz_logger import get_log
 
-from topo_processor.util import time_in_ms
+from topo_processor.util.time import time_in_ms
 
 from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Asset
+    from topo_processor.stac.asset import Asset
 
 
 class MetadataLoaderRepository:

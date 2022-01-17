@@ -8,7 +8,7 @@ from linz_logger import get_log
 from .metadata_validator import MetadataValidator
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Item
+    from topo_processor.stac.item import Item
 
 
 class MetadataValidatorImageryHistoric(MetadataValidator):

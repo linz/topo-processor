@@ -3,7 +3,8 @@ import os
 import pytest
 
 from topo_processor.metadata.metadata_validators.metadata_validator_tiff import MetadataValidatorTiff
-from topo_processor.stac import Asset, Item
+from topo_processor.stac.asset import Asset
+from topo_processor.stac.item import Item
 
 
 def test_check_validity():

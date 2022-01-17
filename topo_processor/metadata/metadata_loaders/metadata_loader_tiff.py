@@ -3,17 +3,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import rasterio
-from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
-from topo_processor import stac
 from topo_processor.file_system.get_fs import get_fs
-from topo_processor.util import is_tiff
+from topo_processor.stac.stac_extensions import StacExtensions
+from topo_processor.util.tiff import is_tiff
 
 from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Asset
+    from topo_processor.stac.asset import Asset
 
 
 class MetadataLoaderTiff(MetadataLoader):
@@ -42,10 +41,10 @@ class MetadataLoaderTiff(MetadataLoader):
         else:
             crs = None
         asset.item.properties["proj:epsg"] = crs
-        asset.item.add_extension(stac.StacExtensions.projection.value)
+        asset.item.add_extension(StacExtensions.projection.value)
 
     def add_bands(self, tiff, asset):
-        asset.item.add_extension(stac.StacExtensions.eo.value)
+        asset.item.add_extension(StacExtensions.eo.value)
         if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
         elif all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):

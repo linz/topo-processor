@@ -9,15 +9,12 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
-import topo_processor.stac.lds_cache as lds_cache
-from topo_processor import stac
-from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import (
+from topo_processor.util.conversions import (
     historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
@@ -30,7 +27,8 @@ from topo_processor.util.tiff import is_tiff
 from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Asset, Item
+    from topo_processor.stac.asset import Asset
+    from topo_processor.stac.item import Item
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
@@ -87,7 +85,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             }
         )
 
-        collection.add_extension(stac.StacExtensions.quality.value)
+        collection.add_extension(StacExtensions.quality.value)
 
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
@@ -112,10 +110,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_projection_extent(item)
         self.add_bands_extent(item, asset)
 
-        item.add_extension(stac.StacExtensions.historical_imagery.value)
-        item.add_extension(stac.StacExtensions.linz.value)
-        item.add_extension(stac.StacExtensions.version.value)
-        item.add_extension(stac.StacExtensions.processing.value)
+        item.add_extension(StacExtensions.historical_imagery.value)
+        item.add_extension(StacExtensions.linz.value)
+        item.add_extension(StacExtensions.version.value)
+        item.add_extension(StacExtensions.processing.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -168,7 +166,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
 
         item.properties.update(remove_empty_strings(camera_properties))
-        item.add_extension(stac.StacExtensions.camera.value)
+        item.add_extension(StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         film_properties = {}
@@ -179,7 +177,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         film_properties["film:physical_size"] = asset_metadata["format"]
 
         item.properties.update(remove_empty_strings(film_properties))
-        item.add_extension(stac.StacExtensions.film.value)
+        item.add_extension(StacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         aerial_photo_properties = {}
@@ -206,7 +204,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             aerial_photo_properties["aerial-photo:scale"] = scale
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
-        item.add_extension(stac.StacExtensions.aerial_photo.value)
+        item.add_extension(StacExtensions.aerial_photo.value)
 
     def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
         scanning_properties = {}
@@ -217,7 +215,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             scanning_properties["scan:scanned"] = quarterdate_to_date_string(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
-        item.add_extension(stac.StacExtensions.scanning.value)
+        item.add_extension(StacExtensions.scanning.value)
 
     def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
         item_date = asset_metadata.get("date", None)
@@ -238,14 +236,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         }
         if self.is_valid_centroid(item, centroid):
             item.properties["proj:centroid"] = centroid
-            item.add_extension(stac.StacExtensions.projection.value)
+            item.add_extension(StacExtensions.projection.value)
 
     def add_projection_extent(self, item: Item):
         item.properties["proj:epsg"] = None
-        item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+        item.add_extension(StacExtensions.projection.value)
 
     def add_bands_extent(self, item: Item, asset: Asset):
-        item.add_extension(stac.StacExtensions.eo.value)
+        item.add_extension(StacExtensions.eo.value)
 
         if asset:
             # default value
