@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Union
 from urllib.parse import urlparse
 
 import boto3
@@ -39,7 +39,7 @@ def s3_download(source_path: str, dest_path: str) -> None:
     )
 
 
-def load_file_content(bucket_name: str, object_path: str) -> bytes | Any:
+def load_file_content(bucket_name: str, object_path: str) -> Union[bytes, Any]:
     credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(
