@@ -105,7 +105,7 @@ class Collection(Validity):
 
         return get_min_max_interval(dates)
 
-    def get_bounding_boxes(self):
+    def get_bounding_boxes(self) -> List[tuple[float]]:
         """
         create a union of all item bounding boxes inside the collection
         """

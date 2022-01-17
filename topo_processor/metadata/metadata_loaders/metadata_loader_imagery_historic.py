@@ -61,7 +61,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
 
-    def populate_item(self, metadata_row, asset: Asset = None) -> None:
+    def populate_item(self, metadata_row: Dict[str, str], asset: Asset = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
         if not title:
             get_log().warning(
@@ -251,7 +251,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             # default value
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
 
-    def is_valid_centroid(self, item: Item, centroid) -> bool:
+    def is_valid_centroid(self, item: Item, centroid: Dict[str, float]) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
             item.add_warning(
                 msg="Skipped Record",

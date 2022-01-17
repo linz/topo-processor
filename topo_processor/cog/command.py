@@ -12,7 +12,7 @@ class CommandDocker(TypedDict):
 class Command:
     use_docker: bool
 
-    def __init__(self, command: str, docker_ref: CommandDocker = None):
+    def __init__(self, command: str, docker_ref: CommandDocker = None) -> None:
         self.command = command
         self.arguments = []
         self.volumes = []
@@ -76,7 +76,7 @@ class Command:
             docker.arg(argument)
         return docker
 
-    def run(self):  # ignore: type
+    def run(self):
         if self.use_docker:
             return ExecutionDocker.run(self)
         return ExecutionLocal.run(self)
