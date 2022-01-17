@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, Union
 
 import shapely.wkt
 from linz_logger.logger import get_log
@@ -61,7 +61,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
 
-    def populate_item(self, metadata_row, asset: Asset = None) -> None:
+    def populate_item(self, metadata_row: Dict[str, str], asset: Asset = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
         if not title:
             get_log().warning(
@@ -139,14 +139,16 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         self.is_init = True
 
-    def get_title(self, survey: str, alternate_survey_name: str):
+    def get_title(self, survey: str, alternate_survey_name: str) -> Union[str, None]:
         if not survey or survey == "0" or survey == "":
             if alternate_survey_name and alternate_survey_name != "":
                 return alternate_survey_name
+            else:
+                return None
         else:
             return survey
 
-    def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         wkt = asset_metadata.get("WKT", None)
         if wkt is None or wkt.lower() == "polygon empty":
             item.add_warning("Geometry is missing", "")
@@ -161,7 +163,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         except shapely.errors.WKTReadingError as e:
             item.add_error("Geometry is invalid", "", e)
 
-    def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         camera_properties = {}
 
         camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
@@ -170,7 +172,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(remove_empty_strings(camera_properties))
         item.add_extension(stac.StacExtensions.camera.value)
 
-    def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         film_properties = {}
 
         film_properties["film:id"] = asset_metadata["film"]
@@ -181,7 +183,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(remove_empty_strings(film_properties))
         item.add_extension(stac.StacExtensions.film.value)
 
-    def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         aerial_photo_properties = {}
         aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
         aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
@@ -208,7 +210,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(remove_empty_strings(aerial_photo_properties))
         item.add_extension(stac.StacExtensions.aerial_photo.value)
 
-    def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         scanning_properties = {}
 
         if asset_metadata["source"]:
@@ -219,7 +221,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties.update(remove_empty_strings(scanning_properties))
         item.add_extension(stac.StacExtensions.scanning.value)
 
-    def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         item_date = asset_metadata.get("date", None)
 
         if item_date:
@@ -230,7 +232,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         else:
             item.add_error(msg="No date found", cause=self.name, e=Exception(f"item date has no value"))
 
-    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]):
+    def add_centroid(self, item: Item, asset_metadata: Dict[str, str]) -> None:
 
         centroid = {
             "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
@@ -240,18 +242,18 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.properties["proj:centroid"] = centroid
             item.add_extension(stac.StacExtensions.projection.value)
 
-    def add_projection_extent(self, item: Item):
+    def add_projection_extent(self, item: Item) -> None:
         item.properties["proj:epsg"] = None
         item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
 
-    def add_bands_extent(self, item: Item, asset: Asset):
+    def add_bands_extent(self, item: Item, asset: Asset) -> None:
         item.add_extension(stac.StacExtensions.eo.value)
 
         if asset:
             # default value
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
 
-    def is_valid_centroid(self, item: Item, centroid) -> bool:
+    def is_valid_centroid(self, item: Item, centroid: Dict[str, float]) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
             item.add_warning(
                 msg="Skipped Record",
@@ -272,6 +274,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
         return True
 
-    def add_linz_geospatial_type(self, item: Item, photo_type) -> None:
+    def add_linz_geospatial_type(self, item: Item, photo_type: str) -> None:
 
         item.linz_geospatial_type = historical_imagery_photo_type_to_linz_geospatial_type(photo_type)

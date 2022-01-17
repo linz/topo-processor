@@ -4,7 +4,7 @@ from topo_processor import stac
 from topo_processor.metadata.metadata_loaders.metadata_loader_tiff import MetadataLoaderTiff
 
 
-def test_load_metadata():
+def test_load_metadata() -> None:
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
     item = stac.Item("item_id")

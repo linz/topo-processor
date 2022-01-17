@@ -5,7 +5,7 @@ from topo_processor.file_system.get_fs import bucket_name_from_path, is_s3_path
 from topo_processor.util.aws_credentials import Credentials, get_credentials
 
 
-def create_cog(input_path: str, output_path: str) -> str:
+def create_cog(input_path: str, output_path: str) -> Command:
     cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
     if is_s3_path(input_path):
         credentials: Credentials = get_credentials(bucket_name_from_path(input_path))

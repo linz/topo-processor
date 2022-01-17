@@ -13,7 +13,7 @@ from topo_processor.stac.validate_report import ValidateReport
 # STAC item level tests
 
 
-def test_check_validity_camera_extension():
+def test_check_validity_camera_extension() -> None:
     """check fails due to string"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -29,7 +29,7 @@ def test_check_validity_camera_extension():
         validator.validate_metadata(item)
 
 
-def test_check_validity_film_extension():
+def test_check_validity_film_extension() -> None:
     """check fails due to string"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -45,7 +45,7 @@ def test_check_validity_film_extension():
         validator.validate_metadata(item)
 
 
-def test_check_validity_fails_on_string_aerial_photo_extension():
+def test_check_validity_fails_on_string_aerial_photo_extension() -> None:
     """check fails due to string in place of expected integer"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -64,7 +64,7 @@ def test_check_validity_fails_on_string_aerial_photo_extension():
         validator.validate_metadata(item)
 
 
-def test_check_validity_fails_on_required_field_aerial_photo_extension():
+def test_check_validity_fails_on_required_field_aerial_photo_extension() -> None:
     """check fails due to missing required field"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -82,7 +82,7 @@ def test_check_validity_fails_on_required_field_aerial_photo_extension():
         validator.validate_metadata(item)
 
 
-def test_check_validity_scanning_extension():
+def test_check_validity_scanning_extension() -> None:
     """check fails due date string format"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -98,7 +98,7 @@ def test_check_validity_scanning_extension():
         validator.validate_metadata(item)
 
 
-def test_validate_metadata_with_report_item():
+def test_validate_metadata_with_report_item() -> None:
     """check that the method return a report of the errors for an item validation"""
     validate_report: ValidateReport = ValidateReport()
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -124,7 +124,7 @@ def test_validate_metadata_with_report_item():
     )
 
 
-def test_check_validity_version_extension():
+def test_check_validity_version_extension() -> None:
     """check fails due to missing version"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = stac.Asset(source_path)
@@ -139,7 +139,7 @@ def test_check_validity_version_extension():
         validator.validate_metadata(item)
 
 
-def test_check_validity_processing_extension():
+def test_check_validity_processing_extension() -> None:
     """check validates item processing:software"""
     validate_report: ValidateReport = ValidateReport()
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -158,7 +158,7 @@ def test_check_validity_processing_extension():
 # STAC collection level tests
 
 
-def test_validate_metadata_with_report_collection():
+def test_validate_metadata_with_report_collection() -> None:
     """check that the method return a report of the errors for a collection validation"""
     validate_report: ValidateReport = ValidateReport()
     collection = stac.Collection("title_col")
@@ -171,7 +171,7 @@ def test_validate_metadata_with_report_collection():
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection(mocker):
+def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
     """check that the linz collection schema validates"""
     validate_report: ValidateReport = ValidateReport()
     collection = stac.Collection("title_col")
@@ -207,7 +207,7 @@ def test_validate_metadata_linz_collection(mocker):
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection_missing_linz_fields(mocker):
+def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None:  # type: ignore
     """check that the linz collection schema gives error missing linz fields"""
     validate_report: ValidateReport = ValidateReport()
     collection = stac.Collection("title_col")
@@ -250,7 +250,7 @@ def test_validate_metadata_linz_collection_missing_linz_fields(mocker):
 
 
 @pytest.mark.skip(reason="use this test for local schema testing - multiple errors in report")
-def test_validate_metadata_with_report_item_local():
+def test_validate_metadata_with_report_item_local() -> None:
     source = "file://" + os.getcwd() + "/test_data" + "/schemas"
     validate_report: ValidateReport = ValidateReport()
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
@@ -277,7 +277,7 @@ def test_validate_metadata_with_report_item_local():
 
 
 @pytest.mark.skip(reason="use this test for local schema testing - film item")
-def test_check_validity_local_film_extension():
+def test_check_validity_local_film_extension() -> None:
     source = "file://" + os.getcwd() + "/test_data" + "/schemas"
     validate_report: ValidateReport = ValidateReport()
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")

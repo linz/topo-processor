@@ -34,7 +34,7 @@ from topo_processor.util.configuration import temp_folder
     is_flag=True,
     help="Use verbose to display trace logs (it might be slower).",
 )
-def main(item, collection, metadata, verbose):
+def main(item: str, collection: str, metadata: str, verbose: str) -> None:
     if verbose:
         set_level(LogLevel.trace)
     else:
