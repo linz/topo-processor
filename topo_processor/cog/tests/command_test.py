@@ -3,7 +3,7 @@ import pytest
 from topo_processor.cog.command import Command
 
 
-def test_hello_world_local():
+def test_hello_world_local() -> None:
     cmd = Command("echo")
     cmd.arg("Hello World Local!!!")
     return_code, stdout, stderr = cmd.run()
@@ -12,7 +12,7 @@ def test_hello_world_local():
     assert return_code == 0
 
 
-def test_hello_world_docker(mocker):
+def test_hello_world_docker(mocker) -> None:  # type: ignore
     cmd = Command("/bin/echo", {"container": "busybox", "tag": "latest"})
     cmd.arg("Hello World Docker!!!")
     mocker.patch("topo_processor.cog.execution.ExecutionLocal.run", return_value=[0, "Hello World Docker!!!\n", ""])

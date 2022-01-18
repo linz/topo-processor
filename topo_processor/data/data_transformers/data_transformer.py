@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class DataTransformer(ABC):
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> None:
         str
 
     @abstractmethod
@@ -18,5 +18,5 @@ class DataTransformer(ABC):
         pass
 
     @abstractmethod
-    def transform_data(self, item: Item):
+    def transform_data(self, item: Item) -> None:
         pass

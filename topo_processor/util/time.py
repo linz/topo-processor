@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List
 
 
-def time_in_ms():
+def time_in_ms() -> float:
     return time.time() * 1000
 
 

@@ -9,7 +9,7 @@ from topo_processor.file_system.transfer import transfer_file
 
 
 @pytest.fixture(autouse=True)
-def setup():
+def setup() -> None:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:
@@ -20,7 +20,7 @@ def setup():
     shutil.rmtree(target)
 
 
-def test_transfer_local(setup):
+def test_transfer_local(setup) -> None:  # type: ignore
     dest_path = f"{setup}/test.tiff"
     input_path = os.path.join(os.getcwd(), "test_data/tiffs/SURVEY_1/CONTROL.tiff")
     transfer_file(input_path, "fakechecksum", "image/tiff", dest_path)
