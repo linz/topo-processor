@@ -1,7 +1,6 @@
 from mimetypes import MimeTypes
 from os import path
-from typing import TYPE_CHECKING, Any, Dict, Union
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 import pystac
 
