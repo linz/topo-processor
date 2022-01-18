@@ -19,7 +19,7 @@ class Asset(Validity):
     content_type: str
     needs_upload = bool
     href: str
-    properties: Dict[str, Any]
+    properties: Dict[str, str]
     item: "Item"
     key_name: AssetKey
 
@@ -41,9 +41,10 @@ class Asset(Validity):
             return self.content_type
         return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
 
-    def get_checksum(self) -> Any:
+    def get_checksum(self) -> str:
         if "file:checksum" not in self.properties:
-            self.properties["file:checksum"] = multihash_as_hex(self.source_path)
+            checksum: str = multihash_as_hex(self.source_path)
+            self.properties["file:checksum"] = checksum
         return self.properties["file:checksum"]
 
     def set_output_asset_dates(self, output_path: str) -> None:
