@@ -61,7 +61,6 @@ disable_error_code = [
     "override",
     "comparison-overlap",
     "name-defined",
-    "return-value",
     "valid-type",
     "func-returns-value",
     "arg-type",
