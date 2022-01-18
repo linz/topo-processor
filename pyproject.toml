@@ -17,7 +17,7 @@ pystac = "^1.2.0"
 jsonschema = "^4.4.0"
 jsonschema-rs = "^0.13.1"
 Shapely = "^1.8.0"
-requests = "^2.26.0"
+requests = "^2.27.1"
 aiohttp = "^3.8.1"
 python-dotenv = "^0.19.2"
 
