@@ -1,5 +1,6 @@
-from datetime import datetime
+import datetime as dt
 from typing import Any, Dict, List, Set
+from typing import List, Optional
 
 import shapely.geometry
 from pystac import pystac
@@ -15,19 +16,18 @@ from .stac_extensions import StacExtensions
 class Item(Validity):
 
     id: str
-    geometry_poly: shapely.geometry.Polygon
-    linz_geospatial_type: str
-    datetime: datetime
+    geometry_poly: Optional[shapely.geometry.Polygon] = None
+    linz_geospatial_type: str = ""
+    datetime: Optional[dt.datetime] = None
     properties: Dict[str, Any]
     stac_extensions: Set[str]
-    collection: Collection
     assets: List[Asset]
-    schema: str
+    collection: Optional[Collection] = None
+    schema: Optional[str]
 
     def __init__(self, item_id: str):
         super().__init__()
         self.id = item_id
-        self.datetime = None
         self.properties = {
             # TODO: [TDE-237] to generate release versioning
             "processing:software": {"Topo Processor": "0.1.0"},
@@ -35,9 +35,6 @@ class Item(Validity):
             "version": "1",
         }
         self.stac_extensions = set([StacExtensions.file.value])
-        self.collection = None
-        self.geometry_poly = None
-        self.linz_geospatial_type = ""
         self.assets = []
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.ITEM, pystac.get_stac_version())
 
@@ -57,6 +54,8 @@ class Item(Validity):
 
     def add_extension(self, ext: str, add_to_collection: bool = True) -> None:
         self.stac_extensions.add(ext)
+        if not self.collection:
+            return
         if add_to_collection:
             self.collection.add_extension(ext)
 

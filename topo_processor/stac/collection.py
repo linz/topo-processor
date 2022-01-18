@@ -36,12 +36,12 @@ class Collection(Validity):
     items: Dict[str, "Item"]
     linz_providers: List[Dict[str, Any]]
     providers: List[pystac.Provider]
-    schema: str
+    schema: Optional[str]
     extra_fields: Dict[str, Any]
     linz_geospatial_type: str
 
     stac_extensions: Set[str]
-    summaries: Summaries
+    summaries: Summaries = Summaries.empty()
 
     def __init__(self, title: str):
         super().__init__()
@@ -50,7 +50,6 @@ class Collection(Validity):
         self.title = title
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
-        self.stac_extensions = set([])
         self.extra_fields = dict(
             {
                 "linz:security_classification": "unclassified",
@@ -63,7 +62,6 @@ class Collection(Validity):
         self.linz_providers = []
         self.stac_extensions = set([StacExtensions.file.value])
         self.providers = [Providers.TTW.value]
-        self.summaries = Summaries.empty()
 
     def add_item(self, item: Item) -> None:
         if item.collection is not None and item.collection != self:
