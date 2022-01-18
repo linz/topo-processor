@@ -1,5 +1,4 @@
 import json
-from typing import Any, Union
 from urllib.parse import urlparse
 
 import boto3
@@ -39,7 +38,7 @@ def s3_download(source_path: str, dest_path: str) -> None:
     )
 
 
-def load_file_content(bucket_name: str, object_path: str) -> Union[bytes, Any]:
+def load_file_content(bucket_name: str, object_path: str) -> bytes:
     credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(
@@ -52,9 +51,11 @@ def load_file_content(bucket_name: str, object_path: str) -> Union[bytes, Any]:
     object_content = s3.Object(bucket_name=bucket_name, key=object_path)
 
     if object_path.endswith(".json"):
-        return json.loads(object_content.get()["Body"].read())
+        json_result: bytes = json.loads(object_content.get()["Body"].read())
+        return json_result
 
-    return object_content.get()["Body"].read()
+    result: bytes = object_content.get()["Body"].read()
+    return result
 
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:
