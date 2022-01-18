@@ -6,7 +6,7 @@ authors = ["Blayne Chard <bchard@linz.govt.nz>", "Paul Fouquet <pfouquet@linz.go
 
 [tool.poetry.dependencies]
 python = "^3.8"
-linz-logger= "^0.5.0"
+linz-logger= "^0.6.0"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.10"
 click = "^8.0.3"
@@ -14,7 +14,7 @@ boto3 = "^1.20.22"
 python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2021.11.1"}
 pystac = "^1.2.0"
-jsonschema = "^4.2.1"
+jsonschema = "^4.4.0"
 jsonschema-rs = "^0.13.1"
 Shapely = "^1.8.0"
 requests = "^2.26.0"
@@ -48,7 +48,6 @@ show_error_codes = true
 strict = true
 disable_error_code = [
     "attr-defined",
-    "no-untyped-def",
     "no-untyped-call",
     "operator",
     "misc",
@@ -61,10 +60,8 @@ disable_error_code = [
     "override",
     "comparison-overlap",
     "name-defined",
-    "return-value",
     "valid-type",
     "func-returns-value",
-    "union-attr",
     "arg-type",
 ]
 

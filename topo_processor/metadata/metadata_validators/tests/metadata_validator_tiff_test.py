@@ -6,7 +6,7 @@ from topo_processor.metadata.metadata_validators.metadata_validator_tiff import 
 from topo_processor.stac import Asset, Item
 
 
-def test_check_validity():
+def test_check_validity() -> None:
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")
