@@ -689,7 +689,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "linz-logger"
-version = "0.5.0"
+version = "0.6.0"
 description = "LINZ standard Logging format"
 category = "main"
 optional = false
@@ -1525,8 +1525,8 @@ lazy-object-proxy = [
     {file = "lazy_object_proxy-1.7.1-pp37.pp38-none-any.whl", hash = "sha256:d66906d5785da8e0be7360912e99c9188b70f52c422f9fc18223347235691a84"},
 ]
 linz-logger = [
-    {file = "linz_logger-0.5.0-py3-none-any.whl", hash = "sha256:c3d84a4df3c901608782f09950d55cce3c67842ec16082761d21a6440d4c483c"},
-    {file = "linz_logger-0.5.0.tar.gz", hash = "sha256:972ac08c652938fc305c8adec3e9244c671fcae055b545b14fcf17b83bc261bf"},
+    {file = "linz_logger-0.6.0-py3-none-any.whl", hash = "sha256:b15e59399af1e289d59e39f68ab6f9d5abcc5b648146ff6abd52aefaad3154f2"},
+    {file = "linz_logger-0.6.0.tar.gz", hash = "sha256:70460df866f33ba997d4f38ebcfcae6cb1cfff6f52d15b0cbe3f8dfece3ca27c"},
 ]
 mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},

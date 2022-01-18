@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class MetadataValidator(ABC):
     @property
     @abstractmethod
-    def name(self):
+    def name(self) -> None:
         str
 
     @abstractmethod
@@ -18,5 +18,5 @@ class MetadataValidator(ABC):
         pass
 
     @abstractmethod
-    def validate_metadata(self, item: Item):
+    def validate_metadata(self, item: Item) -> None:
         pass

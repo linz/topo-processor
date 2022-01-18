@@ -43,7 +43,7 @@ class Item(Validity):
         self.assets = []
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(STACObjectType.ITEM, get_stac_version())
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         if not super().is_valid():
             return False
         for asset in self.assets:
@@ -51,13 +51,13 @@ class Item(Validity):
                 return False
         return True
 
-    def add_asset(self, asset: Asset):
+    def add_asset(self, asset: Asset) -> None:
         if asset.item:
             raise Exception(f"Asset is already associated with an item: existing item='{asset.item.id}' new item='{self.id}'")
         self.assets.append(asset)
         asset.item = self
 
-    def add_extension(self, ext: str, add_to_collection: bool = True):
+    def add_extension(self, ext: str, add_to_collection: bool = True) -> None:
         self.stac_extensions.add(ext)
         if add_to_collection:
             self.collection.add_extension(ext)

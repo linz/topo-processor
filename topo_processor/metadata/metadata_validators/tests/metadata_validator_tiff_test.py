@@ -7,7 +7,7 @@ from topo_processor.stac.asset import Asset
 from topo_processor.stac.item import Item
 
 
-def test_check_validity():
+def test_check_validity() -> None:
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")

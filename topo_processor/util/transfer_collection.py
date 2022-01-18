@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from topo_processor.stac.collection import Collection
 
 
-def transfer_collection(collection: Collection, target: str):
+def transfer_collection(collection: Collection, target: str) -> None:
     stac_collection = collection.create_stac()
     # pystac v1.1.0
     # Required to remove cwd from collection self_href,

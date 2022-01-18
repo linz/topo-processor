@@ -5,7 +5,7 @@ from topo_processor.util.time import time_in_ms
 from .get_fs import get_fs
 
 
-def transfer_file(source_file: str, checksum: str, content_type, target_file: str):
+def transfer_file(source_file: str, checksum: str, content_type: str, target_file: str) -> None:
     start_time = time_in_ms()
     with get_fs(source_file).open(source_file, "rb") as f1:
         data = f1.read()

@@ -5,6 +5,7 @@ from topo_processor.file_system.get_fs import get_fs
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
 from topo_processor.metadata.metadata_loaders import metadata_loader_repo
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
+from topo_processor.stac.item import Item
 from topo_processor.stac.store import get_asset, item_store
 from topo_processor.util.time import time_in_ms
 
@@ -33,7 +34,7 @@ def _create_items() -> None:
         _process_item(item)
 
 
-def _process_item(item) -> None:
+def _process_item(item: Item) -> None:
     if item.is_valid():
         metadata_validator_repo.validate_metadata(item)
     if item.is_valid():

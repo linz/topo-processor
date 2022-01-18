@@ -5,7 +5,7 @@ class ValidateReport:
     total: int
     report_per_error_type: Dict[str, Dict[str, int]]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.total = 0
         self.report_per_error_type = {}
 

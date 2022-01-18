@@ -5,21 +5,21 @@ from topo_processor.stac.item import Item
 from topo_processor.stac.stac_extensions import StacExtensions
 
 
-def test_is_applicable():
+def test_is_applicable() -> None:
     source_path = "test_abc.tiff"
     asset = Asset(source_path)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert metadata_loader_imagery_historic.is_applicable(asset)
 
 
-def test_is_applicable_his():
+def test_is_applicable_his() -> None:
     source_path = "test_abc.tiff.his"
     asset = Asset(source_path)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert metadata_loader_imagery_historic.is_applicable(asset) is False
 
 
-def test_item_not_found_in_csv():
+def test_item_not_found_in_csv() -> None:
     source_path = "test_abc.tiff"
     asset = Asset(source_path)
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
@@ -33,7 +33,7 @@ def test_item_not_found_in_csv():
     assert error_msg in asset.log
 
 
-def test_camera_extension_added_if_empty_metadata():
+def test_camera_extension_added_if_empty_metadata() -> None:
     """Tests camera extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -44,7 +44,7 @@ def test_camera_extension_added_if_empty_metadata():
     assert StacExtensions.camera.value in item.stac_extensions
 
 
-def test_camera_metadata_added():
+def test_camera_metadata_added() -> None:
     """Tests camera metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -57,7 +57,7 @@ def test_camera_metadata_added():
     assert "camera:sequence_number" not in item.properties.keys()
 
 
-def test_film_extension_added_if_empty_metadata():
+def test_film_extension_added_if_empty_metadata() -> None:
     """Tests film extension is still added even if metadata is empty"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -68,7 +68,7 @@ def test_film_extension_added_if_empty_metadata():
     assert StacExtensions.film.value in item.stac_extensions
 
 
-def test_film_metadata_added():
+def test_film_metadata_added() -> None:
     """Tests film metadata is is still added if one of them is an empty string"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -83,7 +83,7 @@ def test_film_metadata_added():
     assert item.properties["film:physical_size"] == "23 cm x 23 cm"
 
 
-def test_aerial_photo_extension_added_if_empty_metadata():
+def test_aerial_photo_extension_added_if_empty_metadata() -> None:
     """Tests aerial-photo extension is still added if empty metadata"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -99,7 +99,7 @@ def test_aerial_photo_extension_added_if_empty_metadata():
     assert "aerial-photo:anomalies" not in item.properties.keys()
 
 
-def test_aerial_photo_zero_altitude_scale():
+def test_aerial_photo_zero_altitude_scale() -> None:
     """Tests aerial-photo extension added and no metadata with zero values for altitude and scale"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -112,7 +112,7 @@ def test_aerial_photo_zero_altitude_scale():
     assert "aerial-photo:scale" not in item.properties.keys()
 
 
-def test_aerial_photo_metadata_added():
+def test_aerial_photo_metadata_added() -> None:
     """Test aerial-photo metadata is added if one is an empty string"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -128,7 +128,7 @@ def test_aerial_photo_metadata_added():
     assert "aerial-photo:anomalies" not in item.properties.keys()
 
 
-def test_scanning_extension_added_if_empty_metadata():
+def test_scanning_extension_added_if_empty_metadata() -> None:
     """Tests scanning extension is still added if metadata is empty"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -139,7 +139,7 @@ def test_scanning_extension_added_if_empty_metadata():
     assert StacExtensions.scanning.value in item.stac_extensions
 
 
-def test_scanning_extension_invalid_values_date_wrong_format():
+def test_scanning_extension_invalid_values_date_wrong_format() -> None:
     """Tests scanning extension added with original strings for invalid values for source and when_scanned"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -152,7 +152,7 @@ def test_scanning_extension_invalid_values_date_wrong_format():
     assert item.properties["scan:scanned"] == "nzam_pilot"
 
 
-def test_scanning_metadata_added():
+def test_scanning_metadata_added() -> None:
     """Tests scanning metadata is added if one empty string"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -165,7 +165,7 @@ def test_scanning_metadata_added():
     assert "scan:scanned" not in item.properties.keys()
 
 
-def test_add_datetime_property():
+def test_add_datetime_property() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {"date": "1952-04-23T00:00:00.000"}
@@ -175,7 +175,7 @@ def test_add_datetime_property():
     assert item.datetime.isoformat() == "1952-04-22T12:00:00+00:00"
 
 
-def test_add_datetime_property_empty():
+def test_add_datetime_property_empty() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {"date": ""}
@@ -184,7 +184,7 @@ def test_add_datetime_property_empty():
     assert item.datetime is None
 
 
-def test_add_datetime_property_not_date():
+def test_add_datetime_property_not_date() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {"date": "toto"}
@@ -193,7 +193,7 @@ def test_add_datetime_property_not_date():
     assert item.datetime is None
 
 
-def test_spatial_metadata_empty():
+def test_spatial_metadata_empty() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {}
@@ -202,7 +202,7 @@ def test_spatial_metadata_empty():
     assert item.geometry_poly is None
 
 
-def test_spatial_metadata_polygon_empty():
+def test_spatial_metadata_polygon_empty() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {"WKT": "POLYGON EMPTY"}
@@ -213,7 +213,7 @@ def test_spatial_metadata_polygon_empty():
     assert item.log[0]["level"] == "warning"
 
 
-def test_spatial_metadata_polygon_invalid():
+def test_spatial_metadata_polygon_invalid() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {"WKT": "POLYGON POLYGON ((177.168157744315 -38.7538525409217))"}
@@ -224,7 +224,7 @@ def test_spatial_metadata_polygon_invalid():
     assert item.log[0]["level"] == "error"
 
 
-def test_spatial_metadata_polygon():
+def test_spatial_metadata_polygon() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     metadata = {
@@ -236,8 +236,9 @@ def test_spatial_metadata_polygon():
     assert item.geometry_poly.bounds == (177.16816, -38.8056, 177.23736, -38.75143)
 
 
-def test_spatial_metadata_collection_polygon():
+def test_spatial_metadata_collection_polygon() -> None:
     item = Item("test_abc.tiff")
+
     metadata = {
         "WKT": "POLYGON ((177.168157744315 -38.7538525409217,177.23423558687 -38.7514276946524,177.237358655351 -38.8031681573174,177.17123348276 -38.8055953066942,177.168157744315 -38.7538525409217))"
     }
@@ -248,7 +249,7 @@ def test_spatial_metadata_collection_polygon():
     assert item.geometry_poly.bounds == (177.16816, -38.8056, 177.23736, -38.75143)
 
 
-def test_centroid_metadata_added():
+def test_centroid_metadata_added() -> None:
     """Tests centroid metadata is added correctly"""
     source_path = "test_abc.tiff"
     item = Item(source_path)
@@ -263,7 +264,7 @@ def test_centroid_metadata_added():
     assert StacExtensions.projection.value in item.stac_extensions
 
 
-def test_invalid_centroid_lat():
+def test_invalid_centroid_lat() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     centroid = {
@@ -277,7 +278,7 @@ def test_invalid_centroid_lat():
     )
 
 
-def test_invalid_centroid_lon():
+def test_invalid_centroid_lon() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     centroid = {
@@ -289,7 +290,7 @@ def test_invalid_centroid_lon():
     assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lon value: -190.0, instance: <class 'float'>"
 
 
-def test_invalid_centroid_string():
+def test_invalid_centroid_string() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
     centroid = {"lat": "-41.28509", "lon": "174.77442"}
@@ -298,7 +299,7 @@ def test_invalid_centroid_string():
     assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lat value: -41.28509, instance: <class 'str'>"
 
 
-def test_mission_metadata_added_by_survey():
+def test_mission_metadata_added_by_survey() -> None:
     """Tests mission metadata is added by survey value"""
     metadata = {
         "survey": "12345",
@@ -309,7 +310,7 @@ def test_mission_metadata_added_by_survey():
     assert title == "12345"
 
 
-def test_mission_metadata_added_by_alternate_survey_name():
+def test_mission_metadata_added_by_alternate_survey_name() -> None:
     """Tests mission metadata is added by alternate survey value"""
     metadata = {
         "survey": "0",
@@ -320,7 +321,7 @@ def test_mission_metadata_added_by_alternate_survey_name():
     assert title == "67890"
 
 
-def test_mission_metadata_not_added():
+def test_mission_metadata_not_added() -> None:
     """Tests mission metadata is not added"""
     metadata = {
         "survey": "0",
@@ -331,7 +332,7 @@ def test_mission_metadata_not_added():
     assert title is None
 
 
-def test_provider_added():
+def test_provider_added() -> None:
     source_path = "test_abc.tiff"
     asset = Asset(source_path)
     metadata = {

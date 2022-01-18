@@ -5,7 +5,7 @@ import pytest
 from topo_processor.stac.validate_report import ValidateReport
 
 
-def test_increment_error():
+def test_increment_error() -> None:
     """"""
     error_report: ValidateReport = ValidateReport()
     error_report.increment_error("schema_a", "error_1")

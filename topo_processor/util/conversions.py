@@ -1,11 +1,11 @@
 import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Union
 
 from dateutil import parser, tz
 
 
-def string_to_number(value):
+def string_to_number(value: str) -> Union[float, int, str]:
     """If possible this function returns the int/float of the input value,
     if not it returns the string.
     """
@@ -24,7 +24,7 @@ def remove_empty_strings(properties: Dict) -> Dict:
     return {key: value for key, value in properties.items() if value != ""}
 
 
-def string_to_boolean(value, true_values, false_values):
+def string_to_boolean(value: str, true_values: List[str], false_values: List[str]) -> Union[bool, str]:
     """Find value in lists and return boolean,
     else returns the original value string.
     """

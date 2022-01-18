@@ -7,7 +7,7 @@ from topo_processor.stac.item import Item
 from topo_processor.stac.stac_extensions import StacExtensions
 
 
-def test_load_metadata():
+def test_load_metadata() -> None:
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")

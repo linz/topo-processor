@@ -6,7 +6,7 @@ authors = ["Blayne Chard <bchard@linz.govt.nz>", "Paul Fouquet <pfouquet@linz.go
 
 [tool.poetry.dependencies]
 python = "^3.8"
-linz-logger= "^0.5.0"
+linz-logger= "^0.6.0"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.10"
 click = "^8.0.3"
@@ -48,7 +48,6 @@ profile = "black"
 show_error_codes = true
 strict = true
 disable_error_code = [
-    "no-untyped-def",
     "no-untyped-call",
     "no-any-return",
     "operator",
@@ -62,10 +61,8 @@ disable_error_code = [
     "override",
     "comparison-overlap",
     "name-defined",
-    "return-value",
     "valid-type",
     "func-returns-value",
-    "union-attr",
     "arg-type",
 ]
 
