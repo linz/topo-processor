@@ -49,7 +49,6 @@ strict = true
 disable_error_code = [
     "attr-defined",
     "no-untyped-call",
-    "no-any-return",
     "operator",
     "misc",
     "assignment",
