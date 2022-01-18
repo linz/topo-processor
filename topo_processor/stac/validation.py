@@ -1,5 +1,5 @@
 import os
-from typing import List, Union
+from typing import Dict, List, Union
 
 from linz_logger import get_log
 
@@ -58,7 +58,7 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
     )
 
 
-def validate_store(store: List[Union[Item, Collection]]) -> ValidateReport:
+def validate_store(store: Union[Dict[str, Item], Dict[str, Collection]]) -> ValidateReport:
     validate_report: ValidateReport = ValidateReport()
 
     for stac_object in store.values():

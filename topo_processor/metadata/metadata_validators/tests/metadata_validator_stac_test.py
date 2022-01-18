@@ -120,7 +120,7 @@ def test_validate_metadata_with_report_item():
     validator = MetadataValidatorStac()
     assert validator.is_applicable(item)
     validate_report.add_errors(validator.validate_metadata_with_report(item))
-    assert '"string" is not of type "integer"' in validate_report.report_per_error_type[stac.StacExtensions.film.value]
+    assert '"string" is not of type "integer"' in validate_report.report_per_error_type[StacExtensions.film.value]
     assert (
         '"aerial-photo:run" is a required property' in validate_report.report_per_error_type[StacExtensions.aerial_photo.value]
     )
@@ -239,13 +239,13 @@ def test_validate_metadata_linz_collection_missing_linz_fields(mocker):
     validator = MetadataValidatorStac()
     assert validator.is_applicable(collection)
     validate_report.add_errors(validator.validate_metadata_with_report(collection))
-    assert '"linz:lifecycle" is a required property' in validate_report.report_per_error_type[stac.StacExtensions.linz.value]
-    assert '"linz:history" is a required property' in validate_report.report_per_error_type[stac.StacExtensions.linz.value]
+    assert '"linz:lifecycle" is a required property' in validate_report.report_per_error_type[StacExtensions.linz.value]
+    assert '"linz:history" is a required property' in validate_report.report_per_error_type[StacExtensions.linz.value]
     assert (
         '"linz:security_classification" is a required property'
         in validate_report.report_per_error_type[StacExtensions.linz.value]
     )
-    assert '"linz:providers" is a required property' in validate_report.report_per_error_type[stac.StacExtensions.linz.value]
+    assert '"linz:providers" is a required property' in validate_report.report_per_error_type[StacExtensions.linz.value]
 
 
 # Local schema file tests

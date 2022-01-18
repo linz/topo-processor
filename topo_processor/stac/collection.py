@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List
 
 import pystac
 import ulid
