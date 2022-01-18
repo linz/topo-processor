@@ -1,6 +1,6 @@
 from mimetypes import MimeTypes
 from os import path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 import pystac
 
@@ -36,7 +36,7 @@ class Asset(Validity):
     def file_ext(self) -> str:
         return path.splitext(self.target if self.target else self.source_path)[1]
 
-    def get_content_type(self) -> str:
+    def get_content_type(self) -> Union[str, None]:
         if self.content_type:
             return self.content_type
         return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
