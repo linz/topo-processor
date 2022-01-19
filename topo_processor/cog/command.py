@@ -12,7 +12,7 @@ class CommandDocker(TypedDict):
 class Command:
     use_docker: bool
 
-    def __init__(self, command: str, docker_ref: CommandDocker = None) -> None:
+    def __init__(self, command: str, docker_ref: Optional[CommandDocker] = None) -> None:
         self.command = command
         self.arguments = []
         self.volumes = []
