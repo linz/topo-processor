@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Dict
 from boto3 import Session
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
-from topo_processor.util.configuration import aws_role_config_path
+from topo_processor.util.configuration import aws_profile, aws_role_config_path
 
 if TYPE_CHECKING:
     from mypy_boto3_sts import STSClient
@@ -24,11 +24,9 @@ class Credentials:
         self.token = token
 
 
-
-session = Session(profile_name=os.getenv("AWS_PROFILE"))
+session = boto3.Session(profile_name=aws_profile)
 client_sts: STSClient = session.client("sts")
 bucket_roles: Dict[str, Dict[str, Credentials]] = {}
-
 
 
 def get_credentials(bucket_name: str) -> Credentials:

@@ -1,5 +1,5 @@
 from .checksum import multihash_as_hex
-from .configuration import configuration
+from .configuration import aws_profile, aws_role_config_path, lds_cache_bucket
 from .conversions import (
     historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
