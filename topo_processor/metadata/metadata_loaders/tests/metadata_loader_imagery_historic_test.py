@@ -292,7 +292,7 @@ def test_invalid_centroid_string() -> None:
     centroid = {"lat": "-41.28509", "lon": "174.77442"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     assert not metadata_loader_imagery_historic.is_valid_centroid(item, centroid)  # type: ignore [arg-type]
-    # Ignore typing above because it interfers with our test.
+    # Ignore typing above because it interferes with our test.
     assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lat value: -41.28509, instance: <class 'str'>"
 
 
