@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 
 
 class MetadataValidator(ABC):
-
     @property
     @abstractmethod
     def name(self) -> Optional[str]:
