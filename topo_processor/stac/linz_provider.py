@@ -2,9 +2,10 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from pystac import Provider
+from pystac.utils import StringEnum
 
 
-class LinzProviderRole(str, Enum):
+class LinzProviderRole(StringEnum):
     """Enumerates the allows values of the LinzProvider "role" field."""
 
     MANAGER = "manager"
@@ -13,9 +14,11 @@ class LinzProviderRole(str, Enum):
 
 class LinzProvider(Provider):
 
-    roles: Optional[List[LinzProviderRole]]
+    roles: Optional[List[LinzProviderRole]] # type:ignore
     """Optional roles of the provider. Any of manager or custodian.
-    LINZ override of pystac.ProviderRole Enum."""
+    LINZ override of pystac.ProviderRole Enum.
+    Type ignored due to: https://github.com/radiantearth/stac-spec/issues/1147
+    """
 
     def __init__(
         self,
