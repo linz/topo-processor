@@ -14,7 +14,7 @@ class LinzProviderRole(StringEnum):
 
 class LinzProvider(Provider):
 
-    roles: Optional[List[LinzProviderRole]] # type:ignore
+    roles: Optional[List[LinzProviderRole]]  # type:ignore
     """Optional roles of the provider. Any of manager or custodian.
     LINZ override of pystac.ProviderRole Enum.
     Type ignored due to: https://github.com/radiantearth/stac-spec/issues/1147
