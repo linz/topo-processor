@@ -533,7 +533,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pystac"
-version = "1.2.0"
+version = "1.3.0"
 description = "Python library for working with Spatiotemporal Asset Catalog (STAC)."
 category = "main"
 optional = false
@@ -836,7 +836,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f075267ed143ab4c6a17d833dff74376b8da01f4d9f73c87a9b73bfcb672b47b"
+content-hash = "b3b41bd0ba897bcf5822c2c9b9604bd1c78618da942d618e80d16411c8aa25e2"
 
 [metadata.files]
 affine = [
@@ -1367,8 +1367,8 @@ pyrsistent = [
     {file = "pyrsistent-0.18.0.tar.gz", hash = "sha256:773c781216f8c2900b42a7b638d5b517bb134ae1acbebe4d1e8f1f41ea60eb4b"},
 ]
 pystac = [
-    {file = "pystac-1.2.0-py3-none-any.whl", hash = "sha256:a47039e0997216d28177dfe42f74bb9297af9b0d4eb3f2aead5c27b7ee21223b"},
-    {file = "pystac-1.2.0.tar.gz", hash = "sha256:8a60be2a30e1e28f8617a88f9f8fddc00c519be494a02ec111dc8fba62bf26e7"},
+    {file = "pystac-1.3.0-py3-none-any.whl", hash = "sha256:8897e4621d631e85f926254837823a5c06eb8f88fea4e9201e985d727017ff49"},
+    {file = "pystac-1.3.0.tar.gz", hash = "sha256:b0244641ef2a29a7b7929266b0d1eda2b0a0ef826dadb1aed93404a14e6e313b"},
 ]
 pytest = [
     {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
