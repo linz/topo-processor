@@ -33,7 +33,7 @@ def get_last_version(collection: pystac.Collection) -> str:
     # Get the last link item
     href = collection.get_links()[-1].get_href()
 
-    if not href.endswith(".json"):
+    if not href or not href.endswith(".json"):
         raise Exception(f"No version found for Collection {collection.title}")
 
     item_file_name: str = os.path.basename(href)

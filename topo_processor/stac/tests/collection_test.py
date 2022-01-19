@@ -7,7 +7,7 @@ from topo_processor.stac import Collection, Item
 from topo_processor.stac.asset import Asset
 
 
-def test_duplicate_item():
+def test_duplicate_item() -> None:
     """Same Id different data"""
     item_a = Item("same_id")
     item_b = Item("same_id")
@@ -18,7 +18,7 @@ def test_duplicate_item():
         collection.add_item(item_b)
 
 
-def test_duplicate_item_two():
+def test_duplicate_item_two() -> None:
     """Identical items"""
     item_a = Item("same_id")
     item_b = Item("same_id")
@@ -28,7 +28,7 @@ def test_duplicate_item_two():
         collection.add_item(item_b)
 
 
-def test_create_stac():
+def test_create_stac() -> None:
     collection = Collection("fake_collection")
     collection.description = "fake_collection_description"
     collection.license = "fake_license"
@@ -37,12 +37,12 @@ def test_create_stac():
     assert json_collection["stac_version"] == "1.0.0"
 
 
-def test_polygon_union_empty():
+def test_polygon_union_empty() -> None:
     collection = Collection("fake_collection")
     assert collection.get_bounding_boxes() == [(0.0, 0.0, 0.0, 0.0)]
 
 
-def test_polygon_union():
+def test_polygon_union() -> None:
     collection = Collection("fake_collection")
 
     item_a = Item("id_1")
@@ -56,7 +56,7 @@ def test_polygon_union():
     assert collection.get_bounding_boxes() == [(1.0, 2.0, 7.0, 8.0)]
 
 
-def test_get_temporal_extent():
+def test_get_temporal_extent() -> None:
     collection = Collection("fake_collection")
     datetime_earliest = datetime.strptime("1918-11-11", "%Y-%m-%d")
     datetime_mid = datetime.strptime("1945-05-08", "%Y-%m-%d")
@@ -85,7 +85,7 @@ def test_get_temporal_extent():
     assert collection.get_temporal_extent() == [datetime_earliest, datetime_latest]
 
 
-def test_get_linz_asset_summaries():
+def test_get_linz_asset_summaries() -> None:
     collection = Collection("fake_title")
     item = Item("item_id")
     collection.add_item(item)
@@ -106,7 +106,7 @@ def test_get_linz_asset_summaries():
     }
 
 
-def test_single_geospatial_types():
+def test_single_geospatial_types() -> None:
     """Single photo_type"""
 
     collection = Collection("fake_collection")
@@ -122,7 +122,7 @@ def test_single_geospatial_types():
     assert collection.get_linz_geospatial_type() == "color image"
 
 
-def test_multiple_geospatial_types():
+def test_multiple_geospatial_types() -> None:
     """Multiple photo_type"""
 
     collection = Collection("fake_collection")
@@ -138,7 +138,7 @@ def test_multiple_geospatial_types():
     assert collection.get_linz_geospatial_type() == "invalid geospatial type"
 
 
-def test_empty_geospatial_types():
+def test_empty_geospatial_types() -> None:
     """Empty photo_type"""
 
     collection = Collection("fake_collection")

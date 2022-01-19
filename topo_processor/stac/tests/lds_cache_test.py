@@ -7,7 +7,7 @@ from pystac.collection import Extent, SpatialExtent, TemporalExtent
 import topo_processor.stac.lds_cache as lds_cache
 
 
-def test_get_last_version():
+def test_get_last_version() -> None:
     extent = Extent(SpatialExtent([0.0]), TemporalExtent([datetime.now(), None]))
     collection: pystac.Collection = pystac.Collection(id="1234", description="fake", extent=extent)
     link_a: pystac.Link = pystac.Link(rel=pystac.RelType.SELF, target="./collection.json")
@@ -19,5 +19,5 @@ def test_get_last_version():
     assert lds_cache.get_last_version(collection) == "100001"
 
 
-def test_get_metadata_file_path():
+def test_get_metadata_file_path() -> None:
     assert lds_cache.get_metadata_file_name("12345", "123456") == "12345_123456.csv"

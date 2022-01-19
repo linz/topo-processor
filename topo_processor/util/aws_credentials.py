@@ -20,7 +20,7 @@ class Credentials:
 
 session = boto3.Session(profile_name=aws_profile)
 client: boto3.client = session.client("sts")
-bucket_roles: Dict = {}
+bucket_roles: Dict[str, Dict[str, Credentials]] = {}
 
 
 def get_credentials(bucket_name: str) -> Credentials:

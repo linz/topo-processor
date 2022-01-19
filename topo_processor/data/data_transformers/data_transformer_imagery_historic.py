@@ -34,7 +34,7 @@ class DataTransformerImageryHistoric(DataTransformer):
             start_time = time_in_ms()
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
-            create_cog(asset.source_path, output_path, compression_method="lzw").run()
+            create_cog(asset.source_path, output_path).run()
 
             get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 

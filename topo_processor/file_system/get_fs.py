@@ -1,3 +1,5 @@
+from typing import Any
+
 from fsspec.implementations.local import LocalFileSystem
 from s3fs import S3FileSystem
 
@@ -13,7 +15,7 @@ def bucket_name_from_path(path: str) -> str:
     return path_parts.pop(0)
 
 
-def get_fs(path: str):
+def get_fs(path: str) -> Any:
     if is_s3_path(path):
         return S3FileSystem()
     return LocalFileSystem(auto_mkdir="True")

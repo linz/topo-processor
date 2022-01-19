@@ -1,10 +1,12 @@
+from typing import Dict
+
 from .asset import Asset
 from .collection import Collection
 from .item import Item
 
-collection_store = {}
-item_store = {}
-asset_store = {}
+collection_store: Dict[str, Collection] = {}
+item_store: Dict[str, Item] = {}
+asset_store: Dict[str, Asset] = {}
 
 
 def get_collection(title: str) -> Collection:
