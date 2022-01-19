@@ -1,6 +1,6 @@
 from mimetypes import MimeTypes
 from os import path
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Dict, Union
 
 import pystac
 
@@ -20,7 +20,7 @@ class Asset(Validity):
     content_type: str
     needs_upload = bool
     href: str
-    properties: dict
+    properties: Dict[str, Any]
     item: "Item"
     key_name: AssetKey
 
@@ -42,7 +42,7 @@ class Asset(Validity):
             return self.content_type
         return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
 
-    def get_checksum(self) -> str:
+    def get_checksum(self) -> Any:
         if "file:checksum" not in self.properties:
             self.properties["file:checksum"] = multihash_as_hex(self.source_path)
         return self.properties["file:checksum"]

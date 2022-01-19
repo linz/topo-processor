@@ -24,9 +24,11 @@ class Credentials:
         self.token = token
 
 
+
 session = Session(profile_name=os.getenv("AWS_PROFILE"))
 client_sts: STSClient = session.client("sts")
-bucket_roles: Dict = {}
+bucket_roles: Dict[str, Dict[str, Credentials]] = {}
+
 
 
 def get_credentials(bucket_name: str) -> Credentials:

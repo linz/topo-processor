@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
 from dateutil import parser, tz
 
@@ -36,7 +36,7 @@ def string_to_boolean(value: str, true_values: List[str], false_values: List[str
     return value
 
 
-def nzt_datetime_to_utc_datetime(date: str) -> datetime:
+def nzt_datetime_to_utc_datetime(date: str) -> Union[datetime, Any]:
     utc_tz = tz.gettz("UTC")
     nz_tz = tz.gettz("Pacific/Auckland")
 
