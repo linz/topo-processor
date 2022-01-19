@@ -126,8 +126,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         if not os.path.isfile(csv_path):
             raise Exception(f'Cannot find "{csv_path}"')
 
-        with open(csv_path, "r") as csv_path:
-            reader = csv.DictReader(csv_path, delimiter=",")
+        with open(csv_path, "r") as csv_text:
+            reader = csv.DictReader(csv_text, delimiter=",")
             for row in reader:
                 if row["raw_filename"]:
                     raw_filename = row["raw_filename"]
