@@ -19,7 +19,7 @@ class Asset(Validity):
     content_type: str
     needs_upload = bool
     href: str
-    properties: Dict[str, Any]
+    properties: Dict[str, str]
     item: "Item"
     key_name: AssetKey
 

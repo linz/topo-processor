@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict
+from typing import Any, Dict
 
 import boto3
 
