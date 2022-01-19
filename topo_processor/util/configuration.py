@@ -1,5 +1,6 @@
 from os import environ
 from tempfile import mkdtemp
+from typing import Optional
 
 from dotenv import load_dotenv
 
