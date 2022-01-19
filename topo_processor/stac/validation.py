@@ -57,7 +57,7 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
         collectionErrors=collection_report.report_per_error_type,
     )
 
-    
+
 def validate_store(store: Union[Dict[str, Item], Dict[str, Collection]]) -> ValidateReport:
     validate_report: ValidateReport = ValidateReport()
 
