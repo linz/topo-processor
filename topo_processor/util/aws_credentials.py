@@ -1,11 +1,10 @@
 import json
-import os
-from typing import Any, Dict
+from typing import Dict
 
 import boto3
 
 from topo_processor.file_system.get_fs import bucket_name_from_path
-from topo_processor.util.configuration import aws_role_config_path
+from topo_processor.util.configuration import aws_profile, aws_role_config_path
 
 
 class Credentials:
@@ -19,7 +18,7 @@ class Credentials:
         self.token = token
 
 
-session = boto3.Session(profile_name=os.getenv("AWS_PROFILE"))
+session = boto3.Session(profile_name=aws_profile)
 client: boto3.client = session.client("sts")
 bucket_roles: Dict[str, Dict[str, Credentials]] = {}
 
