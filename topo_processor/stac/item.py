@@ -1,5 +1,5 @@
-import datetime
-from typing import List
+from datetime import datetime
+from typing import Any, Dict, List, Set
 
 import shapely.geometry
 from pystac import pystac
@@ -17,9 +17,9 @@ class Item(Validity):
     id: str
     geometry_poly: shapely.geometry.Polygon
     linz_geospatial_type: str
-    datetime: datetime.datetime
-    properties: dict
-    stac_extensions: set
+    datetime: datetime
+    properties: Dict[str, Any]
+    stac_extensions: Set[str]
     collection: Collection
     assets: List[Asset]
     schema: str

@@ -1,10 +1,10 @@
-import os
+from os import environ, path
 from tempfile import mkdtemp
 
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 
-configuration = dotenv_values(".env")
-
-lds_cache_bucket: str = configuration["LDS_CACHE_BUCKET"]
-aws_role_config_path = os.path.expanduser(configuration["AWS_ROLES_CONFIG"])
+load_dotenv()
+lds_cache_bucket: str = environ.get("LDS_CACHE_BUCKET")
+aws_role_config_path: str = path.expanduser(environ.get("AWS_ROLES_CONFIG"))
+aws_profile: str = environ.get("AWS_PROFILE")
 temp_folder: str = mkdtemp()

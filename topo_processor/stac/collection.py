@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime
+from datetime import date, datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 
 import pystac
 import ulid
@@ -34,13 +34,13 @@ class Collection(Validity):
     description: str
     license: str
     items: Dict[str, "Item"]
-    linz_providers: List[LinzProvider]
+    linz_providers: List[Dict[str, Any]]
     providers: List[pystac.Provider]
     schema: str
     extra_fields: Dict[str, Any]
     linz_geospatial_type: str
 
-    stac_extensions: set
+    stac_extensions: Set[str]
     summaries: Summaries
 
     def __init__(self, title: str):
@@ -96,7 +96,7 @@ class Collection(Validity):
             os.mkdir(temp_dir)
         return temp_dir
 
-    def get_temporal_extent(self) -> List[datetime]:
+    def get_temporal_extent(self) -> List[Optional[datetime]]:
         dates: List[datetime] = []
 
         for item in self.items.values():
@@ -124,7 +124,7 @@ class Collection(Validity):
         geospatial_type_str = geospatial_type_set.pop()
         return geospatial_type_str
 
-    def get_linz_asset_summaries(self) -> Dict:
+    def get_linz_asset_summaries(self) -> Dict[str, Any]:
         assets_checked: List[Asset] = []
         dates_created: List[datetime] = []
         dates_updated: List[datetime] = []
