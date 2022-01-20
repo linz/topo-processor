@@ -56,7 +56,6 @@ disable_error_code = [
     "var-annotated",
     "list-item",
     "type-var",
-    "override",
     "comparison-overlap",
     "name-defined",
     "valid-type",
