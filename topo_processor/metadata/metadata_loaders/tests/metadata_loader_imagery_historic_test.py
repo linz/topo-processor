@@ -363,6 +363,7 @@ def test_provider_added() -> None:
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.populate_item(metadata, asset)
     collection = asset.item.collection.create_stac()
+    assert collection.providers
     assert len(collection.providers) == 2
     if collection.providers and len(collection.providers) > 0:
         LINZ_provider = collection.providers[0]
