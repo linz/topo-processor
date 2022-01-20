@@ -20,7 +20,7 @@ def string_to_number(value: str) -> Union[float, int, str]:
             return value
 
 
-def remove_empty_strings(properties: Dict[str, str]) -> Dict[str, str]:
+def remove_empty_strings(properties: Dict[str, Any]) -> Dict[str, Any]:
     return {key: value for key, value in properties.items() if value != ""}
 
 

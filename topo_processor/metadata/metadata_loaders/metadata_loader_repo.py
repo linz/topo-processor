@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Union
 
 from linz_logger import get_log
 
@@ -18,16 +18,17 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    def load_metadata(self, asset: Asset) -> None:
+    def load_metadata(self, asset: Union[Asset, None]) -> None:
         for loader in self.loaders:
             if loader.is_applicable(asset):
                 start_time = time_in_ms()
                 try:
                     loader.load_metadata(asset)
-                    if not asset.is_valid:
+                    if not asset or not asset.is_valid:
                         break
                 except Exception as e:
-                    asset.add_error(str(e), loader.name, e)
+                    if asset:
+                        asset.add_error(str(e), loader.name, e)
                     get_log().warning(f"Metadata Load Failed: {e}", loader=loader.name)
                     return
                 get_log().debug(

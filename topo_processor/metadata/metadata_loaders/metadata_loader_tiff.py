@@ -21,7 +21,7 @@ class MetadataLoaderTiff(MetadataLoader):
     def is_applicable(self, asset: Asset) -> bool:
         if asset is None or asset.item is None:
             return False
-        return cast(bool, is_tiff(asset.source_path))
+        return is_tiff(asset.source_path)
 
     def load_metadata(self, asset: Asset) -> None:
 

@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 class MetadataValidator(ABC):
     @property
     @abstractmethod
-    def name(self) -> None:
-        str
+    def name(self) -> str:
+        pass
 
     @abstractmethod
     def is_applicable(self, item: Item) -> bool:

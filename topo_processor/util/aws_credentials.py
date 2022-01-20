@@ -1,5 +1,4 @@
 import json
-import os
 from typing import TYPE_CHECKING, Any, Dict
 
 from boto3 import Session
@@ -24,25 +23,26 @@ class Credentials:
         self.token = token
 
 
-session = boto3.Session(profile_name=aws_profile)
+session = Session(profile_name=aws_profile)
 client_sts: STSClient = session.client("sts")
-bucket_roles: Dict[str, Dict[str, Credentials]] = {}
+bucket_roles: Dict[str, Dict[str, str]] = {}
+bucket_credentials: Dict[str, Credentials] = {}
 
 
 def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
         load_roles(json.load(open(aws_role_config_path)))
     if bucket_name in bucket_roles:
-        if not "credentials" in bucket_roles[bucket_name]:
-            assumed_role_object = client_sts.assume_role(  #
+        if bucket_name in bucket_credentials:
+            assumed_role_object = client_sts.assume_role(
                 RoleArn=bucket_roles[bucket_name]["roleArn"], RoleSessionName="TopoProcessor"
             )
-            bucket_roles[bucket_name]["credentials"] = Credentials(
+            bucket_credentials[bucket_name] = Credentials(
                 assumed_role_object["Credentials"]["AccessKeyId"],
                 assumed_role_object["Credentials"]["SecretAccessKey"],
                 assumed_role_object["Credentials"]["SessionToken"],
             )
-        return bucket_roles[bucket_name]["credentials"]
+        return bucket_credentials[bucket_name]
 
     session_credentials = session.get_credentials()
     default_credentials = Credentials(
