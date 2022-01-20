@@ -4,7 +4,7 @@ import os
 from datetime import date, datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
 
 import pystac
 import ulid
@@ -114,7 +114,7 @@ class Collection(Validity):
         if len(polys) == 0:
             return [[0.0, 0.0, 0.0, 0.0]]
         union_poly = unary_union(polys)
-        return [union_poly.bounds]
+        return [list(union_poly.bounds)]
 
     def get_linz_geospatial_type(self) -> str:
         geospatial_type_set = set(x.linz_geospatial_type for x in self.items.values() if x.linz_geospatial_type)
