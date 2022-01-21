@@ -55,7 +55,7 @@ def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
         json_result: Dict[str, Any] = json.loads(object_content.get()["Body"].read())
         return json_result
 
-    result: Dict[str, Any] = object_content.get()["Body"].read()
+    result: Dict[str, Any] = json.loads(object_content.get()["Body"].read().decode("utf-8"))
     return result
 
 
