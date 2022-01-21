@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, List, Optional
 
 from linz_logger import get_log
 
@@ -18,7 +18,7 @@ class MetadataLoaderRepository:
     def append(self, loader: MetadataLoader) -> None:
         self.loaders.append(loader)
 
-    def load_metadata(self, asset: Union[Asset, None]) -> None:
+    def load_metadata(self, asset: Optional[Asset] = None) -> None:
         for loader in self.loaders:
             if loader.is_applicable(asset):
                 start_time = time_in_ms()

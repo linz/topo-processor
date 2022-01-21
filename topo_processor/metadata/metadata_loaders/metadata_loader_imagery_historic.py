@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 import shapely.wkt
 from linz_logger.logger import get_log
@@ -37,10 +37,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
-    def is_applicable(self, asset: Asset) -> bool:
-        return is_tiff(asset.source_path)
+    def is_applicable(self, asset: Optional[Asset] = None) -> bool:
+        if asset:
+            return is_tiff(asset.source_path)
+        else:
+            return False
 
-    def load_metadata(self, asset: Union[Asset, None] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
+    def load_metadata(self, asset: Optional[Asset] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
 

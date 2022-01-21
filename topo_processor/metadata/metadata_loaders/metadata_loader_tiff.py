@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Optional
 
 import rasterio
 from rasterio.enums import ColorInterp
@@ -18,20 +18,20 @@ if TYPE_CHECKING:
 class MetadataLoaderTiff(MetadataLoader):
     name = "metadata.loader.imagery.tiff"
 
-    def is_applicable(self, asset: Asset) -> bool:
+    def is_applicable(self, asset: Optional[Asset] = None) -> bool:
         if asset is None or asset.item is None:
             return False
         return is_tiff(asset.source_path)
 
-    def load_metadata(self, asset: Asset = None) -> None:
-
-        fs = get_fs(asset.source_path)
-        # FIXME: Should we download the file first as we could need it to do the coggification later?
-        # This process takes quiet a long time locally.
-        with fs.open(asset.source_path) as f:
-            with rasterio.open(f) as tiff:
-                self.add_epsg(tiff, asset)
-                self.add_bands(tiff, asset)
+    def load_metadata(self, asset: Optional[Asset] = None) -> None:
+        if asset:
+            fs = get_fs(asset.source_path)
+            # FIXME: Should we download the file first as we could need it to do the coggification later?
+            # This process takes quiet a long time locally.
+            with fs.open(asset.source_path) as f:
+                with rasterio.open(f) as tiff:
+                    self.add_epsg(tiff, asset)
+                    self.add_bands(tiff, asset)
 
     def add_epsg(self, tiff: Any, asset: Asset) -> None:
         if tiff.crs:
