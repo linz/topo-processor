@@ -18,5 +18,5 @@ class MetadataLoader(ABC):
         pass
 
     @abstractmethod
-    def load_metadata(self, asset: Union[Asset, None] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
+    def load_metadata(self, asset: Union[Asset, None] = None) -> None:
         pass

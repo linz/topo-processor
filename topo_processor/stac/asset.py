@@ -42,10 +42,13 @@ class Asset(Validity):
             return self.content_type
         return MimeTypes().guess_type(self.target if self.target else self.source_path)[0]
 
-    def get_checksum(self) -> Any:
+    def get_checksum(self) -> str:
         if "file:checksum" not in self.properties:
-            self.properties["file:checksum"] = multihash_as_hex(self.source_path)
-        return self.properties["file:checksum"]
+            checksum: str = multihash_as_hex(self.source_path)
+            self.properties["file:checksum"] = checksum
+
+        return_value: str = self.properties["file:checksum"]
+        return return_value
 
     def set_output_asset_dates(self, output_path: str) -> None:
         if "created" not in self.properties:
