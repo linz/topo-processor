@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from topo_processor.stac.item import Item
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class DataTransformer(ABC):
     @property
     @abstractmethod
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         pass
 
     @abstractmethod

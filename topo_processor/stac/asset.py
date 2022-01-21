@@ -1,6 +1,6 @@
 from mimetypes import MimeTypes
 from os import path
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 import pystac
 
@@ -16,23 +16,18 @@ if TYPE_CHECKING:
 
 class Asset(Validity):
     source_path: str  # The raw file location on disk
-    target: str  # New file name used for uploading
-    content_type: str
-    needs_upload = bool
+    target: Optional[str] = None  # New file name used for uploading
+    content_type: Optional[str] = None
+    needs_upload: bool = True
     href: str
     properties: Dict[str, Any]
-    item: "Item"
-    key_name: AssetKey
+    item: Optional["Item"] = None
+    key_name: Optional[AssetKey] = None
 
     def __init__(self, source_path: str):
         super().__init__()
         self.source_path = source_path
-        self.content_type = None
-        self.target = None
-        self.needs_upload = True
         self.properties = {}
-        self.item = None
-        self.key_name = None
 
     def file_ext(self) -> str:
         return path.splitext(self.target if self.target else self.source_path)[1]

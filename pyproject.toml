@@ -51,7 +51,6 @@ disable_error_code = [
     "no-untyped-call",
     "operator",
     "misc",
-    "assignment",
     "import",
     "var-annotated",
     "comparison-overlap",

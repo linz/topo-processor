@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class MetadataLoader(ABC):
     @property
     @abstractmethod
-    def name(self) -> str:
+    def name(self) -> Optional[str]:
         pass
 
     @abstractmethod

@@ -1,5 +1,5 @@
 import gzip
-import os
+from typing import Optional
 
 from linz_logger.logger import get_log
 
@@ -11,7 +11,7 @@ def is_gzip_file(file_path: str) -> bool:
 
 
 def decompress_file(file_path: str) -> None:
-    input: gzip.GzipFile = None
+    input: Optional[gzip.GzipFile] = None
 
     try:
         input = gzip.GzipFile(file_path, "rb")
@@ -20,7 +20,8 @@ def decompress_file(file_path: str) -> None:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
     finally:
-        input.close()
+        if input:
+            input.close()
 
     output = open(file_path, "wb")
     output.write(s)
