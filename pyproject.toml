@@ -54,7 +54,6 @@ disable_error_code = [
     "assignment",
     "import",
     "var-annotated",
-    "override",
     "comparison-overlap",
     "name-defined",
     "valid-type",
