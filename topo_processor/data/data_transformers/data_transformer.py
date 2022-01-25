@@ -4,13 +4,13 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Item
+    from topo_processor.stac.item import Item
 
 
 class DataTransformer(ABC):
     @property
     @abstractmethod
-    def name(self) -> Optional[str]:
+    def name(self) -> str:
         pass
 
     @abstractmethod

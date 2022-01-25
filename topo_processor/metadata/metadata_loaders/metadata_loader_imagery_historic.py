@@ -3,21 +3,18 @@ from __future__ import annotations
 import csv
 import numbers
 import os
-from typing import TYPE_CHECKING, Dict, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
-import topo_processor.stac.lds_cache as lds_cache
-from topo_processor import stac
-from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
-from topo_processor.util import (
+from topo_processor.util.conversions import (
     historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
     quarterdate_to_date_string,
@@ -30,7 +27,8 @@ from topo_processor.util.tiff import is_tiff
 from .metadata_loader import MetadataLoader
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Asset, Item
+    from topo_processor.stac.asset import Asset
+    from topo_processor.stac.item import Item
 
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
@@ -39,17 +37,20 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
-    def is_applicable(self, asset: Asset) -> bool:
-        return is_tiff(asset.source_path)
+    def is_applicable(self, asset: Optional[Asset] = None) -> bool:
+        if asset:
+            return is_tiff(asset.source_path)
+        else:
+            return False
 
-    def load_metadata(self, asset: Asset = None, metadata_file: str = "", is_load_all: bool = False) -> None:
+    def load_metadata(self, asset: Optional[Asset] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         if not self.is_init:
             self.read_csv(metadata_file)
 
         if is_load_all:
             for metadata in self.raw_metadata.values():
                 self.populate_item(metadata)
-        else:
+        elif asset:
             filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 
             if filename not in self.raw_metadata:
@@ -61,7 +62,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
 
-    def populate_item(self, metadata_row: Dict[str, str], asset: Asset = None) -> None:
+    def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
         if not title:
             get_log().warning(
@@ -87,7 +88,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             }
         )
 
-        collection.add_extension(stac.StacExtensions.quality.value)
+        collection.add_extension(StacExtensions.quality.value)
 
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
@@ -112,10 +113,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_projection_extent(item)
         self.add_bands_extent(item, asset)
 
-        item.add_extension(stac.StacExtensions.historical_imagery.value)
-        item.add_extension(stac.StacExtensions.linz.value)
-        item.add_extension(stac.StacExtensions.version.value)
-        item.add_extension(stac.StacExtensions.processing.value)
+        item.add_extension(StacExtensions.historical_imagery.value)
+        item.add_extension(StacExtensions.linz.value)
+        item.add_extension(StacExtensions.version.value)
+        item.add_extension(StacExtensions.processing.value)
 
     def read_csv(self, metadata_file: str = "") -> None:
         self.raw_metadata = {}
@@ -164,16 +165,16 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_error("Geometry is invalid", "", e)
 
     def add_camera_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        camera_properties = {}
+        camera_properties: Dict[str, Any] = {}
 
         camera_properties["camera:sequence_number"] = string_to_number(asset_metadata["camera_sequence_no"])
         camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
 
         item.properties.update(remove_empty_strings(camera_properties))
-        item.add_extension(stac.StacExtensions.camera.value)
+        item.add_extension(StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        film_properties = {}
+        film_properties: Dict[str, Any] = {}
 
         film_properties["film:id"] = asset_metadata["film"]
         film_properties["film:negative_sequence"] = string_to_number(asset_metadata["film_sequence_no"])
@@ -181,10 +182,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         film_properties["film:physical_size"] = asset_metadata["format"]
 
         item.properties.update(remove_empty_strings(film_properties))
-        item.add_extension(stac.StacExtensions.film.value)
+        item.add_extension(StacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        aerial_photo_properties = {}
+        aerial_photo_properties: Dict[str, Any] = {}
         aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
         aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
         aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
@@ -208,10 +209,10 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             aerial_photo_properties["aerial-photo:scale"] = scale
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
-        item.add_extension(stac.StacExtensions.aerial_photo.value)
+        item.add_extension(StacExtensions.aerial_photo.value)
 
     def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        scanning_properties = {}
+        scanning_properties: Dict[str, Any] = {}
 
         if asset_metadata["source"]:
             scanning_properties["scan:is_original"] = string_to_boolean(asset_metadata["source"], ["original"], ["copy"])
@@ -219,7 +220,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             scanning_properties["scan:scanned"] = quarterdate_to_date_string(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
-        item.add_extension(stac.StacExtensions.scanning.value)
+        item.add_extension(StacExtensions.scanning.value)
 
     def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         item_date = asset_metadata.get("date", None)
@@ -235,25 +236,25 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
     def add_centroid(self, item: Item, asset_metadata: Dict[str, str]) -> None:
 
         centroid = {
-            "lat": string_to_number(asset_metadata.get("photocentre_lat", None)),
-            "lon": string_to_number(asset_metadata.get("photocentre_lon", None)),
+            "lat": string_to_number(asset_metadata.get("photocentre_lat", "")),
+            "lon": string_to_number(asset_metadata.get("photocentre_lon", "")),
         }
         if self.is_valid_centroid(item, centroid):
             item.properties["proj:centroid"] = centroid
-            item.add_extension(stac.StacExtensions.projection.value)
+            item.add_extension(StacExtensions.projection.value)
 
     def add_projection_extent(self, item: Item) -> None:
         item.properties["proj:epsg"] = None
-        item.add_extension(stac.stac_extensions.StacExtensions.projection.value)
+        item.add_extension(StacExtensions.projection.value)
 
-    def add_bands_extent(self, item: Item, asset: Asset) -> None:
-        item.add_extension(stac.StacExtensions.eo.value)
+    def add_bands_extent(self, item: Item, asset: Optional[Asset] = None) -> None:
+        item.add_extension(StacExtensions.eo.value)
 
         if asset:
             # default value
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
 
-    def is_valid_centroid(self, item: Item, centroid: Dict[str, float]) -> bool:
+    def is_valid_centroid(self, item: Item, centroid: Dict[str, Any]) -> bool:
         if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
             item.add_warning(
                 msg="Skipped Record",

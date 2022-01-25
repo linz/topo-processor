@@ -1,11 +1,13 @@
+from typing import Union
+
 from linz_logger import get_log
 
-from topo_processor.util import time_in_ms
+from topo_processor.util.time import time_in_ms
 
 from .get_fs import get_fs
 
 
-def transfer_file(source_file: str, checksum: str, content_type: str, target_file: str) -> None:
+def transfer_file(source_file: str, checksum: str, content_type: Union[str, None], target_file: str) -> None:
     start_time = time_in_ms()
     with get_fs(source_file).open(source_file, "rb") as f1:
         data = f1.read()

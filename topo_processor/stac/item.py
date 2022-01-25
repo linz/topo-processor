@@ -1,11 +1,13 @@
 import datetime as dt
-from typing import Any, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 
 import shapely.geometry
-from pystac import pystac
+from pystac import get_stac_version
+from pystac.item import Item as PystacItem
+from pystac.stac_object import STACObjectType
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
-from topo_processor.util import Validity
+from topo_processor.util.valid import Validity
 
 from .asset import Asset
 from .collection import Collection
@@ -35,7 +37,7 @@ class Item(Validity):
         }
         self.stac_extensions = set([StacExtensions.file.value])
         self.assets = []
-        self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.ITEM, pystac.get_stac_version())
+        self.schema = DefaultSchemaUriMap().get_object_schema_uri(STACObjectType.ITEM, get_stac_version())
 
     def is_valid(self) -> bool:
         if not super().is_valid():
@@ -58,14 +60,14 @@ class Item(Validity):
         if add_to_collection:
             self.collection.add_extension(ext)
 
-    def create_stac(self) -> pystac.Item:
+    def create_stac(self) -> PystacItem:
         geometry = None
         bbox = None
         if self.geometry_poly is not None:
             geometry = shapely.geometry.mapping(self.geometry_poly)
             bbox = self.geometry_poly.bounds
 
-        stac = pystac.Item(
+        stac = PystacItem(
             id=self.id,
             geometry=geometry,
             bbox=bbox,
