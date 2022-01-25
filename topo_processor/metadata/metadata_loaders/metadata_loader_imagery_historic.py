@@ -255,7 +255,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.properties["eo:bands"] = [{"name": ColorInterp.gray.name, "common_name": "pan"}]
 
     def is_valid_centroid(self, item: Item, centroid: Dict[str, Any]) -> bool:
-        if not isinstance(centroid["lat"], numbers.Number) or centroid["lat"] > 90 or centroid["lat"] < -90:
+        if not isinstance(centroid["lat"], float) or centroid["lat"] > 90 or centroid["lat"] < -90:
             item.add_warning(
                 msg="Skipped Record",
                 cause=self.name,
@@ -264,7 +264,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 ),
             )
             return False
-        if not isinstance(centroid["lon"], numbers.Number) or centroid["lon"] > 180 or centroid["lon"] < -180:
+        if not isinstance(centroid["lon"], float) or centroid["lon"] > 180 or centroid["lon"] < -180:
             item.add_warning(
                 msg="Skipped Record",
                 cause=self.name,
