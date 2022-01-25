@@ -20,10 +20,12 @@ class MetadataValidatorImageryHistoric(MetadataValidator):
     def validate_metadata(self, item: Item) -> None:
         for asset in item.assets:
             parent_folder = os.path.basename(os.path.dirname(asset.source_path))
-            if not parent_folder == asset.item.collection.title:
+            if not item.collection:
+                get_log().info("Item has no collection", item_id=item.id)
+            elif not parent_folder == item.collection.title:
                 get_log().info(
                     "Metadata survey does not match image parent folder",
-                    metadata_survey=asset.item.collection.title,
+                    metadata_survey=item.collection.title,
                     parent_folder=parent_folder,
                     source_path=asset.source_path,
                 )

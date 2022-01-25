@@ -362,7 +362,8 @@ def test_provider_added() -> None:
 
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.populate_item(metadata, asset)
-    collection = asset.item.collection.create_stac()
+    if asset.item and asset.item.collection:
+        collection = asset.item.collection.create_stac()
     assert collection.providers
     assert len(collection.providers) == 2
     if collection.providers and len(collection.providers) > 0:

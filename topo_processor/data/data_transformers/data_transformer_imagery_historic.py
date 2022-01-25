@@ -33,6 +33,9 @@ class DataTransformerImageryHistoric(DataTransformer):
             if not is_tiff(asset.source_path):
                 continue
             start_time = time_in_ms()
+            if not item.collection:
+                get_log().warning("Item has no collection", item_id=item.id)
+                return
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
             create_cog(asset.source_path, output_path).run()

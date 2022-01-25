@@ -62,7 +62,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
 
-    def populate_item(self, metadata_row: Dict[str, str], asset: Asset = None) -> None:
+    def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
         if not title:
             get_log().warning(
@@ -174,7 +174,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        film_properties = {}
+        film_properties: Dict[str, Any] = {}
 
         film_properties["film:id"] = asset_metadata["film"]
         film_properties["film:negative_sequence"] = string_to_number(asset_metadata["film_sequence_no"])
@@ -185,7 +185,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
-        aerial_photo_properties = {}
+        aerial_photo_properties: Dict[str, Any] = {}
         aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
         aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
         aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]
@@ -247,7 +247,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.properties["proj:epsg"] = None
         item.add_extension(StacExtensions.projection.value)
 
-    def add_bands_extent(self, item: Item, asset: Asset) -> None:
+    def add_bands_extent(self, item: Item, asset: Optional[Asset] = None) -> None:
         item.add_extension(StacExtensions.eo.value)
 
         if asset:
