@@ -10,7 +10,7 @@ from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Collection
+    from topo_processor.stac.collection import Collection
 
 
 def transfer_collection(collection: Collection, target: str) -> None:
@@ -43,6 +43,8 @@ def transfer_collection(collection: Collection, target: str) -> None:
             asset.href = f"./{item.id}{asset.file_ext()}"
             if asset.href in existing_asset_hrefs:
                 raise Exception(f"{asset.href} already exists.")
+            if not asset.target:
+                raise Exception(f"No asset target set for asset {asset.href}")
             transfer_file(
                 asset.source_path, asset.get_checksum(), asset.get_content_type(), os.path.join(target, asset.target)
             )
@@ -56,6 +58,8 @@ def transfer_collection(collection: Collection, target: str) -> None:
         # pystac v1.1.0
         # Required to not add a self link with an 'absolute' link from the cwd
         json_item = stac_item.to_dict(include_self_link=False)
+        if not item.collection:
+            raise Exception(f"No collection set for item {item.id}")
         write_json(json_item, os.path.join(target, item.collection.title, f"{item.id}.json"))
 
     # after all items have been processed generate summaries

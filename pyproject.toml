@@ -23,6 +23,7 @@ python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
+boto3-stubs = {version = "*", extras = ["sts"]}
 isort = "^5.10.1"
 pylint = "^2.12.2"
 pytest = "^6.2.4"
@@ -47,7 +48,6 @@ profile = "black"
 show_error_codes = true
 strict = true
 disable_error_code = [
-    "attr-defined",
     "no-untyped-call",
     "operator",
     "misc",

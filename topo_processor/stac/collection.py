@@ -14,8 +14,8 @@ from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
 from topo_processor.stac.asset import Asset
-from topo_processor.util import Validity
 from topo_processor.util.time import get_min_max_interval
+from topo_processor.util.valid import Validity
 
 from .linz_provider import LinzProvider
 from .providers import Providers

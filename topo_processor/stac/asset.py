@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
 import pystac
 
-from topo_processor.util import Validity, get_file_update_time, multihash_as_hex
+from topo_processor.util.checksum import multihash_as_hex
+from topo_processor.util.files import get_file_update_time
+from topo_processor.util.valid import Validity
 
 from .asset_key import AssetKey
 

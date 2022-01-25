@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 
 import pytest
 
-import topo_processor.stac as stac
+from topo_processor.stac.stac_extensions import StacExtensions
 
 
 @pytest.fixture(autouse=True)
@@ -43,7 +43,7 @@ def test_upload_local(setup) -> None:  # type: ignore
     with open(os.path.join(target, "SURVEY_1", "72359.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
     assert item_metadata["properties"]["camera:sequence_number"] == 89555
-    assert stac.StacExtensions.camera.value in item_metadata["stac_extensions"]
+    assert StacExtensions.camera.value in item_metadata["stac_extensions"]
     assert "camera:nominal_focal_length" not in item_metadata["properties"].keys()
 
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
@@ -73,4 +73,4 @@ def test_upload_local(setup) -> None:  # type: ignore
 
     assert item_metadata["properties"]["camera:sequence_number"] == 89556
     assert item_metadata["properties"]["camera:nominal_focal_length"] == 508
-    assert stac.StacExtensions.camera.value in item_metadata["stac_extensions"]
+    assert StacExtensions.camera.value in item_metadata["stac_extensions"]

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Tuple
 
 from linz_logger import get_log
 
-from topo_processor.util import time_in_ms
+from topo_processor.util.time import time_in_ms
 
 if TYPE_CHECKING:
     from .command import Command

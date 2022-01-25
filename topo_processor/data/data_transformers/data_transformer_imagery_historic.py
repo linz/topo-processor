@@ -7,14 +7,15 @@ import pystac
 import ulid
 from linz_logger import get_log
 
-from topo_processor import stac
 from topo_processor.cog.create_cog import create_cog
-from topo_processor.util import is_tiff, time_in_ms
+from topo_processor.stac.asset import Asset
+from topo_processor.util.tiff import is_tiff
+from topo_processor.util.time import time_in_ms
 
 from .data_transformer import DataTransformer
 
 if TYPE_CHECKING:
-    from topo_processor.stac import Item
+    from topo_processor.stac.item import Item
 
 
 class DataTransformerImageryHistoric(DataTransformer):
@@ -32,6 +33,9 @@ class DataTransformerImageryHistoric(DataTransformer):
             if not is_tiff(asset.source_path):
                 continue
             start_time = time_in_ms()
+            if not item.collection:
+                get_log().warning("Item has no collection", item_id=item.id)
+                return
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
             create_cog(asset.source_path, output_path).run()
@@ -40,7 +44,7 @@ class DataTransformerImageryHistoric(DataTransformer):
 
             asset.needs_upload = False
 
-            cog_asset = stac.Asset(output_path)
+            cog_asset = Asset(output_path)
             cog_asset.content_type = pystac.MediaType.COG
             cog_asset.key_name = asset.key_name
             cog_asset.target = asset.target

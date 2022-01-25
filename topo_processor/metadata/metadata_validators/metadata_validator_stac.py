@@ -9,7 +9,8 @@ import jsonschema_rs
 from linz_logger import get_log
 from pystac.errors import STACValidationError
 
-from topo_processor.stac import Collection, Item
+from topo_processor.stac.collection import Collection
+from topo_processor.stac.item import Item
 
 from .metadata_validator import MetadataValidator
 
