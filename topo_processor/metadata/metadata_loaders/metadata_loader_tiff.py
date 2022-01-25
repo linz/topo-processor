@@ -6,8 +6,8 @@ import rasterio
 from rasterio.enums import ColorInterp
 
 from topo_processor.file_system.get_fs import get_fs
+from topo_processor.stac.file_extension import is_tiff
 from topo_processor.stac.stac_extensions import StacExtensions
-from topo_processor.util.tiff import is_tiff
 
 from .metadata_loader import MetadataLoader
 

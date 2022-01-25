@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import rasterio
 from rasterio.enums import ColorInterp
 
-from topo_processor.util.tiff import is_tiff
+from topo_processor.stac.file_extension import is_tiff
 
 from .metadata_validator import MetadataValidator
 
