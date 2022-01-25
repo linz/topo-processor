@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 
-from topo_processor.util.files import get_file_update_time
 from topo_processor.util.time import get_min_max_interval
 
 
