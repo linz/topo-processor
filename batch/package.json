@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@aws-cdk/aws-batch": "^1.115.0",
+    "@aws-cdk/aws-ecs": "^1.115.0",
+    "@aws-cdk/core": "^1.115.0",
+    "@linzjs/style": "^2.1.5",
+    "aws-cdk": "^1.115.0",
+    "aws-sdk": "^2.955.0",
+    "ulid": "^2.3.0",
+    "conventional-changelog-cli": "^2.1.1"
+  },
+    "scripts": {
+    "build": "tsc",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "lint": "npx eslint {src/**,*.js}",
+    "test": "echo No tests yet",
+    "submit": "node build/src/infra/submit.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "build/src/**"
+  ]
+}
