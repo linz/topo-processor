@@ -3,6 +3,7 @@ import os
 import shutil
 from datetime import datetime
 from tempfile import mkdtemp
+from typing import Generator
 
 import pytest
 
@@ -15,7 +16,7 @@ from topo_processor.util.transfer_collection import transfer_collection
 
 
 @pytest.fixture(autouse=True)
-def setup() -> None:
+def setup() -> Generator[str, None, None]:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:

@@ -1,5 +1,6 @@
 import shutil
 from tempfile import mkdtemp
+from typing import Generator
 
 import pytest
 
@@ -7,7 +8,7 @@ from topo_processor.util.aws_files import build_s3_path
 
 
 @pytest.fixture(autouse=True)
-def setup() -> None:
+def setup() -> Generator[str, None, None]:
     """
     This function creates a temporary directory and deletes it after each test.
     See following link for details:

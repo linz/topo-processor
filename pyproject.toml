@@ -50,7 +50,6 @@ strict = true
 disable_error_code = [
     "no-untyped-call",
     "operator",
-    "misc",
     "import",
     "var-annotated",
     "comparison-overlap",
