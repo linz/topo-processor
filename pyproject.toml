@@ -52,7 +52,6 @@ disable_error_code = [
     "operator",
     "misc",
     "import",
-    "var-annotated",
     "comparison-overlap",
     "name-defined",
     "valid-type",
