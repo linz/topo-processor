@@ -23,7 +23,7 @@ async function main(): Promise<void> {
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           memory: 128,
-          command: ['Job' + jobId],
+          command: buildCommandArguments(),
           environment,
         },
       })
@@ -31,6 +31,31 @@ async function main(): Promise<void> {
 
     console.log(res);
   }
+}
+
+
+function buildCommandArguments(correlationId: string, jobName: string, fileList: string[]): string[] {
+  const command: string[] = [];
+  command.push('--correlation-id');
+  command.push(correlationId);
+  command.push('--job-name');
+  command.push('--aws-read-role');
+  // command.push(configuration.roles.read);
+  // command.push('--aws-write-role');
+  // command.push(configuration.roles.write);
+  // command.push('--aws-read-bucket');
+  // command.push(configuration.buckets.read);
+  // command.push('--aws-write-bucket');
+  // command.push(configuration.buckets.write);
+  command.push(jobName);
+  command.push('--source');
+  command.push(fileList.join(';'));
+  command.push('--target');
+  command.push();
+  command.push('--datatype');
+  command.push();
+
+  return command;
 }
 
 main().catch(console.error);

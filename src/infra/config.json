@@ -1,0 +1,22 @@
+{
+    "roles": {
+      "jobDefinition": "",
+      "jobQueue": "",
+      "read": "",
+      "write": ""
+    },
+    "buckets": {
+      "read": "",
+      "write": ""
+    },
+    "files":{
+      "sourceFolder": "/opentopography/Auckland_2013/",
+      "destinationFolder": "/Auckland_2013/",
+      "suffix": "_buildings",
+      "extension": ".laz",
+      "numberPerJob": 10
+    },
+    "pdal":{
+      "limits": "Classification[6:6]"
+    }
+  }
