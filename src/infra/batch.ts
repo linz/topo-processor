@@ -46,7 +46,7 @@ export class AwsBatchStack extends cdk.Stack {
         maxvCpus: 100,
         minvCpus: 0,
         desiredvCpus: 1,
-        instanceTypes: [ec2.InstanceType.of(ec2.InstanceClass.ARM1, ec2.InstanceSize.LARGE)],
+        instanceTypes: [ec2.InstanceType.of(ec2.InstanceClass.C5, ec2.InstanceSize.LARGE)],
       },
     });
 

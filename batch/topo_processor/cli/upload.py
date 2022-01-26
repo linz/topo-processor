@@ -1,4 +1,5 @@
 import os
+from webbrowser import get
 
 import click
 from linz_logger import LogLevel, get_log, set_level
@@ -30,12 +31,27 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
+    "-cid",
+    "--correlationid",
+    required=False,
+    help="The correlation ID of the batch job",
+)
+@click.option(
+    "-t",
+    "--target",
+    required=True,
+    help="The target directory path or bucket name of the upload",
+)
+@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, datatype: str, target: str, verbose: str) -> None:
+def main(source: str, datatype: str, correlationid: str, target: str, verbose: str) -> None:
+    if correlationid:
+        get_log().info({"Correlation ID": correlationid})
+    
     if verbose:
         set_level(LogLevel.trace)
 

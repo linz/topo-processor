@@ -3,8 +3,8 @@ import * as ulid from 'ulid';
 
 const batch = new sdk.Batch();
 
-const JobDefinitionArn = 'JobDefArnGoesHere';
-const JobQueueArn = 'JobQueueArnGoesHere';
+const JobDefinitionArn = 'arn:aws:batch:ap-southeast-2:658203534767:job-definition/BatchJob743C9ABD-31d558cce7be016:3';
+const JobQueueArn = 'arn:aws:batch:ap-southeast-2:658203534767:job-queue/BatchQueue28C25975-859f89a75a20a0b';
 
 async function main(): Promise<void> {
   const correlationId = ulid.ulid();
@@ -15,15 +15,20 @@ async function main(): Promise<void> {
   // Your logic to determine what to submit
   
   // TODO Just copied from template
-  for (let jobId = 0; jobId < 3; jobId++) {
+  for (let jobId = 0; jobId < 1; jobId++) {
     const res = await batch
       .submitJob({
         jobName: ['Job', correlationId, jobId].join('-'),
         jobQueue: JobQueueArn,
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
-          memory: 128,
-          command: buildCommandArguments(),
+          resourceRequirements:[
+               {
+                  "type": "MEMORY",
+                  "value": "4096"
+               }
+            ],
+          command: buildCommandArguments(correlationId),
           environment,
         },
       })
@@ -34,26 +39,21 @@ async function main(): Promise<void> {
 }
 
 
-function buildCommandArguments(correlationId: string, jobName: string, fileList: string[]): string[] {
+function buildCommandArguments(correlationId: string) {
   const command: string[] = [];
-  command.push('--correlation-id');
+  // command.push('./validate')
+  command.push('./upload');
+  command.push('--correlationid');
   command.push(correlationId);
-  command.push('--job-name');
-  command.push('--aws-read-role');
-  // command.push(configuration.roles.read);
-  // command.push('--aws-write-role');
-  // command.push(configuration.roles.write);
-  // command.push('--aws-read-bucket');
-  // command.push(configuration.buckets.read);
-  // command.push('--aws-write-bucket');
-  // command.push(configuration.buckets.write);
-  command.push(jobName);
+  // command.push('--job-name');
+  // command.push(jobName);
   command.push('--source');
-  command.push(fileList.join(';'));
+  command.push('s3://linz-historical-imagery-staging/backup9/Supplied Films/CROWN_1124/fake/');
   command.push('--target');
-  command.push();
+  command.push('s3://megantestbucket/test-tp-batch/');
   command.push('--datatype');
-  command.push();
+  command.push('imagery.historic');
+  command.push('-v')
 
   return command;
 }
