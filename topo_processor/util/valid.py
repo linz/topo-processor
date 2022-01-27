@@ -1,9 +1,9 @@
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 
 class Validity:
     def __init__(self) -> None:
-        self.log = []
+        self.log: List[Dict[str, Any]] = []
         self._valid = True
 
     def add_error(self, msg: str, cause: str, e: Optional[Exception] = None) -> None:

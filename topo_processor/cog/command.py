@@ -14,9 +14,9 @@ class Command:
 
     def __init__(self, command: str, docker_ref: Optional[CommandDocker] = None) -> None:
         self.command = command
-        self.arguments = []
-        self.volumes = []
-        self.envs = []
+        self.arguments: List[str] = []
+        self.volumes: List[str] = []
+        self.envs: List[str] = []
         if docker_ref is None:
             self.use_docker = False
         else:

@@ -1,3 +1,5 @@
+from typing import Dict
+
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.collection import Collection
@@ -196,7 +198,7 @@ def test_add_datetime_property_not_date() -> None:
 def test_spatial_metadata_empty() -> None:
     source_path = "test_abc.tiff"
     item = Item(source_path)
-    metadata = {}
+    metadata: Dict[str, str] = {}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_spatial_extent(item, asset_metadata=metadata)
     assert item.geometry_poly is None
