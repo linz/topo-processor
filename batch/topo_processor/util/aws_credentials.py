@@ -33,7 +33,7 @@ def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
         load_roles(json.load(open(aws_role_config_path)))
     if bucket_name in bucket_roles:
-        if bucket_name in bucket_credentials:
+        if bucket_name not in bucket_credentials:
             assumed_role_object = client_sts.assume_role(
                 RoleArn=bucket_roles[bucket_name]["roleArn"], RoleSessionName="TopoProcessor"
             )

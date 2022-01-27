@@ -1,14 +1,14 @@
 import os
-from webbrowser import get
 
 import click
 from linz_logger import LogLevel, get_log, set_level
 
+from batch.topo_processor.file_system.s3 import bucket_name_from_path
 from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac import DataType, collection_store, process_directory
 from topo_processor.util import time_in_ms
 from topo_processor.util.aws_credentials import bucket_roles
-from batch.topo_processor.file_system.s3 import bucket_name_from_path
+from topo_processor.util.configuration import lds_cache_bucket
 from topo_processor.util.transfer_collection import transfer_collection
 
 
@@ -24,6 +24,12 @@ from topo_processor.util.transfer_collection import transfer_collection
     "--readrole",
     required=False,
     help="The AWS read role for the source bucket.",
+)
+@click.option(
+    "-lr",
+    "--ldscacherole",
+    required=False,
+    help="The AWS read role for the LDS Cache.",
 )
 @click.option(
     "-d",
@@ -62,15 +68,19 @@ from topo_processor.util.transfer_collection import transfer_collection
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, readrole: str, datatype: str, correlationid: str, target: str, writerole: str, verbose: str) -> None:
+def main(
+    source: str, readrole: str, ldscacherole: str, datatype: str, correlationid: str, target: str, writerole: str, verbose: str
+) -> None:
     if correlationid:
         get_log().info({"Correlation ID": correlationid})
 
     # Loads the roles
     if readrole:
-        bucket_roles[bucket_name_from_path(source)]["roleArn"] = readrole
+        bucket_roles[bucket_name_from_path(source)] = {"roleArn": readrole}
+    if ldscacherole:
+        bucket_roles[lds_cache_bucket] = {"roleArn": ldscacherole}
     if writerole:
-        bucket_roles[bucket_name_from_path(target)]["roleArn"] = writerole
+        bucket_roles[bucket_name_from_path(target)] = {"roleArn": writerole}
 
     if verbose:
         set_level(LogLevel.trace)
