@@ -3,10 +3,8 @@ import * as ulid from "ulid";
 
 const batch = new sdk.Batch();
 
-const JobDefinitionArn =
-  "arn:aws:batch:ap-southeast-2:658203534767:job-definition/BatchJob743C9ABD-31d558cce7be016:3";
-const JobQueueArn =
-  "arn:aws:batch:ap-southeast-2:658203534767:job-queue/BatchQueue28C25975-859f89a75a20a0b";
+const JobDefinitionArn = "";
+const JobQueueArn = "";
 
 async function main(): Promise<void> {
   const correlationId = ulid.ulid();
@@ -50,7 +48,7 @@ function buildCommandArguments(correlationId: string) {
   // command.push(jobName);
   command.push("--source");
   command.push(
-    "s3://linz-historical-imagery-staging/backup9/Supplied Films/CROWN_1124/fake/"
+    "s3://linz-historical-imagery-staging/backup9/Supplied Films/CROWN_1124/"
   );
   command.push("--target");
   command.push("s3://megantestbucket/test-tp-batch/");

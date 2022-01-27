@@ -57,6 +57,8 @@ export class AwsBatchStack extends Stack {
     instanceRole.addToPrincipalPolicy(
       new PolicyStatement({ resources: ["*"], actions: ["sts:AssumeRole"] })
     );
+
+    //FIXME: CHeck if we need that
     new CfnInstanceProfile(this, "BatchInstanceProfile", {
       instanceProfileName: instanceRole.roleName,
       roles: [instanceRole.roleName],
@@ -71,7 +73,7 @@ export class AwsBatchStack extends Stack {
         maxvCpus: 100,
         minvCpus: 0,
         desiredvCpus: 1,
-        instanceTypes: [InstanceType.of(InstanceClass.C6G, InstanceSize.LARGE)],
+        instanceTypes: [InstanceType.of(InstanceClass.C5, InstanceSize.LARGE)],
       },
     });
 

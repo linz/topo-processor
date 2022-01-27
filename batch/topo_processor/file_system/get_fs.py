@@ -10,11 +10,6 @@ def is_s3_path(path: str) -> bool:
     return False
 
 
-def bucket_name_from_path(path: str) -> str:
-    path_parts = path.replace("s3://", "").split("/")
-    return path_parts.pop(0)
-
-
 def get_fs(path: str) -> Any:
     if is_s3_path(path):
         return S3FileSystem()

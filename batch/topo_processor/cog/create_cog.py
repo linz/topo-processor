@@ -1,8 +1,9 @@
 import os
 
 from topo_processor.cog.command import Command
-from topo_processor.file_system.get_fs import bucket_name_from_path, is_s3_path
+from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.util.aws_credentials import Credentials, get_credentials
+from batch.topo_processor.file_system.s3 import bucket_name_from_path
 
 
 def create_cog(input_path: str, output_path: str) -> Command:
