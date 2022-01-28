@@ -49,9 +49,7 @@ show_error_codes = true
 strict = true
 disable_error_code = [
     "no-untyped-call",
-    "misc",
     "import",
-    "var-annotated",
     "comparison-overlap",
     "name-defined",
     "valid-type",

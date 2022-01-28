@@ -1,8 +1,6 @@
 import json
 import os
-import shutil
 from datetime import datetime
-from tempfile import mkdtemp
 
 import pytest
 
@@ -14,19 +12,7 @@ from topo_processor.stac.item import Item
 from topo_processor.util.transfer_collection import transfer_collection
 
 
-@pytest.fixture(autouse=True)
-def setup() -> None:
-    """
-    This function creates a temporary directory and deletes it after each test.
-    See following link for details:
-    https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
-    """
-    target = mkdtemp()
-    yield target
-    shutil.rmtree(target)
-
-
-def test_fail_on_duplicate_assets(setup) -> None:  # type: ignore
+def test_fail_on_duplicate_assets(setup: str) -> None:
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"
@@ -51,7 +37,7 @@ def test_fail_on_duplicate_assets(setup) -> None:  # type: ignore
         transfer_collection(item.collection, target)
 
 
-def test_asset_key_not_in_list(setup) -> None:  # type: ignore
+def test_asset_key_not_in_list(setup: str) -> None:
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"
@@ -71,7 +57,7 @@ def test_asset_key_not_in_list(setup) -> None:  # type: ignore
         transfer_collection(item.collection, target)
 
 
-def test_generate_summaries(setup) -> None:  # type: ignore
+def test_generate_summaries(setup: str) -> None:
     target = setup
     collection = Collection("fake_title")
     collection.description = "fake_description"

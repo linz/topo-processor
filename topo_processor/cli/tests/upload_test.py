@@ -1,28 +1,14 @@
 import json
 import os
-import shutil
 import subprocess
-from tempfile import mkdtemp
 
 import pytest
 
 from topo_processor.stac.stac_extensions import StacExtensions
 
 
-@pytest.fixture(autouse=True)
-def setup() -> None:
-    """
-    This function creates a temporary directory and deletes it after each test.
-    See following link for details:
-    https://docs.pytest.org/en/stable/fixture.html#yield-fixtures-recommended
-    """
-    target = mkdtemp()
-    yield target
-    shutil.rmtree(target)
-
-
 @pytest.mark.slow
-def test_upload_local(setup) -> None:  # type: ignore
+def test_upload_local(setup: str) -> None:
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     command = os.path.join(os.getcwd(), "upload")
