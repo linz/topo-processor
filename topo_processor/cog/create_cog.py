@@ -6,7 +6,10 @@ from topo_processor.util.aws_credentials import Credentials, get_credentials
 
 
 def create_cog(input_path: str, output_path: str) -> Command:
-    cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
+    if os.environ.get("IS_DOCKER") == "true":
+        cmd = Command("gdal_translate")
+    else:
+        cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
     if is_s3_path(input_path):
         credentials: Credentials = get_credentials(bucket_name_from_path(input_path))
         cmd.env(f"AWS_ACCESS_KEY_ID={credentials.access_key}")
