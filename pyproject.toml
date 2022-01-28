@@ -48,12 +48,7 @@ profile = "black"
 show_error_codes = true
 strict = true
 disable_error_code = [
-    "no-untyped-call",
     "import",
-    "comparison-overlap",
-    "name-defined",
-    "valid-type",
-    "func-returns-value",
 ]
 
 [[tool.mypy.overrides]]
