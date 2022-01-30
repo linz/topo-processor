@@ -58,6 +58,12 @@ This configuration file must be referenced in the `.env` file as `AWS_ROLES_CONF
 
 ## Usage
 
+### AWS Batch deployment
+
+```shell
+npx cdk deploy
+```
+
 ### Upload
 
 **_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
