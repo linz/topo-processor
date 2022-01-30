@@ -3,7 +3,7 @@ from linz_logger import get_log
 from topo_processor.data.data_transformers import data_transformer_repo
 from topo_processor.file_system.get_fs import get_fs
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
-from topo_processor.metadata.metadata_loaders import metadata_loader_repo
+from topo_processor.metadata.metadata_loaders import metadata_loader_rep
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.file_extension import FILE_EXTENSIONS, is_extension
@@ -36,7 +36,7 @@ def _create_assets(source_dir: str, data_type: str) -> None:
                 continue
             asset_path = get_path_with_protocol(source_dir, fs, path)
             asset = get_asset(f"{asset_path}/{file_}")
-            metadata_loader_repo.load_metadata(asset)
+            metadata_loader_rep.load_metadata(asset)
 
 
 def _create_items() -> None:
