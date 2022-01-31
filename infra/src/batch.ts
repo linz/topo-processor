@@ -5,7 +5,6 @@ import {
   Role,
   CompositePrincipal,
   ServicePrincipal,
-  CfnInstanceProfile,
   ManagedPolicy,
   PolicyStatement,
 } from "aws-cdk-lib/aws-iam";
