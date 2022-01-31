@@ -25,7 +25,7 @@ async function main(): Promise<void> {
           resourceRequirements: [
             {
               type: "MEMORY",
-              value: "512",
+              value: "1950",
             },
           ],
           command: buildCommandArguments(correlationId),
@@ -40,20 +40,15 @@ async function main(): Promise<void> {
 
 function buildCommandArguments(correlationId: string) {
   const command: string[] = [];
-  // command.push('./validate')
   command.push("./upload");
   command.push("--correlationid");
   command.push(correlationId);
-  // command.push('--job-name');
-  // command.push(jobName);
   command.push("--source");
-  command.push(
-    "s3://linz-historical-imagery-staging/backup9/Supplied Films/CROWN_1124/"
-  );
+  command.push("");
   command.push("--target");
-  command.push("s3://megantestbucket/test-tp-batch/");
+  command.push("");
   command.push("--datatype");
-  command.push("imagery.historic");
+  command.push("");
   command.push("-v");
 
   return command;
