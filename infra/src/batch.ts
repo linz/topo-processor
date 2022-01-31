@@ -22,6 +22,7 @@ import {
   JobDefinition,
   JobQueue,
 } from "@aws-cdk/aws-batch-alpha";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -58,11 +59,11 @@ export class AwsBatchStack extends Stack {
       new PolicyStatement({ resources: ["*"], actions: ["sts:AssumeRole"] })
     );
 
-    //FIXME: CHeck if we need that
-    new CfnInstanceProfile(this, "BatchInstanceProfile", {
-      instanceProfileName: instanceRole.roleName,
-      roles: [instanceRole.roleName],
-    });
+    Bucket.fromBucketName(
+      this,
+      "bucket-megantestbucket",
+      "megantestbucket"
+    ).grantReadWrite(instanceRole);
 
     const computeEnvironment = new ComputeEnvironment(this, "BatchCompute", {
       managed: true,
