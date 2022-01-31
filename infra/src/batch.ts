@@ -5,6 +5,7 @@ import {
   Role,
   CompositePrincipal,
   ServicePrincipal,
+  CfnInstanceProfile,
   ManagedPolicy,
   PolicyStatement,
 } from "aws-cdk-lib/aws-iam";
@@ -63,6 +64,11 @@ export class AwsBatchStack extends Stack {
       "bucket-megantestbucket",
       "megantestbucket"
     ).grantReadWrite(instanceRole);
+
+    new CfnInstanceProfile(this, "BatchInstanceProfile", {
+      instanceProfileName: instanceRole.roleName,
+      roles: [instanceRole.roleName],
+    });
 
     const computeEnvironment = new ComputeEnvironment(this, "BatchCompute", {
       managed: true,
