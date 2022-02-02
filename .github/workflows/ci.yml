@@ -33,3 +33,16 @@ jobs:
       - name: Mypy
         run: |
           poetry run mypy .
+
+      - name: (Prod) Setup git config
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: (Prod) Create tag
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION}
+          git push --tags
