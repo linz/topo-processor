@@ -9,7 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.4.0
+      - name: Build and test
+        uses: linz/action-typescript@v1
+
       - name: Use Python "3.8"
         uses: actions/setup-python@v2.3.1
         with:

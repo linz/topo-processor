@@ -1,16 +1,16 @@
-import * as sdk from "aws-sdk";
-import * as ulid from "ulid";
+import * as sdk from 'aws-sdk';
+import * as ulid from 'ulid';
 
 const batch = new sdk.Batch();
 
-const JobDefinitionArn = "";
-const JobQueueArn = "";
+const JobDefinitionArn = '';
+const JobQueueArn = '';
 
 async function main(): Promise<void> {
   const correlationId = ulid.ulid();
   console.log({ correlationId });
 
-  const environment = [{ name: "LINZ_CORRELATION_ID", value: correlationId }];
+  const environment = [{ name: 'LINZ_CORRELATION_ID', value: correlationId }];
 
   // Your logic to determine what to submit
 
@@ -18,14 +18,14 @@ async function main(): Promise<void> {
   for (let jobId = 0; jobId < 1; jobId++) {
     const res = await batch
       .submitJob({
-        jobName: ["Job", correlationId, jobId].join("-"),
+        jobName: ['Job', correlationId, jobId].join('-'),
         jobQueue: JobQueueArn,
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           resourceRequirements: [
             {
-              type: "MEMORY",
-              value: "1950",
+              type: 'MEMORY',
+              value: '1950',
             },
           ],
           command: buildCommandArguments(correlationId),
@@ -38,18 +38,18 @@ async function main(): Promise<void> {
   }
 }
 
-function buildCommandArguments(correlationId: string) {
+function buildCommandArguments(correlationId: string): string[] {
   const command: string[] = [];
-  command.push("./upload");
-  command.push("--correlationid");
+  command.push('./upload');
+  command.push('--correlationid');
   command.push(correlationId);
-  command.push("--source");
-  command.push("");
-  command.push("--target");
-  command.push("");
-  command.push("--datatype");
-  command.push("");
-  command.push("-v");
+  command.push('--source');
+  command.push('');
+  command.push('--target');
+  command.push('');
+  command.push('--datatype');
+  command.push('');
+  command.push('-v');
 
   return command;
 }
