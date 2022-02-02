@@ -1,6 +1,6 @@
-import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
-import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
-import { ContainerImage } from "aws-cdk-lib/aws-ecs";
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
+import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
+import { ContainerImage } from 'aws-cdk-lib/aws-ecs';
 import {
   Role,
   CompositePrincipal,
@@ -8,21 +8,11 @@ import {
   CfnInstanceProfile,
   ManagedPolicy,
   PolicyStatement,
-} from "aws-cdk-lib/aws-iam";
-import {
-  Vpc,
-  InstanceClass,
-  InstanceType,
-  InstanceSize,
-} from "aws-cdk-lib/aws-ec2";
-import { Construct } from "constructs";
-import {
-  ComputeResourceType,
-  ComputeEnvironment,
-  JobDefinition,
-  JobQueue,
-} from "@aws-cdk/aws-batch-alpha";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+} from 'aws-cdk-lib/aws-iam';
+import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-ec2';
+import { Construct } from 'constructs';
+import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -32,45 +22,35 @@ export class AwsBatchStack extends Stack {
   public constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);
 
-    const container = new DockerImageAsset(this, "BatchContainer", {
+    const container = new DockerImageAsset(this, 'BatchContainer', {
       directory: props.container,
     });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, "AlbVpc", {
-      tags: { BaseVPC: "true" },
+    const vpc = Vpc.fromLookup(this, 'AlbVpc', {
+      tags: { BaseVPC: 'true' },
     });
-    const instanceRole = new Role(this, "BatchInstanceRole", {
+    const instanceRole = new Role(this, 'BatchInstanceRole', {
       assumedBy: new CompositePrincipal(
-        new ServicePrincipal("ec2.amazonaws.com"),
-        new ServicePrincipal("ecs.amazonaws.com")
+        new ServicePrincipal('ec2.amazonaws.com'),
+        new ServicePrincipal('ecs.amazonaws.com'),
       ),
     });
     instanceRole.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName(
-        "service-role/AmazonEC2ContainerServiceforEC2Role"
-      )
+      ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonEC2ContainerServiceforEC2Role'),
     );
-    instanceRole.addManagedPolicy(
-      ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore")
-    );
+    instanceRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
 
-    instanceRole.addToPrincipalPolicy(
-      new PolicyStatement({ resources: ["*"], actions: ["sts:AssumeRole"] })
-    );
+    instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    Bucket.fromBucketName(
-      this,
-      "bucket-megantestbucket",
-      "megantestbucket"
-    ).grantReadWrite(instanceRole);
+    Bucket.fromBucketName(this, 'bucket-megantestbucket', 'megantestbucket').grantReadWrite(instanceRole);
 
-    new CfnInstanceProfile(this, "BatchInstanceProfile", {
+    new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
       roles: [instanceRole.roleName],
     });
 
-    const computeEnvironment = new ComputeEnvironment(this, "BatchCompute", {
+    const computeEnvironment = new ComputeEnvironment(this, 'BatchCompute', {
       managed: true,
       computeResources: {
         instanceRole: instanceRole.roleName,
@@ -83,14 +63,14 @@ export class AwsBatchStack extends Stack {
       },
     });
 
-    const job = new JobDefinition(this, "BatchJob", {
+    const job = new JobDefinition(this, 'BatchJob', {
       container: { image },
     });
-    const queue = new JobQueue(this, "BatchQueue", {
+    const queue = new JobQueue(this, 'BatchQueue', {
       computeEnvironments: [{ computeEnvironment, order: 1 }],
     });
 
-    new CfnOutput(this, "BatchJobArn", { value: job.jobDefinitionArn });
-    new CfnOutput(this, "BatchQueueArn", { value: queue.jobQueueArn });
+    new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
+    new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
   }
 }
