@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/linz/topo-processor/compare/v0.2.0...v0.3.0) (2022-02-02)
+
+
+### Features
+
+* **ci:** create github releases in ci ([#544](https://github.com/linz/topo-processor/issues/544)) ([74ceb4c](https://github.com/linz/topo-processor/commit/74ceb4c941ef1bcb4283f8ded9cbc4fb6777930b))
+
+
+
 # 0.2.0 (2022-02-02)
 
 
