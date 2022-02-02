@@ -7,5 +7,5 @@ new AwsBatchStack(app, "Batch", {
     region: "ap-southeast-2",
     account: process.env["CDK_DEFAULT_ACCOUNT"],
   },
-  container: "../",
+  container: "./",
 });
