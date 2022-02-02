@@ -160,3 +160,19 @@ The following command have to be run in a virtual environment (poetry shell):
 # To record the output in an external file:
 ./validate | tee output.file
 ```
+
+
+## AWS Deployment / CI / CD
+
+CI/CD is used to deploy into AWS, to trigger a deployment create a new "release:" commit and merge it to master
+
+A helpful utility script is in `./scripts/version.bump.sh` to automate this process
+
+```bash
+./scripts/version.bump.sh
+# Push branch release/v:versionNumber
+git push
+# Create the pull request
+gh pr create
+# Merge to master
+```
