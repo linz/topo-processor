@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import numbers
 import os
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
@@ -9,7 +8,9 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
+from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.file_extension import is_tiff
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -22,7 +23,7 @@ from topo_processor.util.conversions import (
     string_to_boolean,
     string_to_number,
 )
-from topo_processor.util.tiff import is_tiff
+from topo_processor.util.s3 import is_s3_path
 
 from .metadata_loader import MetadataLoader
 
@@ -45,7 +46,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def load_metadata(self, asset: Optional[Asset] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
         if not self.is_init:
-            self.read_csv(metadata_file)
+            if asset and not is_s3_path(asset.source_path):
+                self.read_csv()
+            else:
+                metadata_file = lds_cache.get_layer(self.layer_id)
+                self.read_csv(metadata_file)
 
         if is_load_all:
             for metadata in self.raw_metadata.values():

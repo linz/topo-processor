@@ -4,9 +4,9 @@ import shutil
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.file_system.get_fs import is_s3_path
 from topo_processor.stac.validation import validate_stac
 from topo_processor.util.configuration import temp_folder
+from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 
 

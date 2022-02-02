@@ -9,7 +9,7 @@ from linz_logger import get_log
 
 from topo_processor.cog.create_cog import create_cog
 from topo_processor.stac.asset import Asset
-from topo_processor.util.tiff import is_tiff
+from topo_processor.stac.file_extension import is_tiff
 from topo_processor.util.time import time_in_ms
 
 from .data_transformer import DataTransformer

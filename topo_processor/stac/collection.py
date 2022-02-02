@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 
 import pystac
 import ulid
@@ -24,7 +24,7 @@ from .stac_extensions import StacExtensions
 if TYPE_CHECKING:
     from .item import Item
 
-TEMP_DIR = None
+TEMP_DIR: Optional[str] = None
 FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/master/fields/fields.json"
 
 

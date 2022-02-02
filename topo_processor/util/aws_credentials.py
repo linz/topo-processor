@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Any, Dict
 
 from boto3 import Session
 
-from topo_processor.file_system.get_fs import bucket_name_from_path
 from topo_processor.util.configuration import aws_profile, aws_role_config_path
+from topo_processor.util.s3 import bucket_name_from_path
 
 if TYPE_CHECKING:
     from mypy_boto3_sts import STSClient
@@ -33,7 +33,8 @@ def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
         load_roles(json.load(open(aws_role_config_path)))
     if bucket_name in bucket_roles:
-        if bucket_name in bucket_credentials:
+        # FIXME: check if the token is expired - add a parameter
+        if bucket_name not in bucket_credentials:
             assumed_role_object = client_sts.assume_role(
                 RoleArn=bucket_roles[bucket_name]["roleArn"], RoleSessionName="TopoProcessor"
             )

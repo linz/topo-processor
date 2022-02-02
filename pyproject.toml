@@ -61,3 +61,4 @@ ignore_missing_imports = true
 markers = [
     "slow: marks tests as slow",
 ]
+testpaths = ["topo_processor"]

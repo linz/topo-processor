@@ -4,13 +4,13 @@ from typing import Dict, Union
 from linz_logger import get_log
 
 import topo_processor.stac.lds_cache as lds_cache
-from topo_processor.file_system.get_fs import is_s3_path
-from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_historic
+from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_hist
 from topo_processor.metadata.metadata_validators import metadata_validator_stac
 from topo_processor.stac.validate_report import ValidateReport
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
 from topo_processor.util.gzip import decompress_file, is_gzip_file
+from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 
 from .collection import Collection
@@ -20,14 +20,15 @@ from .store import collection_store, item_store
 
 def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_collection: bool = True) -> None:
     """This function only validate the Historical Imagery layer at the moment."""
+    # FIXME: Make this function generic by validating other layers (vs only Historical Imagery atm)
     start_time = time_in_ms()
     item_report: ValidateReport = ValidateReport()
     collection_report: ValidateReport = ValidateReport()
 
-    get_log().debug("validate_stac", layer=metadata_loader_imagery_historic.layer_id)
+    get_log().debug("validate_stac", layer=metadata_loader_imagery_hist.layer_id)
 
     if not metadata_file:
-        metadata_file = lds_cache.get_layer(metadata_loader_imagery_historic.layer_id)
+        metadata_file = lds_cache.get_layer(metadata_loader_imagery_hist.layer_id)
     else:
         if is_s3_path(metadata_file):
             local_metadata_file = temp_folder + "/" + os.path.basename(metadata_file)
@@ -37,7 +38,7 @@ def validate_stac(metadata_file: str = "", validate_item: bool = True, validate_
             decompress_file(metadata_file)
 
     # Load metadata from metadata csv file
-    metadata_loader_imagery_historic.load_metadata(None, metadata_file, True)
+    metadata_loader_imagery_hist.load_metadata(None, metadata_file, True)
     get_log().debug("Metadata Loaded", metadata_file=metadata_file, duration=time_in_ms() - start_time)
 
     # Validate metadata from stored STAC objects

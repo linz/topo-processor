@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class DataType(str, Enum):
-    ImageryHistoric = "imagery.historic"
-    ImageryAerial = "imagery.aerial"
-    LidarDSM = "lidar.dsm"
-    LidarDEM = "lidar.dem"
-    LidarPointCloud = "lidar.pointcloud"
+    IMAGERY_HISTORIC = "imagery.historic"
+    IMAGERY_AERIAL = "imagery.aerial"
+    LIDAR_DSM = "lidar.dsm"
+    LIDAR_DEM = "lidar.dem"
+    LIDAR_POINT_CLOUD = "lidar.pointcloud"

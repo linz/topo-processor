@@ -1,21 +1,30 @@
 import os
 
+from linz_logger import get_log
+
 from topo_processor.cog.command import Command
-from topo_processor.file_system.get_fs import bucket_name_from_path, is_s3_path
 from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
 
 
 def create_cog(input_path: str, output_path: str) -> Command:
+    is_s3 = is_s3_path(input_path)
+    if is_s3:
+        credentials: Credentials = get_credentials(bucket_name_from_path(input_path))
+        input_path = f"/vsis3/{input_path.replace('s3://', '')}"
     if os.environ.get("IS_DOCKER") == "true":
         cmd = Command("gdal_translate")
+        if is_s3:
+            os.environ["AWS_ACCESS_KEY_ID"] = credentials.access_key
+            os.environ["AWS_SECRET_ACCESS_KEY"] = credentials.secret_key
+            os.environ["AWS_SESSION_TOKEN"] = credentials.token
     else:
         cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
-    if is_s3_path(input_path):
-        credentials: Credentials = get_credentials(bucket_name_from_path(input_path))
-        cmd.env(f"AWS_ACCESS_KEY_ID={credentials.access_key}")
-        cmd.env(f"AWS_SECRET_ACCESS_KEY={credentials.secret_key}")
-        cmd.env(f"AWS_SESSION_TOKEN={credentials.token}")
-        input_path = f"/vsis3/{input_path.replace('s3://', '')}"
+        if is_s3:
+            cmd.env(f"AWS_ACCESS_KEY_ID={credentials.access_key}")
+            cmd.env(f"AWS_SECRET_ACCESS_KEY={credentials.secret_key}")
+            cmd.env(f"AWS_SESSION_TOKEN={credentials.token}")
+
     cmd.env("GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR")
     cmd.mount(input_path)
     cmd.mount(os.path.dirname(output_path))

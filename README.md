@@ -58,6 +58,30 @@ This configuration file must be referenced in the `.env` file as `AWS_ROLES_CONF
 
 ## Usage
 
+### AWS Batch
+
+**_NOTE:_** Only the `upload` command is implemented to run on AWS Batch at the moment.
+
+1. Deploy the Batch via CDK
+
+On the account you are logged into:
+
+```shell
+npx cdk deploy
+```
+
+The terminal will out put the following values needed in the next step: `BatchJobArn` and `BatchQueueArn`
+
+2. Submit a job
+
+**_NOTE:_** Currently the job submission is restricted to only one job.
+
+The following manual configuration have to be done on the job submission script `/infra/src/submit.ts`:
+
+- `JobDefinitionArn` will take the `BatchJobArn` value.
+- `JobQueueArn` will take the `BatchQueueArn` value.
+- For the `upload` command, `buildCommandArguments()` function has to be modified with the AWS role needed to be assumed to read/write on the `input`, `output`, and `lds_cache` buckets as per the following command arguments: `-rr` or `--readrole`, `-wr` or `--writerole`, and `-lr` or `--ldscacherole`
+
 ### Upload
 
 **_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.

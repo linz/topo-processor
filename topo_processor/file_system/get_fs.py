@@ -3,19 +3,12 @@ from typing import Any
 from fsspec.implementations.local import LocalFileSystem
 from s3fs import S3FileSystem
 
-
-def is_s3_path(path: str) -> bool:
-    if path.startswith("s3://"):
-        return True
-    return False
-
-
-def bucket_name_from_path(path: str) -> str:
-    path_parts = path.replace("s3://", "").split("/")
-    return path_parts.pop(0)
+from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
 
 
 def get_fs(path: str) -> Any:
     if is_s3_path(path):
-        return S3FileSystem()
+        credentials: Credentials = get_credentials(bucket_name_from_path(path))
+        return S3FileSystem(secret=credentials.secret_key, token=credentials.token, key=credentials.access_key)
     return LocalFileSystem(auto_mkdir="True")
