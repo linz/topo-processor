@@ -1,4 +1,4 @@
-import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import { ContainerImage } from 'aws-cdk-lib/aws-ecs';
 import {
@@ -12,7 +12,7 @@ import {
 import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -43,7 +43,17 @@ export class AwsBatchStack extends Stack {
 
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    Bucket.fromBucketName(this, 'bucket-megantestbucket', 'megantestbucket').grantReadWrite(instanceRole);
+    const bucket = new Bucket(this, 'Bucket', {
+        removalPolicy: RemovalPolicy.RETAIN,
+        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+        lifecycleRules: [
+          {
+            expiration: Duration.days(1),
+          },
+        ],
+      });
+
+      bucket.grantReadWrite(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
