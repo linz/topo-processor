@@ -40,12 +40,16 @@ export class AwsBatchStack extends Stack {
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
     const bucket = new Bucket(this, 'Bucket', {
-      removalPolicy: RemovalPolicy.RETAIN,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      lifecycleRules: [{ expiration: Duration.days(1) }],
-    });
+        removalPolicy: RemovalPolicy.RETAIN,
+        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+        lifecycleRules: [
+          {
+            expiration: Duration.days(30),
+          },
+        ],
+      });
 
-    bucket.grantReadWrite(instanceRole);
+      bucket.grantReadWrite(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
