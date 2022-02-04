@@ -156,6 +156,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         wkt = asset_metadata.get("WKT", None)
+        if wkt is None:
+            wkt = asset_metadata.get("\ufeffWKT", None)
         if wkt is None or wkt.lower() == "polygon empty":
             item.add_warning("Geometry is missing", "")
             return
