@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
 
 import rasterio
+from linz_logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.file_system.get_fs import get_fs
@@ -32,34 +34,37 @@ class MetadataValidatorTiff(MetadataValidator):
             eo_bands = asset.properties["eo:bands"]
             fs = get_fs(asset.source_path)
             with fs.open(asset.source_path) as f:
-                with rasterio.open(f) as tiff:
-                    # black and white
-                    if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
-                        # check linz_geospatial_type matches colorinterp
-                        if geospatial_type not in ["black and white image", "black and white infrared image"]:
-                            raise Exception(
-                                f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
-                            )
-                        # check eo:bands matches colorinterp
-                        if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
-                            raise Exception(
-                                f"Wrong 'eo:bands' with common name: '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
-                            )
-                    # color
-                    if all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
-                        common_names = [common_names["common_name"] for common_names in eo_bands]
-                        # check linz_geospatial_type matches colorinterp
-                        if geospatial_type not in ["color image", "color infrared image"]:
-                            raise Exception(
-                                f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
-                            )
-                        # check eo:bands matches colorinterp
-                        if (
-                            len(eo_bands) != 3
-                            or "red" not in common_names
-                            or "green" not in common_names
-                            or "blue" not in common_names
-                        ):
-                            raise Exception(
-                                f"Wrong 'eo:bands' with common name: {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
-                            )
+                with warnings.catch_warnings(record=True) as w:
+                    with rasterio.open(f) as tiff:
+                        # black and white
+                        if ColorInterp.gray in tiff.colorinterp and len(tiff.colorinterp) == 1:
+                            # check linz_geospatial_type matches colorinterp
+                            if geospatial_type not in ["black and white image", "black and white infrared image"]:
+                                raise Exception(
+                                    f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                                )
+                            # check eo:bands matches colorinterp
+                            if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
+                                raise Exception(
+                                    f"Wrong 'eo:bands' with common name: '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                                )
+                        # color
+                        if all(band in [ColorInterp.red, ColorInterp.blue, ColorInterp.green] for band in tiff.colorinterp):
+                            common_names = [common_names["common_name"] for common_names in eo_bands]
+                            # check linz_geospatial_type matches colorinterp
+                            if geospatial_type not in ["color image", "color infrared image"]:
+                                raise Exception(
+                                    f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                                )
+                            # check eo:bands matches colorinterp
+                            if (
+                                len(eo_bands) != 3
+                                or "red" not in common_names
+                                or "green" not in common_names
+                                or "blue" not in common_names
+                            ):
+                                raise Exception(
+                                    f"Wrong 'eo:bands' with common name: {geospatial_type} when bands = {', '.join([color.name for color in tiff.colorinterp])}"
+                                )
+                for warn in w:
+                    get_log().warning(f"Rasterio Warning: {warn.message}", file=asset.source_path, loader=self.name)
