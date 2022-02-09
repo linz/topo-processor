@@ -25,7 +25,9 @@ export class AwsBatchStack extends Stack {
     const container = new DockerImageAsset(this, 'BatchContainer', { directory: props.container });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, 'Vpc', { tags: { BaseVPC: 'true' } });
+    const vpc = Vpc.fromLookup(this, 'Vpc', {
+      tags: { BaseVPC: 'true' },
+    });
     const instanceRole = new Role(this, 'BatchInstanceRole', {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal('ec2.amazonaws.com'),
@@ -40,6 +42,7 @@ export class AwsBatchStack extends Stack {
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
     const bucket = new Bucket(this, 'Bucket', {
+<<<<<<< HEAD
         removalPolicy: RemovalPolicy.RETAIN,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
         lifecycleRules: [
@@ -48,8 +51,18 @@ export class AwsBatchStack extends Stack {
           },
         ],
       });
+=======
+      removalPolicy: RemovalPolicy.RETAIN,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      lifecycleRules: [
+        {
+          expiration: Duration.days(1),
+        },
+      ],
+    });
+>>>>>>> fix: pass CfnOutputs to Topo Processor
 
-      bucket.grantReadWrite(instanceRole);
+    bucket.grantReadWrite(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
@@ -64,7 +77,11 @@ export class AwsBatchStack extends Stack {
         type: ComputeResourceType.SPOT,
         maxvCpus: 100,
         minvCpus: 0,
+<<<<<<< HEAD
         // desiredvCpus: 1,
+=======
+        desiredvCpus: 1,
+>>>>>>> fix: pass CfnOutputs to Topo Processor
         instanceTypes: [
           InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
           InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE),
