@@ -15,10 +15,10 @@ async function main(): Promise<void> {
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'Batch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
-  const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue!;
-  const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue!;
-  const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue!;
-  const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue!;
+  const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue as string;
+  const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue as string;
+  const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue as string;
+  const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue as string;
 
   console.log({ JobDefinitionArn });
   console.log({ JobQueueArn });
