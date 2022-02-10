@@ -3,13 +3,15 @@ from typing import TYPE_CHECKING, Any, Dict
 
 from boto3 import Session
 
-from topo_processor.util.configuration import aws_profile, aws_role_config_path
+from topo_processor.util.configuration import aws_profile, linz_ssm_bucket_config_name
 from topo_processor.util.s3 import bucket_name_from_path
 
 if TYPE_CHECKING:
     from mypy_boto3_sts import STSClient
+    from mypy_boto3_ssm import SSMClient
 else:
     STSClient = object
+    SSMClient = object
 
 
 class Credentials:
@@ -25,13 +27,24 @@ class Credentials:
 
 session = Session(profile_name=aws_profile)
 client_sts: STSClient = session.client("sts")
+client_ssm: SSMClient = session.client("ssm")
 bucket_roles: Dict[str, Dict[str, str]] = {}
 bucket_credentials: Dict[str, Credentials] = {}
+
+# Load bucket to roleArn mapping for LINZ internal buckets from SSM
+def init_roles() -> None:
+    if linz_ssm_bucket_config_name is None:
+        return
+    role_config_param = client_ssm.get_parameter(Name=linz_ssm_bucket_config_name)
+    role_config = json.loads(role_config_param["Parameter"]["Value"])
+
+    for cfg in role_config:
+        bucket_roles[cfg["bucket"]] = cfg
 
 
 def get_credentials(bucket_name: str) -> Credentials:
     if not bucket_roles:
-        load_roles(json.load(open(aws_role_config_path)))
+        init_roles()
     if bucket_name in bucket_roles:
         # FIXME: check if the token is expired - add a parameter
         if bucket_name not in bucket_credentials:
@@ -51,8 +64,3 @@ def get_credentials(bucket_name: str) -> Credentials:
     )
 
     return default_credentials
-
-
-def load_roles(role_config: Any) -> None:
-    for (key, value) in role_config.items():
-        bucket_roles[bucket_name_from_path(key)] = value
