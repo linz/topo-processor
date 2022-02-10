@@ -7,8 +7,8 @@ from topo_processor.util.configuration import aws_profile, linz_ssm_bucket_confi
 from topo_processor.util.s3 import bucket_name_from_path
 
 if TYPE_CHECKING:
-    from mypy_boto3_sts import STSClient
     from mypy_boto3_ssm import SSMClient
+    from mypy_boto3_sts import STSClient
 else:
     STSClient = object
     SSMClient = object
