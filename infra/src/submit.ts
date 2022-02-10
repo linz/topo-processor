@@ -30,10 +30,14 @@ async function main(): Promise<void> {
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'Batch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
-  const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue as string;
-  const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue as string;
-  const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue as string;
-  const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue as string;
+  const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue;
+  if (JobDefinitionArn == null) throw new Error('Unable to find CfnOutput "BatchJobArn"');
+  const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue;
+  if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
+  const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue;
+  if (BatchEc2InstanceRole == null) throw new Error('Unable to find CfnOutput "BatchEc2InstanceRole"');
+  const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue;
+  if (TopoProcessorBucket == null) throw new Error('Unable to find CfnOutput "TopoProcessorBucket"');
 
   console.log({ JobDefinitionArn });
   console.log({ JobQueueArn });
