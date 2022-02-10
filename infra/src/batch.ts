@@ -13,6 +13,7 @@ import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -25,9 +26,7 @@ export class AwsBatchStack extends Stack {
     const container = new DockerImageAsset(this, 'BatchContainer', { directory: props.container });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, 'Vpc', {
-      tags: { BaseVPC: 'true' },
-    });
+    const vpc = Vpc.fromLookup(this, 'Vpc', { tags: { BaseVPC: 'true' } });
     const instanceRole = new Role(this, 'BatchInstanceRole', {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal('ec2.amazonaws.com'),
@@ -54,11 +53,7 @@ export class AwsBatchStack extends Stack {
 =======
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      lifecycleRules: [
-        {
-          expiration: Duration.days(1),
-        },
-      ],
+      lifecycleRules: [{ expiration: Duration.days(1) }],
     });
 >>>>>>> fix: pass CfnOutputs to Topo Processor
 
@@ -78,10 +73,14 @@ export class AwsBatchStack extends Stack {
         maxvCpus: 100,
         minvCpus: 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
         // desiredvCpus: 1,
 =======
         desiredvCpus: 1,
 >>>>>>> fix: pass CfnOutputs to Topo Processor
+=======
+        // desiredvCpus: 1,
+>>>>>>> feat: import bucket role arns from ssm
         instanceTypes: [
           InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
           InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE),
