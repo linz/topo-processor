@@ -13,7 +13,6 @@ import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 interface BatchStackProps extends StackProps {
   container: string;

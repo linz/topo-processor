@@ -27,9 +27,6 @@ async function main(): Promise<void> {
   const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue;
   if (TopoProcessorBucket == null) throw new Error('Unable to find CfnOutput "TopoProcessorBucket"');
 
-  console.log({ JobDefinitionArn });
-  console.log({ JobQueueArn });
-
   // Your logic to determine what to submit
 
   // TODO Just copied from template
@@ -41,7 +38,7 @@ async function main(): Promise<void> {
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-          command: buildCommandArguments(correlationId, BatchEc2InstanceRole, TopoProcessorBucket),
+          command: buildCommandArguments(correlationId, TopoProcessorBucket),
           environment,
         },
       })
@@ -51,10 +48,7 @@ async function main(): Promise<void> {
   }
 }
 
-function buildCommandArguments(correlationId: string, BatchEc2InstanceRole: string, tempBucket: string): string[] {
-  console.log({ BatchEc2InstanceRole });
-  console.log({ TopoProcessorBucket: tempBucket });
-
+function buildCommandArguments(correlationId: string, tempBucket: string): string[] {
   const command: string[] = [];
   command.push('./upload');
   command.push('--correlationid');
@@ -63,14 +57,8 @@ function buildCommandArguments(correlationId: string, BatchEc2InstanceRole: stri
   command.push('s3://' + tempBucket + '/input/');
   command.push('--target');
   command.push('s3://' + tempBucket + '/output/');
-  // command.push('--readrole');
-  // command.push(BatchEc2InstanceRole);
-  // command.push('--writerole');
-  // command.push(BatchEc2InstanceRole);
   command.push('--datatype');
   command.push('imagery.historic');
-  // command.push('--ldscacherole');
-  // command.push('placeholder');
   command.push('-v');
 
   return command;
