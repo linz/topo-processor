@@ -40,21 +40,10 @@ export class AwsBatchStack extends Stack {
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
     const bucket = new Bucket(this, 'Bucket', {
-<<<<<<< HEAD
-        removalPolicy: RemovalPolicy.RETAIN,
-        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-        lifecycleRules: [
-          {
-            expiration: Duration.days(30),
-          },
-        ],
-      });
-=======
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      lifecycleRules: [{ expiration: Duration.days(1) }],
+      lifecycleRules: [{ expiration: Duration.days(30) }],
     });
->>>>>>> fix: pass CfnOutputs to Topo Processor
 
     bucket.grantReadWrite(instanceRole);
 
