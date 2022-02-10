@@ -16,8 +16,4 @@ def test_get_last_version() -> None:
     link_d: pystac.Link = pystac.Link(rel=pystac.RelType.ITEM, target="./1234_100001.json")
     collection.add_links([link_a, link_b, link_c, link_d])
 
-    assert lds_cache.get_last_version(collection) == "100001"
-
-
-def test_get_metadata_file_path() -> None:
-    assert lds_cache.get_metadata_file_name("12345", "123456") == "12345_123456.csv"
+    assert lds_cache.get_latest_item_path(collection).target == "./1234_100001.json"
