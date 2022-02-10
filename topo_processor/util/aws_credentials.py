@@ -7,11 +7,9 @@ from topo_processor.util.configuration import aws_profile, linz_ssm_bucket_confi
 from topo_processor.util.s3 import bucket_name_from_path
 
 if TYPE_CHECKING:
-    from mypy_boto3_ssm import SSMClient
     from mypy_boto3_sts import STSClient
 else:
     STSClient = object
-    SSMClient = object
 
 
 class Credentials:
@@ -27,7 +25,6 @@ class Credentials:
 
 session = Session(profile_name=aws_profile)
 client_sts: STSClient = session.client("sts")
-client_ssm: SSMClient = session.client("ssm")
 bucket_roles: Dict[str, Dict[str, str]] = {}
 bucket_credentials: Dict[str, Credentials] = {}
 
@@ -35,7 +32,11 @@ bucket_credentials: Dict[str, Credentials] = {}
 def init_roles() -> None:
     if linz_ssm_bucket_config_name is None:
         return
-    role_config_param = client_ssm.get_parameter(Name=linz_ssm_bucket_config_name)
+
+    if aws_profile is None:
+        return
+
+    role_config_param = session.client("ssm").get_parameter(Name=linz_ssm_bucket_config_name)
     role_config = json.loads(role_config_param["Parameter"]["Value"])
 
     for cfg in role_config:
