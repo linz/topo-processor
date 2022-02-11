@@ -1,4 +1,4 @@
-name: Build
+name: Build Typescript
 on:
   push:
     branches:
@@ -11,30 +11,6 @@ jobs:
     steps:
       - name: Build and test
         uses: linz/action-typescript@v1
-
-      - name: Use Python "3.8"
-        uses: actions/setup-python@v2.3.1
-        with:
-          python-version: "3.8"
-      - name: Install
-        run: |
-          pip install poetry
-          poetry install
-      - name: Format
-        run: |
-          poetry run black . --check --diff
-      - name: Lint
-        run: |
-          poetry run pylint topo_processor/ --exit-zero
-      - name: Import Sorting
-        run: |
-          poetry run isort -rc . --check --diff
-      - name: Test
-        run: |
-          poetry run pytest --slow --cov topo_processor
-      - name: Mypy
-        run: |
-          poetry run mypy .
 
       - name: (Prod) Setup git config
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
