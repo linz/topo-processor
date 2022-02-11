@@ -23,11 +23,11 @@ export class AwsBatchStack extends Stack {
   public constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);
 
-    const container = new DockerImageAsset(this, 'TopoProcessorBatchContainer', { directory: props.container });
+    const container = new DockerImageAsset(this, 'BatchContainer', { directory: props.container });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, 'TopoProcessorVpc', { tags: { BaseVPC: 'true' } });
-    const instanceRole = new Role(this, 'TopoProcessorBatchInstanceRole', {
+    const vpc = Vpc.fromLookup(this, 'Vpc', { tags: { BaseVPC: 'true' } });
+    const instanceRole = new Role(this, 'BatchInstanceRole', {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal('ec2.amazonaws.com'),
         new ServicePrincipal('ecs.amazonaws.com'),
@@ -49,12 +49,12 @@ export class AwsBatchStack extends Stack {
     topoProcessorBucket.grantReadWrite(instanceRole);
     StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole)
 
-    new CfnInstanceProfile(this, 'TopoProcessorBatchInstanceProfile', {
+    new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
       roles: [instanceRole.roleName],
     });
 
-    const computeEnvironment = new ComputeEnvironment(this, 'TopoProcessorBatchCompute', {
+    const computeEnvironment = new ComputeEnvironment(this, 'BatchCompute', {
       managed: true,
       computeResources: {
         instanceRole: instanceRole.roleName,
@@ -71,8 +71,8 @@ export class AwsBatchStack extends Stack {
       },
     });
 
-    const job = new JobDefinition(this, 'TopoProcessorBatchJob', { container: { image } });
-    const queue = new JobQueue(this, 'TopoProcessorBatchQueue', {
+    const job = new JobDefinition(this, 'BatchJob', { container: { image } });
+    const queue = new JobQueue(this, 'BatchQueue', {
       computeEnvironments: [{ computeEnvironment, order: 1 }],
     });
 
