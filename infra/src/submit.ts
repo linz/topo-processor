@@ -13,6 +13,7 @@ async function main(): Promise<void> {
   const environment = [
     { name: 'LINZ_CORRELATION_ID', value: correlationId },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
+    { name: 'LDS_CACHE_BUCKET', value: 'linz-lds-cache' },
   ];
 
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'Batch' }).promise();
