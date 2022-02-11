@@ -1,17 +1,21 @@
 FROM osgeo/gdal:ubuntu-small-latest
 
-#Install Poetry
+# Install Poetry
 RUN apt-get update
 RUN apt-get install python3-pip -y
 RUN pip install poetry
-RUN poetry config virtualenvs.create false
 
-#Set environment variable to prevent GDAL running in Docker
+# Set environment variable to prevent GDAL running in Docker
 ENV IS_DOCKER=true
 
-#Add Poetry config and scripts
-COPY . /app/topo-processor
+WORKDIR /app
+# Add Poetry config and scripts
+COPY poetry.lock pyproject.toml /app/
 
-WORKDIR /app/topo-processor
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-dev --no-interaction --no-ansi
 
-RUN poetry install --no-dev
+COPY ./topo_processor /app/topo_processor
+COPY ./upload /app/
+
+
