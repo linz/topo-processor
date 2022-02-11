@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 else:
     STSClient = object
 
+
 class Credentials:
     access_key: str
     secret_key: str

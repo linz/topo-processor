@@ -72,9 +72,7 @@ export class AwsBatchStack extends Stack {
     });
 
     const job = new JobDefinition(this, 'BatchJob', { container: { image } });
-    const queue = new JobQueue(this, 'BatchQueue', {
-      computeEnvironments: [{ computeEnvironment, order: 1 }],
-    });
+    const queue = new JobQueue(this, 'BatchQueue', { computeEnvironments: [{ computeEnvironment, order: 1 }] });
 
     new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
