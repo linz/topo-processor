@@ -62,15 +62,6 @@ export class AwsBatchStack extends Stack {
         type: ComputeResourceType.SPOT,
         maxvCpus: 100,
         minvCpus: 0,
-<<<<<<< HEAD
-<<<<<<< HEAD
-        // desiredvCpus: 1,
-=======
-        desiredvCpus: 1,
->>>>>>> fix: pass CfnOutputs to Topo Processor
-=======
-        // desiredvCpus: 1,
->>>>>>> feat: import bucket role arns from ssm
         instanceTypes: [
           InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
           InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE),
@@ -89,5 +80,6 @@ export class AwsBatchStack extends Stack {
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
     new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
     new CfnOutput(this, 'TempBucketName', { value: topoProcessorBucket.bucketName });
+
   }
 }

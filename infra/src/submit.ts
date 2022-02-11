@@ -38,11 +38,8 @@ async function main(): Promise<void> {
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-<<<<<<< HEAD
-          command: buildCommandArguments(correlationId, TempBucket),
-=======
+
           command: buildCommandArguments(correlationId, TempBucketName),
->>>>>>> feat: deploy on li-topo-nonprod
           environment,
         },
       })
@@ -52,9 +49,7 @@ async function main(): Promise<void> {
   }
 }
 
-
 function buildCommandArguments(correlationId: string, tempBucket: string): string[] {
-
   const command: string[] = [];
   command.push('./upload');
   command.push('--correlationid');
@@ -65,10 +60,6 @@ function buildCommandArguments(correlationId: string, tempBucket: string): strin
   command.push('s3://' + tempBucket + '/output/');
   command.push('--datatype');
   command.push('imagery.historic');
-  command.push('--datatype');
-  command.push('imagery.historic');
-  command.push('--ldscacherole');
-  command.push('placeholder');
   command.push('-v');
 
   return command;
