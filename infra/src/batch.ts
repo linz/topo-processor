@@ -47,7 +47,7 @@ export class AwsBatchStack extends Stack {
     });
 
     topoProcessorBucket.grantReadWrite(instanceRole);
-    StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole)
+    StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
@@ -78,6 +78,5 @@ export class AwsBatchStack extends Stack {
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
     new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
     new CfnOutput(this, 'TempBucketName', { value: topoProcessorBucket.bucketName });
-
   }
 }
