@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 else:
     STSClient = object
 
-
 class Credentials:
     access_key: str
     secret_key: str
@@ -32,27 +31,11 @@ bucket_credentials: Dict[str, Credentials] = {}
 def init_roles() -> None:
     if linz_ssm_bucket_config_name is None:
         return
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> refactor: move ssm loading inside init_roles to prevent unit test failures
-=======
->>>>>>> 5a7c894424702d1b7cffc6f71029380c72db8137
 
     if aws_profile is None:
         return
 
     role_config_param = session.client("ssm").get_parameter(Name=linz_ssm_bucket_config_name)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    role_config_param = client_ssm.get_parameter(Name=linz_ssm_bucket_config_name)
->>>>>>> feat: import bucket role arns from ssm
-=======
->>>>>>> refactor: move ssm loading inside init_roles to prevent unit test failures
-=======
->>>>>>> 5a7c894424702d1b7cffc6f71029380c72db8137
     role_config = json.loads(role_config_param["Parameter"]["Value"])
 
     for cfg in role_config:
