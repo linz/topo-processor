@@ -15,7 +15,7 @@ async function main(): Promise<void> {
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
 
-  const stackInfo = await cloudFormation.describeStacks({ StackName: 'Batch' }).promise();
+  const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
   const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue;
@@ -24,8 +24,8 @@ async function main(): Promise<void> {
   if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
   const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue;
   if (BatchEc2InstanceRole == null) throw new Error('Unable to find CfnOutput "BatchEc2InstanceRole"');
-  const TempBucket = stackOutputs?.find((f) => f.OutputKey === 'TempBucket')?.OutputValue;
-  if (TempBucket == null) throw new Error('Unable to find CfnOutput "TempBucket"');
+  const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
+  if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
   // Your logic to determine what to submit
 
@@ -38,7 +38,11 @@ async function main(): Promise<void> {
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
+<<<<<<< HEAD
           command: buildCommandArguments(correlationId, TempBucket),
+=======
+          command: buildCommandArguments(correlationId, TempBucketName),
+>>>>>>> feat: deploy on li-topo-nonprod
           environment,
         },
       })

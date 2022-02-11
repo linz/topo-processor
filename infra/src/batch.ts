@@ -13,6 +13,7 @@ import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -22,11 +23,11 @@ export class AwsBatchStack extends Stack {
   public constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);
 
-    const container = new DockerImageAsset(this, 'BatchContainer', { directory: props.container });
+    const container = new DockerImageAsset(this, 'TopoProcessorBatchContainer', { directory: props.container });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, 'Vpc', { tags: { BaseVPC: 'true' } });
-    const instanceRole = new Role(this, 'BatchInstanceRole', {
+    const vpc = Vpc.fromLookup(this, 'TopoProcessorVpc', { tags: { BaseVPC: 'true' } });
+    const instanceRole = new Role(this, 'TopoProcessorBatchInstanceRole', {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal('ec2.amazonaws.com'),
         new ServicePrincipal('ecs.amazonaws.com'),
@@ -39,20 +40,21 @@ export class AwsBatchStack extends Stack {
 
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    const bucket = new Bucket(this, 'Bucket', {
+    const topoProcessorBucket = new Bucket(this, 'TempBucket', {
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ expiration: Duration.days(30) }],
     });
 
-    bucket.grantReadWrite(instanceRole);
+    topoProcessorBucket.grantReadWrite(instanceRole);
+    StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole)
 
-    new CfnInstanceProfile(this, 'BatchInstanceProfile', {
+    new CfnInstanceProfile(this, 'TopoProcessorBatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
       roles: [instanceRole.roleName],
     });
 
-    const computeEnvironment = new ComputeEnvironment(this, 'BatchCompute', {
+    const computeEnvironment = new ComputeEnvironment(this, 'TopoProcessorBatchCompute', {
       managed: true,
       computeResources: {
         instanceRole: instanceRole.roleName,
@@ -78,12 +80,14 @@ export class AwsBatchStack extends Stack {
       },
     });
 
-    const job = new JobDefinition(this, 'BatchJob', { container: { image } });
-    const queue = new JobQueue(this, 'BatchQueue', { computeEnvironments: [{ computeEnvironment, order: 1 }] });
+    const job = new JobDefinition(this, 'TopoProcessorBatchJob', { container: { image } });
+    const queue = new JobQueue(this, 'TopoProcessorBatchQueue', {
+      computeEnvironments: [{ computeEnvironment, order: 1 }],
+    });
 
     new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
     new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
-    new CfnOutput(this, 'TopoProcessorBucket', { value: bucket.bucketName });
+    new CfnOutput(this, 'TempBucketName', { value: topoProcessorBucket.bucketName });
   }
 }
