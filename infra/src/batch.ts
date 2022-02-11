@@ -1,4 +1,4 @@
-import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import { ContainerImage } from 'aws-cdk-lib/aws-ecs';
 import {
@@ -12,7 +12,7 @@ import {
 import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -22,14 +22,10 @@ export class AwsBatchStack extends Stack {
   public constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);
 
-    const container = new DockerImageAsset(this, 'BatchContainer', {
-      directory: props.container,
-    });
+    const container = new DockerImageAsset(this, 'BatchContainer', { directory: props.container });
     const image = ContainerImage.fromDockerImageAsset(container);
 
-    const vpc = Vpc.fromLookup(this, 'AlbVpc', {
-      tags: { BaseVPC: 'true' },
-    });
+    const vpc = Vpc.fromLookup(this, 'Vpc', { tags: { BaseVPC: 'true' } });
     const instanceRole = new Role(this, 'BatchInstanceRole', {
       assumedBy: new CompositePrincipal(
         new ServicePrincipal('ec2.amazonaws.com'),
@@ -43,7 +39,13 @@ export class AwsBatchStack extends Stack {
 
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    Bucket.fromBucketName(this, 'bucket-megantestbucket', 'megantestbucket').grantReadWrite(instanceRole);
+    const bucket = new Bucket(this, 'Bucket', {
+      removalPolicy: RemovalPolicy.RETAIN,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      lifecycleRules: [{ expiration: Duration.days(1) }],
+    });
+
+    bucket.grantReadWrite(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
@@ -58,19 +60,22 @@ export class AwsBatchStack extends Stack {
         type: ComputeResourceType.SPOT,
         maxvCpus: 100,
         minvCpus: 0,
-        desiredvCpus: 1,
-        instanceTypes: [InstanceType.of(InstanceClass.C5, InstanceSize.LARGE)],
+        // desiredvCpus: 1,
+        instanceTypes: [
+          InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
+          InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE),
+          InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE2),
+          InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE4),
+        ],
       },
     });
 
-    const job = new JobDefinition(this, 'BatchJob', {
-      container: { image },
-    });
-    const queue = new JobQueue(this, 'BatchQueue', {
-      computeEnvironments: [{ computeEnvironment, order: 1 }],
-    });
+    const job = new JobDefinition(this, 'BatchJob', { container: { image } });
+    const queue = new JobQueue(this, 'BatchQueue', { computeEnvironments: [{ computeEnvironment, order: 1 }] });
 
     new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
+    new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
+    new CfnOutput(this, 'TopoProcessorBucket', { value: bucket.bucketName });
   }
 }
