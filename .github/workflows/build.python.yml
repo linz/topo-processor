@@ -1,0 +1,36 @@
+name: Build Python
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Use Python "3.8"
+        uses: actions/setup-python@v2.3.1
+        with:
+          python-version: "3.8"
+      - name: Install
+        run: |
+          pip install poetry
+          poetry install
+      - name: Format
+        run: |
+          poetry run black . --check --diff
+      - name: Lint
+        run: |
+          poetry run pylint topo_processor/ --exit-zero
+      - name: Import Sorting
+        run: |
+          poetry run isort -rc . --check --diff
+      - name: Test
+        run: |
+          poetry run pytest --slow --cov topo_processor
+      - name: Mypy
+        run: |
+          poetry run mypy .
