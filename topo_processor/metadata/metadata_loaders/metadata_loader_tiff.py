@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any, Optional
 
 import rasterio
+from linz_logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.file_system.get_fs import get_fs
@@ -28,10 +30,14 @@ class MetadataLoaderTiff(MetadataLoader):
             fs = get_fs(asset.source_path)
             # FIXME: Should we download the file first as we could need it to do the coggification later?
             # This process takes quiet a long time locally.
+
             with fs.open(asset.source_path) as f:
-                with rasterio.open(f) as tiff:
-                    self.add_epsg(tiff, asset)
-                    self.add_bands(tiff, asset)
+                with warnings.catch_warnings(record=True) as w:
+                    with rasterio.open(f) as tiff:
+                        self.add_epsg(tiff, asset)
+                        self.add_bands(tiff, asset)
+                for warn in w:
+                    get_log().warning(f"Rasterio Warning: {warn.message}", file=asset.source_path, loader=self.name)
 
     def add_epsg(self, tiff: Any, asset: Asset) -> None:
         if tiff.crs:
