@@ -40,21 +40,13 @@ poetry install
 
 ## Configuration
 
-The global user configuration is defined in the `.env` file located at the `root` of the project.
+The global user configuration is defined by environment variables, example environment variables are found in the `.env` file.
 
 ### AWS
 
-To allow the system to perform AWS request, you'll need an AWS roles `json` configuration file as follow:
+To allow the system to perform cross account AWS request, you'll need to config AWS roles inside of a AWS SSM parameter
 
-```json
-{
-  "s3://example-bucket": {
-    "roleArn": "arn:aws:iam::0123456789:role/example-read"
-  }
-}
-```
-
-This configuration file must be referenced in the `.env` file as `AWS_ROLES_CONFIG`
+This configuration parameter can be referenced via `$LINZ_SSM_BUCKET_CONFIG_NAME`
 
 ## Usage
 
