@@ -16,14 +16,20 @@ def process_directory(source_dir: str, data_type: DataType) -> None:
     start_time = time_in_ms()
     _create_assets(source_dir, data_type)
     total_asset = len(asset_store)
-    if total_asset > 0:
-        get_log().debug("Assets Created", total_assets=total_asset, source_dir=source_dir, duration=time_in_ms() - start_time)
+    if total_asset == 0:
+        get_log().warn("No Assets Found", assets=total_asset, source=source_dir, duration=time_in_ms() - start_time)
+        return
+
+    get_log().debug("Assets Created", assets=total_asset, source=source_dir, duration=time_in_ms() - start_time)
 
     start_time = time_in_ms()
     _create_items()
     total_item = len(item_store)
-    if len(item_store) > 0:
-        get_log().debug("Items Created", total_items=total_item, source_dir=source_dir, duration=time_in_ms() - start_time)
+    if len(item_store) == 0:
+        get_log().warn("No Items Created", items=total_item, source=source_dir, duration=time_in_ms() - start_time)
+        return
+
+    get_log().debug("Items Created", items=total_item, source=source_dir, duration=time_in_ms() - start_time)
 
 
 def _create_assets(source_dir: str, data_type: str) -> None:

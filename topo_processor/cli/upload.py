@@ -21,18 +21,6 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The name of the directory with data to import",
 )
 @click.option(
-    "-rr",
-    "--readrole",
-    required=False,
-    help="The AWS read role for the source bucket.",
-)
-@click.option(
-    "-lr",
-    "--ldscacherole",
-    required=False,
-    help="The AWS read role for the LDS Cache.",
-)
-@click.option(
     "-d",
     "--datatype",
     required=True,
@@ -44,12 +32,6 @@ from topo_processor.util.transfer_collection import transfer_collection
     "--target",
     required=True,
     help="The target directory path or bucket name of the upload",
-)
-@click.option(
-    "-wr",
-    "--writerole",
-    required=False,
-    help="The AWS write role for the target bucket.",
 )
 @click.option(
     "-cid",
@@ -69,19 +51,8 @@ from topo_processor.util.transfer_collection import transfer_collection
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(
-    source: str, readrole: str, ldscacherole: str, datatype: str, correlationid: str, target: str, writerole: str, verbose: str
-) -> None:
-    if correlationid:
-        get_log().info({"Correlation ID": correlationid})
-
-    # Loads the roles
-    if readrole:
-        bucket_roles[bucket_name_from_path(source)] = {"roleArn": readrole}
-    if ldscacherole:
-        bucket_roles[lds_cache_bucket] = {"roleArn": ldscacherole}
-    if writerole:
-        bucket_roles[bucket_name_from_path(target)] = {"roleArn": writerole}
+def main(source: str, datatype: str, correlationid: str, target: str, verbose: str) -> None:
+    get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
 
     if verbose:
         set_level(LogLevel.trace)
@@ -97,7 +68,6 @@ def main(
     try:
         for collection in collection_store.values():
             transfer_collection(collection, target)
-
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()
