@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Build and test
         uses: linz/action-typescript@v1
@@ -30,3 +33,27 @@ jobs:
         run: npx conventional-github-releaser -p angular
         env:
           CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: (NonProd) Configure AWS Credentials
+        if: github.ref == 'refs/heads/master'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: 'ap-southeast-2'
+          role-to-assume: ${{ secrets.AWS_ROLE_NON_PROD }}
+
+      - name: (NonProd) Deploy to NonProd
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npx cdk deploy
+
+      - name: (Prod) Configure AWS Credentials
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: 'ap-southeast-2'
+          role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
+
+      - name: (Prod) Deploy to Prod
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        run: |
+          npx cdk deploy
