@@ -13,6 +13,7 @@ import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-
 import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -39,13 +40,14 @@ export class AwsBatchStack extends Stack {
 
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    const bucket = new Bucket(this, 'Bucket', {
+    const tempBucket = new Bucket(this, 'TempBucket', {
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      lifecycleRules: [{ expiration: Duration.days(1) }],
+      lifecycleRules: [{ expiration: Duration.days(30) }],
     });
 
-    bucket.grantReadWrite(instanceRole);
+    tempBucket.grantReadWrite(instanceRole);
+    StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
       instanceProfileName: instanceRole.roleName,
@@ -60,7 +62,6 @@ export class AwsBatchStack extends Stack {
         type: ComputeResourceType.SPOT,
         maxvCpus: 100,
         minvCpus: 0,
-        // desiredvCpus: 1,
         instanceTypes: [
           InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
           InstanceType.of(InstanceClass.C5, InstanceSize.XLARGE),
@@ -76,6 +77,6 @@ export class AwsBatchStack extends Stack {
     new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
     new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
-    new CfnOutput(this, 'TopoProcessorBucket', { value: bucket.bucketName });
+    new CfnOutput(this, 'TempBucketName', { value: tempBucket.bucketName });
   }
 }
