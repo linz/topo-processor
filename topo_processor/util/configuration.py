@@ -6,11 +6,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def get_env(env_name:str) -> str:
+
+def get_env(env_name: str) -> str:
     env_var = environ.get(env_name)
     if env_var is None:
         raise Exception(f"Missing environment variable ${env_name}")
     return env_var
+
 
 lds_cache_bucket: str = get_env("LINZ_CACHE_BUCKET")
 aws_profile: str = get_env("AWS_PROFILE")
