@@ -40,13 +40,13 @@ export class AwsBatchStack extends Stack {
 
     instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
 
-    const topoProcessorBucket = new Bucket(this, 'TempBucket', {
+    const tempBucket = new Bucket(this, 'TempBucket', {
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ expiration: Duration.days(30) }],
     });
 
-    topoProcessorBucket.grantReadWrite(instanceRole);
+    tempBucket.grantReadWrite(instanceRole);
     StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
 
     new CfnInstanceProfile(this, 'BatchInstanceProfile', {
@@ -77,6 +77,6 @@ export class AwsBatchStack extends Stack {
     new CfnOutput(this, 'BatchJobArn', { value: job.jobDefinitionArn });
     new CfnOutput(this, 'BatchQueueArn', { value: queue.jobQueueArn });
     new CfnOutput(this, 'BatchEc2InstanceRole', { value: instanceRole.roleArn });
-    new CfnOutput(this, 'TempBucketName', { value: topoProcessorBucket.bucketName });
+    new CfnOutput(this, 'TempBucketName', { value: tempBucket.bucketName });
   }
 }
