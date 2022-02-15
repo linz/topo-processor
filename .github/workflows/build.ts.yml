@@ -44,7 +44,6 @@ jobs:
       - name: (NonProd) Deploy to NonProd
         if: github.ref == 'refs/heads/master'
         run: |
-          yarn build
           npx cdk deploy
 
       - name: (Prod) Configure AWS Credentials
@@ -57,5 +56,4 @@ jobs:
       - name: (Prod) Deploy to Prod
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
         run: |
-          yarn build
           npx cdk deploy
