@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Hello World
 def get_env(env_name: str) -> str:
     env_var = environ.get(env_name)
     if env_var is None:
