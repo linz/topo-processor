@@ -13,20 +13,18 @@ async function main(): Promise<void> {
   const environment = [
     { name: 'LINZ_CORRELATION_ID', value: correlationId },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
-    { name: 'LDS_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
   ];
 
-  const stackInfo = await cloudFormation.describeStacks({ StackName: 'Batch' }).promise();
+  const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
   const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue;
   if (JobDefinitionArn == null) throw new Error('Unable to find CfnOutput "BatchJobArn"');
   const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue;
   if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
-  const BatchEc2InstanceRole = stackOutputs?.find((f) => f.OutputKey === 'BatchEc2InstanceRole')?.OutputValue;
-  if (BatchEc2InstanceRole == null) throw new Error('Unable to find CfnOutput "BatchEc2InstanceRole"');
-  const TopoProcessorBucket = stackOutputs?.find((f) => f.OutputKey === 'TopoProcessorBucket')?.OutputValue;
-  if (TopoProcessorBucket == null) throw new Error('Unable to find CfnOutput "TopoProcessorBucket"');
+  const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
+  if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
   // Your logic to determine what to submit
 
@@ -39,7 +37,8 @@ async function main(): Promise<void> {
         jobDefinition: JobDefinitionArn,
         containerOverrides: {
           resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-          command: buildCommandArguments(correlationId, TopoProcessorBucket),
+
+          command: buildCommandArguments(correlationId, TempBucketName),
           environment,
         },
       })
