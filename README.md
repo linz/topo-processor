@@ -15,7 +15,7 @@ These components include transforming data into cloud optimised formats like [CO
 
 ## Installation
 
-### Requirements ro run Topo Processor locally:
+### Requirements to run Topo Processor locally:
 
 #### Poetry
 
@@ -42,7 +42,7 @@ poetry install
 
 The global user configuration is defined by environment variables, example environment variables are found in the `.env` file.
 
-### Requirements ro run Topo Processor using AWS Batch:
+### Requirements to run Topo Processor using AWS Batch:
 
 #### Software
 
@@ -70,7 +70,7 @@ npx cdk deploy
 
 ### AWS Roles
 
-To allow the system to perform cross account AWS request, you'll need to config AWS roles inside of a AWS SSM parameter.
+To allow the system to perform cross account AWS requests, you'll need to config AWS roles inside of an AWS SSM parameter.
 
 This configuration parameter can be referenced via `$LINZ_SSM_BUCKET_CONFIG_NAME`
 
