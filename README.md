@@ -58,6 +58,8 @@ yarn build
 
 To deploy the Batch via CDK locally:
 
+
+
 On the AWS account you are logged into
 
 ```shell
@@ -77,6 +79,8 @@ This configuration parameter can be referenced via `$LINZ_SSM_BUCKET_CONFIG_NAME
 ### AWS Batch Job Submission
 
 **_NOTE:_** Only the `upload` command is implemented to run on AWS Batch at the moment. Currently the job submission is restricted to only one job.
+
+**_NOTE:_** You may need to set the `AWS_REGION` environment variable to your region.
 
 ```shell
 node ./build/infra/src/submit.js
