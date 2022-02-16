@@ -56,7 +56,7 @@ function buildCommandArguments(correlationId: string, tempBucket: string): strin
   command.push('--source');
   command.push('s3://' + tempBucket + '/input/');
   command.push('--target');
-  command.push('s3://' + tempBucket + '/output/');
+  command.push('s3://' + tempBucket + '/' + correlationId + '/');
   command.push('--datatype');
   command.push('imagery.historic');
   command.push('-v');
