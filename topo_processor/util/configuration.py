@@ -1,9 +1,9 @@
-from linz_logger import get_log
 from os import environ
 from tempfile import mkdtemp
 from typing import Optional
 
 from dotenv import load_dotenv
+from linz_logger import get_log
 
 load_dotenv()
 
