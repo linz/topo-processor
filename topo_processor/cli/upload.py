@@ -6,9 +6,7 @@ from linz_logger import LogLevel, get_log, set_level
 from topo_processor.stac.data_type import DataType
 from topo_processor.stac.item_factory import process_directory
 from topo_processor.stac.store import collection_store
-from topo_processor.util.aws_credentials import bucket_roles
-from topo_processor.util.configuration import lds_cache_bucket
-from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
+from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
 

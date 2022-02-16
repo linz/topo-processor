@@ -14,6 +14,7 @@ async function main(): Promise<void> {
     { name: 'LINZ_CORRELATION_ID', value: correlationId },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
     { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
   ];
 
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
@@ -26,9 +27,6 @@ async function main(): Promise<void> {
   const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
-  // Your logic to determine what to submit
-
-  // TODO Just copied from template
   for (let jobId = 0; jobId < 1; jobId++) {
     const res = await batch
       .submitJob({
@@ -47,6 +45,8 @@ async function main(): Promise<void> {
     console.log(res);
   }
 }
+
+// TODO: historical imagery input source
 
 function buildCommandArguments(correlationId: string, tempBucket: string): string[] {
   const command: string[] = [];

@@ -1,11 +1,10 @@
 import json
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Dict
 
 from boto3 import Session
 from linz_logger import get_log
 
 from topo_processor.util.configuration import aws_profile, linz_ssm_bucket_config_name
-from topo_processor.util.s3 import bucket_name_from_path
 
 if TYPE_CHECKING:
     from mypy_boto3_sts import STSClient
@@ -31,10 +30,8 @@ bucket_credentials: Dict[str, Credentials] = {}
 
 # Load bucket to roleArn mapping for LINZ internal buckets from SSM
 def init_roles() -> None:
+    get_log().debug("init_roles", linz_ssm_bucket_name=linz_ssm_bucket_config_name, aws_profile=aws_profile)
     if linz_ssm_bucket_config_name is None:
-        return
-
-    if aws_profile is None:
         return
 
     get_log().debug("load_bucket_config", ssm=linz_ssm_bucket_config_name)
@@ -47,6 +44,7 @@ def init_roles() -> None:
 
 
 def get_credentials(bucket_name: str) -> Credentials:
+    get_log().debug("get_credentials_bucket_name", bucket_name=bucket_name)
     if not bucket_roles:
         init_roles()
     if bucket_name in bucket_roles:
