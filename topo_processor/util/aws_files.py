@@ -40,6 +40,7 @@ def s3_download(source_path: str, dest_path: str) -> None:
 
 
 def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
+    get_log().debug("bucket_name", bucket_name=bucket_name)
     credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(
