@@ -9,13 +9,13 @@
 
 ## Description
 
-The Topo Processor is a collection of small components that can be combined together to create a pipeline.
+The Topo Processor is a collection of small components that can be combined together to create a pipeline. It can be run on a local workstation or using AWS Batch.
 
 These components include transforming data into cloud optimised formats like [COG](https://www.cogeo.org/) and the creation of [STAC](http://stacspec.org/) metadata.
 
 ## Installation
 
-### Requirements
+### Requirements to run Topo Processor locally:
 
 #### Poetry
 
@@ -42,39 +42,51 @@ poetry install
 
 The global user configuration is defined by environment variables, example environment variables are found in the `.env` file.
 
-### AWS
+### Requirements to run Topo Processor using AWS Batch:
 
-To allow the system to perform cross account AWS request, you'll need to config AWS roles inside of a AWS SSM parameter
+#### Software
+
+```shell
+yarn
+
+yarn build
+```
+
+#### AWS Batch Stack deployment
+
+**_NOTE:_** [AWS deployment is done automatically through GitHub Actions.](#aws-deployment--ci--cd)
+
+To deploy the Batch via CDK locally:
+
+
+
+On the AWS account you are logged into
+
+```shell
+yarn build
+
+npx cdk deploy
+```
+
+### AWS Roles
+
+To allow the system to perform cross account AWS requests, you'll need to config AWS roles inside of an AWS SSM parameter.
 
 This configuration parameter can be referenced via `$LINZ_SSM_BUCKET_CONFIG_NAME`
 
 ## Usage
 
-### AWS Batch
+### AWS Batch Job Submission
 
-**_NOTE:_** Only the `upload` command is implemented to run on AWS Batch at the moment.
+**_NOTE:_** Only the `upload` command is implemented to run on AWS Batch at the moment. Currently the job submission is restricted to only one job.
 
-1. Deploy the Batch via CDK
-
-On the account you are logged into:
+**_NOTE:_** You may need to set the `AWS_REGION` environment variable to your region.
 
 ```shell
-npx cdk deploy
+node ./build/infra/src/submit.js
 ```
 
-The terminal will out put the following values needed in the next step: `BatchJobArn` and `BatchQueueArn`
-
-2. Submit a job
-
-**_NOTE:_** Currently the job submission is restricted to only one job.
-
-The following manual configuration have to be done on the job submission script `/infra/src/submit.ts`:
-
-- `JobDefinitionArn` will take the `BatchJobArn` value.
-- `JobQueueArn` will take the `BatchQueueArn` value.
-- For the `upload` command, `buildCommandArguments()` function has to be modified with the AWS role needed to be assumed to read/write on the `input`, `output`, and `lds_cache` buckets as per the following command arguments: `-rr` or `--readrole`, `-wr` or `--writerole`, and `-lr` or `--ldscacherole`
-
-### Upload
+### Upload command
 
 **_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
 
