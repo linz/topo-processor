@@ -1,0 +1,9 @@
+{
+    "path": "test_data",
+    "time": 1644961117023,
+    "files": [
+      { "path": "/tiffs/SURVEY_1/WRONG_PHOTO_TYPE.tif" },
+      { "path": "/tiffs/SURVEY_1/MULTIPLE_ASSET.tif" },
+      { "path": "/tiffs/SURVEY_1/CONTROL.tif" }
+    ]
+  }
