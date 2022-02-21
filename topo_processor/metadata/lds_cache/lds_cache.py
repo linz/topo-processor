@@ -76,6 +76,7 @@ def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]
                     is_found = True
                 else:
                     is_found = False
+                    break
             else:
                 get_log().warning("filter_metadata", key=criteria_key, msg="Key not found.")
         if is_found:
