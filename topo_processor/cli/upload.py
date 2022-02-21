@@ -3,7 +3,7 @@ import os
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.stac.data_type import DataType
+from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.item_factory import process_directory
 from topo_processor.stac.store import collection_store
 from topo_processor.util.s3 import is_s3_path
@@ -44,12 +44,18 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
+    "-m",
+    "--metadata",
+    required=False,
+    help="The metadata file path",
+)
+@click.option(
     "-v",
     "--verbose",
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, datatype: str, correlationid: str, target: str, verbose: str) -> None:
+def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
 
     if verbose:
@@ -61,7 +67,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, verbose: s
     if not is_s3_path(source):
         source = os.path.abspath(source)
 
-    process_directory(source, data_type)
+    process_directory(source, data_type, metadata)
 
     try:
         for collection in collection_store.values():

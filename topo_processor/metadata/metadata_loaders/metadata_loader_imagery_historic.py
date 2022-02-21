@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import csv
 import os
 from typing import TYPE_CHECKING, Any, Dict, Optional, Union
 
@@ -8,7 +7,8 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
-from topo_processor.stac import lds_cache
+from topo_processor.metadata.data_type import DataType
+from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.file_extension import is_tiff
 from topo_processor.stac.linz_provider import LinzProviders
@@ -34,7 +34,6 @@ if TYPE_CHECKING:
 
 class MetadataLoaderImageryHistoric(MetadataLoader):
     name = "metadata.loader.imagery.historic"
-    layer_id = "51002"
     is_init = False
     raw_metadata: Dict[str, Dict[str, str]] = {}
 
@@ -45,18 +44,19 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             return False
 
     def load_metadata(self, asset: Optional[Asset] = None, metadata_file: str = "", is_load_all: bool = False) -> None:
-        if not self.is_init:
-            if asset and not is_s3_path(asset.source_path):
-                self.read_csv()
-            else:
-                metadata_file = lds_cache.get_layer(self.layer_id)
-                self.read_csv(metadata_file)
+        criteria = {}
+        filename = ""
+
+        if asset:
+            filename = os.path.splitext(os.path.basename(asset.source_path))[0]
+            criteria = {"raw_filename": filename}
+
+        self.raw_metadata = get_metadata(DataType.IMAGERY_HISTORIC.value, criteria, metadata_file)
 
         if is_load_all:
             for metadata in self.raw_metadata.values():
                 self.populate_item(metadata)
         elif asset:
-            filename = os.path.splitext(os.path.basename(asset.source_path))[0]
 
             if filename not in self.raw_metadata:
                 asset.add_error("Asset not found in CSV file", self.name)
@@ -122,28 +122,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.linz.value)
         item.add_extension(StacExtensions.version.value)
         item.add_extension(StacExtensions.processing.value)
-
-    def read_csv(self, metadata_file: str = "") -> None:
-        self.raw_metadata = {}
-        if not metadata_file:
-            metadata_file = "test_data/historical_aerial_photos_metadata.csv"
-
-        csv_path = os.path.join(os.getcwd(), metadata_file)
-        if not os.path.isfile(csv_path):
-            raise Exception(f'Cannot find "{csv_path}"')
-
-        with open(csv_path, "r") as csv_text:
-            reader = csv.DictReader(csv_text, delimiter=",")
-            for row in reader:
-                if row["raw_filename"]:
-                    raw_filename = row["raw_filename"]
-                    if not metadata_file and raw_filename in self.raw_metadata:
-                        raise Exception(f'Duplicate file "{raw_filename}" found in metadata csv')
-                    self.raw_metadata[raw_filename] = row
-                else:
-                    self.raw_metadata[row["sufi"]] = row
-
-        self.is_init = True
 
     def get_title(self, survey: str, alternate_survey_name: str) -> Union[str, None]:
         if not survey or survey == "0" or survey == "":
