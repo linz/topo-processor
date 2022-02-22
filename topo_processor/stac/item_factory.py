@@ -10,7 +10,7 @@ from topo_processor.stac.store import asset_store, item_store
 from topo_processor.util.time import time_in_ms
 
 
-def process_directory(source: str, data_type: DataType, metadata_path: str = "") -> None:
+def process_source(source: str, data_type: DataType, metadata_path: str = "") -> None:
     start_time = time_in_ms()
     _create_assets(source, data_type, metadata_path)
     total_asset = len(asset_store)
