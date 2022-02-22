@@ -4,6 +4,7 @@ import subprocess
 
 import pytest
 
+from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.stac_extensions import StacExtensions
 
 

@@ -10,7 +10,7 @@ from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_d
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 from topo_processor.util.gzip import decompress_file
 
-metadata: Dict[str, Dict[str, Any]] = {}
+metadata_store: Dict[str, Dict[str, Any]] = {}
 """Stores the metadata by layer id"""
 
 
@@ -36,7 +36,7 @@ def get_metadata(data_type: str, criteria: Optional[Dict[str, str]] = None, meta
     layer_id = get_layer_id(data_type)
 
     if not metadata_path:
-        if not metadata.get(layer_id):
+        if not metadata_store.get(layer_id):
             latest_item = get_latest_item(layer_id)
             exported_asset = latest_item.assets.get("export", None)
 
@@ -55,12 +55,12 @@ def get_metadata(data_type: str, criteria: Optional[Dict[str, str]] = None, meta
 
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
-            metadata[layer_id] = read_csv(metadata_path)
+            metadata_store[layer_id] = read_csv(metadata_path)
 
     if criteria:
-        return filter_metadata(metadata[layer_id], criteria)
+        return filter_metadata(metadata_store[layer_id], criteria)
 
-    return metadata[layer_id]
+    return metadata_store[layer_id]
 
 
 def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]) -> Dict[str, Any]:
@@ -68,8 +68,6 @@ def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]
     is_found = False
 
     for metadata_key, metadata_value in metadata_to_filter.items():
-        # TODO Remove this print
-        print(f"---------> CRITERIA: {criteria}")
         for criteria_key, criteria_value in criteria.items():
             if metadata_value[criteria_key]:
                 if metadata_value[criteria_key] == criteria_value:

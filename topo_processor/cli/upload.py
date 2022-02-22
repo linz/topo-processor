@@ -4,6 +4,7 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.metadata.data_type import DataType
+from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.item_factory import process_directory
 from topo_processor.stac.store import collection_store
 from topo_processor.util.s3 import is_s3_path
@@ -66,6 +67,11 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
 
     if not is_s3_path(source):
         source = os.path.abspath(source)
+
+    # This force loading in cache the metadata required by the user.
+    # Not the prettiest way but avoid to change the metadata_loader.load_metadata signature
+    if metadata:
+        get_metadata(data_type, None, metadata)
 
     process_directory(source, data_type, metadata)
 

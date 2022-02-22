@@ -2,7 +2,6 @@ from linz_logger import get_log
 
 from topo_processor.data.data_transformers import data_transformer_repo
 from topo_processor.file_system.assets import get_assets
-from topo_processor.file_system.get_fs import get_fs
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.metadata_loaders import metadata_loader_rep
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
@@ -34,8 +33,7 @@ def process_directory(source: str, data_type: DataType, metadata_path: str = "")
 def _create_assets(source: str, data_type: str, metadata_path: str) -> None:
     assets = get_assets(source, data_type, metadata_path)
     for asset in assets:
-        print(f"test: {asset}")
-        # metadata_loader_rep.load_metadata(asset)
+        metadata_loader_rep.load_metadata(asset)
 
 
 def _create_items() -> None:

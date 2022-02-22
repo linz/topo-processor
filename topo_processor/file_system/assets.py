@@ -29,7 +29,7 @@ def get_assets(source: str, data_type: str, metadata_path: str = "") -> List[Ass
         if data_type == DataType.IMAGERY_HISTORIC:
             # FIXME Where the manifest path should be store in this repository?
             manifest_path = "s3://linz-historical-imagery-staging/manifest.json"
-            asset_path_list: List[str] = get_file_path_from_survey(source, manifest_path)
+            asset_path_list: List[str] = get_file_path_from_survey(source, manifest_path, metadata_path)
             for path in asset_path_list:
                 print(path)
 
