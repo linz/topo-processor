@@ -1,6 +1,6 @@
+from ..metadata.data_type import DataType
 from .asset import Asset
 from .collection import Collection
-from ..metadata.data_type import DataType
 from .item import Item
 from .item_factory import process_directory
 from .linz_provider import LinzProvider, LinzProviderRole
