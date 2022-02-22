@@ -16,6 +16,7 @@ def get_env(env_name: str) -> str:
 
 
 lds_cache_bucket: str = get_env("LINZ_CACHE_BUCKET")
+historical_imagery_bucket =  get_env("LINZ_HISTORICAL_IMAGERY_BUCKET")
 aws_profile: Optional[str] = environ.get("AWS_PROFILE")
 linz_ssm_bucket_config_name: Optional[str] = environ.get("LINZ_SSM_BUCKET_CONFIG_NAME")
 temp_folder: str = mkdtemp()
