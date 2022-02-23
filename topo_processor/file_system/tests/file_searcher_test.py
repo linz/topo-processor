@@ -20,9 +20,9 @@ def test_get_file_path_from_manifest() -> None:
 
 def test_get_file_path_from_survey() -> None:
     assert_list: List[str] = []
-    assert_list.append("/tiffs/SURVEY_1/WRONG_PHOTO_TYPE.tif")
-    assert_list.append("/tiffs/SURVEY_1/MULTIPLE_ASSET.tif")
-    assert_list.append("/tiffs/SURVEY_1/CONTROL.tif")
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/WRONG_PHOTO_TYPE.tif")
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/MULTIPLE_ASSET.tif")
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/CONTROL.tif")
 
     result_list: List[str] = get_file_path_from_survey(
         "SURVEY_1", os.path.join(os.getcwd(), "test_data", "manifest.json"), "test_data/historical_aerial_photos_metadata.csv"
