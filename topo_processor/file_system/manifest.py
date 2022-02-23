@@ -10,7 +10,6 @@ def load_manifest(manifest_path: str) -> Dict[str, Any]:
     if is_s3_path(manifest_path):
         s3_download(manifest_path, f"{temp_folder}/manifest.json")
         manifest_path = f"{temp_folder}/manifest.json"
-        
 
     with open(manifest_path) as manifest_json_file:
         manifest: Dict[str, Any] = json.load(manifest_json_file)

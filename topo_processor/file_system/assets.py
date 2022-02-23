@@ -31,6 +31,9 @@ def get_assets(source: str, data_type: str, metadata_path: str = "") -> List[Ass
             manifest_path = build_s3_path(historical_imagery_bucket, "manifest.json")
             asset_path_list: List[str] = get_file_path_from_survey(source, manifest_path, metadata_path)
             for path in asset_path_list:
-                print(path)
+                if not is_extension(path, FILE_EXTENSIONS[data_type]):
+                    continue
+                asset = get_asset(path)
+                assets_list.append(asset)
 
     return assets_list

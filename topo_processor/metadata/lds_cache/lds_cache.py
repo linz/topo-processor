@@ -79,5 +79,4 @@ def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]
                 get_log().warning("filter_metadata", key=criteria_key, msg="Key not found.")
         if is_found:
             filtered_dict[metadata_key] = metadata_value
-
     return filtered_dict
