@@ -65,9 +65,6 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
-    if not is_s3_path(source):
-        source = os.path.abspath(source)
-
     # This force loading in cache the metadata required by the user.
     # Not the prettiest way but avoid to change the metadata_loader.load_metadata signature
     if metadata:
