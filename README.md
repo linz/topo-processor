@@ -90,7 +90,16 @@ node ./build/infra/src/submit.js
 
 **_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
 
-The user has to specify the survey path (where the data is) as a `--source` and it will be validated against the latest version of metadata. The `--datatype` has to be `historical.imagery`. The user also have to specify a target folder for the output.
+| Argument | Description |
+| ------ | :----: |
+| `-s` or `--source`     |   The source of the data to import. Can be a `survey ID` or a path (local or `s3`) to the survey.   |
+| `-d` or `--datatype`     | The datatype of the upload. *Only `imagery.historic` is available at the moment.*  |
+| `-t` or `--target`  | The target local directory path or `s3` path of the upload.  |
+| `-cid` or `--correlationid`  | OPTIONAL. The `correlation ID` of the batch job. *`AWS Batch` only.*    |
+| `-m` or `--metadata`  | OPTIONAL. The metadata file (local or `s3`) path.    |
+| `-v` or `--verbose`  | Flag to display trace logs.    |
+
+The user has to specify the survey id or path (where the data is) as a `--source` and it will be validated against the latest version of metadata. A metadata file path can also be specified by using `--metadata` if the LDS cache version one is not wanted. The `--datatype` has to be `imagery.historic`. The user also have to specify a target folder for the output.
 
 ```shell
 # Run in a virtual environment (poetry shell):
