@@ -15,8 +15,11 @@ def read_csv(metadata_file: str = "") -> Dict[str, Any]:
         for row in reader:
             if row["raw_filename"]:
                 raw_filename = row["raw_filename"]
-                if not metadata_file and raw_filename in metadata:
-                    raise Exception(f'Duplicate file "{raw_filename}" found in metadata csv')
+                if raw_filename in metadata:
+                    if row == metadata[raw_filename]:
+                        raise Exception(f'Duplicate file "{raw_filename}" found in metadata csv')
+                    else:
+                        metadata[row["sufi"]] = row
                 metadata[raw_filename] = row
             else:
                 metadata[row["sufi"]] = row
