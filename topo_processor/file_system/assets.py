@@ -21,6 +21,7 @@ def get_assets(source: str, data_type: str, metadata_path: str = "") -> List[Ass
             return _get_historical_imagery_assets(source, data_type, metadata_path)
     raise Exception(f"Source is neither Directory or Imagery Historic datatype, source= {source}")
 
+
 def _get_assets_from_directory(source: str, data_type: str) -> List[Asset]:
     assets_list: List[Asset] = []
     if not is_s3_path(source):
@@ -36,6 +37,7 @@ def _get_assets_from_directory(source: str, data_type: str) -> List[Asset]:
             asset = get_asset(f"{asset_path}/{file_}")
             assets_list.append(asset)
     return assets_list
+
 
 def _get_historical_imagery_assets(source: str, data_type: str, metadata_path: str = "") -> List[Asset]:
     assets_list: List[Asset] = []
