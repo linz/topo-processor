@@ -36,12 +36,6 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The correlation ID of the batch job",
 )
 @click.option(
-    "-t",
-    "--target",
-    required=True,
-    help="The target directory path or bucket name of the upload",
-)
-@click.option(
     "-m",
     "--metadata",
     required=False,
