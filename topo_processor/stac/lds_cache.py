@@ -2,7 +2,7 @@ import os
 
 import pystac
 
-from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
+from topo_processor.aws.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 from topo_processor.util.gzip import decompress_file
 

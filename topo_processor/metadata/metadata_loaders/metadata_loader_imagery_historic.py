@@ -23,7 +23,7 @@ from topo_processor.util.conversions import (
     string_to_boolean,
     string_to_number,
 )
-from topo_processor.util.s3 import is_s3_path
+from topo_processor.aws.s3 import is_s3_path
 
 from .metadata_loader import MetadataLoader
 

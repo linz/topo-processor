@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import boto3
 from linz_logger import get_log
 
-from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.aws.aws_credentials import Credentials, get_credentials
 from topo_processor.util.time import time_in_ms
 
 

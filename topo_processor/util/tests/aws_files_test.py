@@ -1,6 +1,6 @@
 import pytest
 
-from topo_processor.util.aws_files import build_s3_path
+from topo_processor.aws.aws_files import build_s3_path
 
 
 # Add test with AWS mock
