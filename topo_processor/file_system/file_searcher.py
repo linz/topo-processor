@@ -19,10 +19,8 @@ def get_file_path_from_survey(survey_id: str, manifest_path: str, metadata_path:
         file_name_lower = str(metadata_row["raw_filename"]).lower()
         tmp_list = get_file_path_from_manifest(manifest, ("/" + file_name_lower + ".tif", "/" + file_name_lower + ".tiff"))
         if len(tmp_list) > 1:
-            get_log().warn(
-                "duplicate_file",
-                msg="More than one file found with this name.",
-                file_name=file_name_lower,
+            raise Exception(
+                f"Duplicate files found for file name: {file_name_lower}. Duplicate path: {', '.join([duplicate for duplicate in tmp_list])}"
             )
         elif len(tmp_list) == 1:
             path = build_s3_path(historical_imagery_bucket, tmp_list[0])

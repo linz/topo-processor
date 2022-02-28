@@ -29,3 +29,18 @@ def test_get_file_path_from_survey() -> None:
     )
 
     assert result_list == assert_list
+
+
+def test_get_file_path_from_survey_duplicate() -> None:
+    assert_list: List[str] = []
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/WRONG_PHOTO_TYPE.tif")
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/MULTIPLE_ASSET.tif")
+    assert_list.append("s3://linz-historical-imagery-staging/tiffs/SURVEY_1/CONTROL.tif")
+
+    with pytest.raises(Exception) as e:
+        get_file_path_from_survey(
+            "SURVEY_1",
+            os.path.join(os.getcwd(), "test_data", "manifest_duplicate.json"),
+            "test_data/historical_aerial_photos_metadata.csv",
+        )
+        assert "Duplicate files found" in str(e.value)
