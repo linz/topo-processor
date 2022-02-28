@@ -99,7 +99,7 @@ node ./build/infra/src/submit.js
 | `-m` or `--metadata`  | OPTIONAL. The metadata file (local or `s3`) path.    |
 | `-v` or `--verbose`  | Flag to display trace logs.    |
 
-The user has to specify the survey id or path (where the data is) as a `--source` and it will be validated against the latest version of metadata. A metadata file path can also be specified by using `--metadata` if the LDS cache version one is not wanted. The `--datatype` has to be `imagery.historic`. The user also have to specify a target folder for the output.
+The user has to specify the survey id or path (where the data is) as a `--source` and it will be validated against the latest version of metadata. A metadata file path can also be specified by using `--metadata` if the LDS cache version one is not wanted. The `--datatype` has to be `imagery.historic`. The user also has to specify a target folder for the output.
 
 ```shell
 # Run in a virtual environment (poetry shell):
