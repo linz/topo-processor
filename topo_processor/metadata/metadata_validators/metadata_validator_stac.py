@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import json
-import urllib
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import Any, Dict, Union
 
 import fsspec
 import jsonschema_rs

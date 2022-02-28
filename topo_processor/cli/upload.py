@@ -1,12 +1,10 @@
-import os
-
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.stac.data_type import DataType
-from topo_processor.stac.item_factory import process_directory
+from topo_processor.metadata.data_type import DataType
+from topo_processor.metadata.lds_cache.lds_cache import get_metadata
+from topo_processor.stac.item_factory import process_source
 from topo_processor.stac.store import collection_store
-from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
 
@@ -16,14 +14,14 @@ from topo_processor.util.transfer_collection import transfer_collection
     "-s",
     "--source",
     required=True,
-    help="The name of the directory with data to import",
+    help="The source of the data to import",
 )
 @click.option(
     "-d",
     "--datatype",
     required=True,
     type=click.Choice([data_type for data_type in DataType], case_sensitive=True),
-    help="The Datatype of the upload",
+    help="The datatype of the upload",
 )
 @click.option(
     "-t",
@@ -38,10 +36,10 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The correlation ID of the batch job",
 )
 @click.option(
-    "-t",
-    "--target",
-    required=True,
-    help="The target directory path or bucket name of the upload",
+    "-m",
+    "--metadata",
+    required=False,
+    help="The metadata file path",
 )
 @click.option(
     "-v",
@@ -49,7 +47,7 @@ from topo_processor.util.transfer_collection import transfer_collection
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, datatype: str, correlationid: str, target: str, verbose: str) -> None:
+def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
 
     if verbose:
@@ -58,10 +56,11 @@ def main(source: str, datatype: str, correlationid: str, target: str, verbose: s
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
-    if not is_s3_path(source):
-        source = os.path.abspath(source)
+    # Caching the metadata required by the user.
+    if metadata:
+        get_metadata(data_type, None, metadata)
 
-    process_directory(source, data_type)
+    process_source(source, data_type, metadata)
 
     try:
         for collection in collection_store.values():
