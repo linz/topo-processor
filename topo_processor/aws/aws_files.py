@@ -62,3 +62,14 @@ def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:
     return f"s3://{bucket_name}/" + (object_path[1:] if object_path.startswith("/") else object_path)
+
+
+def bucket_name_from_path(path: str) -> str:
+    path_parts = path.replace("s3://", "").split("/")
+    return path_parts.pop(0)
+
+
+def is_s3_path(path: str) -> bool:
+    if path.startswith("s3://"):
+        return True
+    return False

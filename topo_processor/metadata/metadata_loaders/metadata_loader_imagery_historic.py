@@ -8,6 +8,7 @@ import shapely.wkt
 from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
+from topo_processor.aws.aws_files import is_s3_path
 from topo_processor.stac import lds_cache
 from topo_processor.stac.asset_key import AssetKey
 from topo_processor.stac.file_extension import is_tiff
@@ -23,7 +24,6 @@ from topo_processor.util.conversions import (
     string_to_boolean,
     string_to_number,
 )
-from topo_processor.aws.s3 import is_s3_path
 
 from .metadata_loader import MetadataLoader
 

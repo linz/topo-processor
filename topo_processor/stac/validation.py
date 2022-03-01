@@ -4,13 +4,12 @@ from typing import Dict, Union
 from linz_logger import get_log
 
 import topo_processor.stac.lds_cache as lds_cache
+from topo_processor.aws.aws_files import is_s3_path, s3_download
 from topo_processor.metadata.metadata_loaders import metadata_loader_imagery_hist
 from topo_processor.metadata.metadata_validators import metadata_validator_stac
 from topo_processor.stac.validate_report import ValidateReport
-from topo_processor.aws.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
 from topo_processor.util.gzip import decompress_file, is_gzip_file
-from topo_processor.aws.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 
 from .collection import Collection

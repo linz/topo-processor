@@ -1,9 +1,7 @@
 import os
 
-from linz_logger import get_log
-
 from topo_processor.aws.aws_credentials import Credentials, get_credentials
-from topo_processor.aws.s3 import bucket_name_from_path, is_s3_path
+from topo_processor.aws.aws_files import bucket_name_from_path, is_s3_path
 from topo_processor.cog.command import Command
 
 
