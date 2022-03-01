@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from typing import Any, Dict
 from urllib.parse import urlparse
 
@@ -12,7 +13,6 @@ from topo_processor.util.time import time_in_ms
 def s3_download(source_path: str, dest_path: str) -> None:
     start_time = time_in_ms()
     get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
-
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     object_name = url_o.path[1:]
@@ -62,3 +62,43 @@ def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:
     return f"s3://{bucket_name}/" + (object_path[1:] if object_path.startswith("/") else object_path)
+
+
+def bucket_name_from_path(path: str) -> str:
+    path_parts = path.replace("s3://", "").split("/")
+    return path_parts.pop(0)
+
+
+def is_s3_path(path: str) -> bool:
+    if path.startswith("s3://"):
+        return True
+    return False
+
+def build_s3_manifest(source_path: str) -> datetime:
+    start_time = time_in_ms()
+    get_log().debug("s3 timestamp", objectPath=source_path)
+
+    url_o = urlparse(source_path)
+    bucket_name = url_o.netloc
+    object_name = url_o.path[1:]
+    credentials: Credentials = get_credentials(bucket_name)
+
+    s3 = boto3.resource(
+        "s3",
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
+    )
+
+    try:
+        object_summary = s3.ObjectSummary(bucket_name,object_name)
+        print(object_summary)
+    except Exception as e:
+        get_log().error("s3_download failed", objectPath=source_path, error=e)
+        raise e
+
+    get_log().debug(
+        "log_manifest_details",
+        objectPath=source_path,
+        duration=time_in_ms() - start_time,
+    )

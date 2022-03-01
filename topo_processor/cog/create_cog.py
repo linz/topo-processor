@@ -2,7 +2,7 @@ import os
 
 from topo_processor.cog.command import Command
 from topo_processor.util.aws_credentials import Credentials, get_credentials
-from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
+from topo_processor.util.aws_files import bucket_name_from_path, is_s3_path
 
 
 def create_cog(input_path: str, output_path: str) -> Command:
