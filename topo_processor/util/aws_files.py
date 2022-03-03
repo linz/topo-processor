@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 from urllib.parse import urlparse
 
@@ -74,13 +74,14 @@ def is_s3_path(path: str) -> bool:
         return True
     return False
 
-def create_s3_manifest(source_path: str) -> datetime:
+
+def create_s3_manifest(source_path: str) -> None:
     start_time = time_in_ms()
-    get_log().debug("create_manifest", objectPath=source_path)
+    get_log().debug("check_manifest", objectPath=source_path)
+    create_manifest_file = False
 
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
-    print(bucket_name)
     manifest_path = url_o.path[1:]
     credentials: Credentials = get_credentials(bucket_name)
 
@@ -92,18 +93,32 @@ def create_s3_manifest(source_path: str) -> datetime:
     )
 
     try:
-        manifest_new: Dict[str, Any] = {}
-        manifest_file_list: List[Dict[str, str]] = []
-        paginator = s3_client.get_paginator('list_objects_v2')
-        response_iterator = paginator.paginate(Bucket=bucket_name)
-        for response in response_iterator:
-            for contents_data in response['Contents']:
-                key = contents_data["Key"]
-                if key.endswith(('.tif', '.tiff')):
-                    manifest_file_list.append({"path": key})
-        manifest_new["path"] = manifest_path
-        manifest_new["time"] = time_in_ms()
-        manifest_new["files"] = manifest_file_list
+        manifest_modified_datetime = s3_client.head_object(Bucket=bucket_name, Key=manifest_path)["LastModified"]
+        cutoff_datetime = datetime.now(timezone.utc) - timedelta(days=1)
+        if cutoff_datetime > manifest_modified_datetime:
+            create_manifest_file = True
+    except Exception as e:
+        get_log().debug("no_manifest_file", objectPath=bucket_name, error=e)
+        create_manifest_file = True
+        raise e
+
+    try:
+        if create_manifest_file:
+            get_log().debug("create_manifest", objectPath=source_path)
+            manifest_new: Dict[str, Any] = {}
+            manifest_file_list: List[Dict[str, str]] = []
+            paginator = s3_client.get_paginator('list_objects_v2')
+            response_iterator = paginator.paginate(Bucket=bucket_name)
+            for response in response_iterator:
+                for contents_data in response['Contents']:
+                    key = contents_data["Key"]
+                    if key.endswith(('.tif', '.tiff')):
+                        manifest_file_list.append({"path": key})
+            manifest_new["path"] = manifest_path
+            manifest_new["time"] = time_in_ms()
+            manifest_new["files"] = manifest_file_list
+        else:
+            return
 
         print(manifest_new)
 
@@ -112,7 +127,7 @@ def create_s3_manifest(source_path: str) -> datetime:
         raise e
 
     get_log().debug(
-        "log_manifest_details",
+        "log_manifest_create_time",
         objectPath=source_path,
         duration=time_in_ms() - start_time,
     )
