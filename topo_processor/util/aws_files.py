@@ -1,13 +1,16 @@
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 from urllib.parse import urlparse
 
 import boto3
+from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
 from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.time import time_in_ms
+from topo_processor.util.configuration import historical_imagery_bucket
 
 
 def s3_download(source_path: str, dest_path: str) -> None:
@@ -97,22 +100,25 @@ def create_s3_manifest(source_path: str) -> None:
         cutoff_datetime = datetime.now(timezone.utc) - timedelta(days=1)
         if cutoff_datetime > manifest_modified_datetime:
             create_manifest_file = True
-    except Exception as e:
-        get_log().debug("no_manifest_file", objectPath=bucket_name, error=e)
-        create_manifest_file = True
-        raise e
+
+    except botocore_exceptions.ClientError as e:
+        if e.response["Error"]["Code"] == "404":
+            get_log().debug("no_manifest_file_found", bucketName=bucket_name, error=e)
+            create_manifest_file = True
+        else:
+            raise e
 
     try:
         if create_manifest_file:
             get_log().debug("create_manifest", objectPath=source_path)
             manifest_new: Dict[str, Any] = {}
             manifest_file_list: List[Dict[str, str]] = []
-            paginator = s3_client.get_paginator('list_objects_v2')
+            paginator = s3_client.get_paginator("list_objects_v2")
             response_iterator = paginator.paginate(Bucket=bucket_name)
             for response in response_iterator:
-                for contents_data in response['Contents']:
+                for contents_data in response["Contents"]:
                     key = contents_data["Key"]
-                    if key.endswith(('.tif', '.tiff')):
+                    if key.endswith((".tif", ".tiff")):
                         manifest_file_list.append({"path": key})
             manifest_new["path"] = manifest_path
             manifest_new["time"] = time_in_ms()
@@ -120,7 +126,12 @@ def create_s3_manifest(source_path: str) -> None:
         else:
             return
 
-        print(manifest_new)
+        s3_client.put_object(
+            Body=json.dumps(manifest_new).encode("UTF-8"),
+            ContentType="application/json",
+            Bucket=bucket_name,
+            Key=manifest_path,
+        )
 
     except Exception as e:
         get_log().error("create_manifest_failed", objectPath=bucket_name, error=e)

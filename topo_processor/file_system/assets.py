@@ -9,7 +9,7 @@ from topo_processor.stac.asset import Asset
 from topo_processor.stac.file_extension import FILE_EXTENSIONS, is_extension
 from topo_processor.stac.store import get_asset
 from topo_processor.util.aws_files import build_s3_path
-from topo_processor.util.configuration import historical_imagery_bucket
+from topo_processor.util.configuration import manifest_bucket
 from topo_processor.util.aws_files import is_s3_path
 
 
@@ -41,7 +41,7 @@ def _get_assets_from_directory(source: str, data_type: str) -> List[Asset]:
 
 def _get_historical_imagery_assets(source: str, data_type: str, metadata_path: str = "") -> List[Asset]:
     assets_list: List[Asset] = []
-    manifest_path = build_s3_path(historical_imagery_bucket, "manifest.json")
+    manifest_path = build_s3_path(manifest_bucket, "manifest.json")
     asset_path_list: List[str] = get_file_path_from_survey(source, manifest_path, metadata_path)
     for path in asset_path_list:
         if not is_extension(path, FILE_EXTENSIONS[data_type]):

@@ -10,13 +10,6 @@ async function main(): Promise<void> {
   const correlationId = ulid.ulid();
   console.log({ correlationId });
 
-  const environment = [
-    { name: 'LINZ_CORRELATION_ID', value: correlationId },
-    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
-    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
-    { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
-  ];
-
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
@@ -26,6 +19,14 @@ async function main(): Promise<void> {
   if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
   const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
+
+  const environment = [
+    { name: 'LINZ_CORRELATION_ID', value: correlationId },
+    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
+    { name: 'LINZ_MANIFEST_BUCKET', value: TempBucketName },
+    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
+  ];
 
   for (let jobId = 0; jobId < 1; jobId++) {
     const res = await batch
