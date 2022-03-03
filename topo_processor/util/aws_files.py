@@ -1,6 +1,6 @@
 import json
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, List
 from urllib.parse import urlparse
 
 import boto3
@@ -81,7 +81,7 @@ def create_s3_manifest(source_path: str) -> datetime:
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     print(bucket_name)
-    object_name = url_o.path[1:]
+    manifest_path = url_o.path[1:]
     credentials: Credentials = get_credentials(bucket_name)
 
     s3_client = boto3.client(
@@ -92,7 +92,8 @@ def create_s3_manifest(source_path: str) -> datetime:
     )
 
     try:
-        manifest_file_list = [{Dict[str, str]}]
+        manifest_new: Dict[str, Any] = {}
+        manifest_file_list: List[Dict[str, str]] = []
         paginator = s3_client.get_paginator('list_objects_v2')
         response_iterator = paginator.paginate(Bucket=bucket_name)
         for response in response_iterator:
@@ -100,6 +101,11 @@ def create_s3_manifest(source_path: str) -> datetime:
                 key = contents_data["Key"]
                 if key.endswith(('.tif', '.tiff')):
                     manifest_file_list.append({"path": key})
+        manifest_new["path"] = manifest_path
+        manifest_new["time"] = time_in_ms()
+        manifest_new["files"] = manifest_file_list
+
+        print(manifest_new)
 
     except Exception as e:
         get_log().error("create_manifest_failed", objectPath=bucket_name, error=e)
