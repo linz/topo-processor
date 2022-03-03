@@ -76,7 +76,7 @@ def is_s3_path(path: str) -> bool:
 
 def create_s3_manifest(source_path: str) -> datetime:
     start_time = time_in_ms()
-    get_log().debug("s3 timestamp", objectPath=source_path)
+    get_log().debug("create_manifest", objectPath=source_path)
 
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
@@ -91,28 +91,18 @@ def create_s3_manifest(source_path: str) -> datetime:
         aws_session_token=credentials.token,
     )
 
-    # paginator = s3.get_paginator('list_objects_v2')
-    # response_iterator = paginator.paginate(Bucket=bucket_name)
-
-    # for response in response_iterator:
-    #     for object_data in response['Contents']:
-    #         key = object_data['Key']
-    #         if key.endswith('.tif', '.tiff'):
-    #             file_names.append(key)
-
     try:
         manifest_file_list = [{Dict[str, str]}]
-        file_list = s3_client.list_objects_v2(Bucket=bucket_name)['Contents']
-        for f in file_list:
-            key = f["Key"]
-            if key.endswith(('.tif', '.tiff')):
-                manifest_file_list.append({"path": key})
+        paginator = s3_client.get_paginator('list_objects_v2')
+        response_iterator = paginator.paginate(Bucket=bucket_name)
+        for response in response_iterator:
+            for contents_data in response['Contents']:
+                key = contents_data["Key"]
+                if key.endswith(('.tif', '.tiff')):
+                    manifest_file_list.append({"path": key})
 
-        # object_summary = s3.ObjectSummary(bucket_name,object_name)
-        # print(object_summary)
-        print(manifest_file_list)
     except Exception as e:
-        get_log().error("manifest_create_failed", objectPath=bucket_name, error=e)
+        get_log().error("create_manifest_failed", objectPath=bucket_name, error=e)
         raise e
 
     get_log().debug(
@@ -120,22 +110,3 @@ def create_s3_manifest(source_path: str) -> datetime:
         objectPath=source_path,
         duration=time_in_ms() - start_time,
     )
-
-
-
-
-# s3_client = boto3.client('s3')
-# bucket = 'my-bucket'
-# prefix = 'my-prefix/foo/bar'
-# paginator = s3_client.get_paginator('list_objects_v2')
-# response_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
-
-# file_names = []
-
-# for response in response_iterator:
-#     for object_data in response['Contents']:
-#         key = object_data['Key']
-#         if key.endswith('.json'):
-#             file_names.append(key)
-
-# print file_names
