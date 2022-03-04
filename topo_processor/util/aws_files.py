@@ -68,7 +68,7 @@ def build_s3_path(bucket_name: str, object_path: str) -> str:
 
 
 def create_s3_manifest(manifest_source_path: str) -> None:
-    #TODO:lock file
+    # TODO:lock file
     start_time = time_in_ms()
     get_log().debug("check_manifest", manifestPath=manifest_source_path)
     create_manifest_file = False
