@@ -12,6 +12,7 @@ from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.configuration import historical_imagery_bucket
 from topo_processor.util.time import time_in_ms
 
+
 def s3_download(source_path: str, dest_path: str) -> None:
     start_time = time_in_ms()
     get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
