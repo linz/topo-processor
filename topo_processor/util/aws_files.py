@@ -101,7 +101,7 @@ def create_s3_manifest(manifest_source_path: str) -> None:
         if create_manifest_file:
             get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
             manifest_new: Dict[str, Any] = {}
-            manifest_file_list = _list_objects(bucket_name)
+            manifest_file_list = _list_objects(historical_imagery_bucket)
             # manifest_file_list: List[Dict[str, str]] = []
             # paginator = s3_client.get_paginator("list_objects_v2")
             # response_iterator = paginator.paginate(Bucket=historical_imagery_bucket, Prefix='GeostoreTestData/')
@@ -146,7 +146,7 @@ def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
 
     file_list: List[Dict[str, str]] = []
     paginator = s3_client.get_paginator("list_objects_v2")
-    response_iterator = paginator.paginate(Bucket=bucket_name, Prefix='input/')
+    response_iterator = paginator.paginate(Bucket=bucket_name)
     for response in response_iterator:
         for contents_data in response["Contents"]:
             key = contents_data["Key"]
