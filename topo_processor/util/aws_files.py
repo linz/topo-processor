@@ -16,6 +16,7 @@ from topo_processor.util.time import time_in_ms
 def s3_download(source_path: str, dest_path: str) -> None:
     start_time = time_in_ms()
     get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
+
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     object_name = url_o.path[1:]
@@ -44,7 +45,6 @@ def s3_download(source_path: str, dest_path: str) -> None:
 
 def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
     get_log().debug("bucket_name", bucket_name=bucket_name)
-
     credentials: Credentials = get_credentials(bucket_name)
 
     s3 = boto3.resource(
