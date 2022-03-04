@@ -12,7 +12,6 @@ from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.configuration import historical_imagery_bucket
 from topo_processor.util.time import time_in_ms
 
-
 def s3_download(source_path: str, dest_path: str) -> None:
     start_time = time_in_ms()
     get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
@@ -72,7 +71,6 @@ def create_s3_manifest(manifest_source_path: str) -> None:
     # TODO:lock file
     start_time = time_in_ms()
     get_log().debug("check_manifest", manifestPath=manifest_source_path)
-    create_manifest_file = False
 
     url_o = urlparse(manifest_source_path)
     bucket_name = url_o.netloc
@@ -88,27 +86,23 @@ def create_s3_manifest(manifest_source_path: str) -> None:
 
     try:
         manifest_modified_datetime = s3_client.head_object(Bucket=bucket_name, Key=manifest_path)["LastModified"]
-        cutoff_datetime = datetime.now(timezone.utc) - timedelta(days=1)
-        if cutoff_datetime > manifest_modified_datetime:
-            create_manifest_file = True
+        cutoff_datetime = datetime.now(timezone.utc) - timedelta(days=28)
+        if cutoff_datetime < manifest_modified_datetime:
+            return
 
     except botocore_exceptions.ClientError as e:
         if e.response["Error"]["Code"] == "404":
             get_log().debug("no_manifest_file_found", bucketName=bucket_name, manifestPath=manifest_path, error=e)
-            create_manifest_file = True
         else:
             raise e
 
     try:
-        if create_manifest_file:
-            get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
-            manifest_new: Dict[str, Any] = {}
-            manifest_file_list = _list_objects(historical_imagery_bucket)
-            manifest_new["path"] = manifest_path
-            manifest_new["time"] = time_in_ms()
-            manifest_new["files"] = manifest_file_list
-        else:
-            return
+        get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
+        manifest_new: Dict[str, Any] = {}
+        manifest_file_list = _list_objects(historical_imagery_bucket)
+        manifest_new["path"] = manifest_path
+        manifest_new["time"] = time_in_ms()
+        manifest_new["files"] = manifest_file_list
 
         s3_client.put_object(
             Body=json.dumps(manifest_new).encode("UTF-8"),
@@ -145,7 +139,7 @@ def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
     for response in response_iterator:
         for contents_data in response["Contents"]:
             key = contents_data["Key"]
-            if key.endswith((".tif", ".tiff")):
+            if key.lower().endswith((".tif", ".tiff")):
                 file_list.append({"path": key})
 
     return file_list
