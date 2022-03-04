@@ -67,23 +67,12 @@ def build_s3_path(bucket_name: str, object_path: str) -> str:
     return f"s3://{bucket_name}/" + (object_path[1:] if object_path.startswith("/") else object_path)
 
 
-def bucket_name_from_path(path: str) -> str:
-    path_parts = path.replace("s3://", "").split("/")
-    return path_parts.pop(0)
-
-
-def is_s3_path(path: str) -> bool:
-    if path.startswith("s3://"):
-        return True
-    return False
-
-
-def create_s3_manifest(source_path: str) -> None:
+def create_s3_manifest(manifest_source_path: str) -> None:
     start_time = time_in_ms()
-    get_log().debug("check_manifest", objectPath=source_path)
+    get_log().debug("check_manifest", manifestPath=manifest_source_path)
     create_manifest_file = False
 
-    url_o = urlparse(source_path)
+    url_o = urlparse(manifest_source_path)
     bucket_name = url_o.netloc
     manifest_path = url_o.path[1:]
     credentials: Credentials = get_credentials(bucket_name)
@@ -103,23 +92,24 @@ def create_s3_manifest(source_path: str) -> None:
 
     except botocore_exceptions.ClientError as e:
         if e.response["Error"]["Code"] == "404":
-            get_log().debug("no_manifest_file_found", bucketName=bucket_name, error=e)
+            get_log().debug("no_manifest_file_found", bucketName=bucket_name, manifestPath=manifest_path, error=e)
             create_manifest_file = True
         else:
             raise e
 
     try:
         if create_manifest_file:
-            get_log().debug("create_manifest", objectPath=source_path)
+            get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
             manifest_new: Dict[str, Any] = {}
-            manifest_file_list: List[Dict[str, str]] = []
-            paginator = s3_client.get_paginator("list_objects_v2")
-            response_iterator = paginator.paginate(Bucket=bucket_name)
-            for response in response_iterator:
-                for contents_data in response["Contents"]:
-                    key = contents_data["Key"]
-                    if key.endswith((".tif", ".tiff")):
-                        manifest_file_list.append({"path": key})
+            manifest_file_list = _list_objects(bucket_name)
+            # manifest_file_list: List[Dict[str, str]] = []
+            # paginator = s3_client.get_paginator("list_objects_v2")
+            # response_iterator = paginator.paginate(Bucket=historical_imagery_bucket, Prefix='GeostoreTestData/')
+            # for response in response_iterator:
+            #     for contents_data in response["Contents"]:
+            #         key = contents_data["Key"]
+            #         if key.endswith((".tif", ".tiff")):
+            #             manifest_file_list.append({"path": key})
             manifest_new["path"] = manifest_path
             manifest_new["time"] = time_in_ms()
             manifest_new["files"] = manifest_file_list
@@ -134,11 +124,33 @@ def create_s3_manifest(source_path: str) -> None:
         )
 
     except Exception as e:
-        get_log().error("create_manifest_failed", objectPath=bucket_name, error=e)
+        get_log().error("create_manifest_failed", bucketPath=bucket_name, manifestPath=manifest_path, error=e)
         raise e
 
     get_log().debug(
         "log_manifest_create_time",
-        objectPath=source_path,
+        manifestSourcePath=manifest_source_path,
         duration=time_in_ms() - start_time,
     )
+
+def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
+
+    credentials: Credentials = get_credentials(bucket_name)
+
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
+    )
+
+    file_list: List[Dict[str, str]] = []
+    paginator = s3_client.get_paginator("list_objects_v2")
+    response_iterator = paginator.paginate(Bucket=bucket_name, Prefix='input/')
+    for response in response_iterator:
+        for contents_data in response["Contents"]:
+            key = contents_data["Key"]
+            if key.endswith((".tif", ".tiff")):
+                file_list.append({"path": key})
+
+    return file_list

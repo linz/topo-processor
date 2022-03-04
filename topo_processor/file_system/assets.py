@@ -10,7 +10,7 @@ from topo_processor.stac.file_extension import FILE_EXTENSIONS, is_extension
 from topo_processor.stac.store import get_asset
 from topo_processor.util.aws_files import build_s3_path
 from topo_processor.util.configuration import manifest_bucket
-from topo_processor.util.aws_files import is_s3_path
+from topo_processor.util.s3 import is_s3_path
 
 
 def get_assets(source: str, data_type: str, metadata_path: str = "") -> List[Asset]:

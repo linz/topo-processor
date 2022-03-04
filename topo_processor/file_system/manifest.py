@@ -2,8 +2,9 @@ import boto3
 import json
 from typing import Any, Dict, List, Tuple
 
-from topo_processor.util.aws_files import create_s3_manifest, is_s3_path, s3_download
+from topo_processor.util.aws_files import create_s3_manifest, s3_download
 from topo_processor.util.configuration import temp_folder
+from topo_processor.util.s3 import is_s3_path
 
 
 def load_manifest(manifest_path: str) -> Dict[str, Any]:
