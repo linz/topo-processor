@@ -21,11 +21,11 @@ async function main(): Promise<void> {
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
   const environment = [
-    { name: 'LINZ_CORRELATION_ID', value: correlationId },
-    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
-    { name: 'LINZ_MANIFEST_BUCKET', value: TempBucketName },
-    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
     { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
+    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'LINZ_CORRELATION_ID', value: correlationId },
+    { name: 'LINZ_MANIFEST_BUCKET', value: TempBucketName },
+    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
 
   for (let jobId = 0; jobId < 1; jobId++) {
