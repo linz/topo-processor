@@ -9,8 +9,8 @@ from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
 from topo_processor.util.aws_credentials import Credentials, get_credentials
-from topo_processor.util.time import time_in_ms
 from topo_processor.util.configuration import historical_imagery_bucket
+from topo_processor.util.time import time_in_ms
 
 
 def s3_download(source_path: str, dest_path: str) -> None:
@@ -102,14 +102,6 @@ def create_s3_manifest(manifest_source_path: str) -> None:
             get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
             manifest_new: Dict[str, Any] = {}
             manifest_file_list = _list_objects(historical_imagery_bucket)
-            # manifest_file_list: List[Dict[str, str]] = []
-            # paginator = s3_client.get_paginator("list_objects_v2")
-            # response_iterator = paginator.paginate(Bucket=historical_imagery_bucket, Prefix='GeostoreTestData/')
-            # for response in response_iterator:
-            #     for contents_data in response["Contents"]:
-            #         key = contents_data["Key"]
-            #         if key.endswith((".tif", ".tiff")):
-            #             manifest_file_list.append({"path": key})
             manifest_new["path"] = manifest_path
             manifest_new["time"] = time_in_ms()
             manifest_new["files"] = manifest_file_list
@@ -132,6 +124,7 @@ def create_s3_manifest(manifest_source_path: str) -> None:
         manifestSourcePath=manifest_source_path,
         duration=time_in_ms() - start_time,
     )
+
 
 def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
 
