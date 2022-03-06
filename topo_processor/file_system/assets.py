@@ -6,10 +6,10 @@ from topo_processor.file_system.get_fs import get_fs
 from topo_processor.file_system.get_path_with_protocol import get_path_with_protocol
 from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
-from topo_processor.stac.file_extension import FILE_EXTENSIONS, is_extension
 from topo_processor.stac.store import get_asset
 from topo_processor.util.aws_files import build_s3_path
 from topo_processor.util.configuration import manifest_bucket
+from topo_processor.util.file_extension import FILE_EXTENSIONS, is_extension
 from topo_processor.util.s3 import is_s3_path
 
 

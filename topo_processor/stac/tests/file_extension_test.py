@@ -1,7 +1,7 @@
 import pytest
 
 from topo_processor.metadata.data_type import DataType
-from topo_processor.stac.file_extension import FILE_EXTENSIONS, is_extension, is_tiff
+from topo_processor.util.file_extension import FILE_EXTENSIONS, is_extension, is_tiff
 
 
 def test_is_tiff() -> None:

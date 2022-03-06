@@ -8,8 +8,10 @@ import boto3
 from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
+
 from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.configuration import historical_imagery_bucket
+from topo_processor.util.file_extension import is_tiff
 from topo_processor.util.time import time_in_ms
 
 
@@ -140,7 +142,7 @@ def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
     for response in response_iterator:
         for contents_data in response["Contents"]:
             key = contents_data["Key"]
-            if key.lower().endswith((".tif", ".tiff")):
+            if is_tiff(key):
                 file_list.append({"path": key})
 
     return file_list
