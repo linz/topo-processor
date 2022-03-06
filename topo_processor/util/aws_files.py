@@ -8,7 +8,6 @@ import boto3
 from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
-
 from topo_processor.util.aws_credentials import Credentials, get_credentials
 from topo_processor.util.configuration import historical_imagery_bucket
 from topo_processor.util.file_extension import is_tiff
