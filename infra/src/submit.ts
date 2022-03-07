@@ -25,7 +25,6 @@ async function main(): Promise<void> {
     { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
     { name: 'LINZ_CORRELATION_ID', value: correlationId },
     { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
-    { name: 'LINZ_MANIFEST_BUCKET', value: TempBucketName },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
 

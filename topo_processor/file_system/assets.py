@@ -8,9 +8,8 @@ from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.store import get_asset
 from topo_processor.util.aws_files import build_s3_path
-from topo_processor.util.configuration import manifest_bucket
 from topo_processor.util.file_extension import FILE_EXTENSIONS, is_extension
-from topo_processor.util.s3 import is_s3_path
+from topo_processor.util.s3 import bucket_name_from_stack, is_s3_path
 
 
 def get_assets(source: str, data_type: str, metadata_path: str = "") -> List[Asset]:
@@ -41,6 +40,7 @@ def _get_assets_from_directory(source: str, data_type: str) -> List[Asset]:
 
 def _get_historical_imagery_assets(source: str, data_type: str, metadata_path: str = "") -> List[Asset]:
     assets_list: List[Asset] = []
+    manifest_bucket = bucket_name_from_stack("TopoProcessorBatch")
     manifest_path = build_s3_path(manifest_bucket, "manifest.json")
     asset_path_list: List[str] = get_file_path_from_survey(source, manifest_path, metadata_path)
     for path in asset_path_list:
