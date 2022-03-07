@@ -24,6 +24,7 @@ async function main(): Promise<void> {
     { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
     { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
     { name: 'LINZ_CORRELATION_ID', value: correlationId },
+    { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
     { name: 'LINZ_MANIFEST_BUCKET', value: TempBucketName },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
@@ -55,7 +56,7 @@ function buildCommandArguments(correlationId: string, tempBucket: string): strin
   command.push('--correlationid');
   command.push(correlationId);
   command.push('--source');
-  command.push('s3://' + tempBucket + '/input/');
+  command.push('9490');
   command.push('--target');
   command.push('s3://' + tempBucket + '/' + correlationId + '/');
   command.push('--datatype');
