@@ -58,8 +58,6 @@ yarn build
 
 To deploy the Batch via CDK locally:
 
-
-
 On the AWS account you are logged into
 
 ```shell
@@ -78,26 +76,30 @@ This configuration parameter can be referenced via `$LINZ_SSM_BUCKET_CONFIG_NAME
 
 ### AWS Batch Job Submission
 
-**_NOTE:_** Only the `upload` command is implemented to run on AWS Batch at the moment. Currently the job submission is restricted to only one job.
+**_NOTE:_** Only the `upload` command is implemented to run on AWS Batch. Currently the job submission is restricted to only one job per survey.
 
 **_NOTE:_** You may need to set the `AWS_REGION` environment variable to your region.
 
 ```shell
-node ./build/infra/src/submit.js
+# Passing survey IDs as argument
+node ./build/infra/src/submit.js surveyId1 surveyId3 [...]
+
+# Passing S3 folder as argument
+node ./build/infra/src/submit.js s3://my-bucket/backup2/surveyId1/ s3://my-bucket/backup4/surveyId3/ [...]
 ```
 
 ### Upload command
 
 **_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
 
-| Argument | Description |
-| ------ | :----: |
-| `-s` or `--source`     |   The source of the data to import. Can be a `survey ID` or a path (local or `s3`) to the survey.   |
-| `-d` or `--datatype`     | The datatype of the upload. *Only `imagery.historic` is available at the moment.*  |
-| `-t` or `--target`  | The target local directory path or `s3` path of the upload.  |
-| `-cid` or `--correlationid`  | OPTIONAL. The `correlation ID` of the batch job. *`AWS Batch` only.*    |
-| `-m` or `--metadata`  | OPTIONAL. The metadata file (local or `s3`) path.    |
-| `-v` or `--verbose`  | Flag to display trace logs.    |
+| Argument                    |                                           Description                                           |
+| --------------------------- | :---------------------------------------------------------------------------------------------: |
+| `-s` or `--source`          | The source of the data to import. Can be a `survey ID` or a path (local or `s3`) to the survey. |
+| `-d` or `--datatype`        |        The datatype of the upload. _Only `imagery.historic` is available at the moment._        |
+| `-t` or `--target`          |                   The target local directory path or `s3` path of the upload.                   |
+| `-cid` or `--correlationid` |              OPTIONAL. The `correlation ID` of the batch job. _`AWS Batch` only._               |
+| `-m` or `--metadata`        |                        OPTIONAL. The metadata file (local or `s3`) path.                        |
+| `-v` or `--verbose`         |                                   Flag to display trace logs.                                   |
 
 The user has to specify the survey id or path (where the data is) as a `--source` and it will be validated against the latest version of metadata. A metadata file path can also be specified by using `--metadata` if the LDS cache version one is not wanted. The `--datatype` has to be `imagery.historic`. The user also has to specify a target folder for the output.
 
@@ -173,7 +175,6 @@ The following command have to be run in a virtual environment (poetry shell):
 # To record the output in an external file:
 ./validate | tee output.file
 ```
-
 
 ## AWS Deployment / CI / CD
 
