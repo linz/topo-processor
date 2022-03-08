@@ -14,6 +14,7 @@ import { Construct } from 'constructs';
 import { ComputeResourceType, ComputeEnvironment, JobDefinition, JobQueue } from '@aws-cdk/aws-batch-alpha';
 import { BlockPublicAccess, Bucket } from 'aws-cdk-lib/aws-s3';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { createRolesForBucket } from './roles';
 
 interface BatchStackProps extends StackProps {
   container: string;
@@ -47,7 +48,7 @@ export class AwsBatchStack extends Stack {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ expiration: Duration.days(30) }],
     });
-
+    createRolesForBucket(this, tempBucket);
     tempBucket.grantReadWrite(instanceRole);
     StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
 
