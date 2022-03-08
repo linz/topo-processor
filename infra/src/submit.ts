@@ -42,7 +42,7 @@ async function main(): Promise<void> {
           },
         })
         .promise();
-      console.log(res);
+      console.log({ source: process.argv[i] }, '\n', res);
     }
   } else {
     console.log(
