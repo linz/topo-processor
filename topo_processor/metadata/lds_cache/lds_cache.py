@@ -31,7 +31,9 @@ def get_latest_item(layer: str) -> pystac.Item:
     return pystac.Item.from_dict(load_file_content(lds_cache_bucket, latest_item_path))
 
 
-def get_metadata(data_type: str, criteria: Optional[Dict[str, str]] = None, metadata_path: str = "") -> Dict[str, Any]:
+def get_metadata(
+    data_type: str, criteria: Optional[Dict[str, str]] = None, metadata_path: str = "", save_filtered: bool = False
+) -> Dict[str, Any]:
     """Return a dictionnary containing the metadata"""
     layer_id = get_layer_id(data_type)
 
@@ -58,12 +60,17 @@ def get_metadata(data_type: str, criteria: Optional[Dict[str, str]] = None, meta
             metadata_store[layer_id] = read_csv(metadata_path)
 
     if criteria:
-        return filter_metadata(metadata_store[layer_id], criteria)
+        filtered_metadata = filter_metadata(metadata_store[layer_id], criteria)
+        if save_filtered:
+            metadata_store[layer_id] = filtered_metadata
+        else:
+            return filtered_metadata
 
     return metadata_store[layer_id]
 
 
 def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]) -> Dict[str, Any]:
+    get_log().debug("filter_metadata_start", criteria=criteria)
     filtered_dict: Dict[str, Any] = {}
     is_found = False
 
@@ -75,8 +82,7 @@ def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]
                 else:
                     is_found = False
                     break
-            else:
-                get_log().warning("filter_metadata", key=criteria_key, msg="Key not found.")
         if is_found:
             filtered_dict[metadata_key] = metadata_value
+    get_log().debug("filter_metadata_end", metadata=filtered_dict)
     return filtered_dict
