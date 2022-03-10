@@ -38,7 +38,9 @@ export class AwsBatchStack extends Stack {
     );
     instanceRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
 
-    instanceRole.addToPrincipalPolicy(new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole'] }));
+    instanceRole.addToPrincipalPolicy(
+      new PolicyStatement({ resources: ['*'], actions: ['sts:AssumeRole', 'cloudformation:DescribeStacks'] }),
+    );
 
     const tempBucket = new Bucket(this, 'TempBucket', {
       removalPolicy: RemovalPolicy.RETAIN,

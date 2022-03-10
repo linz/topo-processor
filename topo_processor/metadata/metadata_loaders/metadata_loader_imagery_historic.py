@@ -10,7 +10,6 @@ from rasterio.enums import ColorInterp
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
-from topo_processor.stac.file_extension import is_tiff
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -23,6 +22,7 @@ from topo_processor.util.conversions import (
     string_to_boolean,
     string_to_number,
 )
+from topo_processor.util.file_extension import is_tiff
 
 from .metadata_loader import MetadataLoader
 

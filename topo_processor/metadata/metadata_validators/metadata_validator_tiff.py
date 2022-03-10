@@ -8,7 +8,7 @@ from linz_logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.file_system.get_fs import get_fs
-from topo_processor.stac.file_extension import is_tiff
+from topo_processor.util.file_extension import is_tiff
 
 from .metadata_validator import MetadataValidator
 
