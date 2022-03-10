@@ -10,10 +10,12 @@ ENV IS_DOCKER=true
 
 WORKDIR /app
 # Add Poetry config and scripts
-COPY poetry.lock pyproject.toml VERSION /app/
+COPY poetry.lock pyproject.toml /app/
 
 RUN poetry config virtualenvs.create false \
   && poetry install --no-dev --no-interaction --no-ansi
 
 COPY ./topo_processor /app/topo_processor
 COPY ./upload /app/
+
+
