@@ -1,11 +1,15 @@
 import json
-from typing import Any, Dict
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List
 from urllib.parse import urlparse
 
 import boto3
+from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
 from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.util.configuration import historical_imagery_bucket
+from topo_processor.util.file_extension import is_tiff
 from topo_processor.util.time import time_in_ms
 
 
@@ -62,3 +66,81 @@ def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
 
 def build_s3_path(bucket_name: str, object_path: str) -> str:
     return f"s3://{bucket_name}/" + (object_path[1:] if object_path.startswith("/") else object_path)
+
+
+def create_s3_manifest(manifest_source_path: str) -> None:
+    # TODO:lock file
+    start_time = time_in_ms()
+    get_log().debug("check_manifest", manifestPath=manifest_source_path)
+
+    url_o = urlparse(manifest_source_path)
+    bucket_name = url_o.netloc
+    manifest_path = url_o.path[1:]
+    credentials: Credentials = get_credentials(bucket_name)
+
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
+    )
+
+    try:
+        manifest_modified_datetime = s3_client.head_object(Bucket=bucket_name, Key=manifest_path)["LastModified"]
+        cutoff_datetime = datetime.now(timezone.utc) - timedelta(days=28)
+        if cutoff_datetime < manifest_modified_datetime:
+            return
+
+    except botocore_exceptions.ClientError as e:
+        if e.response["Error"]["Code"] == "404":
+            get_log().debug("no_manifest_file_found", bucketName=bucket_name, manifestPath=manifest_path, error=e)
+        else:
+            raise e
+
+    try:
+        get_log().debug("create_manifest", bucketName=bucket_name, manifestPath=manifest_path)
+        manifest_new: Dict[str, Any] = {}
+        manifest_file_list = _list_objects(historical_imagery_bucket)
+        manifest_new["path"] = manifest_path
+        manifest_new["time"] = time_in_ms()
+        manifest_new["files"] = manifest_file_list
+
+        s3_client.put_object(
+            Body=json.dumps(manifest_new).encode("UTF-8"),
+            ContentType="application/json",
+            Bucket=bucket_name,
+            Key=manifest_path,
+        )
+
+    except Exception as e:
+        get_log().error("create_manifest_failed", bucketPath=bucket_name, manifestPath=manifest_path, error=e)
+        raise e
+
+    get_log().debug(
+        "log_manifest_create_time",
+        manifestSourcePath=manifest_source_path,
+        duration=time_in_ms() - start_time,
+    )
+
+
+def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
+
+    credentials: Credentials = get_credentials(bucket_name)
+
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=credentials.access_key,
+        aws_secret_access_key=credentials.secret_key,
+        aws_session_token=credentials.token,
+    )
+
+    file_list: List[Dict[str, str]] = []
+    paginator = s3_client.get_paginator("list_objects_v2")
+    response_iterator = paginator.paginate(Bucket=bucket_name)
+    for response in response_iterator:
+        for contents_data in response["Contents"]:
+            key = contents_data["Key"]
+            if is_tiff(key):
+                file_list.append({"path": key})
+
+    return file_list

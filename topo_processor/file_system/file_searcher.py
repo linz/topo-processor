@@ -12,7 +12,7 @@ from topo_processor.util.configuration import historical_imagery_bucket
 def get_file_path_from_survey(survey_id: str, manifest_path: str, metadata_path: str = "") -> List[str]:
     list_file_path: List[str] = []
     criteria = {"survey": survey_id}
-    metadata = get_metadata(DataType.IMAGERY_HISTORIC, criteria, metadata_path)
+    metadata = get_metadata(DataType.IMAGERY_HISTORIC, criteria, metadata_path, True)
     manifest = load_manifest(manifest_path)
 
     for metadata_row in metadata.values():

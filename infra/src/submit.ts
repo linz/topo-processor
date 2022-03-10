@@ -11,12 +11,13 @@ async function main(): Promise<void> {
   console.log({ correlationId });
 
   const environment = [
-    { name: 'LINZ_CORRELATION_ID', value: correlationId },
-    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
-    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
     { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
+    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'LINZ_CORRELATION_ID', value: correlationId },
+    { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
+    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
-
+  
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
@@ -27,6 +28,7 @@ async function main(): Promise<void> {
   const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
+
   if (process.argv.length > 2) {
     for (let i = 2; i < process.argv.length; i++) {
       const res = await batch
@@ -36,7 +38,6 @@ async function main(): Promise<void> {
           jobDefinition: JobDefinitionArn,
           containerOverrides: {
             resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-
             command: buildCommandArguments(correlationId, TempBucketName, process.argv[i]),
             environment,
           },
