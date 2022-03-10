@@ -14,6 +14,7 @@ from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.stac.store import get_collection, get_item
+from topo_processor.util.configuration import get_version
 from topo_processor.util.conversions import (
     historical_imagery_photo_type_to_linz_geospatial_type,
     nzt_datetime_to_utc_datetime,
@@ -65,6 +66,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.target = f"{asset_metadata['survey']}/{asset_metadata['sufi']}{asset.file_ext()}"
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
+
 
     def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])

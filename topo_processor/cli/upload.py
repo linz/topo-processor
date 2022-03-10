@@ -5,6 +5,7 @@ from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.item_factory import process_source
 from topo_processor.stac.store import collection_store
+from topo_processor.util.configuration import get_version
 from topo_processor.util.time import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
 
@@ -55,6 +56,8 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
 
     start_time = time_in_ms()
     data_type = DataType(datatype)
+
+    print(get_version())
 
     # Caching the metadata required by the user.
     if metadata:

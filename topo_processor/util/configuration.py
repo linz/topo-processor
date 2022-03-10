@@ -1,4 +1,4 @@
-from os import environ
+from os import environ, path
 from tempfile import mkdtemp
 from typing import Optional
 
@@ -23,3 +23,9 @@ temp_folder: str = mkdtemp()
 get_log().debug(
     "from_environment_variables", lds_cache_bucket=lds_cache_bucket, aws_profile=aws_profile, ssm=linz_ssm_bucket_config_name
 )
+
+
+def get_version() -> str:
+    with open(path.join("VERSION")) as version_file:
+        version:str = version_file.read().strip()
+        return version
