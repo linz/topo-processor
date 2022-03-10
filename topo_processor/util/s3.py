@@ -13,20 +13,16 @@ def bucket_name_from_stack(stack_name: str) -> str:
     cloudformation = session.resource("cloudformation")
     stack = cloudformation.Stack(stack_name)
 
-    temp_bucket: str
+    temp_bucket: str = ""
 
-    try:
-        for output in stack.outputs:
-            if output["OutputKey"] == "TempBucketName":
-                get_log().debug("bucket_name", bucket_name=output["OutputValue"])
-                temp_bucket = output["OutputValue"]
-
-    except Exception as e:
-        get_log().error("bucket_name_not_found", stackName=stack_name, error=e)
-        raise e
+    for output in stack.outputs:
+        if output["OutputKey"] == "TempBucketName":
+            get_log().debug("bucket_name", bucket_name=output["OutputValue"])
+            temp_bucket = output["OutputValue"]
 
     if not temp_bucket:
-        raise Exception("No temp_bucket found for command")
+        get_log().error("bucket_name_not_found", stackName=stack_name)
+        raise Exception("No temp_bucket found in stack")
 
     return temp_bucket
 
