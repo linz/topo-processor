@@ -10,6 +10,14 @@ async function main(): Promise<void> {
   const correlationId = ulid.ulid();
   console.log({ correlationId });
 
+  const environment = [
+    { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
+    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
+    { name: 'LINZ_CORRELATION_ID', value: correlationId },
+    { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
+    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
+  ];
+
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
@@ -20,42 +28,36 @@ async function main(): Promise<void> {
   const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
-  const environment = [
-    { name: 'AWS_DEFAULT_REGION', value: 'ap-southeast-2' },
-    { name: 'LINZ_CACHE_BUCKET', value: 'linz-lds-cache' },
-    { name: 'LINZ_CORRELATION_ID', value: correlationId },
-    { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
-    { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
-  ];
-
-  for (let jobId = 0; jobId < 1; jobId++) {
-    const res = await batch
-      .submitJob({
-        jobName: ['Job', correlationId, jobId].join('-'),
-        jobQueue: JobQueueArn,
-        jobDefinition: JobDefinitionArn,
-        containerOverrides: {
-          resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-
-          command: buildCommandArguments(correlationId, TempBucketName),
-          environment,
-        },
-      })
-      .promise();
-
-    console.log(res);
+  if (process.argv.length > 2) {
+    for (let i = 2; i < process.argv.length; i++) {
+      const res = await batch
+        .submitJob({
+          jobName: ['Job', correlationId].join('-'),
+          jobQueue: JobQueueArn,
+          jobDefinition: JobDefinitionArn,
+          containerOverrides: {
+            resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
+            command: buildCommandArguments(correlationId, TempBucketName, process.argv[i]),
+            environment,
+          },
+        })
+        .promise();
+      console.log({ source: process.argv[i] }, '\n', res);
+    }
+  } else {
+    console.log(
+      'You need to provide a source (a list of S3 bucket folders or a list of survey ID to process. Check the README for more information.',
+    );
   }
 }
 
-// TODO: historical imagery input source
-
-function buildCommandArguments(correlationId: string, tempBucket: string): string[] {
+function buildCommandArguments(correlationId: string, tempBucket: string, source: string): string[] {
   const command: string[] = [];
   command.push('./upload');
   command.push('--correlationid');
   command.push(correlationId);
   command.push('--source');
-  command.push('9490');
+  command.push(source);
   command.push('--target');
   command.push('s3://' + tempBucket + '/' + correlationId + '/');
   command.push('--datatype');
