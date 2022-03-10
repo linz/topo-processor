@@ -17,7 +17,7 @@ async function main(): Promise<void> {
     { name: 'LINZ_HISTORICAL_IMAGERY_BUCKET', value: 'linz-historical-imagery-staging' },
     { name: 'LINZ_SSM_BUCKET_CONFIG_NAME', value: 'BucketConfig' },
   ];
-  
+
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
@@ -27,7 +27,6 @@ async function main(): Promise<void> {
   if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
   const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
-
 
   if (process.argv.length > 2) {
     for (let i = 2; i < process.argv.length; i++) {
