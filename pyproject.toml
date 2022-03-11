@@ -13,7 +13,7 @@ click = "^8.0.4"
 boto3 = "^1.21.17"
 python-ulid = "^1.0.2"
 fsspec = {extras = ["s3"], version = "^2022.2.0"}
-pystac = "^1.2.0"
+pystac = "^1.4.0"
 jsonschema = "^4.4.0"
 jsonschema-rs = "^0.13.1"
 Shapely = "^1.8.1"
