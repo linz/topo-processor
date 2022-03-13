@@ -7,6 +7,7 @@ from pystac.item import Item as PystacItem
 from pystac.stac_object import STACObjectType
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
+from topo_processor.util.configuration import get_version
 from topo_processor.util.valid import Validity
 
 from .asset import Asset
@@ -30,8 +31,7 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {
-            # TODO: [TDE-237] to generate release versioning
-            "processing:software": {"Topo Processor": "0.1.0"},
+            "processing:software": {"Topo Processor": get_version()},
             # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
             "version": "1",
         }

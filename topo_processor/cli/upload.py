@@ -57,7 +57,6 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
     start_time = time_in_ms()
     data_type = DataType(datatype)
 
-    print(get_version())
 
     # Caching the metadata required by the user.
     if metadata:
