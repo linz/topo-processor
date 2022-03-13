@@ -952,11 +952,11 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-ulid"
-version = "1.0.3"
+version = "1.1.0"
 description = "Universally Unique Lexicographically Sortable Identifier"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [[package]]
 name = "rasterio"
@@ -1168,7 +1168,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9c16c636fb3a2888ecdd2998a46e4611051983fea71221d7e0ed9cd30a9da80b"
+content-hash = "519992341a7c00ee0d4b163374adf70e01d03379a7bb0e00a054eed771fda12e"
 
 [metadata.files]
 affine = [
@@ -1730,8 +1730,8 @@ python-dotenv = [
     {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
 ]
 python-ulid = [
-    {file = "python-ulid-1.0.3.tar.gz", hash = "sha256:5dd8b969312a40e2212cec9c1ad63f25d4b6eafd92ee3195883e0287b6e9d19e"},
-    {file = "python_ulid-1.0.3-py3-none-any.whl", hash = "sha256:8704dc20f547f531fe3a41d4369842d737a0f275403b909d0872e7ea0fe8d6f2"},
+    {file = "python-ulid-1.1.0.tar.gz", hash = "sha256:5fb5e4a91db8ca93e8938a613360b3def299b60d41f847279a8c39c9b2e9c65e"},
+    {file = "python_ulid-1.1.0-py3-none-any.whl", hash = "sha256:88c952f6be133dbede19c907d72d26717d2691ec8421512b573144794d891e24"},
 ]
 rasterio = [
     {file = "rasterio-1.2.10-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f86efb0e4989201f244d6818575d442b716ce81af6cd969c3caead76b9690837"},

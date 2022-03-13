@@ -11,7 +11,7 @@ py-multihash = "^2.0.1"
 rasterio = "^1.2.10"
 click = "^8.0.4"
 boto3 = "^1.21.17"
-python-ulid = "^1.0.2"
+python-ulid = "^1.1.0"
 fsspec = {extras = ["s3"], version = "^2022.2.0"}
 pystac = "^1.4.0"
 jsonschema = "^4.4.0"
