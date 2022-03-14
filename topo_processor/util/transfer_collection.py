@@ -38,8 +38,8 @@ def transfer_collection(collection: Collection, target: str) -> None:
 
         for asset in item.assets:
 
-            if not asset.needs_upload:
-                continue
+            # if not asset.needs_upload:
+            #     continue
             asset.href = f"./{item.id}{asset.file_ext()}"
             if asset.href in existing_asset_hrefs:
                 raise Exception(f"{asset.href} already exists.")

@@ -42,15 +42,18 @@ class DataTransformerImageryHistoric(DataTransformer):
 
             get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
-            asset.needs_upload = False
+            # asset.needs_upload = False
 
-            cog_asset = Asset(output_path)
-            cog_asset.content_type = pystac.MediaType.COG
-            cog_asset.key_name = asset.key_name
-            cog_asset.target = asset.target
-            cog_asset.properties = asset.properties
-            cog_asset.set_output_asset_dates(output_path)
-            cog_asset_list.append(cog_asset)
+            asset.content_type = pystac.MediaType.COG
+            asset.set_output_asset_dates(output_path)
 
-        for asset in cog_asset_list:
-            item.add_asset(asset)
+        #     cog_asset = Asset(output_path)
+
+        #     cog_asset.key_name = asset.key_name
+        #     cog_asset.target = asset.target
+        #     cog_asset.properties = asset.properties
+        #     cog_asset.set_output_asset_dates(output_path)
+        #     cog_asset_list.append(cog_asset)
+
+        # for asset in cog_asset_list:
+        #     item.add_asset(asset)
