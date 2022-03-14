@@ -45,6 +45,8 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           npx cdk deploy -y --require-approval never
+        env:
+          AWS_ORG_ID: ${{secrets.AWS_ORG_ID}}
 
       - name: (Prod) Configure AWS Credentials
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
@@ -57,3 +59,5 @@ jobs:
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
         run: |
           npx cdk deploy -y --require-approval never
+        env:
+          AWS_ORG_ID: ${{secrets.AWS_ORG_ID}}
