@@ -183,6 +183,7 @@ def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
         {
             "linz:lifecycle": "completed",
             "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
+            "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
             "processing:software": {"Topo Processor": "0.1.0"},
             "version": "1",
         }
