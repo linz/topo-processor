@@ -66,7 +66,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             asset.key_name = AssetKey.Visual
             self.populate_item(asset_metadata, asset)
 
-
     def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
         title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
         if not title:

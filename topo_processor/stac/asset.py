@@ -29,7 +29,7 @@ class Asset(Validity):
         super().__init__()
         self.source_path = source_path
         self.properties = {
-            "processing:software": {"Topo Processor": get_version()},
+            "processing:software": get_version(),
         }
 
     def file_ext(self) -> str:

@@ -54,7 +54,7 @@ class Collection(Validity):
         self.extra_fields = dict(
             {
                 "linz:security_classification": "unclassified",
-                "processing:software": {"Topo Processor": get_version()},
+                "processing:software": get_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
             }

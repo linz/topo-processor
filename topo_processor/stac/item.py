@@ -31,7 +31,7 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {
-            "processing:software": {"Topo Processor": get_version()},
+            "processing:software": get_version(),
             # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
             "version": "1",
         }
