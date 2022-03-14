@@ -5,6 +5,7 @@ from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.item_factory import process_source
 from topo_processor.stac.store import collection_store
+from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
 from topo_processor.util.transfer_collection import transfer_collection
 
@@ -47,7 +48,13 @@ from topo_processor.util.transfer_collection import transfer_collection
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str) -> None:
+@click.option(
+    "-f",
+    "--footprint",
+    required=False,
+    help="The survey footprint metadata path",
+)
+def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
 
     if verbose:
@@ -59,6 +66,17 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
     # Caching the metadata required by the user.
     if metadata:
         get_metadata(data_type, None, metadata)
+        if not is_s3_path(metadata):
+            if not footprint:
+                get_log().error(
+                    "survey_footprint_metadata_not_given",
+                    msg="You have to provide a local path for the survey footprint metadata",
+                )
+            else:
+                if data_type == DataType.IMAGERY_HISTORIC:
+                    get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, None, footprint)
+                else:
+                    raise Exception("Not yet implemented")
 
     process_source(source, data_type, metadata)
 

@@ -4,7 +4,7 @@ import tempfile
 
 import pytest
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv
+from topo_processor.metadata.csv_loader.csv_loader import load_data, read_csv
 
 
 def test_read_csv() -> None:
@@ -88,3 +88,16 @@ def test_error_on_duplicate_file() -> None:
 
     with pytest.raises(Exception, match=r'Duplicate file "WRONG_PHOTO_TYPE" found in metadata csv'):
         read_csv(temp_file.name)
+
+
+def test_load_data() -> None:
+    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
+    metadata = load_data(metadata_path, "SURVEY", columns=["NAME"])
+
+    assert len(metadata) == 3
+    assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2"]
+    assert list(metadata.values()) == [
+        {"NAME": "TE KUITI 1"},
+        {"NAME": "AUCKLAND 1"},
+        {"NAME": "WELLINGTON 2"},
+    ]

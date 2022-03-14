@@ -12,9 +12,10 @@ def test_upload_local(setup: str) -> None:
     target = setup
     source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
     metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv"))
+    footprint_metadata = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv"))
     command = os.path.join(os.getcwd(), "upload")
     subprocess.run(
-        [command, "-s", source, "-d", "imagery.historic", "-t", target, "-m", metadata_path],
+        [command, "-s", source, "-d", "imagery.historic", "-t", target, "-m", metadata_path, "-f", footprint_metadata],
         check=True,
     )
 
@@ -38,7 +39,7 @@ def test_upload_local(setup: str) -> None:
 
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
-    assert item_metadata["properties"]["mission"] == "SURVEY_3"
+    assert item_metadata["properties"]["mission"] == "AUCKLAND 1"
     assert item_metadata["id"] == "72352"
     assert (
         item_metadata["assets"]["visual"]["file:checksum"]

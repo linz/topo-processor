@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 import pystac
 from linz_logger import get_log
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv
+from topo_processor.metadata.csv_loader.csv_loader import load_data, read_csv
 from topo_processor.metadata.data_type import DataType, get_layer_id
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
@@ -58,6 +58,8 @@ def get_metadata(
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
             metadata_store[layer_id] = read_csv(metadata_path)
+        elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
+            metadata_store[layer_id] = load_data(metadata_path, "SURVEY", columns=["NAME"])
 
     if criteria:
         filtered_metadata = filter_metadata(metadata_store[layer_id], criteria)
