@@ -67,12 +67,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             self.populate_item(asset_metadata, asset)
 
     def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
-        title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
-        if not title:
-            get_log().warning(
-                "Null collection title value", message="asset has null 'survey' and 'alternate_survey_name' values"
-            )
-            return
+        survey = metadata_row["survey"]
+        if not survey:
+            survey = metadata_row["alternate_survey_name"]
+        title = self.get_title(survey)
+
         collection = get_collection(title)
 
         item = get_item(metadata_row["sufi"])
@@ -122,14 +121,16 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.version.value)
         item.add_extension(StacExtensions.processing.value)
 
-    def get_title(self, survey: str, alternate_survey_name: str) -> Union[str, None]:
-        if not survey or survey == "0" or survey == "":
-            if alternate_survey_name and alternate_survey_name != "":
-                return alternate_survey_name
-            else:
-                return None
-        else:
-            return survey
+    def get_title(self, survey: str) -> str:
+        # TODO allow survey_footprint metadata path
+        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, {"SURVEY": survey}, save_filtered=True)
+        title: str = ""
+
+        if len(survey_names) == 0:
+            raise Exception(f"No name found for survey {survey}")
+
+        title = survey_names[survey]["NAME"]
+        return title
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         wkt = asset_metadata.get("WKT", None)
