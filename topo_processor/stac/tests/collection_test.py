@@ -109,6 +109,7 @@ def test_get_linz_asset_summaries() -> None:
         "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
     }
 
+
 def test_get_linz_multiple_processing_software_asset_summaries() -> None:
     collection = Collection("fake_title")
     item = Item("item_id")
