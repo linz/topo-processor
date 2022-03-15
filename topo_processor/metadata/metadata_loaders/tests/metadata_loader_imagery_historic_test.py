@@ -1,6 +1,8 @@
 import os
 from typing import Dict
 
+import pytest
+
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
@@ -360,3 +362,30 @@ def test_provider_added() -> None:
     assert NZAM_provider.name == "NZ Aerial Mapping"
     assert NZAM_provider.description == "Aerial survey and geospatial services firm. Went into liquidation in 2014."
     assert NZAM_provider.roles == ["producer"]
+
+
+def test_get_collection_title() -> None:
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    title = metadata_loader_imagery_historic.get_title("SURVEY_3")
+
+    assert title == "AUCKLAND 1"
+
+
+def test_get_collection_title_not_found() -> None:
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+
+    with pytest.raises(Exception) as e:
+        metadata_loader_imagery_historic.get_title("SURVEY_6")
+        assert "No name found for survey SURVEY_6" in str(e.value)
