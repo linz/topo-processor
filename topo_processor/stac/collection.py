@@ -31,6 +31,7 @@ FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/master/fields/fie
 class Collection(Validity):
     id: str
     title: str
+    survey: str
     description: str
     license: str
     items: Dict[str, "Item"]

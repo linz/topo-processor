@@ -73,6 +73,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         title = self.get_title(survey)
 
         collection = get_collection(title)
+        collection.survey = survey
 
         item = get_item(metadata_row["sufi"])
         collection.add_item(item)
@@ -123,7 +124,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def get_title(self, survey: str) -> str:
         # TODO allow survey_footprint metadata path
-        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, {"SURVEY": survey}, save_filtered=True)
+        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
         title: str = ""
 
         if len(survey_names) == 0:

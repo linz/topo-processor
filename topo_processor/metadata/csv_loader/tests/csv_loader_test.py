@@ -94,12 +94,10 @@ def test_load_data() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = load_data(metadata_path, "SURVEY", columns=["NAME"])
 
-    assert len(metadata) == 5
-    assert list(metadata.keys()) == ["72358", "72360", "72359", "72352", "29659"]
+    assert len(metadata) == 3
+    assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2"]
     assert list(metadata.values()) == [
         {"NAME": "TE KUITI 1"},
-        {"NAME": "TE KUITI 3"},
-        {"NAME": "TE KUITI 2"},
         {"NAME": "AUCKLAND 1"},
         {"NAME": "WELLINGTON 2"},
     ]
