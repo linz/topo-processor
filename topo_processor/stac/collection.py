@@ -126,7 +126,7 @@ class Collection(Validity):
         assets_checked: List[Asset] = []
         dates_created: List[datetime] = []
         dates_updated: List[datetime] = []
-        processing_software_versions: List[Dict[str]] = []
+        processing_software_versions: List[Dict[str, str]] = []
 
         for item in self.items.values():
             for asset in item.assets:
