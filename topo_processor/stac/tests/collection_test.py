@@ -134,6 +134,30 @@ def test_get_linz_multiple_processing_software_asset_summaries() -> None:
     }
 
 
+def test_get_linz_multiple__identical_processing_software_asset_summaries() -> None:
+    collection = Collection("fake_title")
+    item = Item("item_id")
+    collection.add_item(item)
+
+    cog_1 = Asset("testa")
+    cog_1.properties["created"] = "1999-01-01T00:00:00Z"
+    cog_1.properties["updated"] = "1999-01-01T00:00:00Z"
+    cog_1.properties["processing:software"] = {"Topo Processor": "v0.3.0"}
+    item.add_asset(cog_1)
+
+    cog_2 = Asset("testb")
+    cog_2.properties["created"] = "2010-01-01T00:00:00Z"
+    cog_2.properties["updated"] = "2010-03-01T00:00:00Z"
+    cog_2.properties["processing:software"] = {"Topo Processor": "v0.3.0"}
+    item.add_asset(cog_2)
+
+    assert collection.get_linz_asset_summaries() == {
+        "processing:software": [{"Topo Processor": "v0.3.0"}],
+        "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
+        "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
+    }
+
+
 def test_single_geospatial_types() -> None:
     """Single photo_type"""
 
