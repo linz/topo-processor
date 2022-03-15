@@ -57,7 +57,6 @@ def transfer_collection(collection: Collection, target: str) -> None:
 
         # pystac v1.1.0
         # Required to not add a self link with an 'absolute' link from the cwd
-
         json_item = stac_item.to_dict(include_self_link=False)
         if not item.collection:
             raise Exception(f"No collection set for item {item.id}")

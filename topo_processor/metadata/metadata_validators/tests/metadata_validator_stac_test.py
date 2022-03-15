@@ -218,6 +218,7 @@ def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None: 
     collection.license = "lic"
     collection.extra_fields.update(
         {
+            "processing:software": {"Topo Processor": "0.1.0"},
             "version": "1",
         }
     )

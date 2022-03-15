@@ -45,7 +45,7 @@ class DataTransformerImageryHistoric(DataTransformer):
             asset.needs_upload = False
 
             cog_asset = Asset(output_path)
-
+            cog_asset.content_type = pystac.MediaType.COG
             cog_asset.key_name = asset.key_name
             cog_asset.target = asset.target
             cog_asset.properties = asset.properties
