@@ -24,7 +24,8 @@ get_log().debug(
     "from_environment_variables", lds_cache_bucket=lds_cache_bucket, aws_profile=aws_profile, ssm=linz_ssm_bucket_config_name
 )
 
-def get_topo_processor_version() -> Dict[str,str]:
+
+def get_topo_processor_version() -> Dict[str, str]:
     with open(path.join("VERSION")) as version_file:
         version: str = version_file.read().strip()
         return {"Topo Processor": version}

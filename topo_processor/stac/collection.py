@@ -130,6 +130,8 @@ class Collection(Validity):
 
         for item in self.items.values():
             for asset in item.assets:
+                if not asset.needs_upload:
+                    continue
                 if not asset in assets_checked:
                     if "created" in asset.properties:
                         dates_created.append(asset.properties["created"])

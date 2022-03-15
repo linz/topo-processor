@@ -29,7 +29,7 @@ class MetadataLoaderTiff(MetadataLoader):
         if asset:
             fs = get_fs(asset.source_path)
             # FIXME: Should we download the file first as we could need it to do the coggification later?
-            # This process takes quiet a long time locally.
+            # This process takes quite a long time locally.
 
             with fs.open(asset.source_path) as f:
                 with warnings.catch_warnings(record=True) as w:
