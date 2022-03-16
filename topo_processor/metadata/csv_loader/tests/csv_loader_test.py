@@ -90,7 +90,7 @@ def test_error_on_duplicate_file() -> None:
         read_csv(temp_file.name, "raw_filename", "sufi")
 
 
-def test_load_data() -> None:
+def test_read_csv_column_filter() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 
