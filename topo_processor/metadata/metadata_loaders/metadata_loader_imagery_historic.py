@@ -123,7 +123,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.processing.value)
 
     def get_title(self, survey: str) -> str:
-        # TODO allow survey_footprint metadata path
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
         title: str = ""
 
