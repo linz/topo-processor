@@ -39,7 +39,7 @@ def test_upload_local(setup: str) -> None:
 
     with open(os.path.join(target, "SURVEY_3", "72352.json")) as item_json_file:
         item_metadata = json.load(item_json_file)
-    assert item_metadata["properties"]["mission"] == "AUCKLAND 1"
+    assert item_metadata["properties"]["mission"] == "SURVEY_3"
     assert item_metadata["id"] == "72352"
     assert (
         item_metadata["assets"]["visual"]["file:checksum"]

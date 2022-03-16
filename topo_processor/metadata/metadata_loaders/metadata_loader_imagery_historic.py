@@ -100,7 +100,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
         item.properties.update(
             {
-                "mission": title,
+                "mission": collection.survey,
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
             }

@@ -79,7 +79,7 @@ def test_generate_summaries(setup: str) -> None:
     metadata_loader_imagery_historic.add_spatial_extent(item_1, asset_metadata=test_geom)
     item_1.datetime = test_datetime
     item_1.properties = {
-        "mission": "AUCKLAND 1",
+        "mission": "SURVEY_1",
         "proj:centroid": {"lat": -45.8079, "lon": 170.5548},
         "camera:sequence_number": 89555,
         "film:id": "731",
@@ -95,7 +95,7 @@ def test_generate_summaries(setup: str) -> None:
     metadata_loader_imagery_historic.add_spatial_extent(item_2, asset_metadata=test_geom)
     item_2.datetime = test_datetime
     item_2.properties = {
-        "mission": "AUCKLAND 1",
+        "mission": "SURVEY_1",
         "proj:centroid": {"lat": -45.8079, "lon": 170.5599},
         "camera:sequence_number": 89554,
         "film:id": "731",
@@ -110,7 +110,7 @@ def test_generate_summaries(setup: str) -> None:
 
     with open(os.path.join(target, "SURVEY_1", "collection.json")) as collection_json_file:
         collection_metadata = json.load(collection_json_file)
-        assert collection_metadata["summaries"]["mission"] == ["AUCKLAND 1"]
+        assert collection_metadata["summaries"]["mission"] == ["SURVEY_1"]
         assert collection_metadata["summaries"]["film:id"] == ["731"]
         assert collection_metadata["summaries"]["proj:epsg"] == ["null"]
         assert collection_metadata["summaries"]["aerial-photo:scale"] == {"minimum": 5600, "maximum": 6600}
