@@ -14,6 +14,7 @@ from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
 from topo_processor.stac.asset import Asset
+from topo_processor.util.configuration import get_topo_processor_version
 from topo_processor.util.time import get_min_max_interval
 from topo_processor.util.valid import Validity
 
@@ -53,8 +54,7 @@ class Collection(Validity):
         self.extra_fields = dict(
             {
                 "linz:security_classification": "unclassified",
-                # TODO: [TDE-237] to generate release versioning
-                "processing:software": {"Topo Processor": "0.1.0"},
+                "processing:software": get_topo_processor_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
             }
@@ -126,13 +126,19 @@ class Collection(Validity):
         assets_checked: List[Asset] = []
         dates_created: List[datetime] = []
         dates_updated: List[datetime] = []
+        processing_software_versions: List[Dict[str, str]] = []
 
         for item in self.items.values():
             for asset in item.assets:
+                if not asset.needs_upload:
+                    continue
                 if not asset in assets_checked:
                     if "created" in asset.properties:
                         dates_created.append(asset.properties["created"])
                         dates_updated.append(asset.properties["updated"])
+                    if "processing:software" in asset.properties:
+                        if asset.properties["processing:software"] not in processing_software_versions:
+                            processing_software_versions.append(asset.properties["processing:software"])
                     assets_checked.append(asset)
 
         interval_created = get_min_max_interval(dates_created)
@@ -147,6 +153,7 @@ class Collection(Validity):
             }
 
         return {
+            "processing:software": processing_software_versions,
             "created": {"minimum": interval_created[0], "maximum": interval_created[1]},
             "updated": {"minimum": interval_updated[0], "maximum": interval_updated[1]},
         }

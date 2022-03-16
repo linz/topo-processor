@@ -194,6 +194,7 @@ def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
     mocker.patch(
         "topo_processor.stac.collection.Collection.get_linz_asset_summaries",
         return_value={
+            "processing:software": [{"Topo Processor": "v0.1.0"}, {"Topo Processor": "v0.3.0"}],
             "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
             "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
         },
@@ -226,6 +227,7 @@ def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None: 
     mocker.patch(
         "topo_processor.stac.collection.Collection.get_linz_asset_summaries",
         return_value={
+            "processing:software": [{"Topo Processor": "v0.1.0"}, {"Topo Processor": "v0.3.0"}],
             "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
             "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
         },
