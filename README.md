@@ -127,6 +127,12 @@ The following source and target combinations can be used:
 | local  | local  |
 | local  |   s3   |
 
+### `export`
+
+This command allows to export a survey to the [Geostore](https://github.com/linz/geostore) by using the [Geostore API](https://github.com/linz/geostore/blob/master/USAGE.md).
+
+**_Prerequisites:_** The survey has to be processed by the `upload` command first. The output of the `upload` is what will be exported to the `Geostore`.
+
 ### `validate`
 
 **_NOTE:_** This command is currently only implemented for `Historical Imagery`. Other layers will come later.
