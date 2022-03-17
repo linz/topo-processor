@@ -58,4 +58,4 @@ class MetadataValidatorTiff(MetadataValidator):
                 else:
                     raise Exception(f"Unknown linz_geospatial_type of '{geospatial_type}'")
         for warn in w:
-                    get_log().warning(f"Warning: {warn.message}", file=asset.source_path, loader=self.name)
+            get_log().warning(f"Warning: {warn.message}", file=asset.source_path, loader=self.name)
