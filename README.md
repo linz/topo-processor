@@ -88,9 +88,9 @@ node ./build/infra/src/submit.js surveyId1 surveyId3 [...]
 node ./build/infra/src/submit.js s3://my-bucket/backup2/surveyId1/ s3://my-bucket/backup4/surveyId3/ [...]
 ```
 
-### Upload command
+### `upload`
 
-**_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
+**_NOTE:_** The `upload` command is restricted to a run per `survey` and only for the `Historical Imagery` layer. To run multiple surveys, please refere to `AWS Batch` described above.
 
 | Argument                    |                                           Description                                           |
 | --------------------------- | :---------------------------------------------------------------------------------------------: |
@@ -127,7 +127,7 @@ The following source and target combinations can be used:
 | local  | local  |
 | local  |   s3   |
 
-### Validate
+### `validate`
 
 **_NOTE:_** This command is currently only implemented for `Historical Imagery`. Other layers will come later.
 
