@@ -31,6 +31,7 @@ class MetadataValidatorTiff(MetadataValidator):
 
             geospatial_type = item.linz_geospatial_type
             eo_bands = asset.properties["eo:bands"]
+            common_names = [common_names["common_name"] for common_names in eo_bands]
 
             with warnings.catch_warnings(record=True) as w:
 
@@ -40,9 +41,8 @@ class MetadataValidatorTiff(MetadataValidator):
                     if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
                         raise Exception(f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = '{eo_bands}'")
                 # color
-                common_names = [common_names["common_name"] for common_names in eo_bands]
                 # check linz_geospatial_type matches colorinterp
-                if geospatial_type in ["color image", "color infrared image"]:
+                elif geospatial_type in ["color image", "color infrared image"]:
                     # check eo:bands matches colorinterp
                     if (
                         len(eo_bands) != 3
