@@ -39,8 +39,6 @@ class MetadataValidatorTiff(MetadataValidator):
                     # check eo:bands matches geospatial_type
                     if len(eo_bands) != 1 or eo_bands[0]["common_name"] != "pan":
                         raise Exception(f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = '{eo_bands}'")
-                    else:
-                        continue
                 # color
                 common_names = [common_names["common_name"] for common_names in eo_bands]
                 # check linz_geospatial_type matches colorinterp
@@ -53,8 +51,6 @@ class MetadataValidatorTiff(MetadataValidator):
                         or "blue" not in common_names
                     ):
                         raise Exception(f"Wrong linz_geospatial_type of '{geospatial_type}' when bands = '{eo_bands}'")
-                    else:
-                        continue
                 else:
                     raise Exception(f"Unknown linz_geospatial_type of '{geospatial_type}'")
         for warn in w:
