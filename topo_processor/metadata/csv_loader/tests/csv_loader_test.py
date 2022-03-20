@@ -94,10 +94,6 @@ def test_read_csv_column_filter() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 
-    assert len(metadata) == 3
-    assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2"]
-    assert list(metadata.values()) == [
-        {"NAME": "TE KUITI 1"},
-        {"NAME": "AUCKLAND 1"},
-        {"NAME": "WELLINGTON 2"},
-    ]
+    assert len(metadata) == 4
+    assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]
+    assert list(metadata.values()) == [{"NAME": "TE KUITI 1"}, {"NAME": "AUCKLAND 1"}, {"NAME": "WELLINGTON 2"}, {"NAME": ""}]

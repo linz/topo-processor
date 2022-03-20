@@ -126,7 +126,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
         title: str = ""
 
-        if len(survey_names) == 0:
+        if len(survey_names) == 0 or not survey_names[survey]["NAME"]:
             raise Exception(f"No name found for survey {survey}")
 
         title = survey_names[survey]["NAME"]
