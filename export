@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+
+from topo_processor.cli import export
+
+export.main()
