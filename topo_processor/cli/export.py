@@ -48,6 +48,7 @@ from topo_processor.util.time import time_in_ms
     help="Use this flag to export into production environment.",
 )
 def main(source: str, datatype: str, correlationid: str, verbose: str, prod: str) -> None:
+    start_time = time_in_ms()
     get_log().info("export_start", id=correlationid, source=source, dataType=datatype)
 
     if verbose:
@@ -59,7 +60,7 @@ def main(source: str, datatype: str, correlationid: str, verbose: str, prod: str
         environment = "nonprod"
 
     # Validate source
-    collection_path = f"{temp_folder}/collection.json"
+    """ collection_path = f"{temp_folder}/collection.json"
     if is_s3_path(source):
         if source.endswith("/"):
             source = source[:-1]
@@ -67,17 +68,26 @@ def main(source: str, datatype: str, correlationid: str, verbose: str, prod: str
             s3_download(source + "/" + "collection.json", collection_path)
         except Exception as e:
             get_log().error("export_failed", id=correlationid, source=source, error=e)
+            return
+
     else:
         print("Exporting local data is not yet implemented")
 
     with open(collection_path) as collection_file:
         collection_json: Dict[str, Any] = json.load(collection_file)
 
-    print(collection_json["summaries"]["mission"])
-
     # Get survey id for dataset id and collection.title for Description
+    # FIXME We can also get the folder name where the survey to process is but how to be sure it's the survey id...
+    survey_id = collection_json["summaries"]["mission"][0]
+    if not survey_id:
+        get_log().error("export_failed", id=correlationid, source=source, error="survey id not found in collection.json")
 
-    """ start_time = time_in_ms()
+    title = collection_json["title"] """
+    title = "SOME ISLANDS"
+    survey_id = "9490"
+
+    # print(f"title: {title} - survey_id = {survey_id}")
+
     data_type = DataType(datatype)
     client = boto3.client("lambda")
 
@@ -87,9 +97,7 @@ def main(source: str, datatype: str, correlationid: str, verbose: str, prod: str
         InvocationType="RequestResponse",
         LogType="Tail",
         ClientContext="string",
-        Payload=b'{"http_method": "POST", "body": {"title":'
-        + collection_json["summaries"]["mission"]
-        + b', "description": "Description"}}',
+        Payload=b'{"http_method": "POST", "body": {"title": "9490" ,"description": "SOME ISLANDS"}}"',
         Qualifier="string",
     )
 
@@ -103,4 +111,4 @@ def main(source: str, datatype: str, correlationid: str, verbose: str, prod: str
             datasetId=dataset_id,
             dataType=data_type,
             duration=time_in_ms() - start_time,
-        ) """
+        )
