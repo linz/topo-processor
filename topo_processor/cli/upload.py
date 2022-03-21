@@ -70,7 +70,9 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
             collection.delete_temp_dir()
         get_log().debug(
             "Job Completed",
+            source=source,
             location=target,
+            correlationid=correlationid,
             data_type=data_type,
             duration=time_in_ms() - start_time,
         )
