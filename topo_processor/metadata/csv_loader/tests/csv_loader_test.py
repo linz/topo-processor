@@ -9,7 +9,7 @@ from topo_processor.metadata.csv_loader.csv_loader import read_csv
 
 def test_read_csv() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
-    metadata = read_csv(metadata_path)
+    metadata = read_csv(metadata_path, "raw_filename", "sufi")
 
     assert len(metadata) == 5
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
@@ -19,7 +19,7 @@ def test_error_on_wrong_file_name() -> None:
     metadata_path = "./data/historical_aerial_photos_metadata.csv"
 
     with pytest.raises(Exception, match=r"^Cannot find "):
-        read_csv(metadata_path)
+        read_csv(metadata_path, "raw_filename", "sufi")
 
 
 def test_error_on_duplicate_file() -> None:
@@ -86,5 +86,14 @@ def test_error_on_duplicate_file() -> None:
         writer.writerow(row)
         writer.writerow(row)
 
-    with pytest.raises(Exception, match=r'Duplicate file "WRONG_PHOTO_TYPE" found in metadata csv'):
-        read_csv(temp_file.name)
+    with pytest.raises(Exception, match=r'Duplicate "WRONG_PHOTO_TYPE" found in "' + temp_file.name + '"'):
+        read_csv(temp_file.name, "raw_filename", "sufi")
+
+
+def test_read_csv_column_filter() -> None:
+    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
+    metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
+
+    assert len(metadata) == 4
+    assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]
+    assert list(metadata.values()) == [{"NAME": "TE KUITI 1"}, {"NAME": "AUCKLAND 1"}, {"NAME": "WELLINGTON 2"}, {"NAME": ""}]

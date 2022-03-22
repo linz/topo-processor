@@ -15,6 +15,7 @@ from topo_processor.util.transfer_collection import transfer_collection
 def test_fail_on_duplicate_assets(setup: str) -> None:
     target = setup
     collection = Collection("fake_title")
+    collection.survey = "survey_id"
     collection.description = "fake_description"
     collection.license = "fake_license"
     item = Item("item_id")
@@ -40,6 +41,7 @@ def test_fail_on_duplicate_assets(setup: str) -> None:
 def test_asset_key_not_in_list(setup: str) -> None:
     target = setup
     collection = Collection("fake_title")
+    collection.survey = "survey_id"
     collection.description = "fake_description"
     collection.license = "fake_license"
     item = Item("item_id")
@@ -59,9 +61,10 @@ def test_asset_key_not_in_list(setup: str) -> None:
 
 def test_generate_summaries(setup: str) -> None:
     target = setup
-    collection = Collection("fake_title")
+    collection = Collection("AUCKLAND 1")
     collection.description = "fake_description"
     collection.license = "face_license"
+    collection.survey = "SURVEY_1"
     test_geom = {
         "WKT": "POLYGON ((177.168157744315 -38.7538525409217,"
         "177.23423558687 -38.7514276946524,"
@@ -105,7 +108,7 @@ def test_generate_summaries(setup: str) -> None:
 
     transfer_collection(item_1.collection, target)
 
-    with open(os.path.join(target, "fake_title", "collection.json")) as collection_json_file:
+    with open(os.path.join(target, "SURVEY_1", "collection.json")) as collection_json_file:
         collection_metadata = json.load(collection_json_file)
         assert collection_metadata["summaries"]["mission"] == ["SURVEY_1"]
         assert collection_metadata["summaries"]["film:id"] == ["731"]

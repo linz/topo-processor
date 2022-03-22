@@ -8,9 +8,10 @@ class DataType(str, Enum):
     LIDAR_DSM = "lidar.dsm"
     LIDAR_DEM = "lidar.dem"
     LIDAR_POINT_CLOUD = "lidar.pointcloud"
+    SURVEY_FOOTPRINT_HISTORIC = "survey.footprint.historic"
 
 
-data_type_layer: Dict[str, str] = {DataType.IMAGERY_HISTORIC: "51002"}
+data_type_layer: Dict[str, str] = {DataType.IMAGERY_HISTORIC: "51002", DataType.SURVEY_FOOTPRINT_HISTORIC: "51000"}
 
 
 def get_layer_id(data_type: str) -> str:
