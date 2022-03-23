@@ -73,11 +73,6 @@ class Item(Validity):
         for prop_key in properties_keys_sorted:
             prop_val = self.properties.get(prop_key)
             properties_sorted[prop_key] = prop_val
-            print(properties_sorted)
-
-        # print(self.properties)
-        # print(type(self.properties))
-        # print(properties_sorted)
 
         stac = PystacItem(
             id=self.id,
