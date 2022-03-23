@@ -56,36 +56,32 @@ from topo_processor.util.transfer_collection import transfer_collection
 )
 def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
-
-    if verbose:
-        set_level(LogLevel.trace)
-
-    start_time = time_in_ms()
-    data_type = DataType(datatype)
-
-    # Caching the metadata required by the user.
-    if metadata:
-        get_metadata(data_type, None, metadata)
-        if not is_s3_path(metadata):
-            if not footprint:
-                get_log().error(
-                    "survey_footprint_metadata_not_given",
-                    msg="You have to provide a local path for the survey footprint metadata",
-                )
-            else:
-                if data_type == DataType.IMAGERY_HISTORIC:
-                    get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, None, footprint)
-                else:
-                    raise Exception("Not yet implemented")
-
-    process_source(source, data_type, metadata)
-
     try:
+        if verbose:
+            set_level(LogLevel.trace)
+
+        start_time = time_in_ms()
+        data_type = DataType(datatype)
+
+        # Caching the metadata required by the user.
+        if metadata:
+            get_metadata(data_type, None, metadata)
+            if not is_s3_path(metadata):
+                if not footprint:
+                    get_log().error(
+                        "survey_footprint_metadata_not_given",
+                        msg="You have to provide a local path for the survey footprint metadata",
+                    )
+                else:
+                    if data_type == DataType.IMAGERY_HISTORIC:
+                        get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, None, footprint)
+                    else:
+                        raise Exception("Not yet implemented")
+
+        process_source(source, data_type, metadata)
+
         for collection in collection_store.values():
             transfer_collection(collection, target)
-    finally:
-        for collection in collection_store.values():
-            collection.delete_temp_dir()
         get_log().debug(
             "Job Completed",
             source=source,
@@ -94,3 +90,15 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
             data_type=data_type,
             duration=time_in_ms() - start_time,
         )
+    except Exception as e:
+        get_log().error(
+            "Job Failed",
+            error=e,
+            source=source,
+            correlationid=correlationid,
+            data_type=datatype
+        )
+    finally:
+        for collection in collection_store.values():
+            collection.delete_temp_dir()
+        
