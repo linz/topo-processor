@@ -72,6 +72,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
                         "survey_footprint_metadata_not_given",
                         msg="You have to provide a local path for the survey footprint metadata",
                     )
+                    raise Exception("survey footprint metadata not given")
                 else:
                     if data_type == DataType.IMAGERY_HISTORIC:
                         get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, None, footprint)
@@ -82,6 +83,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
 
         for collection in collection_store.values():
             transfer_collection(collection, target)
+
         get_log().debug(
             "Job Completed",
             source=source,
