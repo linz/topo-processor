@@ -31,11 +31,11 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {
-            "processing:software": get_topo_processor_version(),
             # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
             "version": "1",
+            "processing:software": get_topo_processor_version(),
         }
-        self.stac_extensions = set([StacExtensions.file.value])
+        self.stac_extensions = set()
         self.assets = []
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(STACObjectType.ITEM, get_stac_version())
 
@@ -67,19 +67,12 @@ class Item(Validity):
             geometry = shapely.geometry.mapping(self.geometry_poly)
             bbox = self.geometry_poly.bounds
 
-        properties_sorted: OrderedDict[str, Any] = {}
-        properties_keys_sorted: List[str] = sorted(self.properties)
-
-        for prop_key in properties_keys_sorted:
-            prop_val = self.properties.get(prop_key)
-            properties_sorted[prop_key] = prop_val
-
         stac = PystacItem(
             id=self.id,
             geometry=geometry,
             bbox=bbox,
             datetime=self.datetime,
-            properties=properties_sorted,
-            stac_extensions=list(self.stac_extensions),
+            properties=self.properties,
+            stac_extensions=list(sorted(self.stac_extensions)),
         )
         return stac

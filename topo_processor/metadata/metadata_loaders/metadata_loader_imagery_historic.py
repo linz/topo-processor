@@ -108,20 +108,29 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         )
 
         self.add_linz_geospatial_type(item, metadata_row["photo_type"])
-        self.add_centroid(item, metadata_row)
+        self.add_aerial_photo_metadata(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
-        self.add_aerial_photo_metadata(item, metadata_row)
+        self.add_centroid(item, metadata_row)
+        self.add_projection_extent(item)
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
-        self.add_projection_extent(item)
         self.add_bands_extent(item, asset)
 
+        item.add_extension(StacExtensions.eo.value)
+        item.add_extension(StacExtensions.file.value)
+        item.add_extension(StacExtensions.processing.value)
+        item.add_extension(StacExtensions.projection.value)
+        item.add_extension(StacExtensions.version.value)
+        item.add_extension(StacExtensions.aerial_photo.value)
+        item.add_extension(StacExtensions.camera.value)
+        item.add_extension(StacExtensions.film.value)
         item.add_extension(StacExtensions.historical_imagery.value)
         item.add_extension(StacExtensions.linz.value)
-        item.add_extension(StacExtensions.version.value)
-        item.add_extension(StacExtensions.processing.value)
+        item.add_extension(StacExtensions.scanning.value)
+
+        print(sorted(item.stac_extensions))
 
     def get_title(self, survey: str) -> str:
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
@@ -155,7 +164,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         camera_properties["camera:nominal_focal_length"] = string_to_number(asset_metadata["nominal_focal_length"])
 
         item.properties.update(remove_empty_strings(camera_properties))
-        item.add_extension(StacExtensions.camera.value)
 
     def add_film_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         film_properties: Dict[str, Any] = {}
@@ -166,7 +174,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         film_properties["film:physical_size"] = asset_metadata["format"]
 
         item.properties.update(remove_empty_strings(film_properties))
-        item.add_extension(StacExtensions.film.value)
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         aerial_photo_properties: Dict[str, Any] = {}
@@ -193,7 +200,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             aerial_photo_properties["aerial-photo:scale"] = scale
 
         item.properties.update(remove_empty_strings(aerial_photo_properties))
-        item.add_extension(StacExtensions.aerial_photo.value)
 
     def add_scanning_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         scanning_properties: Dict[str, Any] = {}
@@ -204,7 +210,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             scanning_properties["scan:scanned"] = quarterdate_to_date_string(asset_metadata["when_scanned"])
 
         item.properties.update(remove_empty_strings(scanning_properties))
-        item.add_extension(StacExtensions.scanning.value)
 
     def add_datetime_property(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         item_date = asset_metadata.get("date", None)
@@ -225,14 +230,11 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         }
         if self.is_valid_centroid(item, centroid):
             item.properties["proj:centroid"] = centroid
-            item.add_extension(StacExtensions.projection.value)
 
     def add_projection_extent(self, item: Item) -> None:
         item.properties["proj:epsg"] = None
-        item.add_extension(StacExtensions.projection.value)
 
     def add_bands_extent(self, item: Item, asset: Optional[Asset] = None) -> None:
-        item.add_extension(StacExtensions.eo.value)
 
         if asset:
             # default value
