@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, OrderedDict, Set
 
 import shapely.geometry
 from pystac import get_stac_version
@@ -67,12 +67,24 @@ class Item(Validity):
             geometry = shapely.geometry.mapping(self.geometry_poly)
             bbox = self.geometry_poly.bounds
 
+        properties_sorted: OrderedDict[str, Any] = {}
+        properties_keys_sorted: List[str] = sorted(self.properties)
+
+        for prop_key in properties_keys_sorted:
+            prop_val = self.properties.get(prop_key)
+            properties_sorted[prop_key] = prop_val
+            print(properties_sorted)
+
+        # print(self.properties)
+        # print(type(self.properties))
+        # print(properties_sorted)
+
         stac = PystacItem(
             id=self.id,
             geometry=geometry,
             bbox=bbox,
             datetime=self.datetime,
-            properties=self.properties,
+            properties=properties_sorted,
             stac_extensions=list(self.stac_extensions),
         )
         return stac
