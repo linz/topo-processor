@@ -93,14 +93,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
             duration=time_in_ms() - start_time,
         )
     except Exception as e:
-        get_log().error(
-            "Job Failed",
-            error=e,
-            source=source,
-            correlationid=correlationid,
-            data_type=datatype
-        )
+        get_log().error("Job Failed", error=e, source=source, correlationid=correlationid, data_type=datatype)
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()
-        
