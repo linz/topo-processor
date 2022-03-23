@@ -130,8 +130,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.linz.value)
         item.add_extension(StacExtensions.scanning.value)
 
-        print(sorted(item.stac_extensions))
-
     def get_title(self, survey: str) -> str:
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
         title: str = ""
