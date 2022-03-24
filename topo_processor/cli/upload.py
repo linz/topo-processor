@@ -82,7 +82,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
 
     try:
         for collection in collection_store.values():
-            transfer_collection(collection, target)
+            transfer_collection(collection, target, data_type)
     finally:
         for collection in collection_store.values():
             collection.delete_temp_dir()

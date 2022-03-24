@@ -87,14 +87,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.description = "Historical Imagery"
         collection.extra_fields.update(
             {
-                "linz:lifecycle": "completed",
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
+                "linz:lifecycle": "completed",
+                "linz:security_classification": "unclassified",
                 "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
             }
         )
 
         collection.add_extension(StacExtensions.quality.value)
-
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
@@ -175,6 +175,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def add_aerial_photo_metadata(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         aerial_photo_properties: Dict[str, Any] = {}
+
         aerial_photo_properties["aerial-photo:run"] = asset_metadata["run"]
         aerial_photo_properties["aerial-photo:sequence_number"] = string_to_number(asset_metadata["photo_no"])
         aerial_photo_properties["aerial-photo:anomalies"] = asset_metadata["image_anomalies"]

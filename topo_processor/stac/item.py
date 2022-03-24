@@ -12,7 +12,6 @@ from topo_processor.util.valid import Validity
 
 from .asset import Asset
 from .collection import Collection
-from .stac_extensions import StacExtensions
 
 
 class Item(Validity):
