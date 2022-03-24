@@ -1,5 +1,5 @@
 import json
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 from boto3 import Session
 from linz_logger import get_log
@@ -66,3 +66,8 @@ def get_credentials(bucket_name: str) -> Credentials:
     )
 
     return default_credentials
+
+
+def get_config_bucket() -> Dict[str, Any]:
+    # TODO
+    return {}
