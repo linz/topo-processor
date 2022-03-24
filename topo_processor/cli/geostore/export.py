@@ -52,7 +52,7 @@ def main(source: str, surveyid: str, surveytitle: str, prod: str, verbose: str) 
         set_level(LogLevel.trace)
 
     # TODO Where to store that?
-    s3_role_arn_nonprod = "arn:aws:iam::840351489492:role/geostore-s3-access-read"
+    s3_role_arn_nonprod = ""
 
     client = boto3.client("lambda")
     collection_s3_path = source + "/" + "collection.json"
