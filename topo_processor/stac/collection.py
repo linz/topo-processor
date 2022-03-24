@@ -56,6 +56,7 @@ class Collection(Validity):
                 "processing:software": get_topo_processor_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
+                "linz:security_classification": "unclassified",
             }
         )
         self.linz_providers = []

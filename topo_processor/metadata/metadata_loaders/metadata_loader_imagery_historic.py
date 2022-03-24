@@ -10,6 +10,7 @@ from rasterio.enums import ColorInterp
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.collection import Collection
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -89,7 +90,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
                 "linz:lifecycle": "completed",
-                "linz:security_classification": "unclassified",
                 "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
             }
         )
@@ -118,17 +118,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         self.add_spatial_extent(item, metadata_row)
         self.add_bands_extent(item, asset)
 
-        item.add_extension(StacExtensions.eo.value)
-        item.add_extension(StacExtensions.file.value)
-        item.add_extension(StacExtensions.processing.value)
-        item.add_extension(StacExtensions.projection.value)
-        item.add_extension(StacExtensions.version.value)
-        item.add_extension(StacExtensions.aerial_photo.value)
-        item.add_extension(StacExtensions.camera.value)
-        item.add_extension(StacExtensions.film.value)
-        item.add_extension(StacExtensions.historical_imagery.value)
-        item.add_extension(StacExtensions.linz.value)
-        item.add_extension(StacExtensions.scanning.value)
+        self.add_stac_extensions(item)
 
     def get_title(self, survey: str) -> str:
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
@@ -261,5 +251,17 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         return True
 
     def add_linz_geospatial_type(self, item: Item, photo_type: str) -> None:
-
         item.linz_geospatial_type = historical_imagery_photo_type_to_linz_geospatial_type(photo_type)
+
+    def add_stac_extensions(self, item: Item) -> None:
+        item.add_extension(StacExtensions.eo.value)
+        item.add_extension(StacExtensions.file.value)
+        item.add_extension(StacExtensions.processing.value)
+        item.add_extension(StacExtensions.projection.value)
+        item.add_extension(StacExtensions.version.value)
+        item.add_extension(StacExtensions.aerial_photo.value)
+        item.add_extension(StacExtensions.camera.value)
+        item.add_extension(StacExtensions.film.value)
+        item.add_extension(StacExtensions.historical_imagery.value)
+        item.add_extension(StacExtensions.linz.value)
+        item.add_extension(StacExtensions.scanning.value)
