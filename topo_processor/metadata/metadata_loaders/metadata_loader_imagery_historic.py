@@ -10,7 +10,6 @@ from rasterio.enums import ColorInterp
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
-from topo_processor.stac.collection import Collection
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
