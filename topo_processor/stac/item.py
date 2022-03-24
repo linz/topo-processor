@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Any, Dict, List, Optional, OrderedDict, Set
+from typing import Any, Dict, List, Optional, Set
 
 import shapely.geometry
 from pystac import get_stac_version
