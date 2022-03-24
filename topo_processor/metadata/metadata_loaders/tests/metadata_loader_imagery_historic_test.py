@@ -1,5 +1,5 @@
-from curses import meta
 import os
+from curses import meta
 from typing import Dict
 
 import pytest
@@ -348,6 +348,7 @@ def test_get_collection_title_empty() -> None:
     with pytest.raises(Exception) as e:
         metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
         assert "No name found for survey SURVEY_NO_NAME" in str(e.value)
+
 
 def test_stac_extensions_added() -> None:
     """Tests scanning metadata is added if one empty string"""
