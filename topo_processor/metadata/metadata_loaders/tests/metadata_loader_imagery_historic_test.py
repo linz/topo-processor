@@ -1,5 +1,4 @@
 import os
-from curses import meta
 from typing import Dict
 
 import pytest
@@ -41,6 +40,17 @@ def test_item_not_found_in_csv() -> None:
     assert error_msg in asset.log
 
 
+def test_camera_extension_added_if_empty_metadata() -> None:
+    """Tests camera extension is still added if metadata is empty"""
+    source_path = "test_abc.tiff"
+    item = Item(source_path)
+    item.collection = Collection("Collection")
+    metadata = {"camera_sequence_no": "", "nominal_focal_length": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.camera.value in item.stac_extensions
+
+
 def test_camera_metadata_added() -> None:
     """Tests camera metadata is added if one empty string"""
     source_path = "test_abc.tiff"
@@ -49,8 +59,20 @@ def test_camera_metadata_added() -> None:
     metadata = {"camera_sequence_no": "", "nominal_focal_length": "508"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_camera_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.camera.value in item.stac_extensions
     assert item.properties["camera:nominal_focal_length"] == 508
     assert "camera:sequence_number" not in item.properties.keys()
+
+
+def test_film_extension_added_if_empty_metadata() -> None:
+    """Tests film extension is still added even if metadata is empty"""
+    source_path = "test_abc.tiff"
+    item = Item(source_path)
+    item.collection = Collection("Collection")
+    metadata = {"film": "", "film_sequence_no": "", "physical_film_condition": "", "format": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.film.value in item.stac_extensions
 
 
 def test_film_metadata_added() -> None:
@@ -61,10 +83,27 @@ def test_film_metadata_added() -> None:
     metadata = {"film": "123", "film_sequence_no": "234", "physical_film_condition": "", "format": "23 cm x 23 cm"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_film_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.film.value in item.stac_extensions
     assert item.properties["film:id"] == "123"
     assert item.properties["film:negative_sequence"] == 234
     assert "film:physical_condition" not in item.properties.keys()
     assert item.properties["film:physical_size"] == "23 cm x 23 cm"
+
+
+def test_aerial_photo_extension_added_if_empty_metadata() -> None:
+    """Tests aerial-photo extension is still added if empty metadata"""
+    source_path = "test_abc.tiff"
+    item = Item(source_path)
+    item.collection = Collection("Collection")
+    metadata = {"run": "", "altitude": "", "scale": "", "photo_no": "", "image_anomalies": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.aerial_photo.value in item.stac_extensions
+    assert "aerial-photo:run" not in item.properties.keys()
+    assert "aerial-photo:altitude" not in item.properties.keys()
+    assert "aerial-photo:scale" not in item.properties.keys()
+    assert "aerial-photo:sequence_number" not in item.properties.keys()
+    assert "aerial-photo:anomalies" not in item.properties.keys()
 
 
 def test_aerial_photo_zero_altitude_scale() -> None:
@@ -75,6 +114,7 @@ def test_aerial_photo_zero_altitude_scale() -> None:
     metadata = {"run": "", "altitude": "0", "scale": "0", "photo_no": "", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.aerial_photo.value in item.stac_extensions
     assert "aerial-photo:altitude" not in item.properties.keys()
     assert "aerial-photo:scale" not in item.properties.keys()
 
@@ -87,11 +127,23 @@ def test_aerial_photo_metadata_added() -> None:
     metadata = {"run": "string", "altitude": "123", "scale": "123", "photo_no": "123", "image_anomalies": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_aerial_photo_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.aerial_photo.value in item.stac_extensions
     assert item.properties["aerial-photo:run"] == "string"
     assert item.properties["aerial-photo:altitude"] == 123
     assert item.properties["aerial-photo:scale"] == 123
     assert item.properties["aerial-photo:sequence_number"] == 123
     assert "aerial-photo:anomalies" not in item.properties.keys()
+
+
+def test_scanning_extension_added_if_empty_metadata() -> None:
+    """Tests scanning extension is still added if metadata is empty"""
+    source_path = "test_abc.tiff"
+    item = Item(source_path)
+    item.collection = Collection("Collection")
+    metadata = {"source": "", "when_scanned": ""}
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.scanning.value in item.stac_extensions
 
 
 def test_scanning_extension_invalid_values_date_wrong_format() -> None:
@@ -102,6 +154,7 @@ def test_scanning_extension_invalid_values_date_wrong_format() -> None:
     metadata = {"source": "string", "when_scanned": "nzam_pilot"}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"] == "string"
     assert item.properties["scan:scanned"] == "nzam_pilot"
 
@@ -114,6 +167,7 @@ def test_scanning_metadata_added() -> None:
     metadata = {"source": "ORIGINAL", "when_scanned": ""}
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_scanning_metadata(item, asset_metadata=metadata)
+    assert StacExtensions.scanning.value in item.stac_extensions
     assert item.properties["scan:is_original"]
     assert "scan:scanned" not in item.properties.keys()
 
@@ -214,6 +268,7 @@ def test_centroid_metadata_added() -> None:
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.add_centroid(item, asset_metadata=metadata)
     assert item.properties["proj:centroid"] == {"lat": -41.28509, "lon": 174.77442}
+    assert StacExtensions.projection.value in item.stac_extensions
 
 
 def test_invalid_centroid_lat() -> None:
@@ -348,38 +403,3 @@ def test_get_collection_title_empty() -> None:
     with pytest.raises(Exception) as e:
         metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
         assert "No name found for survey SURVEY_NO_NAME" in str(e.value)
-
-
-def test_stac_extensions_added() -> None:
-    """Tests scanning metadata is added if one empty string"""
-    source_path = "test_abc.tiff"
-    item = Item(source_path)
-    item.collection = Collection("Collection")
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    metadata_loader_imagery_historic.add_stac_extensions(item)
-    item.collection.add_extension(StacExtensions.quality.value)
-
-    assert StacExtensions.eo.value in item.stac_extensions
-    assert StacExtensions.file.value in item.stac_extensions
-    assert StacExtensions.processing.value in item.stac_extensions
-    assert StacExtensions.projection.value in item.stac_extensions
-    assert StacExtensions.version.value in item.stac_extensions
-    assert StacExtensions.aerial_photo.value in item.stac_extensions
-    assert StacExtensions.camera.value in item.stac_extensions
-    assert StacExtensions.film.value in item.stac_extensions
-    assert StacExtensions.historical_imagery.value in item.stac_extensions
-    assert StacExtensions.linz.value in item.stac_extensions
-    assert StacExtensions.scanning.value in item.stac_extensions
-
-    assert StacExtensions.eo.value in item.collection.stac_extensions
-    assert StacExtensions.file.value in item.collection.stac_extensions
-    assert StacExtensions.processing.value in item.collection.stac_extensions
-    assert StacExtensions.projection.value in item.collection.stac_extensions
-    assert StacExtensions.version.value in item.collection.stac_extensions
-    assert StacExtensions.aerial_photo.value in item.collection.stac_extensions
-    assert StacExtensions.camera.value in item.collection.stac_extensions
-    assert StacExtensions.film.value in item.collection.stac_extensions
-    assert StacExtensions.historical_imagery.value in item.collection.stac_extensions
-    assert StacExtensions.linz.value in item.collection.stac_extensions
-    assert StacExtensions.quality.value in item.collection.stac_extensions
-    assert StacExtensions.scanning.value in item.collection.stac_extensions
