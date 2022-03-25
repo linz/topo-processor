@@ -12,6 +12,7 @@ from topo_processor.util.valid import Validity
 
 from .asset import Asset
 from .collection import Collection
+from .stac_extensions import StacExtensions
 
 
 class Item(Validity):
@@ -34,7 +35,7 @@ class Item(Validity):
             "version": "1",
             "processing:software": get_topo_processor_version(),
         }
-        self.stac_extensions = set()
+        self.stac_extensions = set([StacExtensions.file.value])
         self.assets = []
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(STACObjectType.ITEM, get_stac_version())
 

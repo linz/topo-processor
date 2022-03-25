@@ -20,6 +20,7 @@ from topo_processor.util.valid import Validity
 
 from .linz_provider import LinzProvider
 from .providers import Providers
+from .stac_extensions import StacExtensions
 
 if TYPE_CHECKING:
     from .item import Item
@@ -60,7 +61,7 @@ class Collection(Validity):
             }
         )
         self.linz_providers = []
-        self.stac_extensions = set()
+        self.stac_extensions = set([StacExtensions.file.value])
         self.providers = [Providers.TTW.value]
 
     def add_item(self, item: Item) -> None:
