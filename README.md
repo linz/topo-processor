@@ -149,37 +149,37 @@ The following command have to be run in a virtual environment (poetry shell):
 
 ```shell
 # Run default:
-./validate
+poetry run validate
 ```
 
 ```shell
 # Run against a specific version (can be a s3 or local file):
-./validate --metadata s3://bucket/layer_id/metadata_file.csv
+poetry run validate --metadata s3://bucket/layer_id/metadata_file.csv
 ```
 
 ```shell
 # Run against the `Items` only:
-./validate --item
+poetry run validate --item
 ```
 
 ```shell
 # Run against the `Collections` only:
-./validate --collection
+poetry run validate --collection
 ```
 
 ```shell
 # For help:
-./validate --help
+poetry run validate --help
 ```
 
 ```shell
 # To see all logs in a tidy format, use pretty-json-log:
-./validate --verbose | pjl
+poetry run validate --verbose | pjl
 ```
 
 ```shell
 # To record the output in an external file:
-./validate | tee output.file
+poetry run validate | tee output.file
 ```
 
 ## AWS Deployment / CI / CD
