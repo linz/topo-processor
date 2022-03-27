@@ -43,7 +43,7 @@ def main(datasetid: str, prod: str, verbose: str) -> None:
         delete_parameters = {"id": datasetid}
         response = invoke_lambda(client, f"{environment}-datasets", "DELETE", delete_parameters)
         if not "status_code" in response or response["status_code"] != "204":
-            raise Exception("An issue occured during the deletion", response=response)
+            raise Exception("An issue occured during the deletion", response)
 
         get_log().debug(
             "delete_dataset_success",

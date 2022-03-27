@@ -24,7 +24,7 @@ def invoke_lambda(client: Client, name: str, http_method: str, parameters: Dict[
         LogType="Tail",
         Payload=payload,
     )
-    payload_response = json.loads(raw_response["Payload"].read())
+    payload_response: Dict[str, Any] = json.loads(raw_response["Payload"].read())
 
     get_log().debug("response_lambda_function", name=name, response=payload_response)
     return payload_response
@@ -35,5 +35,7 @@ def invoke_import_status(client: Client, environment: str, execution_arn: str) -
     import_status_parameters = {"execution_arn": execution_arn}
     import_status_response_payload = invoke_lambda(client, f"{environment}-import-status", "GET", import_status_parameters)
     if "status_code" not in import_status_response_payload or import_status_response_payload["status_code"] != 200:
-        raise Exception(f"Error while retrieving the import status from the Geostore", response=import_status_response_payload)
-    return import_status_response_payload["body"]
+        raise Exception("Error while retrieving the import status from the Geostore", import_status_response_payload)
+
+    import_status: Dict[str, Any] = import_status_response_payload["body"]
+    return import_status
