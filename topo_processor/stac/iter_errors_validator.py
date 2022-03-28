@@ -96,14 +96,14 @@ class IterErrorsValidator(STACValidator):
             return None
         try:
             errors = self._validate_from_uri(stac_dict, schema_uri)
-            if errors:
-                msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
-                raise pystac.STACValidationError(msg)
-            else:
-                return schema_uri
         except Exception as e:
             get_log().error(f"Exception while validating {stac_object_type} href: {href}")
             raise e
+        if errors:
+            msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
+            raise pystac.STACValidationError(msg)
+        else:
+            return schema_uri
 
     def validate_extension(
         self,
@@ -133,11 +133,11 @@ class IterErrorsValidator(STACValidator):
 
         try:
             errors = self._validate_from_uri(stac_dict, schema_uri)
-            if errors:
-                msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
-                raise pystac.STACValidationError(msg)
-            else:
-                return schema_uri
         except Exception as e:
             get_log().error(f"Exception while validating {stac_object_type} href: {href}")
             raise e
+        if errors:
+            msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
+            raise pystac.STACValidationError(msg)
+        else:
+            return schema_uri
