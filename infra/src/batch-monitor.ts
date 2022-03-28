@@ -14,14 +14,13 @@ export class AwsBatchMonitor extends Stack {
       eventPattern: {
         source: ['aws.batch'],
         detailType: ['Batch Job State Change'],
-        detail: { status: ['FAILED'] },
       },
     });
 
     const lambda = new lf.Function(this, 'BatchLog', {
       runtime: lf.Runtime.NODEJS_14_X,
       handler: 'index.handler',
-      code: Code.fromAsset(path.join(process.cwd(), 'infra', 'src', 'lambda-code', 'index.js')),
+      code: Code.fromAsset(path.join(process.cwd(), 'infra', 'src', 'lambda-code')),
     });
 
     rule.addTarget(new evtTargets.LambdaFunction(lambda));
