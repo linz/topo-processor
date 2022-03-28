@@ -1,5 +1,4 @@
 import json
-import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
 import jsonschema
@@ -40,6 +39,7 @@ class IterErrorsValidator(STACValidator):
         errors = []
         schema, resolver = self.get_schema_from_uri(schema_uri)
 
+        # Draft7 for pystac
         validator = jsonschema.Draft7Validator(schema)
         for error in sorted(validator.evolve(schema=schema).iter_errors(stac_dict), key=str):
             errors.append(error.message)
