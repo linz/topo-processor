@@ -1,6 +1,6 @@
 import json
 import warnings
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import jsonschema
 import pystac
@@ -35,25 +35,20 @@ class IterErrorsValidator(STACValidator):
 
         return schema, resolver
 
-    def _validate_from_uri(self, stac_dict: Dict[str, Any], schema_uri: str) -> bool:
+    def _validate_from_uri(self, stac_dict: Dict[str, Any], schema_uri: str) -> List[str]:
         """Return true if there is at least one validation error"""
-        is_error = False
+        errors = []
         schema, resolver = self.get_schema_from_uri(schema_uri)
 
         validator = jsonschema.Draft7Validator(schema)
         for error in sorted(validator.evolve(schema=schema).iter_errors(stac_dict), key=str):
-            is_error = True
-            get_log().error(
-                "validation_error",
-                err=error.message,
-                schemaUri=schema_uri,
-            )
+            errors.append(error.message)
 
         for uri in resolver.store:
             if uri not in self.schema_cache:
                 self.schema_cache[uri] = resolver.store[uri]
 
-        return is_error
+        return errors
 
     def _get_error_message(
         self,
@@ -62,6 +57,7 @@ class IterErrorsValidator(STACValidator):
         extension_id: Optional[str],
         href: Optional[str],
         stac_id: Optional[str],
+        errors: Optional[List[str]],
     ) -> str:
         s = "Validation failed for {} ".format(stac_object_type)
         if href is not None:
@@ -71,7 +67,8 @@ class IterErrorsValidator(STACValidator):
         s += "against schema at {}".format(schema_uri)
         if extension_id is not None:
             s += " for STAC extension '{}'".format(extension_id)
-
+        if errors:
+            s += " with the following error(s): '{}'".format(", ".join(errors))
         return s
 
     def validate_core(
@@ -98,10 +95,12 @@ class IterErrorsValidator(STACValidator):
         if schema_uri is None:
             return None
         try:
-            is_error = self._validate_from_uri(stac_dict, schema_uri)
-            if is_error:
-                warnings.warn("StacCoreValidationError")
-            return schema_uri
+            errors = self._validate_from_uri(stac_dict, schema_uri)
+            if errors:
+                msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
+                raise pystac.STACValidationError(msg)
+            else:
+                return schema_uri
         except Exception as e:
             get_log().error(f"Exception while validating {stac_object_type} href: {href}")
             raise e
@@ -133,10 +132,12 @@ class IterErrorsValidator(STACValidator):
             return None
 
         try:
-            is_error = self._validate_from_uri(stac_dict, schema_uri)
-            if is_error:
-                warnings.warn("StacCoreValidationError")
-            return schema_uri
+            errors = self._validate_from_uri(stac_dict, schema_uri)
+            if errors:
+                msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
+                raise pystac.STACValidationError(msg)
+            else:
+                return schema_uri
         except Exception as e:
             get_log().error(f"Exception while validating {stac_object_type} href: {href}")
             raise e
