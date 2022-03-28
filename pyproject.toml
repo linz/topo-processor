@@ -25,7 +25,7 @@ python-dotenv = "^0.19.2"
 black = "^22.1"
 boto3-stubs = {version = "*", extras = ["sts"]}
 isort = "^5.10.1"
-pylint = "^2.12.2"
+pylint = "^2.13.2"
 pytest = "^7.0.1"
 rope = "^0.23.0"
 pytest-cov = "^3.0.0"
