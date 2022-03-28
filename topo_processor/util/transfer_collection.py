@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
+from async_timeout import warnings
 from linz_logger import get_log
 from pystac.catalog import CatalogType
 
@@ -68,5 +69,10 @@ def transfer_collection(collection: Collection, target: str) -> None:
     # pystac v1.1.0
     # Required to not add a self link with an 'absolute' link from the cwd
     json_collection = stac_collection.to_dict(include_self_link=False)
+
+    with warnings.catch_warnings(record=True) as w:
+        stac_collection.validate()
+    if len(w) > 0:
+        raise Exception("collection_validation_error")
 
     write_json(json_collection, os.path.join(target, collection.survey, "collection.json"))

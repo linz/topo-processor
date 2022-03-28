@@ -1,9 +1,11 @@
 import click
+import pystac
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.item_factory import process_source
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 from topo_processor.stac.store import collection_store
 from topo_processor.util.s3 import is_s3_path
 from topo_processor.util.time import time_in_ms
@@ -57,6 +59,8 @@ from topo_processor.util.transfer_collection import transfer_collection
 def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
     try:
+        pystac.validation.set_validator(IterErrorsValidator())
+
         if verbose:
             set_level(LogLevel.trace)
 
