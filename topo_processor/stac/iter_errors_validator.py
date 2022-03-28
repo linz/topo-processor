@@ -137,7 +137,7 @@ class IterErrorsValidator(STACValidator):
             get_log().error(f"Exception while validating {stac_object_type} href: {href}")
             raise e
         if errors:
-            msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
+            msg = self._get_error_message(schema_uri, stac_object_type, extension_id, href, stac_dict.get("id"), errors)
             raise pystac.STACValidationError(msg)
         else:
             return schema_uri

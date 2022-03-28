@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from async_timeout import warnings
 from linz_logger import get_log
 from pystac.catalog import CatalogType
 
