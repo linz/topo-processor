@@ -14,7 +14,7 @@ from topo_processor.util.time import time_in_ms
     "-s",
     "--source",
     required=True,
-    help="The source of the data to export",
+    help="The s3 path to the collection.json of the survey to export",
 )
 @click.option(
     "-sid",
@@ -48,38 +48,29 @@ from topo_processor.util.time import time_in_ms
 )
 def main(source: str, survey_id: str, survey_title: str, role_arn: str, prod: bool, verbose: bool) -> None:
     start_time = time_in_ms()
-    if prod:
-        target_env = "Production"
-    else:
-        target_env = "Non Production"
-    get_log().info(
-        "geostore_export_start", source=source, surveyId=survey_id, surveyTitle=survey_title, environment=target_env
-    )
+
+    get_log().info("geostore_export_start", source=source, surveyId=survey_id, surveyTitle=survey_title, isProduction=prod)
 
     if verbose:
         set_level(LogLevel.trace)
 
     client = boto3.client("lambda")
-    collection_s3_path = source + "/" + "collection.json"
-
-    if not prod:
-        suffix = "nonprod-"
 
     try:
         # create a dataset
         create_dataset_parameters = {"title": survey_id, "description": survey_title}
-        dataset_response_payload = invoke_lambda(client, f"{suffix}datasets", "POST", create_dataset_parameters)
+        dataset_response_payload = invoke_lambda(client, "datasets", "POST", create_dataset_parameters, prod)
         dataset_id = dataset_response_payload["body"]["id"]
         if not dataset_id:
-            raise Exception(f"No dataset ID found in {suffix}datasets Lambda function response: {dataset_response_payload}")
+            raise Exception(f"No dataset ID found in datasets Lambda function response: {dataset_response_payload}")
 
         # upload data
-        upload_data_parameters = {"id": dataset_id, "metadata_url": collection_s3_path, "s3_role_arn": role_arn}
-        version_response_payload = invoke_lambda(client, f"{suffix}dataset-versions", "POST", upload_data_parameters)
+        upload_data_parameters = {"id": dataset_id, "metadata_url": source, "s3_role_arn": role_arn}
+        version_response_payload = invoke_lambda(client, "dataset-versions", "POST", upload_data_parameters, prod)
         execution_arn = version_response_payload["body"]["execution_arn"]
 
         # import status
-        import_status = invoke_import_status(client, suffix, execution_arn)
+        import_status = invoke_import_status(client, execution_arn, prod)
 
         get_log().debug(
             "geostore_export_submitted",
@@ -88,6 +79,7 @@ def main(source: str, survey_id: str, survey_title: str, role_arn: str, prod: bo
             executionArn=execution_arn,
             currentImportStatus=import_status,
             duration=time_in_ms() - start_time,
+            isProduction=prod,
             info=f"To check the export status, run the following command 'poetry run status -arn {execution_arn}'",
         )
     except Exception as e:

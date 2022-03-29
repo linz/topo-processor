@@ -9,7 +9,11 @@ else:
     Client = object
 
 
-def invoke_lambda(client: Client, name: str, http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
+def invoke_lambda(
+    client: Client, name: str, http_method: str, parameters: Dict[str, str], is_prod: bool = False
+) -> Dict[str, Any]:
+    if not is_prod:
+        name = "nonprod-" + name
     payload = build_lambda_payload(http_method, parameters)
     get_log().debug("invoke_lambda_function", name=name, payload=payload)
 
@@ -35,10 +39,10 @@ def build_lambda_payload(http_method: str, parameters: Dict[str, str]) -> Dict[s
     return payload
 
 
-def invoke_import_status(client: Client, environment: str, execution_arn: str) -> Dict[str, Any]:
+def invoke_import_status(client: Client, execution_arn: str, is_prod: bool = False) -> Dict[str, Any]:
     """Return the current status of the dataset version import process in the Geostore identified by 'execution_arn'"""
     import_status_parameters = {"execution_arn": execution_arn}
-    import_status_response_payload = invoke_lambda(client, f"{environment}-import-status", "GET", import_status_parameters)
+    import_status_response_payload = invoke_lambda(client, "import-status", "GET", import_status_parameters, is_prod)
     if "status_code" not in import_status_response_payload or import_status_response_payload["status_code"] != 200:
         raise Exception("Error while retrieving the import status from the Geostore", import_status_response_payload)
 

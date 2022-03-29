@@ -25,30 +25,21 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(datasetid: str, prod: str, verbose: str) -> None:
+def main(datasetid: str, prod: bool, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("list_datasets_start", dataset_id=id)
+    get_log().info("list_datasets_start", dataset_id=id, isProduction=prod)
 
     if verbose:
         set_level(LogLevel.trace)
 
     client = boto3.client("lambda")
 
-    if prod:
-        environment = "prod"
-    else:
-        environment = "nonprod"
-
     try:
         list_parameters = {}
         if datasetid:
             list_parameters = {"id": datasetid}
-        dataset_list = invoke_lambda(client, f"{environment}-datasets", "GET", list_parameters)
+        dataset_list = invoke_lambda(client, "datasets", "GET", list_parameters, prod)
 
-        get_log().debug(
-            "list_datasets_end",
-            dataset_list=dataset_list,
-            duration=time_in_ms() - start_time,
-        )
+        get_log().debug("list_datasets_end", dataset_list=dataset_list, isProduction=prod, duration=time_in_ms() - start_time)
     except Exception as e:
         get_log().error("list_datasets_failed", err=e)
