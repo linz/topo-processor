@@ -54,10 +54,10 @@ class Collection(Validity):
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.extra_fields = dict(
             {
-                "linz:security_classification": "unclassified",
                 "processing:software": get_topo_processor_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
+                "linz:security_classification": "unclassified",
             }
         )
         self.linz_providers = []
@@ -175,6 +175,7 @@ class Collection(Validity):
             self.extra_fields["linz:providers"] = self.linz_providers
         self.extra_fields["linz:geospatial_type"] = self.get_linz_geospatial_type()
         self.extra_fields["linz:asset_summaries"] = self.get_linz_asset_summaries()
+
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
@@ -183,10 +184,10 @@ class Collection(Validity):
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
             title=self.title,
-            stac_extensions=list(self.stac_extensions),
+            stac_extensions=list(sorted(self.stac_extensions)),
             href="./collection.json",
-            license=self.license,
             extra_fields=self.extra_fields,
+            license=self.license,
             providers=self.providers,
         )
         return stac

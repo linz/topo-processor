@@ -87,14 +87,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.description = "Historical Imagery"
         collection.extra_fields.update(
             {
-                "linz:lifecycle": "completed",
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
+                "linz:lifecycle": "completed",
                 "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
             }
         )
 
         collection.add_extension(StacExtensions.quality.value)
-
         collection.add_linz_provider(LinzProviders.LTTW.value)
         collection.add_linz_provider(LinzProviders.LMPP.value)
         collection.add_provider(Providers.NZAM.value)
@@ -108,14 +107,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         )
 
         self.add_linz_geospatial_type(item, metadata_row["photo_type"])
-        self.add_centroid(item, metadata_row)
+        self.add_aerial_photo_metadata(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
-        self.add_aerial_photo_metadata(item, metadata_row)
+        self.add_centroid(item, metadata_row)
+        self.add_projection_extent(item)
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
-        self.add_projection_extent(item)
         self.add_bands_extent(item, asset)
 
         item.add_extension(StacExtensions.historical_imagery.value)

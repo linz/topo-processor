@@ -31,9 +31,9 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {
-            "processing:software": get_topo_processor_version(),
             # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
             "version": "1",
+            "processing:software": get_topo_processor_version(),
         }
         self.stac_extensions = set([StacExtensions.file.value])
         self.assets = []
@@ -73,6 +73,6 @@ class Item(Validity):
             bbox=bbox,
             datetime=self.datetime,
             properties=self.properties,
-            stac_extensions=list(self.stac_extensions),
+            stac_extensions=list(sorted(self.stac_extensions)),
         )
         return stac
