@@ -14,5 +14,9 @@ def transfer_file(source_file: str, checksum: str, content_type: Union[str, None
         with get_fs(target_file).open(target_file, "wb", ContentType=content_type, Metadata={"hash": checksum}) as f2:
             f2.write(data)
             get_log().debug(
-                "File transferred", source_file=source_file, target_file=target_file, duration=time_in_ms() - start_time
+                "File transferred",
+                source_file=source_file,
+                target_file=target_file,
+                checksum=checksum,
+                duration=time_in_ms() - start_time,
             )

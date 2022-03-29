@@ -63,7 +63,6 @@ class Collection(Validity):
         self.linz_providers = []
         self.stac_extensions = set([StacExtensions.file.value])
         self.providers = [Providers.TTW.value]
-        get_log().info("Collection Object Created", id=self.id, title=self.title)
 
     def add_item(self, item: Item) -> None:
         if item.collection is not None and item.collection != self:
@@ -191,4 +190,5 @@ class Collection(Validity):
             license=self.license,
             providers=self.providers,
         )
+        get_log().info("Stac Collection Created", id=stac.id, title=stac.title)
         return stac

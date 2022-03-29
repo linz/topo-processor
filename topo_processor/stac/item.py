@@ -2,6 +2,7 @@ import datetime as dt
 from typing import Any, Dict, List, Optional, Set
 
 import shapely.geometry
+from linz_logger import get_log
 from pystac import get_stac_version
 from pystac.item import Item as PystacItem
 from pystac.stac_object import STACObjectType
@@ -75,4 +76,5 @@ class Item(Validity):
             properties=self.properties,
             stac_extensions=list(sorted(self.stac_extensions)),
         )
+        get_log().info("Stac Item Created", id=stac.id)
         return stac
