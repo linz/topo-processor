@@ -9,7 +9,7 @@ from topo_processor.util.time import time_in_ms
 @click.command()
 @click.option(
     "-id",
-    "--datasetid",
+    "--dataset-id",
     required=True,
     help="The dataset id to delete.",
 )

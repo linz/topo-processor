@@ -18,13 +18,19 @@ from topo_processor.util.time import time_in_ms
 )
 @click.option(
     "-sid",
-    "--surveyid",
+    "--survey-id",
     required=True,
     help="The survey id of the data to export",
 )
 @click.option(
     "-st",
-    "--surveytitle",
+    "--survey-title",
+    required=True,
+    help="The survey title of the data to export",
+)
+@click.option(
+    "-r",
+    "--role-arn",
     required=True,
     help="The survey title of the data to export",
 )
@@ -32,7 +38,7 @@ from topo_processor.util.time import time_in_ms
     "-p",
     "--prod",
     is_flag=True,
-    help="Use this flag to export into production environment.",
+    help="Use this flag to export into production environment",
 )
 @click.option(
     "-v",
@@ -40,53 +46,47 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, surveyid: str, surveytitle: str, prod: str, verbose: str) -> None:
+def main(source: str, survey_id: str, survey_title: str, role_arn: str, prod: bool, verbose: bool) -> None:
     start_time = time_in_ms()
     if prod:
         target_env = "Production"
     else:
         target_env = "Non Production"
-    get_log().info("geostore_export_start", source=source, survey_id=surveyid, surveytitle=surveytitle, environment=target_env)
+    get_log().info(
+        "geostore_export_start", source=source, surveyId=survey_id, surveyTitle=survey_title, environment=target_env
+    )
 
     if verbose:
         set_level(LogLevel.trace)
 
-    # TODO Where to store that?
-    s3_role_arn_nonprod = ""
-
     client = boto3.client("lambda")
     collection_s3_path = source + "/" + "collection.json"
 
-    if prod:
-        environment = "prod"
-    else:
-        environment = "nonprod"
+    if not prod:
+        suffix = "nonprod-"
 
     try:
-
         # create a dataset
-        create_dataset_parameters = {"title": surveyid, "description": surveytitle}
-        dataset_response_payload = invoke_lambda(client, f"{environment}-datasets", "POST", create_dataset_parameters)
+        create_dataset_parameters = {"title": survey_id, "description": survey_title}
+        dataset_response_payload = invoke_lambda(client, f"{suffix}datasets", "POST", create_dataset_parameters)
         dataset_id = dataset_response_payload["body"]["id"]
         if not dataset_id:
-            raise Exception(
-                f"No dataset ID found in {environment}-datasets Lambda function response: {dataset_response_payload}"
-            )
+            raise Exception(f"No dataset ID found in {suffix}datasets Lambda function response: {dataset_response_payload}")
 
         # upload data
-        upload_data_parameters = {"id": dataset_id, "metadata_url": collection_s3_path, "s3_role_arn": s3_role_arn_nonprod}
-        version_response_payload = invoke_lambda(client, f"{environment}-dataset-versions", "POST", upload_data_parameters)
+        upload_data_parameters = {"id": dataset_id, "metadata_url": collection_s3_path, "s3_role_arn": role_arn}
+        version_response_payload = invoke_lambda(client, f"{suffix}dataset-versions", "POST", upload_data_parameters)
         execution_arn = version_response_payload["body"]["execution_arn"]
 
         # import status
-        import_status = invoke_import_status(client, environment, execution_arn)
+        import_status = invoke_import_status(client, suffix, execution_arn)
 
         get_log().debug(
             "geostore_export_submitted",
             source=source,
             datasetId=dataset_id,
-            execution_arn=execution_arn,
-            current_import_status=import_status,
+            executionArn=execution_arn,
+            currentImportStatus=import_status,
             duration=time_in_ms() - start_time,
             info=f"To check the export status, run the following command 'poetry run status -arn {execution_arn}'",
         )

@@ -10,24 +10,29 @@ else:
 
 
 def invoke_lambda(client: Client, name: str, http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
-    payload = b'{"http_method": "' + http_method.encode() + b'", "body": {'
-    if len(parameters.items()) > 0:
-        for key, value in parameters.items():
-            payload = payload + b'"' + key.encode() + b'": "' + value.encode() + b'",'
-        payload = payload[:-1]
-    payload = payload + b"}}"
+    payload = build_lambda_payload(http_method, parameters)
     get_log().debug("invoke_lambda_function", name=name, payload=payload)
 
     raw_response = client.invoke(
         FunctionName=name,
         InvocationType="RequestResponse",
         LogType="Tail",
-        Payload=payload,
+        Payload=json.dumps(payload).encode(),
     )
     payload_response: Dict[str, Any] = json.loads(raw_response["Payload"].read())
 
     get_log().debug("response_lambda_function", name=name, response=payload_response)
     return payload_response
+
+
+def build_lambda_payload(http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {}
+    payload["http_method"] = http_method
+    payload["body"] = {}
+    if parameters:
+        payload["body"] = parameters
+
+    return payload
 
 
 def invoke_import_status(client: Client, environment: str, execution_arn: str) -> Dict[str, Any]:
