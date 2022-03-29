@@ -35,7 +35,7 @@ class IterErrorsValidator(STACValidator):
         return schema, resolver
 
     def _validate_from_uri(self, stac_dict: Dict[str, Any], schema_uri: str) -> List[str]:
-        """Return true if there is at least one validation error"""
+        """Return a list of the error(s) found during the validation of stac_dict against schema_uri"""
         errors = []
         schema, resolver = self.get_schema_from_uri(schema_uri)
 
