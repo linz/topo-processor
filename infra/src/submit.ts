@@ -27,6 +27,8 @@ async function main(): Promise<void> {
   if (jobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
   const tempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
   if (tempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
+  const tempBucketReadRole = stackOutputs?.find((f) => f.OutputKey === 'LINZRoleReadArn')?.OutputValue;
+  if (tempBucketReadRole == null) throw new Error('Unable to find CfnOutput "LINZRoleReadArn"');
 
   if (process.argv.length > 2) {
     for (let i = 2; i < process.argv.length; i++) {
