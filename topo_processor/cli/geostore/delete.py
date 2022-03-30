@@ -11,13 +11,13 @@ from topo_processor.util.time import time_in_ms
     "-id",
     "--dataset-id",
     required=True,
-    help="The dataset id to delete.",
+    help="The dataset id to delete",
 )
 @click.option(
     "-p",
     "--prod",
     is_flag=True,
-    help="Use this flag to export into production environment.",
+    help="Use this flag to delete into production environment",
 )
 @click.option(
     "-v",

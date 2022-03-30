@@ -17,7 +17,7 @@ from topo_processor.util.time import time_in_ms
     "-p",
     "--prod",
     is_flag=True,
-    help="Use this flag to export into production environment.",
+    help="Use this flag to get the status from production environment.",
 )
 @click.option(
     "-v",
