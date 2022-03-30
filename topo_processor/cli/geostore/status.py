@@ -11,13 +11,13 @@ from topo_processor.util.time import time_in_ms
     "-arn",
     "--executionarn",
     required=True,
-    help="The execution arn received from the Geostore after invoking an upload.",
+    help="The execution arn received from the Geostore after invoking an upload",
 )
 @click.option(
     "-p",
     "--prod",
     is_flag=True,
-    help="Use this flag to get the status from production environment.",
+    help="Use this flag to get the status from the production environment",
 )
 @click.option(
     "-v",
