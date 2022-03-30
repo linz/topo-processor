@@ -21,23 +21,23 @@ async function main(): Promise<void> {
   const stackInfo = await cloudFormation.describeStacks({ StackName: 'TopoProcessorBatch' }).promise();
   const stackOutputs = stackInfo.Stacks?.[0].Outputs;
 
-  const JobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue;
-  if (JobDefinitionArn == null) throw new Error('Unable to find CfnOutput "BatchJobArn"');
-  const JobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue;
-  if (JobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
-  const TempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
-  if (TempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
+  const jobDefinitionArn = stackOutputs?.find((f) => f.OutputKey === 'BatchJobArn')?.OutputValue;
+  if (jobDefinitionArn == null) throw new Error('Unable to find CfnOutput "BatchJobArn"');
+  const jobQueueArn = stackOutputs?.find((f) => f.OutputKey === 'BatchQueueArn')?.OutputValue;
+  if (jobQueueArn == null) throw new Error('Unable to find CfnOutput "BatchQueueArn"');
+  const tempBucketName = stackOutputs?.find((f) => f.OutputKey === 'TempBucketName')?.OutputValue;
+  if (tempBucketName == null) throw new Error('Unable to find CfnOutput "TempBucketName"');
 
   if (process.argv.length > 2) {
     for (let i = 2; i < process.argv.length; i++) {
       const res = await batch
         .submitJob({
           jobName: ['Job', correlationId].join('-'),
-          jobQueue: JobQueueArn,
-          jobDefinition: JobDefinitionArn,
+          jobQueue: jobQueueArn,
+          jobDefinition: jobDefinitionArn,
           containerOverrides: {
             resourceRequirements: [{ type: 'MEMORY', value: '3600' }],
-            command: buildCommandArguments(correlationId, TempBucketName, process.argv[i]),
+            command: buildCommandArguments(correlationId, tempBucketName, process.argv[i]),
             environment,
           },
         })
