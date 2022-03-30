@@ -14,7 +14,6 @@ from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
 from topo_processor.stac.asset import Asset
-from topo_processor.util.configuration import get_topo_processor_version
 from topo_processor.util.time import get_min_max_interval
 from topo_processor.util.valid import Validity
 
@@ -54,7 +53,6 @@ class Collection(Validity):
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.extra_fields = dict(
             {
-                "processing:software": get_topo_processor_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
                 "linz:security_classification": "unclassified",
