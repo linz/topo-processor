@@ -141,22 +141,6 @@ def test_check_validity_version_extension() -> None:
         validator.validate_metadata(item)
 
 
-def test_check_validity_processing_extension() -> None:
-    """check validates item processing:software"""
-    validate_report: ValidateReport = ValidateReport()
-    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
-    asset = Asset(source_path)
-    item = Item("item_id")
-    item.datetime = datetime.now()
-    item.add_asset(asset)
-    item.properties.update({"processing:software": {"Topo Processor": "0.1.0"}})
-    item.add_extension(StacExtensions.processing.value, add_to_collection=False)
-    validator = MetadataValidatorStac()
-    assert validator.is_applicable(item)
-    validate_report.add_errors(validator.validate_metadata_with_report(item))
-    assert not validate_report.report_per_error_type
-
-
 # STAC collection level tests
 
 
@@ -184,7 +168,6 @@ def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
             "linz:lifecycle": "completed",
             "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
             "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
-            "processing:software": {"Topo Processor": "0.1.0"},
             "version": "1",
         }
     )
@@ -219,7 +202,6 @@ def test_validate_metadata_linz_collection_missing_linz_fields(mocker) -> None: 
     collection.license = "lic"
     collection.extra_fields.update(
         {
-            "processing:software": {"Topo Processor": "0.1.0"},
             "version": "1",
         }
     )
