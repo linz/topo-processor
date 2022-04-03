@@ -188,4 +188,5 @@ class Collection(Validity):
             license=self.license,
             providers=self.providers,
         )
+        get_log().info("Stac Collection Created", id=stac.id, title=stac.title)
         return stac
