@@ -39,7 +39,7 @@ class MetadataValidatorStac(MetadataValidator):
             for warn in w:
                 msg = msg + ", " + str(warn.message)
 
-            if msg:
+            if w:
                 raise STACValidationError(message=f"Not valid STAC: {msg}")
 
     def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
