@@ -1,4 +1,5 @@
 import json
+import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
 import jsonschema
@@ -101,9 +102,9 @@ class IterErrorsValidator(STACValidator):
             raise e
         if errors:
             msg = self._get_error_message(schema_uri, stac_object_type, None, href, stac_dict.get("id"), errors)
-            raise pystac.STACValidationError(msg)
-        else:
-            return schema_uri
+            warnings.warn(msg)
+
+        return schema_uri
 
     def validate_extension(
         self,
@@ -138,6 +139,6 @@ class IterErrorsValidator(STACValidator):
             raise e
         if errors:
             msg = self._get_error_message(schema_uri, stac_object_type, extension_id, href, stac_dict.get("id"), errors)
-            raise pystac.STACValidationError(msg)
-        else:
-            return schema_uri
+            warnings.warn(msg)
+
+        return schema_uri

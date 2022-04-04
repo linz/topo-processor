@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Any, Dict, Union
 
 import fsspec
@@ -31,11 +32,15 @@ class MetadataValidatorStac(MetadataValidator):
         return True
 
     def validate_metadata(self, item: Item) -> None:
-        try:
-            item.create_stac().validate()
 
-        except STACValidationError as e:
-            raise STACValidationError(message=f"Not valid STAC: {e}")
+        with warnings.catch_warnings(record=True) as w:
+            item.create_stac().validate()
+            msg = ""
+            for warn in w:
+                msg = msg + ", " + str(warn.message)
+
+            if msg:
+                raise STACValidationError(message=f"Not valid STAC: {msg}")
 
     def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
         """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
