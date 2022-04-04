@@ -89,7 +89,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             {
                 "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
                 "linz:lifecycle": "completed",
-                "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
+                "quality:description": "Geographic coordinates provided with this aerial photographic survey were estimated from the associated survey chart and have low positional accuracy. They should be used for general referencing only.",
             }
         )
 
