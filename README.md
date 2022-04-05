@@ -129,36 +129,36 @@ The following source and target combinations can be used:
 
 **For the following Geostore commands (described with `(Geostore)`), you need to be authenticated into a Geostore AWS account, assuming the `nonprod-api-users` role. These commands have a `-p` or `-prod` flag. You won't be able to use the `-prod` flag if you authenticated in a `Geostore` `non-prod` account and vice versa. **
 
-### `export` (Geostore)
+### `add` (Geostore)
 
-This command allows to export a survey to the [Geostore](https://github.com/linz/geostore) by using the [Geostore API](https://github.com/linz/geostore/blob/master/USAGE.md).
+This command allows to add a survey to the [Geostore](https://github.com/linz/geostore) by using the [Geostore API](https://github.com/linz/geostore/blob/master/USAGE.md).
 
 **_Prerequisites:_** The survey has to be processed by the `upload` command first. The output files of the `upload` is what will be exported to the `Geostore`.
 
-| Argument                   |                                       Description                                        |
-| -------------------------- | :--------------------------------------------------------------------------------------: |
-| `-s` or `--source`         |              The `s3` path to the `collection.json` of the survey to export              |
-| `-sid` or `--survey-id`    |                           The survey ID of the data to export                            |
-| `-st` or `--survey-title`  |                          The survey title of the data to export                          |
-| `-r` or `--role-arn`       |               The arn role to read the bucket where the data to export is                |
-| `-p` or `--prod` (FLAG)    | Use this flag to export into Geostore Production environment. Non-production by default. |
-| `-v` or `--verbose` (FLAG) |                             Use this flag display trace logs                             |
+| Argument                   |                                     Description                                      |
+| -------------------------- | :----------------------------------------------------------------------------------: |
+| `-s` or `--source`         |             The `s3` path to the `collection.json` of the survey to add              |
+| `-i` or `--survey-id`      |                           The survey ID of the data to add                           |
+| `-t` or `--survey-title`   |                         The survey title of the data to add                          |
+| `-r` or `--role-arn`       |               The arn role to read the bucket where the data to add is               |
+| `-p` or `--prod` (FLAG)    | Use this flag to add into Geostore Production environment. Non-production by default |
+| `-v` or `--verbose` (FLAG) |                           Use this flag display trace logs                           |
 
 ```bash
-poetry run export -s "s3://bucket/survey-path/collection.json" -sid 1234 -st "SURVEY_TITLE" -r "arn:aws:iam::123456789:role/read-role"
+poetry run add -s "s3://bucket/survey-path/collection.json" -i 1234 -t "SURVEY_TITLE" -r "arn:aws:iam::123456789:role/read-role"
 ```
 
 ### `status` (Geostore)
 
 This is to follow the current upload status to the `Geostore` for a particular `dataset` version. You may have to run it several times as the status gets updated.
 
-| Argument                    |                                       Description                                        |
-| --------------------------- | :--------------------------------------------------------------------------------------: |
-| `-arn` or `--execution-arn` |          The execution arn received from the Geostore after invoking an upload           |
-| `-p` or `--prod` (FLAG)     | Use this flag to export into Geostore Production environment. Non-production by default. |
-| `-v` or `--verbose` (FLAG)  |                             Use this flag display trace logs                             |
+| Argument                   |                                   Description                                    |
+| -------------------------- | :------------------------------------------------------------------------------: |
+| `-a` or `--execution-arn`  |      The execution arn received from the Geostore after invoking an upload       |
+| `-p` or `--prod` (FLAG)    | Use this flag for the Geostore production environment. Non-production by default |
+| `-v` or `--verbose` (FLAG) |                         Use this flag display trace logs                         |
 
-**_NOTE:_** The command to run is given in the logs after calling sucessfully the `export` command:
+**_NOTE:_** The command to run is given in the logs after calling sucessfully the `add` command:
 
 ```json
 "info": "To check the export status, run the following command 'poetry run status -arn arn:aws:states:ap-southeast-2:632223577832:execution:ABCD'"
@@ -168,11 +168,11 @@ This is to follow the current upload status to the `Geostore` for a particular `
 
 It gives you the information for one or all the datasets created on the `Geostore`.
 
-| Argument                   |                                       Description                                        |
-| -------------------------- | :--------------------------------------------------------------------------------------: |
-| `-id` or `--dataset-id`    |                                 The dataset id to filter                                 |
-| `-p` or `--prod` (FLAG)    | Use this flag to export into Geostore Production environment. Non-production by default. |
-| `-v` or `--verbose` (FLAG) |                             Use this flag display trace logs                             |
+| Argument                   |                                       Description                                       |
+| -------------------------- | :-------------------------------------------------------------------------------------: |
+| `-d` or `--dataset-id`     |                                The dataset id to filter                                 |
+| `-p` or `--prod` (FLAG)    | Use this flag to export into Geostore Production environment. Non-production by default |
+| `-v` or `--verbose` (FLAG) |                            Use this flag display trace logs                             |
 
 ```bash
 poetry run list [-id ID123ABC]
@@ -182,14 +182,15 @@ poetry run list [-id ID123ABC]
 
 Delete a dataset into the `Geostore`.
 
-| Argument                   |                                       Description                                        |
-| -------------------------- | :--------------------------------------------------------------------------------------: |
-| `-id` or `--dataset-id`    |                                 The dataset id to delete                                 |
-| `-p` or `--prod` (FLAG)    | Use this flag to export into Geostore Production environment. Non-production by default. |
-| `-v` or `--verbose` (FLAG) |                             Use this flag display trace logs                             |
+| Argument                   |                                       Description                                       |
+| -------------------------- | :-------------------------------------------------------------------------------------: |
+| `-d` or `--dataset-id`     |                                The dataset id to delete                                 |
+| `-p` or `--prod` (FLAG)    | Use this flag to delete from Geostore Production environment. Non-production by default |
+| `-c` or `--commit` (FLAG)  |                        Use this flag to confirm the suppression                         |
+| `-v` or `--verbose` (FLAG) |                            Use this flag display trace logs                             |
 
 ```bash
-poetry run delete -id ID123ABC
+poetry run delete -id ID123ABC [--commit]
 ```
 
 ### `validate`

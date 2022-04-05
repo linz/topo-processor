@@ -8,8 +8,8 @@ from topo_processor.util.time import time_in_ms
 
 @click.command()
 @click.option(
-    "-id",
-    "--datasetid",
+    "-d",
+    "--dataset-id",
     required=False,
     help="The dataset id to filter",
 )
@@ -25,9 +25,9 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(datasetid: str, prod: bool, verbose: bool) -> None:
+def main(dataset_id: str, prod: bool, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("list_datasets_start", dataset_id=id, isProduction=prod)
+    get_log().info("list_datasets_start", dataset_id=dataset_id, isProduction=prod)
 
     if verbose:
         set_level(LogLevel.trace)
@@ -36,8 +36,8 @@ def main(datasetid: str, prod: bool, verbose: bool) -> None:
 
     try:
         list_parameters = {}
-        if datasetid:
-            list_parameters = {"id": datasetid}
+        if dataset_id:
+            list_parameters = {"id": dataset_id}
         dataset_list = invoke_lambda(client, "datasets", "GET", list_parameters, prod)
 
         get_log().debug("list_datasets_end", dataset_list=dataset_list, isProduction=prod, duration=time_in_ms() - start_time)

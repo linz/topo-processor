@@ -8,8 +8,8 @@ from topo_processor.util.time import time_in_ms
 
 @click.command()
 @click.option(
-    "-arn",
-    "--executionarn",
+    "-a",
+    "--execution-arn",
     required=True,
     help="The execution arn received from the Geostore after invoking an upload",
 )

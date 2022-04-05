@@ -4,7 +4,7 @@ import boto3
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda
+from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda, is_response_ok
 from topo_processor.util.configuration import temp_folder
 from topo_processor.util.time import time_in_ms
 
@@ -17,13 +17,13 @@ from topo_processor.util.time import time_in_ms
     help="The s3 path to the collection.json of the survey to export",
 )
 @click.option(
-    "-sid",
+    "-i",
     "--survey-id",
     required=True,
     help="The survey id of the data to export",
 )
 @click.option(
-    "-st",
+    "-t",
     "--survey-title",
     required=True,
     help="The survey title of the data to export",

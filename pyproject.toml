@@ -33,7 +33,7 @@ pytest-mock = "^3.6.1"
 mypy = "*"
 
 [tool.poetry.scripts]
-export = 'topo_processor.cli.geostore.export:main'
+add = 'topo_processor.cli.geostore.add:main'
 status = 'topo_processor.cli.geostore.status:main'
 list = 'topo_processor.cli.geostore.list:main'
 delete = 'topo_processor.cli.geostore.delete:main'
