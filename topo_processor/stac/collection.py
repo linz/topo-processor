@@ -85,7 +85,7 @@ class Collection(Validity):
         if linz_provider.to_dict() not in self.linz_providers:
             self.linz_providers.append(linz_provider.to_dict())
 
-    def update_description(self, stac_collection: pystac.Collection, data_type: DataType):
+    def update_description(self, stac_collection: pystac.Collection, data_type: DataType) -> None:
         if data_type == DataType.IMAGERY_HISTORIC:
             size = self.summaries.to_dict()["film:physical_size"]
             if len(size) == 1:
