@@ -7,7 +7,7 @@ import pytest
 
 from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 
-pystac.validation.set_validator(IterErrorsValidator())
+#pystac.validation.set_validator(IterErrorsValidator())
 
 
 def pytest_addoption(parser) -> None:  # type: ignore

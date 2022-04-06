@@ -2,12 +2,15 @@ import os
 from datetime import datetime
 
 import pytest
-from pystac import STACValidationError
+from pystac import STACValidationError, validation
 
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.item import Item
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 from topo_processor.stac.stac_extensions import StacExtensions
+
+validation.set_validator(IterErrorsValidator())
 
 
 def test_iter_errors_validator() -> None:

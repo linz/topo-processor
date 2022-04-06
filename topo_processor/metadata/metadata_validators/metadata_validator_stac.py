@@ -5,11 +5,13 @@ from typing import Any, Dict, Union
 
 import fsspec
 import jsonschema_rs
+import pystac.validation
 from linz_logger import get_log
 from pystac.errors import STACValidationError
 
 from topo_processor.stac.collection import Collection
 from topo_processor.stac.item import Item
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 
 from .metadata_validator import MetadataValidator
 
@@ -33,14 +35,19 @@ class MetadataValidatorStac(MetadataValidator):
 
     def validate_metadata(self, item: Item) -> None:
 
-        with warnings.catch_warnings(record=True) as w:
-            item.create_stac().validate()
-            msg = ""
-            for warn in w:
-                msg = msg + ", " + str(warn.message)
-
-            if w:
-                raise STACValidationError(message=f"Not valid STAC: {msg}")
+        if isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator):
+            with warnings.catch_warnings(record=True) as w:
+                item.create_stac().validate()
+                msg = ""
+                for warn in w:
+                    msg = msg + ", " + str(warn.message)
+                if w:
+                    raise STACValidationError(message=f"Not valid STAC: {msg}")
+        else:
+            try:
+                item.create_stac().validate()
+            except STACValidationError as e:
+                raise STACValidationError(message=f"Not valid STAC: {e}")
 
     def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
         """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
