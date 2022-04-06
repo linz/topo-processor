@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import shapely.wkt
-from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.collection import Collection
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -82,21 +82,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_asset(asset)
 
         item.collection = collection
-
-        collection.license = "CC-BY-4.0"
-        collection.description = "Historical Imagery"
-        collection.extra_fields.update(
-            {
-                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
-                "linz:lifecycle": "completed",
-                "quality:description": "Geographic coordinates provided with this aerial photographic survey were estimated from the associated survey chart and have low positional accuracy. They should be used for general referencing only.",
-            }
-        )
-
-        collection.add_extension(StacExtensions.quality.value)
-        collection.add_linz_provider(LinzProviders.LTTW.value)
-        collection.add_linz_provider(LinzProviders.LMPP.value)
-        collection.add_provider(Providers.NZAM.value)
+        self.population_collection(collection)
 
         item.properties.update(
             {
@@ -120,6 +106,22 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.historical_imagery.value)
         item.add_extension(StacExtensions.linz.value)
         item.add_extension(StacExtensions.version.value)
+
+    def population_collection(self, collection: Collection) -> None:
+        collection.description = "This aerial photographic survey was digitised from {} {} negatives in the Crown collection of the Crown Aerial Film Archive."
+        collection.license = "CC-BY-4.0"
+        collection.extra_fields.update(
+            {
+                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
+                "linz:lifecycle": "completed",
+                "quality:description": "Geographic coordinates provided with this aerial photographic survey were estimated from the associated survey chart and have low positional accuracy. They should be used for general referencing only.",
+            }
+        )
+
+        collection.add_extension(StacExtensions.quality.value)
+        collection.add_linz_provider(LinzProviders.LTTW.value)
+        collection.add_linz_provider(LinzProviders.LMPP.value)
+        collection.add_provider(Providers.NZAM.value)
 
     def get_title(self, survey: str) -> str:
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
