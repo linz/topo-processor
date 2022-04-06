@@ -15,8 +15,6 @@ validation.set_validator(IterErrorsValidator())
 
 def test_iter_errors_validator() -> None:
     """check error details is in exception message"""
-    print("first test")
-    print(validation.RegisteredValidator.get_validator())
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")
@@ -34,8 +32,6 @@ def test_iter_errors_validator() -> None:
 
 def test_iter_errors_validator_multiple_extensions() -> None:
     """check error details is in exception message"""
-    print("second test")
-    print(validation.RegisteredValidator.get_validator())
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
     asset = Asset(source_path)
     item = Item("item_id")
