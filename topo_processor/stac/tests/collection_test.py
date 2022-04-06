@@ -207,7 +207,7 @@ def test_empty_geospatial_types() -> None:
     assert collection.get_linz_geospatial_type() == "invalid geospatial type"
 
 
-def test_historical_imagery_collection_description():
+def test_historical_imagery_collection_description() -> None:
     "Correct Description"
     collection = Collection("fake_collection")
     collection.license = "CC-BY-4.0"
