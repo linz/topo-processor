@@ -171,7 +171,6 @@ def test_check_multiple_stac_extensions_default_pystac_validator() -> None:
     assert not "camera" in str(e.value)
 
 
-
 def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
     """check should raise STACValidationError for both extensions"""
     source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
