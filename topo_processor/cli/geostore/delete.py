@@ -14,12 +14,6 @@ from topo_processor.util.time import time_in_ms
     help="The dataset id to delete",
 )
 @click.option(
-    "-p",
-    "--prod",
-    is_flag=True,
-    help="Use this flag to delete into production environment",
-)
-@click.option(
     "-c",
     "--commit",
     is_flag=True,
@@ -31,9 +25,9 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(dataset_id: str, prod: bool, commit: bool, verbose: str) -> None:
+def main(dataset_id: str, commit: bool, verbose: str) -> None:
     start_time = time_in_ms()
-    get_log().info("delete_datasets_start", dataset_id=dataset_id, isProduction=prod)
+    get_log().info("delete_datasets_start", dataset_id=dataset_id)
 
     if verbose:
         set_level(LogLevel.trace)
@@ -46,15 +40,12 @@ def main(dataset_id: str, prod: bool, commit: bool, verbose: str) -> None:
         if commit:
             operation = "DELETE"
 
-        response = invoke_lambda(client, "datasets", operation, delete_parameters, prod)
+        response = invoke_lambda(client, "datasets", operation, delete_parameters)
         if not commit:
             get_log().info(
-                f"You are about to delete the following dataset: {response['body']}. Run the command again with the --commit flag to confirm.",
-                isProduction=prod,
+                f"You are about to delete the following dataset: {response['body']}. Run the command again with the --commit flag to confirm."
             )
         else:
-            get_log().debug(
-                "delete_dataset_success", deleted_id=dataset_id, isProduction=prod, duration=time_in_ms() - start_time
-            )
+            get_log().debug("delete_dataset_success", deleted_id=dataset_id, duration=time_in_ms() - start_time)
     except Exception as e:
         get_log().error("delete_dataset_failed", err=e)

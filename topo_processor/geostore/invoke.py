@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING, Any, Dict
 
 from linz_logger import get_log
 
+from topo_processor.geostore.environment import is_production
+
 if TYPE_CHECKING:
     from mypy_boto3_lambda import Client
 else:
     Client = object
 
 
-def invoke_lambda(
-    client: Client, name: str, http_method: str, parameters: Dict[str, str], is_prod: bool = False
-) -> Dict[str, Any]:
-    if not is_prod:
+def invoke_lambda(client: Client, name: str, http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
+    if not is_production():
         name = "nonprod-" + name
     payload = build_lambda_payload(http_method, parameters)
     get_log().debug("invoke_lambda_function", name=name, payload=payload)
@@ -42,10 +42,10 @@ def build_lambda_payload(http_method: str, parameters: Dict[str, str]) -> Dict[s
     return payload
 
 
-def invoke_import_status(client: Client, execution_arn: str, is_prod: bool = False) -> Dict[str, Any]:
+def invoke_import_status(client: Client, execution_arn: str) -> Dict[str, Any]:
     """Return the current status of the dataset version import process in the Geostore identified by 'execution_arn'"""
     import_status_parameters = {"execution_arn": execution_arn}
-    import_status_response_payload = invoke_lambda(client, "import-status", "GET", import_status_parameters, is_prod)
+    import_status_response_payload = invoke_lambda(client, "import-status", "GET", import_status_parameters)
 
     import_status: Dict[str, Any] = import_status_response_payload["body"]
     return import_status

@@ -31,6 +31,7 @@ rope = "^0.23.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
+moto = "^3.1.4"
 
 [tool.poetry.scripts]
 add = 'topo_processor.cli.geostore.add:main'

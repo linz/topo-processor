@@ -14,12 +14,6 @@ from topo_processor.util.time import time_in_ms
     help="The execution arn received from the Geostore after invoking an upload",
 )
 @click.option(
-    "-p",
-    "--prod",
-    is_flag=True,
-    help="Use this flag to get the status from the production environment",
-)
-@click.option(
     "-v",
     "--verbose",
     is_flag=True,
@@ -27,7 +21,7 @@ from topo_processor.util.time import time_in_ms
 )
 def main(executionarn: str, prod: bool, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("check_export_status_start", arn=executionarn, isProduction=prod)
+    get_log().info("check_export_status_start", arn=executionarn)
 
     if verbose:
         set_level(LogLevel.trace)
@@ -36,7 +30,7 @@ def main(executionarn: str, prod: bool, verbose: bool) -> None:
 
     try:
         # import status
-        import_status = invoke_import_status(client, executionarn, prod)
+        import_status = invoke_import_status(client, executionarn)
 
         get_log().debug(
             "check_export_status_end",
