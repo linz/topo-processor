@@ -170,8 +170,6 @@ def test_check_multiple_stac_extensions_default_pystac_validator() -> None:
     assert "aerial-photo" in str(e.value)
     assert not "camera" in str(e.value)
 
-    pystac.validation.set_validator(IterErrorsValidator())
-
 
 def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
     """check should raise STACValidationError for both extensions"""
