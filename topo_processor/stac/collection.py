@@ -91,7 +91,9 @@ class Collection(Validity):
             if len(size) == 1:
                 size = size[0]
             colour = self.extra_fields["linz:geospatial_type"]
-            stac_collection.description = self.description = f"This aerial photographic survey was digitised from {colour} {size} negatives in the Crown collection of the Crown Aerial Film Archive."
+            stac_collection.description = (
+                self.description
+            ) = f"This aerial photographic survey was digitised from {colour} {size} negatives in the Crown collection of the Crown Aerial Film Archive."
 
     def get_temp_dir(self) -> str:
         global TEMP_DIR

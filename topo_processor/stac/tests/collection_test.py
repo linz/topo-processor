@@ -226,6 +226,7 @@ def test_historical_imagery_collection_description() -> None:
         == "This aerial photographic survey was digitised from black and white image 120 x 120 negatives in the Crown collection of the Crown Aerial Film Archive."
     )
 
+
 def test_historical_imagery_collection_empty_description() -> None:
     "Empty Description"
     collection = Collection("fake_collection")
@@ -239,7 +240,4 @@ def test_historical_imagery_collection_empty_description() -> None:
 
     stac_collection = collection.create_stac()
     collection.update_description(stac_collection, DataType("imagery.aerial"))
-    assert (
-        collection.description
-        == ""
-    )
+    assert collection.description == ""
