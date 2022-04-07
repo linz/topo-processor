@@ -143,7 +143,6 @@ def test_check_validity_version_extension() -> None:
         validator.validate_metadata(item)
 
 
-
 def test_check_multiple_stac_extensions_default_pystac_validator() -> None:
     """check should raise STACValidationError only for first extension"""
     pystac.validation.set_validator(pystac.validation.stac_validator.JsonSchemaSTACValidator())
@@ -162,12 +161,14 @@ def test_check_multiple_stac_extensions_default_pystac_validator() -> None:
     item.add_extension(StacExtensions.aerial_photo.value, add_to_collection=False)
     item.add_extension(StacExtensions.camera.value, add_to_collection=False)
     validator = MetadataValidatorStac()
-    assert isinstance(pystac.validation.RegisteredValidator.get_validator(), pystac.validation.stac_validator.JsonSchemaSTACValidator)
+    assert isinstance(
+        pystac.validation.RegisteredValidator.get_validator(), pystac.validation.stac_validator.JsonSchemaSTACValidator
+    )
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError) as e:
         validator.validate_metadata(item)
-    assert 'aerial-photo' in str(e.value)
-    assert not 'camera' in str(e.value)
+    assert "aerial-photo" in str(e.value)
+    assert not "camera" in str(e.value)
 
     pystac.validation.set_validator(IterErrorsValidator())
 
@@ -193,9 +194,8 @@ def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError) as e:
         validator.validate_metadata(item)
-    assert 'aerial-photo' in str(e.value)
-    assert 'camera' in str(e.value)
-
+    assert "aerial-photo" in str(e.value)
+    assert "camera" in str(e.value)
 
 
 # STAC collection level tests
