@@ -225,3 +225,21 @@ def test_historical_imagery_collection_description() -> None:
         collection.description
         == "This aerial photographic survey was digitised from black and white image 120 x 120 negatives in the Crown collection of the Crown Aerial Film Archive."
     )
+
+def test_historical_imagery_collection_empty_description() -> None:
+    "Empty Description"
+    collection = Collection("fake_collection")
+    collection.license = "CC-BY-4.0"
+
+    item = Item("id")
+    item.linz_geospatial_type = "black and white image"
+    collection.add_item(item)
+
+    collection.summaries.add("film:physical_size", ["120 x 120"])
+
+    stac_collection = collection.create_stac()
+    collection.update_description(stac_collection, DataType("imagery.aerial"))
+    assert (
+        collection.description
+        == ""
+    )

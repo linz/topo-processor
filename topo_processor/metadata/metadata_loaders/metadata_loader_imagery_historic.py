@@ -108,7 +108,6 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.version.value)
 
     def population_collection(self, collection: Collection) -> None:
-        collection.description = "This aerial photographic survey was digitised from {} {} negatives in the Crown collection of the Crown Aerial Film Archive."
         collection.license = "CC-BY-4.0"
         collection.extra_fields.update(
             {

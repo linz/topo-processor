@@ -50,7 +50,7 @@ class Collection(Validity):
         # FIXME: Do we want to generate this id like this?
         self.id = str(ulid.ULID())
         self.title = title
-        self.description = "default description"
+        self.description = ""
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.extra_fields = dict(
@@ -91,8 +91,7 @@ class Collection(Validity):
             if len(size) == 1:
                 size = size[0]
             colour = self.extra_fields["linz:geospatial_type"]
-            updated_description = self.description.format(colour, size)
-            stac_collection.description = self.description = updated_description
+            stac_collection.description = self.description = f"This aerial photographic survey was digitised from {colour} {size} negatives in the Crown collection of the Crown Aerial Film Archive."
 
     def get_temp_dir(self) -> str:
         global TEMP_DIR
