@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import pystac.validation
 import pytest
 from pystac.errors import STACValidationError
 
@@ -8,6 +9,7 @@ from topo_processor.metadata.metadata_validators.metadata_validator_stac import 
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.collection import Collection
 from topo_processor.stac.item import Item
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -139,6 +141,59 @@ def test_check_validity_version_extension() -> None:
     assert validator.is_applicable(item)
     with pytest.raises(STACValidationError):
         validator.validate_metadata(item)
+
+
+def test_check_multiple_stac_extensions_default_pystac_validator() -> None:
+    """check should raise STACValidationError only for first extension"""
+    pystac.validation.set_validator(pystac.validation.stac_validator.JsonSchemaSTACValidator())
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = Asset(source_path)
+    item = Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"aerial-photo:run": "string"})
+    item.properties.update({"aerial-photo:altitude": "string"})
+    item.properties.update({"aerial-photo:scale": 1234})
+    item.properties.update({"aerial-photo:sequence_number": 1234})
+    item.properties.update({"aerial-photo:anomalies": ""})
+    item.properties.update({"camera:nominal_focal_length": "string"})
+    item.properties.update({"camera:sequence_number": 1234})
+    item.add_extension(StacExtensions.aerial_photo.value, add_to_collection=False)
+    item.add_extension(StacExtensions.camera.value, add_to_collection=False)
+    validator = MetadataValidatorStac()
+    assert isinstance(
+        pystac.validation.RegisteredValidator.get_validator(), pystac.validation.stac_validator.JsonSchemaSTACValidator
+    )
+    assert validator.is_applicable(item)
+    with pytest.raises(STACValidationError) as e:
+        validator.validate_metadata(item)
+    assert "aerial-photo" in str(e.value)
+    assert not "camera" in str(e.value)
+
+
+def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
+    """check should raise STACValidationError for both extensions"""
+    source_path = os.path.join(os.getcwd(), "test_data", "tiffs", "SURVEY_1", "CONTROL.tiff")
+    asset = Asset(source_path)
+    item = Item("item_id")
+    item.datetime = datetime.now()
+    item.add_asset(asset)
+    item.properties.update({"aerial-photo:run": "string"})
+    item.properties.update({"aerial-photo:altitude": "string"})
+    item.properties.update({"aerial-photo:scale": 1234})
+    item.properties.update({"aerial-photo:sequence_number": 1234})
+    item.properties.update({"aerial-photo:anomalies": ""})
+    item.properties.update({"camera:nominal_focal_length": "string"})
+    item.properties.update({"camera:sequence_number": 1234})
+    item.add_extension(StacExtensions.aerial_photo.value, add_to_collection=False)
+    item.add_extension(StacExtensions.camera.value, add_to_collection=False)
+    validator = MetadataValidatorStac()
+    assert isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator)
+    assert validator.is_applicable(item)
+    with pytest.raises(STACValidationError) as e:
+        validator.validate_metadata(item)
+    assert "aerial-photo" in str(e.value)
+    assert "camera" in str(e.value)
 
 
 # STAC collection level tests
