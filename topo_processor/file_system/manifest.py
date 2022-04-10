@@ -1,8 +1,6 @@
 import json
 from typing import Any, Dict, List, Tuple
 
-import boto3
-
 from topo_processor.util.aws_files import create_s3_manifest, s3_download
 from topo_processor.util.configuration import temp_folder
 from topo_processor.util.s3 import is_s3_path
