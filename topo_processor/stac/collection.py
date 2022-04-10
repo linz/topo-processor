@@ -13,6 +13,7 @@ from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
+from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
 from topo_processor.util.time import get_min_max_interval
 from topo_processor.util.valid import Validity
@@ -49,6 +50,7 @@ class Collection(Validity):
         # FIXME: Do we want to generate this id like this?
         self.id = str(ulid.ULID())
         self.title = title
+        self.description = ""
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.extra_fields = dict(
@@ -82,6 +84,16 @@ class Collection(Validity):
     def add_linz_provider(self, linz_provider: LinzProvider) -> None:
         if linz_provider.to_dict() not in self.linz_providers:
             self.linz_providers.append(linz_provider.to_dict())
+
+    def update_description(self, stac_collection: pystac.Collection, data_type: DataType) -> None:
+        if data_type == DataType.IMAGERY_HISTORIC:
+            size = self.summaries.to_dict()["film:physical_size"]
+            if len(size) == 1:
+                size = size[0]
+            colour = self.extra_fields["linz:geospatial_type"]
+            stac_collection.description = (
+                self.description
+            ) = f"This aerial photographic survey was digitised from {colour} {size} negatives in the Crown collection of the Crown Aerial Film Archive."
 
     def get_temp_dir(self) -> str:
         global TEMP_DIR
@@ -167,6 +179,7 @@ class Collection(Validity):
     def generate_summaries(self, collection: pystac.Collection) -> None:
         summarizer = Summarizer(fields=FIELDS_JSON_URL)
         collection.summaries = summarizer.summarize(collection)
+        self.summaries = collection.summaries
 
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:

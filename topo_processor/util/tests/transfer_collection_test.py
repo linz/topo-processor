@@ -4,6 +4,7 @@ from datetime import datetime
 
 import pytest
 
+from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.asset_key import AssetKey
@@ -35,7 +36,7 @@ def test_fail_on_duplicate_assets(setup: str) -> None:
     item.add_asset(cog_2)
 
     with pytest.raises(Exception, match=r"./item_id.tiff already exists."):
-        transfer_collection(item.collection, target)
+        transfer_collection(item.collection, target, DataType("imagery.historic"))
 
 
 def test_asset_key_not_in_list(setup: str) -> None:
@@ -56,7 +57,7 @@ def test_asset_key_not_in_list(setup: str) -> None:
     item.add_asset(test_asset)
 
     with pytest.raises(Exception, match=r"No asset key set for asset ./item_id.tiff"):
-        transfer_collection(item.collection, target)
+        transfer_collection(item.collection, target, DataType("imagery.historic"))
 
 
 def test_generate_summaries(setup: str) -> None:
@@ -106,7 +107,7 @@ def test_generate_summaries(setup: str) -> None:
     collection.add_item(item_2)
     item_2.collection = collection
 
-    transfer_collection(item_1.collection, target)
+    transfer_collection(item_1.collection, target, DataType("imagery.aerial"))
 
     with open(os.path.join(target, "SURVEY_1", "collection.json")) as collection_json_file:
         collection_metadata = json.load(collection_json_file)

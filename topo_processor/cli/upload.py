@@ -86,7 +86,7 @@ def main(source: str, datatype: str, correlationid: str, target: str, metadata: 
         process_source(source, data_type, metadata)
 
         for collection in collection_store.values():
-            transfer_collection(collection, target)
+            transfer_collection(collection, target, data_type)
 
         get_log().debug(
             "Job Completed",

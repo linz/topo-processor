@@ -8,12 +8,13 @@ from pystac.catalog import CatalogType
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
+from topo_processor.metadata.data_type import DataType
 
 if TYPE_CHECKING:
     from topo_processor.stac.collection import Collection
 
 
-def transfer_collection(collection: Collection, target: str) -> None:
+def transfer_collection(collection: Collection, target: str, data_type: DataType) -> None:
     stac_collection = collection.create_stac()
     # pystac v1.1.0
     # Required to remove cwd from collection self_href,
@@ -64,7 +65,7 @@ def transfer_collection(collection: Collection, target: str) -> None:
 
     # after all items have been processed generate summaries
     collection.generate_summaries(stac_collection)
-
+    collection.update_description(stac_collection, data_type)
     # pystac v1.1.0
     # Required to not add a self link with an 'absolute' link from the cwd
     json_collection = stac_collection.to_dict(include_self_link=False)

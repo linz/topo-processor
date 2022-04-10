@@ -3,6 +3,7 @@ from datetime import datetime
 import pytest
 import shapely.wkt
 
+from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.collection import Collection
 from topo_processor.stac.item import Item
@@ -204,3 +205,39 @@ def test_empty_geospatial_types() -> None:
     collection.add_item(item_b)
 
     assert collection.get_linz_geospatial_type() == "invalid geospatial type"
+
+
+def test_historical_imagery_collection_description() -> None:
+    "Correct Description"
+    collection = Collection("fake_collection")
+    collection.license = "CC-BY-4.0"
+
+    item = Item("id")
+    item.linz_geospatial_type = "black and white image"
+    collection.add_item(item)
+
+    collection.summaries.add("film:physical_size", ["120 x 120"])
+    collection.description = "This aerial photographic survey was digitised from {} {} negatives in the Crown collection of the Crown Aerial Film Archive."
+
+    stac_collection = collection.create_stac()
+    collection.update_description(stac_collection, DataType("imagery.historic"))
+    assert (
+        collection.description
+        == "This aerial photographic survey was digitised from black and white image 120 x 120 negatives in the Crown collection of the Crown Aerial Film Archive."
+    )
+
+
+def test_historical_imagery_collection_empty_description() -> None:
+    "Empty Description"
+    collection = Collection("fake_collection")
+    collection.license = "CC-BY-4.0"
+
+    item = Item("id")
+    item.linz_geospatial_type = "black and white image"
+    collection.add_item(item)
+
+    collection.summaries.add("film:physical_size", ["120 x 120"])
+
+    stac_collection = collection.create_stac()
+    collection.update_description(stac_collection, DataType("imagery.aerial"))
+    assert collection.description == ""
