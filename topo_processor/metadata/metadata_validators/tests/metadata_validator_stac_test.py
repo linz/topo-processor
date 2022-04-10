@@ -198,6 +198,76 @@ def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
 
 # STAC collection level tests
 
+def test_check_multiple_stac_extensions_custom_iter_validator_collection(mocker) -> None:
+    """check should raise STACValidationError for multiple extensions"""
+
+    collection = Collection("title_col")
+    collection.description = "desc"
+    collection.license = "lic"
+    collection.extra_fields.update(
+        {
+            "linz:lifecycle": "completed",
+            "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
+            "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
+            "version": "1",
+        }
+    )
+    collection.add_provider(Providers.NZAM.value)
+    collection.add_linz_provider(LinzProviders.LTTW.value)
+    collection.add_linz_provider(LinzProviders.LMPP.value)
+    # mocker.patch("topo_processor.stac.collection.Collection.get_linz_geospatial_type", return_value="black and white image")
+    # mocker.patch(
+    #     "topo_processor.stac.collection.Collection.get_linz_asset_summaries",
+    #     return_value={
+    #         "processing:software": [{"Topo Processor": "v0.1.0"}, {"Topo Processor": "v0.3.0"}],
+    #         "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
+    #         "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
+    #     },
+    # )
+    mocker.patch(
+        "topo_processor.stac.collection.Collection.generate_summaries",
+        return_value={
+            "mission": ["9490"],
+            "platform": ["Fixed-wing Aircraft"],
+            "instruments": ["ZEISS RMK"],
+            "aerial-photo:run": ["A"],
+            "film:id": ["2926"],
+            "film:physical_size": ["23cm x 23cm"],
+            "proj:epsg": [None],
+            "scan:is_original": [True],
+            "aerial-photo:sequence_number": {"minimum": 1, "maximum": 2},
+            "aerial-photo:altitude": {"minimum": 3500, "maximum": 3500},
+            "aerial-photo:scale": {"minimum": 7000, "maximum": 7000},
+            "camera:sequence_number": {"minimum": 351, "maximum": 352},
+            "camera:nominal_focal_length": {"minimum": 152, "maximum": 152},
+            "film:negative_sequence": {"minimum": 1, "maximum": 2},
+            "scan:scanned": {"minimum": "2017-06-30T12:00:00Z", "maximum": "2017-06-30T12:00:00Z"},
+        },
+    )
+    collection.add_extension(StacExtensions.historical_imagery.value)
+    collection.add_extension(StacExtensions.linz.value)
+    collection.add_extension(StacExtensions.quality.value)
+    collection.add_extension(StacExtensions.aerial_photo.value)
+    collection.add_extension(StacExtensions.camera.value)
+    collection.add_extension(StacExtensions.film.value)
+    collection.add_extension(StacExtensions.scanning.value)
+    collection.add_extension(StacExtensions.eo.value)
+    collection.add_extension(StacExtensions.file.value)
+    collection.add_extension(StacExtensions.projection.value)
+    collection.add_extension(StacExtensions.version.value)
+
+    validator = MetadataValidatorStac()
+    pystac_collection = collection.create_stac()
+    print(collection.generate_summaries(pystac_collection))
+    print(pystac_collection.to_dict())
+    print(collection.generate_summaries(pystac_collection))
+    print(pystac_collection.to_dict())
+    assert isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator)
+    assert validator.is_applicable(collection)
+    with pytest.raises(STACValidationError) as e:
+        validator.validate_metadata_pystac_collection(pystac_collection)
+    assert "summaries" in str(e.value)
+
 
 def test_validate_metadata_with_report_collection() -> None:
     """check that the method return a report of the errors for a collection validation"""

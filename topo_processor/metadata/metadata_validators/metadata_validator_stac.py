@@ -7,6 +7,7 @@ import fsspec
 import jsonschema_rs
 import pystac.validation
 from linz_logger import get_log
+from pystac.collection import Collection as PystacCollection
 from pystac.errors import STACValidationError
 
 from topo_processor.stac.collection import Collection
@@ -48,6 +49,24 @@ class MetadataValidatorStac(MetadataValidator):
                 item.create_stac().validate()
             except STACValidationError as e:
                 raise STACValidationError(message=f"Not valid STAC: {e}")
+
+    def validate_metadata_pystac_collection(self, collection: PystacCollection) -> None:
+
+        if isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator):
+            with warnings.catch_warnings(record=True) as w:
+                collection.validate()
+                msg = ""
+                for warn in w:
+                    msg = msg + ", " + str(warn.message)
+                if w:
+                    raise STACValidationError(message=f"Not valid STAC: {msg}")
+
+        else:
+            try:
+                collection.validate()
+            except STACValidationError as e:
+                raise STACValidationError(message=f"Not valid STAC: {e}")
+
 
     def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
         """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
