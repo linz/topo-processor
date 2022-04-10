@@ -82,7 +82,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_asset(asset)
 
         item.collection = collection
-        self.population_collection(collection)
+        self.populate_collection(collection)
 
         item.properties.update(
             {
@@ -107,7 +107,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         item.add_extension(StacExtensions.linz.value)
         item.add_extension(StacExtensions.version.value)
 
-    def population_collection(self, collection: Collection) -> None:
+    def populate_collection(self, collection: Collection) -> None:
         collection.license = "CC-BY-4.0"
         collection.extra_fields.update(
             {
