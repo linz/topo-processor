@@ -5,6 +5,7 @@ import pystac.validation
 import pytest
 from pystac.errors import STACValidationError
 
+from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from topo_processor.metadata.metadata_validators.metadata_validator_stac import MetadataValidatorStac
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.collection import Collection
@@ -198,52 +199,65 @@ def test_check_multiple_stac_extensions_custom_iter_validator() -> None:
 
 # STAC collection level tests
 
-def test_check_multiple_stac_extensions_custom_iter_validator_collection(mocker) -> None:
-    """check should raise STACValidationError for multiple extensions"""
 
-    collection = Collection("title_col")
-    collection.description = "desc"
-    collection.license = "lic"
+def test_validate_collection_with_summaries_iter_validator(setup: str) -> None:
+    target = setup
+    collection = Collection("AUCKLAND 1")
+    collection.description = "fake_description"
+    collection.license = "face_license"
+    collection.survey = "SURVEY_1"
+    collection.add_linz_provider(LinzProviders.LTTW.value)
+    collection.add_linz_provider(LinzProviders.LMPP.value)
     collection.extra_fields.update(
         {
             "linz:lifecycle": "completed",
             "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.",
             "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
-            "version": "1",
         }
     )
-    collection.add_provider(Providers.NZAM.value)
-    collection.add_linz_provider(LinzProviders.LTTW.value)
-    collection.add_linz_provider(LinzProviders.LMPP.value)
-    # mocker.patch("topo_processor.stac.collection.Collection.get_linz_geospatial_type", return_value="black and white image")
-    # mocker.patch(
-    #     "topo_processor.stac.collection.Collection.get_linz_asset_summaries",
-    #     return_value={
-    #         "processing:software": [{"Topo Processor": "v0.1.0"}, {"Topo Processor": "v0.3.0"}],
-    #         "created": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-01-01T00:00:00Z"},
-    #         "updated": {"minimum": "1999-01-01T00:00:00Z", "maximum": "2010-03-01T00:00:00Z"},
-    #     },
-    # )
-    mocker.patch(
-        "topo_processor.stac.collection.Collection.generate_summaries",
-        return_value={
-            "mission": ["9490"],
-            "platform": ["Fixed-wing Aircraft"],
-            "instruments": ["ZEISS RMK"],
-            "aerial-photo:run": ["A"],
-            "film:id": ["2926"],
-            "film:physical_size": ["23cm x 23cm"],
-            "proj:epsg": [None],
-            "scan:is_original": [True],
-            "aerial-photo:sequence_number": {"minimum": 1, "maximum": 2},
-            "aerial-photo:altitude": {"minimum": 3500, "maximum": 3500},
-            "aerial-photo:scale": {"minimum": 7000, "maximum": 7000},
-            "camera:sequence_number": {"minimum": 351, "maximum": 352},
-            "camera:nominal_focal_length": {"minimum": 152, "maximum": 152},
-            "film:negative_sequence": {"minimum": 1, "maximum": 2},
-            "scan:scanned": {"minimum": "2017-06-30T12:00:00Z", "maximum": "2017-06-30T12:00:00Z"},
-        },
-    )
+    test_geom = {
+        "WKT": "POLYGON ((177.168157744315 -38.7538525409217,"
+        "177.23423558687 -38.7514276946524,"
+        "177.237358655351 -38.8031681573174,"
+        "177.17123348276 -38.8055953066942,"
+        "177.168157744315 -38.7538525409217))"
+    }
+    test_datetime = datetime.strptime("1918-11-11", "%Y-%m-%d")
+
+    item_1 = Item("item_1_id")
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item_1, asset_metadata=test_geom)
+    item_1.datetime = test_datetime
+    item_1.properties = {
+        "mission": "SURVEY_1",
+        "proj:centroid": {"lat": -45.8079, "lon": 170.5548},
+        "camera:sequence_number": 89555,
+        "film:id": "731",
+        "aerial-photo:scale": 6600,
+        "scan:scanned": "2014-06-30T12:00:00Z",
+        "proj:epsg": "null",
+    }
+    collection.add_item(item_1)
+    item_1.collection = collection
+    stac_item_1 = item_1.create_stac()
+
+    item_2 = Item("item_2_id")
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    metadata_loader_imagery_historic.add_spatial_extent(item_2, asset_metadata=test_geom)
+    item_2.datetime = test_datetime
+    item_2.properties = {
+        "mission": "SURVEY_1",
+        "proj:centroid": {"lat": -45.8079, "lon": 170.5599},
+        "camera:sequence_number": 89554,
+        "film:id": "731",
+        "aerial-photo:scale": 5600,
+        "scan:scanned": "2019-12-31T11:00:00Z",
+        "proj:epsg": "null",
+    }
+    collection.add_item(item_2)
+    item_2.collection = collection
+    stac_item_2 = item_2.create_stac()
+
     collection.add_extension(StacExtensions.historical_imagery.value)
     collection.add_extension(StacExtensions.linz.value)
     collection.add_extension(StacExtensions.quality.value)
@@ -256,17 +270,23 @@ def test_check_multiple_stac_extensions_custom_iter_validator_collection(mocker)
     collection.add_extension(StacExtensions.projection.value)
     collection.add_extension(StacExtensions.version.value)
 
-    validator = MetadataValidatorStac()
     pystac_collection = collection.create_stac()
-    print(collection.generate_summaries(pystac_collection))
-    print(pystac_collection.to_dict())
-    print(collection.generate_summaries(pystac_collection))
-    print(pystac_collection.to_dict())
+
+    validator = MetadataValidatorStac()
+    pystac_collection = item_1.collection.create_stac()
+    pystac_collection.add_item(stac_item_1)
+    pystac_collection.add_item(stac_item_2)
+    collection.generate_summaries(pystac_collection)
+
     assert isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator)
     assert validator.is_applicable(collection)
     with pytest.raises(STACValidationError) as e:
         validator.validate_metadata_pystac_collection(pystac_collection)
-    assert "summaries" in str(e.value)
+    assert not "summaries" in str(e.value)
+    assert "linz/schema.json" in str(e.value)
+    assert "film/schema.json" in str(e.value)
+    assert "aerial-photo:run" in str(e.value)
+    assert "aerial-photo:sequence_number" in str(e.value)
 
 
 def test_validate_metadata_with_report_collection() -> None:
@@ -282,7 +302,7 @@ def test_validate_metadata_with_report_collection() -> None:
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
+def test_validate_metadata_linz_with_report_collection(mocker) -> None:  # type: ignore
     """check that the linz collection schema validates"""
     validate_report: ValidateReport = ValidateReport()
     collection = Collection("title_col")

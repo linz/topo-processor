@@ -67,7 +67,6 @@ class MetadataValidatorStac(MetadataValidator):
             except STACValidationError as e:
                 raise STACValidationError(message=f"Not valid STAC: {e}")
 
-
     def validate_metadata_with_report(self, stac_object: Union[Item, Collection]) -> Dict[str, list[str]]:
         """Validate the STAC object (Item or Collection) against the core json schema and its extensions.
         Return an error report [{schemaURI, [errors]}]
