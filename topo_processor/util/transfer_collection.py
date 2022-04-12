@@ -66,6 +66,8 @@ def transfer_collection(collection: Collection, target: str, data_type: DataType
     # after all items have been processed generate summaries
     collection.generate_summaries(stac_collection)
     collection.update_description(stac_collection, data_type)
+    collection.validate_pystac_collection(stac_collection)
+
     # pystac v1.1.0
     # Required to not add a self link with an 'absolute' link from the cwd
     json_collection = stac_collection.to_dict(include_self_link=False)

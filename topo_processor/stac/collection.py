@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -9,12 +10,15 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 import pystac
 import ulid
 from linz_logger import get_log
+from pystac.collection import Collection as PystacCollection
+from pystac.errors import STACValidationError
 from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
 from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 from topo_processor.util.time import get_min_max_interval
 from topo_processor.util.valid import Validity
 
@@ -203,3 +207,20 @@ class Collection(Validity):
         )
         get_log().info("Stac Collection Created", id=stac.id, title=stac.title)
         return stac
+
+    def validate_pystac_collection(self, pystac_collection: PystacCollection) -> None:
+
+        if isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator):
+            with warnings.catch_warnings(record=True) as w:
+                pystac_collection.validate()
+                msg = ""
+                for warn in w:
+                    msg = msg + ", " + str(warn.message)
+                if w:
+                    raise STACValidationError(message=f"Not valid STAC: {msg}")
+
+        else:
+            try:
+                pystac_collection.validate()
+            except STACValidationError as e:
+                raise STACValidationError(message=f"Not valid STAC: {e}")
