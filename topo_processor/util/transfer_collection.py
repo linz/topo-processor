@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from linz_logger import get_log
 from pystac.catalog import CatalogType
+from pystac.errors import STACValidationError
 
 from topo_processor.file_system.transfer import transfer_file
 from topo_processor.file_system.write_json import write_json
@@ -66,7 +67,12 @@ def transfer_collection(collection: Collection, target: str, data_type: DataType
     # after all items have been processed generate summaries
     collection.generate_summaries(stac_collection)
     collection.update_description(stac_collection, data_type)
-    collection.validate_pystac_collection(stac_collection)
+
+    try:
+        collection.validate_pystac_collection(stac_collection)
+    # log error as warning until TDE-353 and TDE-354 are done and handle this properly
+    except STACValidationError as e:
+        get_log().warning(f"Collection Validation Warning: {e}", collection_id=collection.id)
 
     # pystac v1.1.0
     # Required to not add a self link with an 'absolute' link from the cwd
