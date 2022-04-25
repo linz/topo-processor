@@ -212,7 +212,7 @@ def test_validate_metadata_with_report_collection() -> None:
     assert not validate_report.report_per_error_type
 
 
-def test_validate_metadata_linz_collection(mocker) -> None:  # type: ignore
+def test_validate_metadata_with_report_linz_collection(mocker) -> None:  # type: ignore
     """check that the linz collection schema validates"""
     validate_report: ValidateReport = ValidateReport()
     collection = Collection("title_col")
