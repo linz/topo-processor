@@ -10,7 +10,7 @@ linz-logger= "^0.6.0"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.10"
 click = "^8.0.4"
-boto3 = "^1.21.17"
+boto3 = "^1.22.7"
 python-ulid = "^1.1.0"
 fsspec = {extras = ["s3"], version = "^2022.2.0"}
 pystac = "^1.4.0"
