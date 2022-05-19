@@ -27,7 +27,7 @@ boto3-stubs = {version = "*", extras = ["sts"]}
 isort = "^5.10.1"
 pylint = "^2.13.9"
 pytest = "^7.0.1"
-rope = "^0.23.0"
+rope = "^1.0.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
