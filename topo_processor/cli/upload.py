@@ -56,7 +56,14 @@ from topo_processor.util.transfer_collection import transfer_collection
     required=False,
     help="The survey footprint metadata path",
 )
-def main(source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str) -> None:
+@click.option(
+    "--force",
+    required=False,
+    help="Force the upload even if the data is not valid",
+)
+def main(
+    source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str, force: bool
+) -> None:
     get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
     try:
         pystac.validation.set_validator(IterErrorsValidator())

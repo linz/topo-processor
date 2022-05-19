@@ -38,11 +38,13 @@ def _create_assets(source: str, data_type: str, metadata_path: str) -> None:
 
 def _create_items() -> None:
     for item in item_store.values():
-        _process_item(item)
+        if item.is_valid():
+            _process_item(item)
 
 
 def _process_item(item: Item) -> None:
-    if item.is_valid():
-        metadata_validator_repo.validate_metadata(item)
+    # TODO validate_metadata should probably not be avoided as it can help to detect metadata errors
+    metadata_validator_repo.validate_metadata(item)
+    # TODO We can avoid the COG creation (done in transform_data) here if there is at least one error
     if item.is_valid():
         data_transformer_repo.transform_data(item)
