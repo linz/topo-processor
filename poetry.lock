@@ -663,7 +663,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "jsonschema"
-version = "4.4.0"
+version = "4.5.1"
 description = "An implementation of JSON Schema validation for Python"
 category = "main"
 optional = false
@@ -1176,7 +1176,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "fd6b3737934cc11ba89049267e5eb0659415d3aa546cab0a34e8d274d63e6e1b"
+content-hash = "cde546133dc03f067803bdcbc485e9f3700724aa54af57e5ec1635ef5232fdfe"
 
 [metadata.files]
 affine = [
@@ -1479,8 +1479,8 @@ jmespath = [
     {file = "jmespath-0.10.0.tar.gz", hash = "sha256:b85d0567b8666149a93172712e68920734333c0ce7e89b78b3e987f71e5ed4f9"},
 ]
 jsonschema = [
-    {file = "jsonschema-4.4.0-py3-none-any.whl", hash = "sha256:77281a1f71684953ee8b3d488371b162419767973789272434bbc3f29d9c8823"},
-    {file = "jsonschema-4.4.0.tar.gz", hash = "sha256:636694eb41b3535ed608fe04129f26542b59ed99808b4f688aa32dcf55317a83"},
+    {file = "jsonschema-4.5.1-py3-none-any.whl", hash = "sha256:71b5e39324422543546572954ce71c67728922c104902cb7ce252e522235b33f"},
+    {file = "jsonschema-4.5.1.tar.gz", hash = "sha256:7c6d882619340c3347a1bf7315e147e6d3dae439033ae6383d6acb908c101dfc"},
 ]
 jsonschema-rs = [
     {file = "jsonschema_rs-0.13.1-cp36-cp36m-macosx_10_15_x86_64.whl", hash = "sha256:5bb8d47655813df5daa5248121fb5d5e85590f6732b1ae9d7b031befbc1eb7fc"},
