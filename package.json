@@ -3,7 +3,7 @@
     "@aws-cdk/aws-batch-alpha": "2.9.0-alpha.0",
     "@linzjs/style": "^3.6.0",
     "aws-cdk-lib": "^2.9.0",
-    "aws-sdk": "^2.1064.0",
+    "aws-sdk": "^2.1139.0",
     "constructs": "^10.0.45",
     "conventional-changelog-cli": "^2.1.1",
     "ulid": "^2.3.0"
