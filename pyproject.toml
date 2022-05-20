@@ -12,7 +12,7 @@ rasterio = "^1.2.10"
 click = "^8.1.3"
 boto3 = "^1.21.17"
 python-ulid = "^1.1.0"
-fsspec = {extras = ["s3"], version = "^2022.2.0"}
+fsspec = {extras = ["s3"], version = "^2022.5.0"}
 pystac = "^1.4.0"
 jsonschema = "^4.5.1"
 jsonschema-rs = "^0.13.1"
