@@ -18,13 +18,16 @@ class MetadataValidatorRepository:
     def append(self, validator: MetadataValidator) -> None:
         self.validators.append(validator)
 
-    def validate_metadata(self, item: Item) -> None:
+    def validate_metadata(self, item: Item) -> bool:
+        is_valid = True
+
         for validator in self.validators:
             if validator.is_applicable(item):
                 start_time = time_in_ms()
                 try:
                     validator.validate_metadata(item)
                 except Exception as e:
+                    is_valid = False
                     item.add_error(str(e), validator.name, e)
                     get_log().warning(f"Validation Failed: {e}", validator=validator.name)
                 get_log().debug(
@@ -32,3 +35,5 @@ class MetadataValidatorRepository:
                     validator=validator.name,
                     duration=time_in_ms() - start_time,
                 )
+
+        return is_valid

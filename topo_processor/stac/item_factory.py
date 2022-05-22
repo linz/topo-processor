@@ -5,12 +5,11 @@ from topo_processor.file_system.assets import get_assets
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.metadata_loaders import metadata_loader_rep
 from topo_processor.metadata.metadata_validators import metadata_validator_repo
-from topo_processor.stac.item import Item
 from topo_processor.stac.store import asset_store, item_store
 from topo_processor.util.time import time_in_ms
 
 
-def process_source(source: str, data_type: DataType, metadata_path: str = "") -> None:
+def process_source(source: str, data_type: DataType, metadata_path: str = "", force: bool = False) -> None:
     start_time = time_in_ms()
     _create_assets(source, data_type, metadata_path)
     total_asset = len(asset_store)
@@ -36,15 +35,20 @@ def _create_assets(source: str, data_type: str, metadata_path: str) -> None:
         metadata_loader_rep.load_metadata(asset)
 
 
-def _create_items() -> None:
+def _create_items(force: bool = False) -> None:
+    all_items_valid = True
+    # Validate metadata of valid items
+    # Item can be already detected invalid from the metadata loader
+    # For those, we don't want to validate their metadata
     for item in item_store.values():
         if item.is_valid():
-            _process_item(item)
+            metadata_is_valid = metadata_validator_repo.validate_metadata(item)
+            if all_items_valid and not metadata_is_valid:
+                all_items_valid = metadata_is_valid
 
+    if not all_items_valid and not force:
+        raise Exception("At least one Item is not valid. Process is stopped")
 
-def _process_item(item: Item) -> None:
-    # TODO validate_metadata should probably not be avoided as it can help to detect metadata errors
-    metadata_validator_repo.validate_metadata(item)
-    # TODO We can avoid the COG creation (done in transform_data) here if there is at least one error
-    if item.is_valid():
-        data_transformer_repo.transform_data(item)
+    for item in item_store.values():
+        if item.is_valid():
+            data_transformer_repo.transform_data(item)
