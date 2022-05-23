@@ -20,7 +20,7 @@ def process_source(source: str, data_type: DataType, metadata_path: str = "", fo
     get_log().debug("Assets Created", assets=total_asset, source=source, duration=time_in_ms() - start_time)
 
     start_time = time_in_ms()
-    _create_items()
+    _create_items(force)
     total_item = len(item_store)
     if len(item_store) == 0:
         get_log().warn("No Items Created", items=total_item, source=source, duration=time_in_ms() - start_time)

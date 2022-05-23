@@ -58,13 +58,13 @@ from topo_processor.util.transfer_collection import transfer_collection
 )
 @click.option(
     "--force",
-    required=False,
-    help="Force the upload even if the data is not valid",
+    is_flag=True,
+    help="Force the upload even if all the data is not valid",
 )
 def main(
     source: str, datatype: str, correlationid: str, target: str, metadata: str, verbose: str, footprint: str, force: bool
 ) -> None:
-    get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype)
+    get_log().info("upload_start", correlationId=correlationid, source=source, target=target, dataType=datatype, force=force)
     try:
         pystac.validation.set_validator(IterErrorsValidator())
 
@@ -90,10 +90,10 @@ def main(
                     else:
                         raise Exception("Not yet implemented")
 
-        process_source(source, data_type, metadata)
+        process_source(source, data_type, metadata, force)
 
         for collection in collection_store.values():
-            transfer_collection(collection, target, data_type)
+            transfer_collection(collection, target, data_type, force)
 
         get_log().debug(
             "Job Completed",

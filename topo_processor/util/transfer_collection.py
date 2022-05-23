@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from topo_processor.stac.collection import Collection
 
 
-def transfer_collection(collection: Collection, target: str, data_type: DataType) -> None:
+def transfer_collection(collection: Collection, target: str, data_type: DataType, force: bool = False) -> None:
     stac_collection = collection.create_stac()
     files_to_transfer: dict[str, Any] = {}
     # pystac v1.1.0
@@ -24,7 +24,7 @@ def transfer_collection(collection: Collection, target: str, data_type: DataType
 
     for item in collection.items.values():
         if not item.is_valid():
-            get_log().warning("Invalid item was not uploaded:", error=item.log)
+            get_log().warning("Invalid item won't be uploaded:", error=item.log)
             continue
         if item.log:
             get_log().warning(f"Item {item.id} contains warnings:", error=item.log)
@@ -79,10 +79,10 @@ def transfer_collection(collection: Collection, target: str, data_type: DataType
 
     try:
         collection.validate_pystac_collection(stac_collection)
-    # log error as warning until TDE-353 and TDE-354 are done and handle this properly
     except Exception as e:
         get_log().error(f"Collection Validation Warning: {e}", collection_id=collection.id)
-        raise Exception("Collection failed the validation. Process is stopped.") from e
+        if not force:
+            raise Exception("Collection failed the validation. Process is stopped.") from e
 
     # Transfer the files
     for item_transfer in files_to_transfer.values():

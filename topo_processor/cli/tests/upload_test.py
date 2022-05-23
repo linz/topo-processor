@@ -81,3 +81,38 @@ def test_upload_local_fail(setup: str) -> None:
             check=True,
         )
         assert "process is stopped" in str(e.value).lower()
+
+
+@pytest.mark.slow
+def test_upload_local_forced(setup: str) -> None:
+    target = setup
+    source = os.path.abspath(os.path.join(os.getcwd(), "test_data", "tiffs"))
+    metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_error.csv"))
+    footprint_metadata = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv"))
+    command = os.path.join(os.getcwd(), "upload")
+
+    subprocess.run(
+        [
+            command,
+            "-s",
+            source,
+            "-d",
+            "imagery.historic",
+            "-t",
+            target,
+            "-m",
+            metadata_path,
+            "-f",
+            footprint_metadata,
+            "--force",
+        ],
+        check=True,
+    )
+
+    assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.json"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_3", "72352.tiff"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_3", "collection.json"))
+
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "29659.json"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "29659.tif"))
+    assert os.path.isfile(os.path.join(target, "SURVEY_2", "collection.json"))
