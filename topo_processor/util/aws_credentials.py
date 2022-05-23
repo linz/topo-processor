@@ -45,12 +45,10 @@ def init_roles() -> None:
 
 def get_credentials(bucket_name: str) -> Credentials:
     get_log().debug("get_credentials_bucket_name", bucket_name=bucket_name)
-    if not bucket_roles:
-        init_roles()
-    if bucket_name in bucket_roles:
-        # FIXME: check if the token is expired - add a parameter
-        if bucket_name not in bucket_credentials:
-            role_arn = bucket_roles[bucket_name]["roleArn"]
+    # FIXME: check if the token is expired - add a parameter
+    if bucket_name not in bucket_credentials:
+        role_arn = get_role_arn(bucket_name)
+        if role_arn:
             get_log().debug("s3_assume_role", bucket_name=bucket_name, role_arn=role_arn)
             assumed_role_object = client_sts.assume_role(RoleArn=role_arn, RoleSessionName="TopoProcessor")
             bucket_credentials[bucket_name] = Credentials(
@@ -58,11 +56,23 @@ def get_credentials(bucket_name: str) -> Credentials:
                 assumed_role_object["Credentials"]["SecretAccessKey"],
                 assumed_role_object["Credentials"]["SessionToken"],
             )
-        return bucket_credentials[bucket_name]
+        else:
+            session_credentials = session.get_credentials()
+            default_credentials = Credentials(
+                session_credentials.access_key, session_credentials.secret_key, session_credentials.token
+            )
 
-    session_credentials = session.get_credentials()
-    default_credentials = Credentials(
-        session_credentials.access_key, session_credentials.secret_key, session_credentials.token
-    )
+            return default_credentials
+    return bucket_credentials[bucket_name]
 
-    return default_credentials
+
+def get_role_arn(bucket_name: str) -> str:
+    role_arn = ""
+    if not bucket_roles:
+        init_roles()
+    if bucket_name in bucket_roles:
+        role_arn = bucket_roles[bucket_name]["roleArn"]
+    else:
+        get_log().warn("role_arn_not_found", bucketName=bucket_name)
+
+    return role_arn
