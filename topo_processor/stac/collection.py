@@ -217,10 +217,10 @@ class Collection(Validity):
                 for warn in w:
                     msg = msg + ", " + str(warn.message)
                 if w:
-                    raise STACValidationError(message=f"Not valid STAC: {msg}")
+                    raise Exception(f"Not valid STAC: {msg}")
 
         else:
             try:
                 pystac_collection.validate()
             except STACValidationError as e:
-                raise STACValidationError(message=f"Not valid STAC: {e}")
+                raise Exception(f"Not valid STAC: {e}") from e

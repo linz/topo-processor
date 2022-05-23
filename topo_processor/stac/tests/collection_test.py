@@ -328,9 +328,9 @@ def test_validate_collection_with_summaries_iter_validator(setup: str) -> None:
     collection.generate_summaries(pystac_collection)
 
     assert isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator)
-    with pytest.raises(STACValidationError) as e:
+    with pytest.raises(Exception) as e:
         collection.validate_pystac_collection(pystac_collection)
-    assert not "summaries" in str(e.value)
+    assert "summaries" not in str(e.value)
     assert "linz/schema.json" in str(e.value)
     assert "film/schema.json" in str(e.value)
     assert "aerial-photo:run" in str(e.value)
