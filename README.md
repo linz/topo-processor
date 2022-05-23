@@ -100,6 +100,7 @@ node ./build/infra/src/submit.js s3://my-bucket/backup2/surveyId1/ s3://my-bucke
 | `-cid` or `--correlationid` |              OPTIONAL. The `correlation ID` of the batch job. _`AWS Batch` only._               |
 | `-m` or `--metadata`        |                        OPTIONAL. The metadata file (local or `s3`) path.                        |
 | `-f` or `--footprint`       |               TESTING PURPOSE. The footprint metadata file (local or `s3`) path.                |
+| `--force`                   |   Flag to force the upload even if some data are invalid (some items might not be uploaded).    |
 | `-v` or `--verbose`         |                                   Flag to display trace logs.                                   |
 
 The user has to specify the survey id or path (where the data is) as a `--source` and it will be validated against the latest version of metadata. A metadata file path can also be specified by using `--metadata` if the LDS cache version one is not wanted. The `--datatype` has to be `imagery.historic`. The user also has to specify a target folder for the output.
