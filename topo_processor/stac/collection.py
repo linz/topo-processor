@@ -223,4 +223,4 @@ class Collection(Validity):
             try:
                 pystac_collection.validate()
             except STACValidationError as e:
-                raise Exception(f"Not valid STAC: {e}") from e
+                raise Exception(f"Not valid STAC") from e
