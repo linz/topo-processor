@@ -26,11 +26,9 @@ def main(executionarn: str, prod: bool, verbose: bool) -> None:
     if verbose:
         set_level(LogLevel.trace)
 
-    client = boto3.client("lambda")
-
     try:
         # import status
-        import_status = invoke_import_status(client, executionarn)
+        import_status = invoke_import_status(executionarn)
 
         get_log().debug(
             "check_export_status_end",

@@ -1,4 +1,3 @@
-import boto3
 import click
 from linz_logger import LogLevel, get_log, set_level
 
@@ -32,15 +31,13 @@ def main(dataset_id: str, commit: bool, verbose: str) -> None:
     if verbose:
         set_level(LogLevel.trace)
 
-    client = boto3.client("lambda")
-
     try:
         delete_parameters = {"id": dataset_id}
         operation = "GET"
         if commit:
             operation = "DELETE"
 
-        response = invoke_lambda(client, "datasets", operation, delete_parameters)
+        response = invoke_lambda("datasets", operation, delete_parameters)
         if not commit:
             get_log().info(
                 f"You are about to delete the following dataset: {response['body']}. Run the command again with the --commit flag to confirm."

@@ -1,4 +1,3 @@
-import boto3
 import click
 from linz_logger import LogLevel, get_log, set_level
 
@@ -26,13 +25,11 @@ def main(dataset_id: str, verbose: bool) -> None:
     if verbose:
         set_level(LogLevel.trace)
 
-    client = boto3.client("lambda")
-
     try:
         list_parameters = {}
         if dataset_id:
             list_parameters = {"id": dataset_id}
-        dataset_list = invoke_lambda(client, "datasets", "GET", list_parameters)
+        dataset_list = invoke_lambda("datasets", "GET", list_parameters)
 
         get_log().debug("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
     except Exception as e:

@@ -6,12 +6,12 @@ import boto3
 import click
 from linz_logger import LogLevel, get_log, set_level
 
-from topo_processor.geostore.environment import is_production
 from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda
+from topo_processor.util.aws_credentials import get_role_arn
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
 from topo_processor.util.file_extension import is_tiff
-from topo_processor.util.s3 import is_s3_path
+from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
 from topo_processor.util.time import time_in_ms
 
 
@@ -21,12 +21,6 @@ from topo_processor.util.time import time_in_ms
     "--source",
     required=True,
     help="The s3 path to the collection.json of the survey to export",
-)
-@click.option(
-    "-r",
-    "--role-arn",
-    required=True,
-    help="The arn role to read the source",
 )
 @click.option(
     "-c",
@@ -40,19 +34,16 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(source: str, role_arn: str, commit: bool, verbose: bool) -> None:
+def main(source: str, commit: bool, verbose: bool) -> None:
     start_time = time_in_ms()
     get_log().info("geostore_add_started", source=source)
 
     if verbose:
         set_level(LogLevel.trace)
 
-    client_lambda = boto3.client("lambda")
-    client_sts = boto3.client("sts")
-    client_sts.assume_role(RoleArn=role_arn, RoleSessionName="read-session")
-
     try:
-        # get information
+        source_role_arn = get_role_arn(bucket_name_from_path(source))
+        # Get Collection information
         collection_local_path = f"{temp_folder}/collection.json"
 
         if is_s3_path(source):
@@ -73,6 +64,8 @@ def main(source: str, role_arn: str, commit: bool, verbose: bool) -> None:
         title = collection_json["title"]
 
         if not commit:
+            client_sts = boto3.client("sts")
+            client_sts.assume_role(RoleArn=source_role_arn, RoleSessionName="read-session")
             file_list: List[str] = []
             paginator = client_sts.get_paginator("list_objects_v2")
             response_iterator = paginator.paginate(Bucket=source.replace("collection.json", ""))
@@ -88,20 +81,18 @@ def main(source: str, role_arn: str, commit: bool, verbose: bool) -> None:
                 surveyTite=title,
             )
         else:
-            # create a dataset
+            # Create a dataset
             create_dataset_parameters = {"title": survey_id, "description": title}
-            dataset_response_payload = invoke_lambda(client_lambda, "datasets", "POST", create_dataset_parameters)
+            dataset_response_payload = invoke_lambda("datasets", "POST", create_dataset_parameters)
             dataset_id = dataset_response_payload["body"]["id"]
             if not dataset_id:
                 raise Exception(f"No dataset ID found in datasets Lambda function response: {dataset_response_payload}")
-
-            # upload data
-            upload_data_parameters = {"id": dataset_id, "metadata_url": source, "s3_role_arn": role_arn}
-            version_response_payload = invoke_lambda(client_lambda, "dataset-versions", "POST", upload_data_parameters)
+            # Upload data
+            upload_data_parameters = {"id": dataset_id, "metadata_url": source, "s3_role_arn": source_role_arn}
+            version_response_payload = invoke_lambda("dataset-versions", "POST", upload_data_parameters)
             execution_arn = version_response_payload["body"]["execution_arn"]
-
-            # import status
-            import_status = invoke_import_status(client_lambda, execution_arn)
+            # Import status
+            import_status = invoke_import_status(execution_arn)
 
         get_log().debug(
             "geostore_add_completed",
@@ -110,7 +101,6 @@ def main(source: str, role_arn: str, commit: bool, verbose: bool) -> None:
             executionArn=execution_arn,
             currentImportStatus=import_status,
             duration=time_in_ms() - start_time,
-            isProduction=is_production,
             info=f"To check the export status, run the following command 'poetry run status -arn {execution_arn}'",
         )
     except Exception as e:
