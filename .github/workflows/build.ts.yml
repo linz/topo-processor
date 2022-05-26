@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
       - name: Build and test
         uses: linz/action-typescript@v1
@@ -27,7 +27,7 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION}
           git push --tags
-          
+
       - name: (Prod) Create github release
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
         run: npx conventional-github-releaser -p angular
