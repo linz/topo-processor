@@ -1,3 +1,57 @@
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/linz/topo-processor/compare/v0.3.0...v0.5.0) (2022-05-26)
+
+
+### Bug Fixes
+
+* allow for unicode character in metadata csv ([#550](https://github.com/linz/topo-processor/issues/550)) ([0493355](https://github.com/linz/topo-processor/commit/0493355))
+* aws profile and region, remove unused imports ([#585](https://github.com/linz/topo-processor/issues/585)) ([eba7f58](https://github.com/linz/topo-processor/commit/eba7f58))
+* bump topo processor version in pyproject.toml ([#683](https://github.com/linz/topo-processor/issues/683)) ([89e6223](https://github.com/linz/topo-processor/commit/89e6223))
+* change logs for filter_metadata and avoid looping over all metadata records while upload with survey ID ([#653](https://github.com/linz/topo-processor/issues/653)) ([2093116](https://github.com/linz/topo-processor/commit/2093116))
+* ensure env vars exist ([#578](https://github.com/linz/topo-processor/issues/578)) ([c1bc714](https://github.com/linz/topo-processor/commit/c1bc714))
+* force --yes ([#584](https://github.com/linz/topo-processor/issues/584)) ([ccd00c3](https://github.com/linz/topo-processor/commit/ccd00c3))
+* log error for jobs that fail ([#703](https://github.com/linz/topo-processor/issues/703)) ([ed46049](https://github.com/linz/topo-processor/commit/ed46049))
+* process should stop and files not transfered if any validation fails (TDE-354) ([#935](https://github.com/linz/topo-processor/issues/935)) ([7e66e47](https://github.com/linz/topo-processor/commit/7e66e47))
+* remove item and collection level processing fields and extension TDE-343 ([#744](https://github.com/linz/topo-processor/issues/744)) ([6b97369](https://github.com/linz/topo-processor/commit/6b97369))
+* remove metadata validator HI ([#548](https://github.com/linz/topo-processor/issues/548)) ([72af3f1](https://github.com/linz/topo-processor/commit/72af3f1))
+* remove unused arguments ([#576](https://github.com/linz/topo-processor/issues/576)) ([ffb1972](https://github.com/linz/topo-processor/commit/ffb1972))
+* tde-381 github action permissions ([#945](https://github.com/linz/topo-processor/issues/945)) ([8b0b350](https://github.com/linz/topo-processor/commit/8b0b350))
+* update .env file and docs that reference it for SSM parameters ([#577](https://github.com/linz/topo-processor/issues/577)) ([e457c2c](https://github.com/linz/topo-processor/commit/e457c2c))
+* update quality-description and collection-description ([#773](https://github.com/linz/topo-processor/issues/773)) ([e9b9f68](https://github.com/linz/topo-processor/commit/e9b9f68))
+* update readme TDE-173 ([#588](https://github.com/linz/topo-processor/issues/588)) ([703d528](https://github.com/linz/topo-processor/commit/703d528))
+
+
+### Features
+
+* add correlationId to target location ([#586](https://github.com/linz/topo-processor/issues/586)) ([4cbc3f8](https://github.com/linz/topo-processor/commit/4cbc3f8))
+* add quality:description ([#673](https://github.com/linz/topo-processor/issues/673)) ([d97f2b5](https://github.com/linz/topo-processor/commit/d97f2b5))
+* **batch:** add geostore roles to temp buckets ([#658](https://github.com/linz/topo-processor/issues/658)) ([911034e](https://github.com/linz/topo-processor/commit/911034e))
+* cache poetry dependencies so docker doesnt have to reinstall them on every build ([#565](https://github.com/linz/topo-processor/issues/565)) ([d380a46](https://github.com/linz/topo-processor/commit/d380a46))
+* catch rasterio warnings to log ([#549](https://github.com/linz/topo-processor/issues/549)) ([48cc037](https://github.com/linz/topo-processor/commit/48cc037))
+* **cdk:** lambda function to monitor batch job failures ([#728](https://github.com/linz/topo-processor/issues/728)) ([bbf7263](https://github.com/linz/topo-processor/commit/bbf7263))
+* config for aws stacks TDE-173 ([#583](https://github.com/linz/topo-processor/issues/583)) ([daf0b04](https://github.com/linz/topo-processor/commit/daf0b04))
+* create historical imagery manifest TDE-272 ([#636](https://github.com/linz/topo-processor/issues/636)) ([3430e83](https://github.com/linz/topo-processor/commit/3430e83))
+* get survey files path from metadata.csv and manifest.json ([#587](https://github.com/linz/topo-processor/issues/587)) ([074c46c](https://github.com/linz/topo-processor/commit/074c46c))
+* iterate all the extensions (warnings instead of raising Exception) ([#764](https://github.com/linz/topo-processor/issues/764)) ([66d588e](https://github.com/linz/topo-processor/commit/66d588e))
+* iterate stac validation errors (details for each schema) ([#729](https://github.com/linz/topo-processor/issues/729)) ([119896d](https://github.com/linz/topo-processor/commit/119896d))
+* load role configuration from SSM ([#563](https://github.com/linz/topo-processor/issues/563)) ([60c6500](https://github.com/linz/topo-processor/commit/60c6500))
+* log loading of credentials from ssm and assuming roles ([#568](https://github.com/linz/topo-processor/issues/568)) ([63dd4ec](https://github.com/linz/topo-processor/commit/63dd4ec))
+* log unique values ([#750](https://github.com/linz/topo-processor/issues/750)) ([8783f3b](https://github.com/linz/topo-processor/commit/8783f3b))
+* processing:software version TDE-237 ([#680](https://github.com/linz/topo-processor/issues/680)) ([688ff9e](https://github.com/linz/topo-processor/commit/688ff9e))
+* sort json keys for historical imagery TDE-338 ([#713](https://github.com/linz/topo-processor/issues/713)) ([baeec8b](https://github.com/linz/topo-processor/commit/baeec8b))
+* submit script takes a source as argument (TDE-324) ([#649](https://github.com/linz/topo-processor/issues/649)) ([894b576](https://github.com/linz/topo-processor/commit/894b576))
+* tde-243 validate collection ([#788](https://github.com/linz/topo-processor/issues/788)) ([0fb597c](https://github.com/linz/topo-processor/commit/0fb597c))
+* update log for elastic search alert ([#698](https://github.com/linz/topo-processor/issues/698)) ([8b9ab9c](https://github.com/linz/topo-processor/commit/8b9ab9c))
+* use survey name for collection title (TDE-217) ([#679](https://github.com/linz/topo-processor/issues/679)) ([c77cd24](https://github.com/linz/topo-processor/commit/c77cd24))
+* use the asset encoding to determine if the asset should be decompressed ([#564](https://github.com/linz/topo-processor/issues/564)) ([3e5cbbf](https://github.com/linz/topo-processor/commit/3e5cbbf))
+
+
+### Performance Improvements
+
+* do not use rasterio to check tiff band validity TDE-333 ([#690](https://github.com/linz/topo-processor/issues/690)) ([183178e](https://github.com/linz/topo-processor/commit/183178e))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/linz/topo-processor/compare/v0.3.0...v0.4.0) (2022-05-24)
 
