@@ -19,21 +19,20 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display trace logs",
 )
-def main(executionarn: str, prod: bool, verbose: bool) -> None:
+def main(execution_arn: str, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("check_export_status_start", arn=executionarn)
+    get_log().info("check_export_status_start", arn=execution_arn)
 
     if verbose:
         set_level(LogLevel.trace)
 
     try:
         # import status
-        import_status = invoke_import_status(executionarn)
+        import_status = invoke_import_status(execution_arn)
 
         get_log().debug(
             "check_export_status_end",
             current_export_status=import_status,
-            isProduction=prod,
             duration=time_in_ms() - start_time,
         )
     except Exception as e:

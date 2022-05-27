@@ -32,7 +32,7 @@ def main(dataset_id: str, commit: bool, verbose: str) -> None:
         set_level(LogLevel.trace)
 
     try:
-        delete_parameters = {"id": dataset_id}
+        delete_parameters = {"title": dataset_id}
         operation = "GET"
         if commit:
             operation = "DELETE"

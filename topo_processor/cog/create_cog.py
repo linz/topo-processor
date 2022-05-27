@@ -1,14 +1,14 @@
 import os
 
 from topo_processor.cog.command import Command
-from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.util.aws_credentials import Credentials, get_credentials_from_bucket
 from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
 
 
 def create_cog(input_path: str, output_path: str) -> Command:
     is_s3 = is_s3_path(input_path)
     if is_s3:
-        credentials: Credentials = get_credentials(bucket_name_from_path(input_path))
+        credentials: Credentials = get_credentials_from_bucket(bucket_name_from_path(input_path))
         input_path = f"/vsis3/{input_path.replace('s3://', '')}"
     if os.environ.get("IS_DOCKER") == "true":
         cmd = Command("gdal_translate")

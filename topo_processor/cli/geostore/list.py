@@ -7,10 +7,10 @@ from topo_processor.util.time import time_in_ms
 
 @click.command()
 @click.option(
-    "-d",
-    "--dataset-id",
+    "-s",
+    "--survey",
     required=False,
-    help="The dataset id to filter",
+    help="The survey to filter",
 )
 @click.option(
     "-v",
@@ -28,7 +28,7 @@ def main(dataset_id: str, verbose: bool) -> None:
     try:
         list_parameters = {}
         if dataset_id:
-            list_parameters = {"id": dataset_id}
+            list_parameters = {"title": dataset_id}
         dataset_list = invoke_lambda("datasets", "GET", list_parameters)
 
         get_log().debug("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
