@@ -7,7 +7,6 @@ import {
   ServicePrincipal,
   CfnInstanceProfile,
   ManagedPolicy,
-  OrganizationPrincipal,
   PolicyStatement,
 } from 'aws-cdk-lib/aws-iam';
 import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-ec2';
