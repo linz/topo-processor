@@ -48,7 +48,7 @@ export class AwsBatchStack extends Stack {
       lifecycleRules: [{ expiration: Duration.days(30) }],
     });
 
-    const roRole = Role.fromRoleName(this, 'internal-user-read', 'internal-user-read');
+    const roRole = Role.fromRoleName(this, 'LINZReadRole', 'internal-user-read');
     tempBucket.grantRead(roRole);
     tempBucket.grantReadWrite(instanceRole);
     StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
