@@ -7,7 +7,6 @@ import {
   ServicePrincipal,
   CfnInstanceProfile,
   ManagedPolicy,
-  OrganizationPrincipal,
   PolicyStatement,
 } from 'aws-cdk-lib/aws-iam';
 import { Vpc, InstanceClass, InstanceType, InstanceSize } from 'aws-cdk-lib/aws-ec2';
@@ -48,15 +47,9 @@ export class AwsBatchStack extends Stack {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       lifecycleRules: [{ expiration: Duration.days(30) }],
     });
-    if (process.env.AWS_ORG_ID) {
-      const principal = new OrganizationPrincipal(process.env.AWS_ORG_ID);
-      const roRole = new Role(this, 'LINZReadRole', {
-        roleName: 'internal-user-read',
-        assumedBy: principal,
-      });
-      tempBucket.grantRead(roRole);
-      new CfnOutput(this, 'LINZRoleReadArn', { value: roRole.roleArn });
-    }
+
+    const roRole = Role.fromRoleName(this, 'LINZReadRole', 'internal-user-read');
+    tempBucket.grantRead(roRole);
     tempBucket.grantReadWrite(instanceRole);
     StringParameter.fromStringParameterName(this, 'BucketConfig', 'BucketConfig').grantRead(instanceRole);
 
