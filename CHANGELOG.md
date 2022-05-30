@@ -1,3 +1,13 @@
+<a name="0.7.0"></a>
+# [0.7.0](https://github.com/linz/topo-processor/compare/v0.6.0...v0.7.0) (2022-05-30)
+
+
+### Bug Fixes
+
+* provision user in aws infrastructure repo ([#958](https://github.com/linz/topo-processor/issues/958)) ([15d5a53](https://github.com/linz/topo-processor/commit/15d5a53))
+
+
+
 <a name="0.6.0"></a>
 # [0.6.0](https://github.com/linz/topo-processor/compare/v0.5.0...v0.6.0) (2022-05-26)
 
