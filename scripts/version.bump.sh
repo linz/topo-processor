@@ -19,6 +19,9 @@ poetry version ${CURRENT_VERSION}
 # Write version to a file for Topo Processor to use
 echo v${CURRENT_VERSION} | tee VERSION
 
+# Commit the changed files
+git commit -a --amend --no-edit
+
 # Checkout a new release branch
 git checkout -b release/v${CURRENT_VERSION}
 
