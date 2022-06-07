@@ -126,10 +126,14 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
         title: str = ""
 
-        if len(survey_names) == 0 or not survey_names[survey]["NAME"]:
-            raise Exception(f"No name found for survey {survey}")
+        if len(survey_names) == 0:
+            raise Exception(f"Empty footprint metadata file when processing survey {survey}")
 
-        title = survey_names[survey]["NAME"]
+        try:
+            title = survey_names[survey]["NAME"]
+        except Exception as e:
+            raise Exception(f"No name found for survey {survey} in footprint metadata file") from e
+
         return title
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]) -> None:
