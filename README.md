@@ -137,28 +137,25 @@ This command allows to add a survey to the [Geostore](https://github.com/linz/ge
 
 **_Prerequisites:_** The survey has to be processed by the `upload` command first. The output files of the `upload` is what will be exported to the `Geostore`.
 
-| Argument                   |                                     Description                                      |
-| -------------------------- | :----------------------------------------------------------------------------------: |
-| `-s` or `--source`         |             The `s3` path to the `collection.json` of the survey to add              |
-| `-i` or `--survey-id`      |                           The survey ID of the data to add                           |
-| `-t` or `--survey-title`   |                         The survey title of the data to add                          |
-| `-r` or `--role-arn`       |               The arn role to read the bucket where the data to add is               |
-| `-p` or `--prod` (FLAG)    | Use this flag to add into Geostore Production environment. Non-production by default |
-| `-v` or `--verbose` (FLAG) |                           Use this flag display trace logs                           |
+| Argument                   |                     Description                     |
+| -------------------------- | :-------------------------------------------------: |
+| `-s` or `--source`         |       The `s3` path to the `survey` to export       |
+| `-r` or `--role`           |      The ARN role to access the source bucket       |
+| `-c` or `--commit` (FLAG)  | Use this flag to commit the creation of the dataset |
+| `-v` or `--verbose` (FLAG) |          Use this flag display debug logs           |
 
 ```bash
-poetry run add -s "s3://bucket/survey-path/collection.json" -i 1234 -t "SURVEY_TITLE" -r "arn:aws:iam::123456789:role/read-role"
+poetry run add -s "s3://bucket/survey-path/" -r "arn:aws:iam::123456789:role/read-role"
 ```
 
 ### `status` (Geostore)
 
 This is to follow the current upload status to the `Geostore` for a particular `dataset` version. You may have to run it several times as the status gets updated.
 
-| Argument                   |                                   Description                                    |
-| -------------------------- | :------------------------------------------------------------------------------: |
-| `-a` or `--execution-arn`  |      The execution arn received from the Geostore after invoking an upload       |
-| `-p` or `--prod` (FLAG)    | Use this flag for the Geostore production environment. Non-production by default |
-| `-v` or `--verbose` (FLAG) |                         Use this flag display trace logs                         |
+| Argument                   |                              Description                              |
+| -------------------------- | :-------------------------------------------------------------------: |
+| `-a` or `--execution-arn`  | The execution arn received from the Geostore after invoking an upload |
+| `-v` or `--verbose` (FLAG) |                   Use this flag display debug logs                    |
 
 **_NOTE:_** The command to run is given in the logs after calling sucessfully the `add` command:
 
@@ -170,29 +167,27 @@ This is to follow the current upload status to the `Geostore` for a particular `
 
 It gives you the information for one or all the datasets created on the `Geostore`.
 
-| Argument                   |                                       Description                                       |
-| -------------------------- | :-------------------------------------------------------------------------------------: |
-| `-d` or `--dataset-id`     |                                The dataset id to filter                                 |
-| `-p` or `--prod` (FLAG)    | Use this flag to export into Geostore Production environment. Non-production by default |
-| `-v` or `--verbose` (FLAG) |                            Use this flag display trace logs                             |
+| Argument                   |           Description            |
+| -------------------------- | :------------------------------: |
+| `-s` or `--survey`         | (OPTIONAL) The survey to filter  |
+| `-v` or `--verbose` (FLAG) | Use this flag display debug logs |
 
 ```bash
-poetry run list [-id ID123ABC]
+poetry run list [-s ID123ABC]
 ```
 
 ### `delete` (Geostore)
 
-Delete a dataset into the `Geostore`.
+Delete a dataset into the `Geostore`. Only if the dataset does not contain any version. To delete a dataset which contains a version, contact the **Geostore** support.
 
-| Argument                   |                                       Description                                       |
-| -------------------------- | :-------------------------------------------------------------------------------------: |
-| `-d` or `--dataset-id`     |                                The dataset id to delete                                 |
-| `-p` or `--prod` (FLAG)    | Use this flag to delete from Geostore Production environment. Non-production by default |
-| `-c` or `--commit` (FLAG)  |                        Use this flag to confirm the suppression                         |
-| `-v` or `--verbose` (FLAG) |                            Use this flag display trace logs                             |
+| Argument                   |               Description                |
+| -------------------------- | :--------------------------------------: |
+| `-d` or `--dataset-id`     |         The dataset id to delete         |
+| `-c` or `--commit` (FLAG)  | Use this flag to confirm the suppression |
+| `-v` or `--verbose` (FLAG) |     Use this flag display debug logs     |
 
 ```bash
-poetry run delete -id ID123ABC [--commit]
+poetry run delete -d ID123ABC [--commit]
 ```
 
 ### `validate`
