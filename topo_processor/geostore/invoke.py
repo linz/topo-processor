@@ -6,18 +6,14 @@ from linz_logger import get_log
 
 from topo_processor.util.aws_credentials import Credentials
 
-ROLE_ARN_PROD = "arn:aws:iam::715898075157:role/api-users"
-ROLE_ARN_NONPROD = "arn:aws:iam::632223577832:role/nonprod-api-users"
+ROLE_ARN = "arn:aws:iam::715898075157:role/api-users"
 
 
 def invoke_lambda(name: str, http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
 
     client_sts = boto3.client("sts")
 
-    name = "nonprod-" + name
-    role_arn = ROLE_ARN_NONPROD
-
-    assumed_role = client_sts.assume_role(RoleArn=role_arn, RoleSessionName="invoke-geostore")
+    assumed_role = client_sts.assume_role(RoleArn=ROLE_ARN, RoleSessionName="invoke-geostore")
     credentials = Credentials(
         assumed_role["Credentials"]["AccessKeyId"],
         assumed_role["Credentials"]["SecretAccessKey"],

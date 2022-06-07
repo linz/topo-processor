@@ -16,14 +16,14 @@ from topo_processor.util.time import time_in_ms
     "-v",
     "--verbose",
     is_flag=True,
-    help="Use verbose to display trace logs",
+    help="Use verbose to display debug logs",
 )
 def main(dataset_id: str, verbose: bool) -> None:
     start_time = time_in_ms()
     get_log().info("list_datasets_start", dataset_id=dataset_id)
 
-    if verbose:
-        set_level(LogLevel.trace)
+    if not verbose:
+        set_level(LogLevel.info)
 
     try:
         list_parameters = {}
@@ -31,6 +31,6 @@ def main(dataset_id: str, verbose: bool) -> None:
             list_parameters = {"title": dataset_id}
         dataset_list = invoke_lambda("datasets", "GET", list_parameters)
 
-        get_log().debug("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
+        get_log().info("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
     except Exception as e:
         get_log().error("list_datasets_failed", err=e)

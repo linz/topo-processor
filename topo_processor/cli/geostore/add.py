@@ -34,20 +34,22 @@ from topo_processor.util.time import time_in_ms
     "-c",
     "--commit",
     is_flag=True,
-    help="Use this flag to commit the suppression of the dataset",
+    help="Use this flag to commit the creation of the dataset",
 )
 @click.option(
     "-v",
     "--verbose",
     is_flag=True,
-    help="Use verbose to display trace logs",
+    help="Use verbose to display debug logs",
 )
 def main(source: str, role: str, commit: bool, verbose: bool) -> None:
+    """Create or add a new version of an existing dataset to the Geostore for the source (survey) passed as argument."""
+
     start_time = time_in_ms()
     get_log().info("geostore_add_started", source=source)
 
-    if verbose:
-        set_level(LogLevel.trace)
+    if not verbose:
+        set_level(LogLevel.info)
 
     try:
         source_role_arn = role
@@ -72,7 +74,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
 
         with open(collection_local_path) as collection_file:
             collection_json: Dict[str, Any] = json.load(collection_file)
-            # Get survey id for dataset id and collection.title for Description
+
+        # Get survey id for dataset id and collection.title for Description
         survey_id = collection_json["summaries"]["mission"][0]
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
@@ -93,7 +96,6 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             paginator = s3.get_paginator("list_objects_v2")
             response_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
             for response in response_iterator:
-                get_log().debug("list_objects_response", response=response)
                 for contents_data in response["Contents"]:
                     key = contents_data["Key"]
                     if is_tiff(key):
@@ -109,15 +111,17 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             list_parameters = {"title": survey_id}
             dataset_list = invoke_lambda("datasets", "GET", list_parameters)
             if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == survey_id:
+                # A dataset already exists
                 if click.confirm(
                     f"A dataset for the survey {survey_id} already exist. A new version will be created. Do you want to continue?",
                     abort=True,
                 ):
+                    # Create a new version
                     dataset_id = dataset_list["body"][0]["id"]
                     click.echo("A new version will be created.")
             else:
-                get_log().info("create_dataset")
                 # Create a dataset
+                get_log().info("create_new_dataset", surveyId=survey_id, surveyTitle=title)
                 create_dataset_parameters = {"title": survey_id, "description": title}
                 dataset_response_payload = invoke_lambda("datasets", "POST", create_dataset_parameters)
                 dataset_id = dataset_response_payload["body"]["id"]
@@ -132,7 +136,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             }
             version_response_payload = invoke_lambda("dataset-versions", "POST", upload_data_parameters)
             execution_arn = version_response_payload["body"]["execution_arn"]
-            # Import status
+
+            # Check import status
             import_status = invoke_import_status(execution_arn)
 
             get_log().debug(

@@ -1,4 +1,3 @@
-import boto3
 import click
 from linz_logger import LogLevel, get_log, set_level
 
@@ -17,17 +16,16 @@ from topo_processor.util.time import time_in_ms
     "-v",
     "--verbose",
     is_flag=True,
-    help="Use verbose to display trace logs",
+    help="Use verbose to display debug logs",
 )
 def main(execution_arn: str, verbose: bool) -> None:
     start_time = time_in_ms()
     get_log().info("check_export_status_start", arn=execution_arn)
 
-    if verbose:
-        set_level(LogLevel.trace)
+    if not verbose:
+        set_level(LogLevel.info)
 
     try:
-        # import status
         import_status = invoke_import_status(execution_arn)
 
         get_log().debug(

@@ -22,14 +22,14 @@ from topo_processor.util.time import time_in_ms
     "-v",
     "--verbose",
     is_flag=True,
-    help="Use verbose to display trace logs",
+    help="Use verbose to display debug logs",
 )
 def main(dataset_id: str, commit: bool, verbose: str) -> None:
     start_time = time_in_ms()
     get_log().info("delete_datasets_start", dataset_id=dataset_id)
 
-    if verbose:
-        set_level(LogLevel.trace)
+    if not verbose:
+        set_level(LogLevel.info)
 
     try:
         delete_parameters = {"title": dataset_id}
@@ -43,6 +43,6 @@ def main(dataset_id: str, commit: bool, verbose: str) -> None:
                 f"You are about to delete the following dataset: {response['body']}. Run the command again with the --commit flag to confirm."
             )
         else:
-            get_log().debug("delete_dataset_success", deleted_id=dataset_id, duration=time_in_ms() - start_time)
+            get_log().info("delete_dataset_success", deleted_id=dataset_id, duration=time_in_ms() - start_time)
     except Exception as e:
         get_log().error("delete_dataset_failed", err=e)
