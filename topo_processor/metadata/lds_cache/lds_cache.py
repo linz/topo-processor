@@ -57,7 +57,9 @@ def get_metadata(
 
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
-            metadata_store[layer_id] = read_csv(metadata_path)
+            metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
+        elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
+            metadata_store[layer_id] = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 
     if criteria:
         filtered_metadata = filter_metadata(metadata_store[layer_id], criteria)

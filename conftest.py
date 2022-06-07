@@ -2,7 +2,15 @@ import shutil
 from tempfile import mkdtemp
 from typing import Generator
 
+import pystac
 import pytest
+
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
+
+
+@pytest.fixture(autouse=True)
+def set_iter_errors_validator() -> None:
+    pystac.validation.set_validator(IterErrorsValidator())
 
 
 def pytest_addoption(parser) -> None:  # type: ignore

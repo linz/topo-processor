@@ -2,12 +2,12 @@ import datetime as dt
 from typing import Any, Dict, List, Optional, Set
 
 import shapely.geometry
+from linz_logger import get_log
 from pystac import get_stac_version
 from pystac.item import Item as PystacItem
 from pystac.stac_object import STACObjectType
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 
-from topo_processor.util.configuration import get_topo_processor_version
 from topo_processor.util.valid import Validity
 
 from .asset import Asset
@@ -31,7 +31,6 @@ class Item(Validity):
         super().__init__()
         self.id = item_id
         self.properties = {
-            "processing:software": get_topo_processor_version(),
             # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
             "version": "1",
         }
@@ -73,6 +72,7 @@ class Item(Validity):
             bbox=bbox,
             datetime=self.datetime,
             properties=self.properties,
-            stac_extensions=list(self.stac_extensions),
+            stac_extensions=list(sorted(self.stac_extensions)),
         )
+        get_log().info("Stac Item Created", id=stac.id)
         return stac

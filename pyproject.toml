@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "topo-processor"
-version = "0.1.0"
+version = "0.3.0"
 description = ""
 authors = ["Blayne Chard <bchard@linz.govt.nz>", "Paul Fouquet <pfouquet@linz.govt.nz>", "Megan Davidson <mdavidson@linz.govt.nz>"]
 
@@ -9,29 +9,30 @@ python = "^3.8"
 linz-logger= "^0.6.0"
 py-multihash = "^2.0.1"
 rasterio = "^1.2.10"
-click = "^8.0.4"
-boto3 = "^1.21.17"
+click = "^8.1.3"
+boto3 = "^1.23.5"
 python-ulid = "^1.1.0"
-fsspec = {extras = ["s3"], version = "^2022.2.0"}
+fsspec = {extras = ["s3"], version = "^2022.5.0"}
 pystac = "^1.4.0"
-jsonschema = "^4.4.0"
+jsonschema = "^4.5.1"
 jsonschema-rs = "^0.13.1"
-Shapely = "^1.8.1"
+Shapely = "^1.8.2"
 requests = "^2.26.0"
 aiohttp = "^3.8.1"
-python-dotenv = "^0.19.2"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1"
-boto3-stubs = {extras = ["lambda","sts"], version = "*"}
+black = "^22.3"
+boto3-stubs = {version = "*", extras = ["lambda","sts"]}
 isort = "^5.10.1"
-pylint = "^2.12.2"
-pytest = "^7.0.1"
-rope = "^0.23.0"
+pylint = "^2.13.9"
+pytest = "^7.1.2"
+rope = "^1.0.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
 moto = "^3.1.4"
+mypy-boto3-lambda = "^1.24.0"
 
 [tool.poetry.scripts]
 add = 'topo_processor.cli.geostore.add:main'

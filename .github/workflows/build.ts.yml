@@ -44,7 +44,7 @@ jobs:
       - name: (NonProd) Deploy to NonProd
         if: github.ref == 'refs/heads/master'
         run: |
-          npx cdk deploy -y --require-approval never
+          npx cdk deploy --all -y --require-approval never
         env:
           AWS_ORG_ID: ${{secrets.AWS_ORG_ID}}
 
@@ -58,6 +58,6 @@ jobs:
       - name: (Prod) Deploy to Prod
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
         run: |
-          npx cdk deploy -y --require-approval never
+          npx cdk deploy --all -y --require-approval never
         env:
           AWS_ORG_ID: ${{secrets.AWS_ORG_ID}}

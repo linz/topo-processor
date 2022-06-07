@@ -1,5 +1,10 @@
+import os
 from typing import Dict
 
+import pytest
+
+from topo_processor.metadata.data_type import DataType
+from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.metadata.metadata_loaders.metadata_loader_imagery_historic import MetadataLoaderImageryHistoric
 from topo_processor.stac.asset import Asset
 from topo_processor.stac.collection import Collection
@@ -301,39 +306,6 @@ def test_invalid_centroid_string() -> None:
     assert str(item.log[0]["error"]) == "stac field 'proj:centroid' has invalid lat value: -41.28509, instance: <class 'str'>"
 
 
-def test_mission_metadata_added_by_survey() -> None:
-    """Tests mission metadata is added by survey value"""
-    metadata = {
-        "survey": "12345",
-        "alternate_survey_name": "",
-    }
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
-    assert title == "12345"
-
-
-def test_mission_metadata_added_by_alternate_survey_name() -> None:
-    """Tests mission metadata is added by alternate survey value"""
-    metadata = {
-        "survey": "0",
-        "alternate_survey_name": "67890",
-    }
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
-    assert title == "67890"
-
-
-def test_mission_metadata_not_added() -> None:
-    """Tests mission metadata is not added"""
-    metadata = {
-        "survey": "0",
-        "alternate_survey_name": "",
-    }
-    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-    title = metadata_loader_imagery_historic.get_title(metadata["survey"], metadata["alternate_survey_name"])
-    assert title is None
-
-
 def test_provider_added() -> None:
     source_path = "test_abc.tiff"
     asset = Asset(source_path)
@@ -361,7 +333,11 @@ def test_provider_added() -> None:
         "image_anomalies": "",
         "when_scanned": "",
     }
-
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.populate_item(metadata, asset)
     if asset.item and asset.item.collection:
@@ -386,3 +362,44 @@ def test_provider_added() -> None:
     assert NZAM_provider.name == "NZ Aerial Mapping"
     assert NZAM_provider.description == "Aerial survey and geospatial services firm. Went into liquidation in 2014."
     assert NZAM_provider.roles == ["producer"]
+
+
+def test_get_collection_title() -> None:
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    title = metadata_loader_imagery_historic.get_title("SURVEY_3")
+
+    assert title == "AUCKLAND 1"
+
+
+def test_get_collection_title_not_found() -> None:
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+
+    with pytest.raises(Exception) as e:
+        metadata_loader_imagery_historic.get_title("SURVEY_6")
+        assert "No name found for survey SURVEY_6" in str(e.value)
+
+
+def test_get_collection_title_empty() -> None:
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        None,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+
+    with pytest.raises(Exception) as e:
+        metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
+        assert "No name found for survey SURVEY_NO_NAME" in str(e.value)

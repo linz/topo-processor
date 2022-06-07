@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, Dict, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import shapely.wkt
-from linz_logger.logger import get_log
 from rasterio.enums import ColorInterp
 
 from topo_processor.metadata.data_type import DataType
 from topo_processor.metadata.lds_cache.lds_cache import get_metadata
 from topo_processor.stac.asset_key import AssetKey
+from topo_processor.stac.collection import Collection
 from topo_processor.stac.linz_provider import LinzProviders
 from topo_processor.stac.providers import Providers
 from topo_processor.stac.stac_extensions import StacExtensions
@@ -67,13 +67,13 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             self.populate_item(asset_metadata, asset)
 
     def populate_item(self, metadata_row: Dict[str, str], asset: Optional[Asset] = None) -> None:
-        title = self.get_title(metadata_row["survey"], metadata_row["alternate_survey_name"])
-        if not title:
-            get_log().warning(
-                "Null collection title value", message="asset has null 'survey' and 'alternate_survey_name' values"
-            )
-            return
+        survey = metadata_row["survey"]
+        if not survey:
+            survey = metadata_row["alternate_survey_name"]
+        title = self.get_title(survey)
+
         collection = get_collection(title)
+        collection.survey = survey
 
         item = get_item(metadata_row["sufi"])
         collection.add_item(item)
@@ -82,55 +82,55 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
             item.add_asset(asset)
 
         item.collection = collection
-
-        collection.license = "CC-BY-4.0"
-        collection.description = "Historical Imagery"
-        collection.extra_fields.update(
-            {
-                "linz:lifecycle": "completed",
-                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
-                "quality:description": "The spatial extents provided are only an approximate coverage for the ungeoreferenced aerial photographs.",
-            }
-        )
-
-        collection.add_extension(StacExtensions.quality.value)
-
-        collection.add_linz_provider(LinzProviders.LTTW.value)
-        collection.add_linz_provider(LinzProviders.LMPP.value)
-        collection.add_provider(Providers.NZAM.value)
+        self.populate_collection(collection)
 
         item.properties.update(
             {
-                "mission": title,
+                "mission": collection.survey,
                 "platform": "Fixed-wing Aircraft",
                 "instruments": [metadata_row["camera"]],
             }
         )
 
         self.add_linz_geospatial_type(item, metadata_row["photo_type"])
-        self.add_centroid(item, metadata_row)
+        self.add_aerial_photo_metadata(item, metadata_row)
         self.add_camera_metadata(item, metadata_row)
         self.add_film_metadata(item, metadata_row)
-        self.add_aerial_photo_metadata(item, metadata_row)
+        self.add_centroid(item, metadata_row)
+        self.add_projection_extent(item)
         self.add_scanning_metadata(item, metadata_row)
         self.add_datetime_property(item, metadata_row)
         self.add_spatial_extent(item, metadata_row)
-        self.add_projection_extent(item)
         self.add_bands_extent(item, asset)
 
         item.add_extension(StacExtensions.historical_imagery.value)
         item.add_extension(StacExtensions.linz.value)
         item.add_extension(StacExtensions.version.value)
-        item.add_extension(StacExtensions.processing.value)
 
-    def get_title(self, survey: str, alternate_survey_name: str) -> Union[str, None]:
-        if not survey or survey == "0" or survey == "":
-            if alternate_survey_name and alternate_survey_name != "":
-                return alternate_survey_name
-            else:
-                return None
-        else:
-            return survey
+    def populate_collection(self, collection: Collection) -> None:
+        collection.license = "CC-BY-4.0"
+        collection.extra_fields.update(
+            {
+                "linz:history": "LINZ and its predecessors, Lands & Survey and Department of Survey and Land Information (DOSLI), commissioned aerial photography for the Crown between 1936 and 2008.\nOne of the predominant uses of the aerial photography at the time was the photogrammetric mapping of New Zealand, initially at 1inch to 1mile followed by the NZMS 260 and Topo50 map series at 1:50,000.\nThese photographs were scanned through the Crown Aerial Film Archive scanning project.",
+                "linz:lifecycle": "completed",
+                "quality:description": "Geographic coordinates provided with this aerial photographic survey were estimated from the associated survey chart and have low positional accuracy. They should be used for general referencing only.",
+            }
+        )
+
+        collection.add_extension(StacExtensions.quality.value)
+        collection.add_linz_provider(LinzProviders.LTTW.value)
+        collection.add_linz_provider(LinzProviders.LMPP.value)
+        collection.add_provider(Providers.NZAM.value)
+
+    def get_title(self, survey: str) -> str:
+        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
+        title: str = ""
+
+        if len(survey_names) == 0 or not survey_names[survey]["NAME"]:
+            raise Exception(f"No name found for survey {survey}")
+
+        title = survey_names[survey]["NAME"]
+        return title
 
     def add_spatial_extent(self, item: Item, asset_metadata: Dict[str, str]) -> None:
         wkt = asset_metadata.get("WKT", None)

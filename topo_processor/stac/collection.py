@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -9,12 +10,15 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
 import pystac
 import ulid
 from linz_logger import get_log
+from pystac.collection import Collection as PystacCollection
+from pystac.errors import STACValidationError
 from pystac.summaries import Summaries, Summarizer
 from pystac.validation.schema_uri_map import DefaultSchemaUriMap
 from shapely.ops import unary_union
 
+from topo_processor.metadata.data_type import DataType
 from topo_processor.stac.asset import Asset
-from topo_processor.util.configuration import get_topo_processor_version
+from topo_processor.stac.iter_errors_validator import IterErrorsValidator
 from topo_processor.util.time import get_min_max_interval
 from topo_processor.util.valid import Validity
 
@@ -32,6 +36,7 @@ FIELDS_JSON_URL = "https://raw.githubusercontent.com/linz/stac/master/fields/fie
 class Collection(Validity):
     id: str
     title: str
+    survey: str
     description: str
     license: str
     items: Dict[str, "Item"]
@@ -49,14 +54,14 @@ class Collection(Validity):
         # FIXME: Do we want to generate this id like this?
         self.id = str(ulid.ULID())
         self.title = title
+        self.description = ""
         self.items = {}
         self.schema = DefaultSchemaUriMap().get_object_schema_uri(pystac.STACObjectType.COLLECTION, pystac.get_stac_version())
         self.extra_fields = dict(
             {
-                "linz:security_classification": "unclassified",
-                "processing:software": get_topo_processor_version(),
                 # TODO: decision to be made on version ref comments [TDE-230] hardcode to '1' for now
                 "version": "1",
+                "linz:security_classification": "unclassified",
             }
         )
         self.linz_providers = []
@@ -83,6 +88,16 @@ class Collection(Validity):
     def add_linz_provider(self, linz_provider: LinzProvider) -> None:
         if linz_provider.to_dict() not in self.linz_providers:
             self.linz_providers.append(linz_provider.to_dict())
+
+    def update_description(self, stac_collection: pystac.Collection, data_type: DataType) -> None:
+        if data_type == DataType.IMAGERY_HISTORIC:
+            size = self.summaries.to_dict()["film:physical_size"]
+            if len(size) == 1:
+                size = size[0]
+            colour = self.extra_fields["linz:geospatial_type"]
+            stac_collection.description = (
+                self.description
+            ) = f"This aerial photographic survey was digitised from {colour} {size} negatives in the Crown collection of the Crown Aerial Film Archive."
 
     def get_temp_dir(self) -> str:
         global TEMP_DIR
@@ -168,12 +183,14 @@ class Collection(Validity):
     def generate_summaries(self, collection: pystac.Collection) -> None:
         summarizer = Summarizer(fields=FIELDS_JSON_URL)
         collection.summaries = summarizer.summarize(collection)
+        self.summaries = collection.summaries
 
     def create_stac(self) -> pystac.Collection:
         if self.linz_providers:
             self.extra_fields["linz:providers"] = self.linz_providers
         self.extra_fields["linz:geospatial_type"] = self.get_linz_geospatial_type()
         self.extra_fields["linz:asset_summaries"] = self.get_linz_asset_summaries()
+
         stac = pystac.Collection(
             id=self.id,
             description=self.description,
@@ -182,10 +199,28 @@ class Collection(Validity):
                 pystac.TemporalExtent(intervals=[self.get_temporal_extent()]),
             ),
             title=self.title,
-            stac_extensions=list(self.stac_extensions),
+            stac_extensions=list(sorted(self.stac_extensions)),
             href="./collection.json",
-            license=self.license,
             extra_fields=self.extra_fields,
+            license=self.license,
             providers=self.providers,
         )
+        get_log().info("Stac Collection Created", id=stac.id, title=stac.title)
         return stac
+
+    def validate_pystac_collection(self, pystac_collection: PystacCollection) -> None:
+
+        if isinstance(pystac.validation.RegisteredValidator.get_validator(), IterErrorsValidator):
+            with warnings.catch_warnings(record=True) as w:
+                pystac_collection.validate()
+                msg = ""
+                for warn in w:
+                    msg = msg + ", " + str(warn.message)
+                if w:
+                    raise Exception(f"Not valid STAC: {msg}")
+
+        else:
+            try:
+                pystac_collection.validate()
+            except STACValidationError as e:
+                raise Exception(f"Not valid STAC") from e
