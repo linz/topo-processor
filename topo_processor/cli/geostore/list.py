@@ -18,17 +18,17 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display debug logs",
 )
-def main(dataset_id: str, verbose: bool) -> None:
+def main(survey: str, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("list_datasets_start", dataset_id=dataset_id)
+    get_log().info("list_datasets_start", survey=survey)
 
     if not verbose:
         set_level(LogLevel.info)
 
     try:
         list_parameters = {}
-        if dataset_id:
-            list_parameters = {"title": dataset_id}
+        if survey:
+            list_parameters = {"title": survey}
         dataset_list = invoke_lambda("datasets", "GET", list_parameters)
 
         get_log().info("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
