@@ -129,20 +129,18 @@ The following source and target combinations can be used:
 | local  | local  |
 | local  |   s3   |
 
-**For the following Geostore commands (described with `(Geostore)`), you need to be authenticated into a Geostore AWS account, assuming the `nonprod-api-users` role. These commands have a `-p` or `-prod` flag. You won't be able to use the `-prod` flag if you authenticated in a `Geostore` `non-prod` account and vice versa. **
-
 ### `add` (Geostore)
 
 This command allows to add a survey to the [Geostore](https://github.com/linz/geostore) by using the [Geostore API](https://github.com/linz/geostore/blob/master/USAGE.md).
 
 **_Prerequisites:_** The survey has to be processed by the `upload` command first. The output files of the `upload` is what will be exported to the `Geostore`.
 
-| Argument                   |                     Description                     |
-| -------------------------- | :-------------------------------------------------: |
-| `-s` or `--source`         |       The `s3` path to the `survey` to export       |
-| `-r` or `--role`           |      The ARN role to access the source bucket       |
-| `-c` or `--commit` (FLAG)  | Use this flag to commit the creation of the dataset |
-| `-v` or `--verbose` (FLAG) |          Use this flag display debug logs           |
+| Argument              |                      Description                       |
+| --------------------- | :----------------------------------------------------: |
+| `-s`, `--source` TEXT |     The s3 path to the survey to export [required]     |
+| `-r`, `--role` TEXT   | The ARN role to access to the source bucket [required] |
+| `-c`, `--commit`      |  Use this flag to commit the creation of the dataset   |
+| `-v`, `--verbose`     |           Use verbose to display debug logs            |
 
 ```bash
 poetry run add -s "s3://bucket/survey-path/" -r "arn:aws:iam::123456789:role/read-role"
@@ -152,12 +150,12 @@ poetry run add -s "s3://bucket/survey-path/" -r "arn:aws:iam::123456789:role/rea
 
 This is to follow the current upload status to the `Geostore` for a particular `dataset` version. You may have to run it several times as the status gets updated.
 
-| Argument                   |                              Description                              |
-| -------------------------- | :-------------------------------------------------------------------: |
-| `-a` or `--execution-arn`  | The execution arn received from the Geostore after invoking an upload |
-| `-v` or `--verbose` (FLAG) |                   Use this flag display debug logs                    |
+| Argument                     |                                   Description                                    |
+| ---------------------------- | :------------------------------------------------------------------------------: |
+| `-a`, `--execution-arn` TEXT | The execution ARN received from the Geostore after invoking an upload [required] |
+| `-v`, `--verbose`            |                        Use verbose to display debug logs                         |
 
-**_NOTE:_** The command to run is given in the logs after calling sucessfully the `add` command:
+**_NOTE:_** The command to run is given in the logs after calling successfully the `add` command:
 
 ```json
 "info": "To check the export status, run the following command 'poetry run status -arn arn:aws:states:ap-southeast-2:632223577832:execution:ABCD'"
@@ -167,10 +165,10 @@ This is to follow the current upload status to the `Geostore` for a particular `
 
 It gives you the information for one or all the datasets created on the `Geostore`.
 
-| Argument                   |           Description            |
-| -------------------------- | :------------------------------: |
-| `-s` or `--survey`         | (OPTIONAL) The survey to filter  |
-| `-v` or `--verbose` (FLAG) | Use this flag display debug logs |
+| Argument              |            Description            |
+| --------------------- | :-------------------------------: |
+| `-s`, `--survey` TEXT |       The survey to filter        |
+| `-v`, `--verbose`     | Use verbose to display debug logs |
 
 ```bash
 poetry run list [-s ID123ABC]
@@ -180,11 +178,11 @@ poetry run list [-s ID123ABC]
 
 Delete a dataset into the `Geostore`. Only if the dataset does not contain any version. To delete a dataset which contains a version, contact the **Geostore** support.
 
-| Argument                   |               Description                |
-| -------------------------- | :--------------------------------------: |
-| `-d` or `--dataset-id`     |         The dataset id to delete         |
-| `-c` or `--commit` (FLAG)  | Use this flag to confirm the suppression |
-| `-v` or `--verbose` (FLAG) |     Use this flag display debug logs     |
+| Argument                  |                       Description                       |
+| ------------------------- | :-----------------------------------------------------: |
+| `-d`, `--dataset-id` TEXT |           The dataset id to delete [required]           |
+| `-c`, `--commit`          | Use this flag to commit the suppression of the dataset. |
+| `-v`, `--verbose`         |            Use verbose to display debug logs            |
 
 ```bash
 poetry run delete -d ID123ABC [--commit]
