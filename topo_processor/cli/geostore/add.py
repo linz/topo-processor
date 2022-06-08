@@ -81,32 +81,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             raise Exception("No survey ID found in collection.json")
         title = collection_json["title"]
 
-        if not commit:
-            source_parse = urlparse(source, allow_fragments=False)
-            bucket_name = source_parse.netloc
-            prefix = source_parse.path[1:].replace("collection.json", "")
-            get_log().debug("no_commit", action="list_objects", bucket=bucket_name, prefix=prefix)
-            file_list: List[str] = []
-            s3 = boto3.client(
-                "s3",
-                aws_access_key_id=credentials.access_key,
-                aws_secret_access_key=credentials.secret_key,
-                aws_session_token=credentials.token,
-            )
-            paginator = s3.get_paginator("list_objects_v2")
-            response_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
-            for response in response_iterator:
-                for contents_data in response["Contents"]:
-                    key = contents_data["Key"]
-                    if is_tiff(key):
-                        file_list.append(key)
-            get_log().info(
-                "The change won't be commit since the --commit flag has not been specified.",
-                sourceFiles=file_list,
-                surveyId=survey_id,
-                surveyTite=title,
-            )
-        else:
+        if commit:
             # Check if a dataset for this survey already exists
             list_parameters = {"title": survey_id}
             dataset_list = invoke_lambda("datasets", "GET", list_parameters)
@@ -149,6 +124,32 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                 duration=time_in_ms() - start_time,
                 info=f"To check the export status, run the following command 'poetry run status -a {execution_arn}'",
             )
+        else:
+            source_parse = urlparse(source, allow_fragments=False)
+            bucket_name = source_parse.netloc
+            prefix = source_parse.path[1:].replace("collection.json", "")
+            get_log().debug("no_commit", action="list_objects", bucket=bucket_name, prefix=prefix)
+            file_list: List[str] = []
+            s3 = boto3.client(
+                "s3",
+                aws_access_key_id=credentials.access_key,
+                aws_secret_access_key=credentials.secret_key,
+                aws_session_token=credentials.token,
+            )
+            paginator = s3.get_paginator("list_objects_v2")
+            response_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
+            for response in response_iterator:
+                for contents_data in response["Contents"]:
+                    key = contents_data["Key"]
+                    if is_tiff(key):
+                        file_list.append(key)
+            get_log().info(
+                "The change won't be commit since the --commit flag has not been specified.",
+                sourceFiles=file_list,
+                surveyId=survey_id,
+                surveyTite=title,
+            )
+
     except Exception as e:
         get_log().error("geostore_add_failed", err=e)
     finally:
