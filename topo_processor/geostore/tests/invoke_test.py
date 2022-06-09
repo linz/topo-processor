@@ -31,4 +31,4 @@ def test_is_response_ok() -> None:
             "id": "01FYTADW8MSCNR8D68EX7APMD3",
         },
     }
-    assert is_response_ok(response_ok) is True
+    assert is_response_ok(response_ok)
