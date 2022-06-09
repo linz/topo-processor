@@ -176,7 +176,7 @@ poetry run list [-s ID123ABC]
 
 ### `delete` (Geostore)
 
-Delete a dataset into the `Geostore`. Only if the dataset does not contain any version. To delete a dataset which contains a version, contact the **Geostore** support.
+Delete a dataset from the `Geostore`. Only if the dataset does not contain any version. To delete a dataset which contains a version, contact the **Geostore** support.
 
 | Argument                  |                       Description                       |
 | ------------------------- | :-----------------------------------------------------: |
