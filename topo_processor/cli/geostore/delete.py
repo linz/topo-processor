@@ -26,7 +26,8 @@ from topo_processor.util.time import time_in_ms
 )
 def main(dataset_id: str, commit: bool, verbose: str) -> None:
     start_time = time_in_ms()
-    get_log().info("delete_datasets_start", dataset_id=dataset_id)
+    logger = get_log()
+    logger.info("delete_datasets_start", dataset_id=dataset_id)
 
     if not verbose:
         set_level(LogLevel.info)
@@ -39,10 +40,10 @@ def main(dataset_id: str, commit: bool, verbose: str) -> None:
 
         response = invoke_lambda("datasets", operation, delete_parameters)
         if not commit:
-            get_log().info(
+            logger.info(
                 f"You are about to delete the following dataset: {response['body']}. Run the command again with the --commit flag to confirm."
             )
         else:
-            get_log().info("delete_dataset_success", deleted_id=dataset_id, duration=time_in_ms() - start_time)
+            logger.info("delete_dataset_success", deleted_id=dataset_id, duration=time_in_ms() - start_time)
     except Exception as e:
-        get_log().error("delete_dataset_failed", err=e)
+        logger.error("delete_dataset_failed", err=e)

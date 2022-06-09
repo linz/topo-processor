@@ -20,7 +20,8 @@ from topo_processor.util.time import time_in_ms
 )
 def main(execution_arn: str, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("check_export_status_start", arn=execution_arn)
+    logger = get_log()
+    logger.info("check_export_status_start", arn=execution_arn)
 
     if not verbose:
         set_level(LogLevel.info)
@@ -28,10 +29,10 @@ def main(execution_arn: str, verbose: bool) -> None:
     try:
         import_status = invoke_import_status(execution_arn)
 
-        get_log().debug(
+        logger.debug(
             "check_export_status_end",
             current_export_status=import_status,
             duration=time_in_ms() - start_time,
         )
     except Exception as e:
-        get_log().error("check_export_status_failed", err=e)
+        logger.error("check_export_status_failed", err=e)

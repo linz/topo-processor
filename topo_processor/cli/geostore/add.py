@@ -44,9 +44,9 @@ from topo_processor.util.time import time_in_ms
 )
 def main(source: str, role: str, commit: bool, verbose: bool) -> None:
     """Create or add a new version of an existing dataset to the Geostore for the source (survey) passed as argument."""
-
     start_time = time_in_ms()
-    get_log().info("geostore_add_started", source=source)
+    logger = get_log()
+    logger.info("geostore_add_started", source=source)
 
     if not verbose:
         set_level(LogLevel.info)
@@ -67,7 +67,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                 )
                 s3_download(os.path.join(source, "collection.json"), collection_local_path, credentials)
             except Exception as e:
-                get_log().error("geostore_export_failed", source=source, error=e)
+                logger.error("geostore_export_failed", source=source, error=e)
                 return
         else:
             raise Exception("The source has to be a survey in a S3 bucket.")
@@ -96,7 +96,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                     click.echo("A new version will be created.")
             else:
                 # Create a dataset
-                get_log().info("create_new_dataset", surveyId=survey_id, surveyTitle=title)
+                logger.info("create_new_dataset", surveyId=survey_id, surveyTitle=title)
                 create_dataset_parameters = {"title": survey_id, "description": title}
                 dataset_response_payload = invoke_lambda("datasets", "POST", create_dataset_parameters)
                 dataset_id = dataset_response_payload["body"]["id"]
@@ -115,7 +115,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             # Check import status
             import_status = invoke_import_status(execution_arn)
 
-            get_log().debug(
+            logger.debug(
                 "geostore_add_completed",
                 source=source,
                 datasetId=dataset_id,
@@ -128,7 +128,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             source_parse = urlparse(source, allow_fragments=False)
             bucket_name = source_parse.netloc
             prefix = source_parse.path[1:].replace("collection.json", "")
-            get_log().debug("no_commit", action="list_objects", bucket=bucket_name, prefix=prefix)
+            logger.debug("no_commit", action="list_objects", bucket=bucket_name, prefix=prefix)
             file_list: List[str] = []
             s3 = boto3.client(
                 "s3",
@@ -143,7 +143,7 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                     key = contents_data["Key"]
                     if is_tiff(key):
                         file_list.append(key)
-            get_log().info(
+            logger.info(
                 "The change won't be commit since the --commit flag has not been specified.",
                 sourceFiles=file_list,
                 surveyId=survey_id,
@@ -151,6 +151,6 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             )
 
     except Exception as e:
-        get_log().error("geostore_add_failed", err=e)
+        logger.error("geostore_add_failed", err=e)
     finally:
         shutil.rmtree(temp_folder)

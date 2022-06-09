@@ -20,7 +20,8 @@ from topo_processor.util.time import time_in_ms
 )
 def main(survey: str, verbose: bool) -> None:
     start_time = time_in_ms()
-    get_log().info("list_datasets_start", survey=survey)
+    logger = get_log()
+    logger.info("list_datasets_start", survey=survey)
 
     if not verbose:
         set_level(LogLevel.info)
@@ -31,6 +32,6 @@ def main(survey: str, verbose: bool) -> None:
             list_parameters = {"title": survey}
         dataset_list = invoke_lambda("datasets", "GET", list_parameters)
 
-        get_log().info("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
+        logger.info("list_datasets_end", dataset_list=dataset_list, duration=time_in_ms() - start_time)
     except Exception as e:
-        get_log().error("list_datasets_failed", err=e)
+        logger.error("list_datasets_failed", err=e)

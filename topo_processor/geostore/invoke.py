@@ -7,6 +7,7 @@ from linz_logger import get_log
 from topo_processor.util.aws_credentials import Credentials
 
 ROLE_ARN = "arn:aws:iam::715898075157:role/api-users"
+logger = get_log()
 
 
 def invoke_lambda(name: str, http_method: str, parameters: Dict[str, str]) -> Dict[str, Any]:
@@ -26,7 +27,7 @@ def invoke_lambda(name: str, http_method: str, parameters: Dict[str, str]) -> Di
         aws_session_token=credentials.token,
     )
     payload = build_lambda_payload(http_method, parameters)
-    get_log().debug("invoke_lambda_function", name=name, payload=payload)
+    logger.debug("invoke_lambda_function", name=name, payload=payload)
 
     raw_response = client_lambda.invoke(
         FunctionName=name,
@@ -39,7 +40,7 @@ def invoke_lambda(name: str, http_method: str, parameters: Dict[str, str]) -> Di
     if not is_response_ok(payload_response):
         raise Exception("invoke_lambda_function_error", payload_response)
 
-    get_log().debug("response_lambda_function", name=name, response=payload_response)
+    logger.debug("response_lambda_function", name=name, response=payload_response)
     return payload_response
 
 
