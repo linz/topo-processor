@@ -24,6 +24,7 @@ from topo_processor.util.time import time_in_ms
     help="Use collection to validate collections only.",
 )
 @click.option(
+    "-m",
     "--metadata",
     required=False,
     help="(OPTIONAL) The path of the metadata csv file to validate.",

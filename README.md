@@ -88,9 +88,9 @@ node ./build/infra/src/submit.js surveyId1 surveyId3 [...]
 node ./build/infra/src/submit.js s3://my-bucket/backup2/surveyId1/ s3://my-bucket/backup4/surveyId3/ [...]
 ```
 
-### Upload command
+### `upload`
 
-**_NOTE:_** In its developing phase for using the `LDS Cache`, the `upload` command will be restricted to a run per `survey` and only for the `Historical Imagery` layer.
+**_NOTE:_** The `upload` command is restricted to a run per `survey` and only for the `Historical Imagery` layer. To run multiple surveys, please refere to `AWS Batch` described above.
 
 | Argument                    |                                           Description                                           |
 | --------------------------- | :---------------------------------------------------------------------------------------------: |
@@ -129,7 +129,66 @@ The following source and target combinations can be used:
 | local  | local  |
 | local  |   s3   |
 
-### Validate
+### `add` (Geostore)
+
+This command allows to add a survey to the [Geostore](https://github.com/linz/geostore) by using the [Geostore API](https://github.com/linz/geostore/blob/master/USAGE.md).
+
+**_Prerequisites:_** The survey has to be processed by the `upload` command first. The output files of the `upload` is what will be exported to the `Geostore`.
+
+| Argument              |                      Description                       |
+| --------------------- | :----------------------------------------------------: |
+| `-s`, `--source` TEXT |     The s3 path to the survey to export [required]     |
+| `-r`, `--role` TEXT   | The ARN role to access to the source bucket [required] |
+| `-c`, `--commit`      |  Use this flag to commit the creation of the dataset   |
+| `-v`, `--verbose`     |           Use verbose to display debug logs            |
+
+```bash
+poetry run add -s "s3://bucket/survey-path/" -r "arn:aws:iam::123456789:role/read-role"
+```
+
+### `status` (Geostore)
+
+This is to follow the current upload status to the `Geostore` for a particular `dataset` version. You may have to run it several times as the status gets updated.
+
+| Argument                     |                                   Description                                    |
+| ---------------------------- | :------------------------------------------------------------------------------: |
+| `-a`, `--execution-arn` TEXT | The execution ARN received from the Geostore after invoking an upload [required] |
+| `-v`, `--verbose`            |                        Use verbose to display debug logs                         |
+
+**_NOTE:_** The command to run is given in the logs after calling successfully the `add` command:
+
+```json
+"info": "To check the export status, run the following command 'poetry run status -arn arn:aws:states:ap-southeast-2:632223577832:execution:ABCD'"
+```
+
+### `list` (Geostore)
+
+It gives you the information for one or all the datasets created on the `Geostore`.
+
+| Argument              |            Description            |
+| --------------------- | :-------------------------------: |
+| `-s`, `--survey` TEXT |       The survey to filter        |
+| `-v`, `--verbose`     | Use verbose to display debug logs |
+
+```bash
+poetry run list [-s ID123ABC]
+```
+
+### `delete` (Geostore)
+
+Delete a dataset from the `Geostore`. Only if the dataset does not contain any version. To delete a dataset which contains a version, contact the **Geostore** support.
+
+| Argument                  |                       Description                       |
+| ------------------------- | :-----------------------------------------------------: |
+| `-d`, `--dataset-id` TEXT |           The dataset id to delete [required]           |
+| `-c`, `--commit`          | Use this flag to commit the suppression of the dataset. |
+| `-v`, `--verbose`         |            Use verbose to display debug logs            |
+
+```bash
+poetry run delete -d ID123ABC [--commit]
+```
+
+### `validate`
 
 **_NOTE:_** This command is currently only implemented for `Historical Imagery`. Other layers will come later.
 
@@ -145,37 +204,37 @@ The following command have to be run in a virtual environment (poetry shell):
 
 ```shell
 # Run default:
-./validate
+poetry run validate
 ```
 
 ```shell
 # Run against a specific version (can be a s3 or local file):
-./validate --metadata s3://bucket/layer_id/metadata_file.csv
+poetry run validate --metadata s3://bucket/layer_id/metadata_file.csv
 ```
 
 ```shell
 # Run against the `Items` only:
-./validate --item
+poetry run validate --item
 ```
 
 ```shell
 # Run against the `Collections` only:
-./validate --collection
+poetry run validate --collection
 ```
 
 ```shell
 # For help:
-./validate --help
+poetry run validate --help
 ```
 
 ```shell
 # To see all logs in a tidy format, use pretty-json-log:
-./validate --verbose | pjl
+poetry run validate --verbose | pjl
 ```
 
 ```shell
 # To record the output in an external file:
-./validate | tee output.file
+poetry run validate | tee output.file
 ```
 
 ## AWS Deployment / CI / CD

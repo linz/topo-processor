@@ -1,26 +1,28 @@
 import json
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 from urllib.parse import urlparse
 
 import boto3
 from botocore import exceptions as botocore_exceptions
 from linz_logger import get_log
 
-from topo_processor.util.aws_credentials import Credentials, get_credentials
+from topo_processor.util.aws_credentials import Credentials, get_credentials_from_bucket
 from topo_processor.util.configuration import historical_imagery_bucket
 from topo_processor.util.file_extension import is_tiff
 from topo_processor.util.time import time_in_ms
 
 
-def s3_download(source_path: str, dest_path: str) -> None:
+def s3_download(source_path: str, dest_path: str, credentials: Union[Credentials, None] = None) -> None:
     start_time = time_in_ms()
     get_log().debug("s3_download started", objectPath=source_path, destinationPath=dest_path)
 
     url_o = urlparse(source_path)
     bucket_name = url_o.netloc
     object_name = url_o.path[1:]
-    credentials: Credentials = get_credentials(bucket_name)
+
+    if not credentials:
+        credentials = get_credentials_from_bucket(bucket_name)
 
     s3 = boto3.resource(
         "s3",
@@ -45,7 +47,7 @@ def s3_download(source_path: str, dest_path: str) -> None:
 
 def load_file_content(bucket_name: str, object_path: str) -> Dict[str, Any]:
     get_log().debug("bucket_name", bucket_name=bucket_name)
-    credentials: Credentials = get_credentials(bucket_name)
+    credentials: Credentials = get_credentials_from_bucket(bucket_name)
 
     s3 = boto3.resource(
         "s3",
@@ -76,7 +78,7 @@ def create_s3_manifest(manifest_source_path: str) -> None:
     url_o = urlparse(manifest_source_path)
     bucket_name = url_o.netloc
     manifest_path = url_o.path[1:]
-    credentials: Credentials = get_credentials(bucket_name)
+    credentials: Credentials = get_credentials_from_bucket(bucket_name)
 
     s3_client = boto3.client(
         "s3",
@@ -125,7 +127,7 @@ def create_s3_manifest(manifest_source_path: str) -> None:
 
 def _list_objects(bucket_name: str) -> List[Dict[str, str]]:
 
-    credentials: Credentials = get_credentials(bucket_name)
+    credentials: Credentials = get_credentials_from_bucket(bucket_name)
 
     s3_client = boto3.client(
         "s3",

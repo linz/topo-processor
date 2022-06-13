@@ -23,7 +23,7 @@ python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3"
-boto3-stubs = {version = "*", extras = ["sts"]}
+boto3-stubs = {version = "*", extras = ["lambda","sts"]}
 isort = "^5.10.1"
 pylint = "^2.13.9"
 pytest = "^7.1.2"
@@ -31,6 +31,15 @@ rope = "^1.0.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
+moto = "^3.1.4"
+mypy-boto3-lambda = "^1.24.0"
+
+[tool.poetry.scripts]
+add = 'topo_processor.cli.geostore.add:main'
+status = 'topo_processor.cli.geostore.status:main'
+list = 'topo_processor.cli.geostore.list:main'
+delete = 'topo_processor.cli.geostore.delete:main'
+validate = 'topo_processor.cli.validate:main'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

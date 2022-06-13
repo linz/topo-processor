@@ -33,7 +33,7 @@ from topo_processor.util.transfer_collection import transfer_collection
     help="The target directory path or bucket name of the upload",
 )
 @click.option(
-    "-cid",
+    "-c",
     "--correlationid",
     required=False,
     help="The correlation ID of the batch job",
