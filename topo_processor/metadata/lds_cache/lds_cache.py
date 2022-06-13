@@ -86,5 +86,4 @@ def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]
                     break
         if is_found:
             filtered_dict[metadata_key] = metadata_value
-    get_log().debug("filter_metadata_end", metadata=filtered_dict)
     return filtered_dict
