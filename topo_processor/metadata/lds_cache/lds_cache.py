@@ -72,7 +72,7 @@ def get_metadata(
 
 
 def filter_metadata(metadata_to_filter: Dict[str, Any], criteria: Dict[str, Any]) -> Dict[str, Any]:
-    get_log().debug("filter_metadata_start", criteria=criteria)
+    get_log().debug("filter_metadata", criteria=criteria)
     filtered_dict: Dict[str, Any] = {}
     is_found = False
 
