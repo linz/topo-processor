@@ -34,7 +34,7 @@ def _create_assets(source: str, data_type: str, metadata_path: str) -> None:
     for asset in assets:
         metadata_loader_rep.load_metadata(asset)
         if not asset.item:
-            raise Exception(f"No item set for asset. Process is stopped.")
+            raise Exception(f"No item set for asset {asset.source_path}. Process is stopped.")
 
 
 def _create_items(force: bool = False) -> None:

@@ -42,7 +42,7 @@ class DataTransformerImageryHistoric(DataTransformer):
                 create_cog(asset.source_path, output_path).run()
             except Exception as e:
                 raise Exception(
-                    f"COG creation failed for item {item.id} with source path {asset.source_path} and output path {output_path}. Process is stopped."
+                    f"COG creation failed for item {item.id} with source path {asset.source_path} and output path {output_path}."
                 ) from e
 
             get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
