@@ -26,8 +26,8 @@ class DataTransformerRepository:
                     transformer.transform_data(item)
                 except Exception as e:
                     item.add_error(str(e), transformer.name, e)
-                    get_log().warning(f"Data Transform Failed: {e}", transformers=transformer.name)
-                    return
+                    get_log().error("Data Transform Failed. Process is stopped.", transformers=transformer.name, error=e)
+                    raise Exception(e)
                 get_log().debug(
                     "Data Transformed",
                     duration=time_in_ms() - start_time,

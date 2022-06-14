@@ -38,7 +38,12 @@ class DataTransformerImageryHistoric(DataTransformer):
                 return
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
-            create_cog(asset.source_path, output_path).run()
+            try:
+                create_cog(asset.source_path, output_path).run()
+            except Exception as e:
+                raise Exception(
+                    f"COG creation failed for item {item.id} with source path {asset.source_path} and output path {output_path}."
+                ) from e
 
             get_log().debug("Created COG", output_path=output_path, duration=time_in_ms() - start_time)
 
