@@ -1,3 +1,20 @@
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/linz/topo-processor/compare/v0.7.0...v0.8.0) (2022-06-14)
+
+
+### Bug Fixes
+
+* commit VERSION and pyproject.toml files ([#979](https://github.com/linz/topo-processor/issues/979)) ([cf64255](https://github.com/linz/topo-processor/commit/cf64255))
+* TDE-387 fail on missing survey name ([#993](https://github.com/linz/topo-processor/issues/993)) ([98bc278](https://github.com/linz/topo-processor/commit/98bc278))
+* TDE-392 stop processing when an image transform fails ([#1013](https://github.com/linz/topo-processor/issues/1013)) ([3d571b7](https://github.com/linz/topo-processor/commit/3d571b7))
+
+
+### Features
+
+* invoke geostore lambda functions (TDE-331) ([#714](https://github.com/linz/topo-processor/issues/714)) ([52934d7](https://github.com/linz/topo-processor/commit/52934d7))
+
+
+
 <a name="0.7.0"></a>
 # [0.7.0](https://github.com/linz/topo-processor/compare/v0.6.0...v0.7.0) (2022-05-30)
 

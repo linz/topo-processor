@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "topo-processor"
-version = "0.3.0"
+version = "0.8.0"
 description = ""
 authors = ["Blayne Chard <bchard@linz.govt.nz>", "Paul Fouquet <pfouquet@linz.govt.nz>", "Megan Davidson <mdavidson@linz.govt.nz>"]
 
