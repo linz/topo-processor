@@ -39,7 +39,7 @@ class DataTransformerImageryHistoric(DataTransformer):
             output_path = os.path.join(item.collection.get_temp_dir(), f"{ulid.ULID()}.tiff")
 
             try:
-                test = create_cog(asset.source_path, output_path).run()
+                create_cog(asset.source_path, output_path).run()
             except Exception as e:
                 raise Exception(
                     f"COG creation failed for item {item.id} with source path {asset.source_path} and output path {output_path}. Process is stopped."
