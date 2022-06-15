@@ -1,3 +1,8 @@
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/linz/topo-processor/compare/v0.9.0...v0.10.0) (2022-06-15)
+
+
+
 <a name="0.9.0"></a>
 # [0.9.0](https://github.com/linz/topo-processor/compare/v0.8.0...v0.9.0) (2022-06-15)
 
