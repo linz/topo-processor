@@ -1,3 +1,14 @@
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/linz/topo-processor/compare/v0.8.0...v0.9.0) (2022-06-15)
+
+
+### Bug Fixes
+
+* TDE-389 improve alert messages to be more meaningful ([#1022](https://github.com/linz/topo-processor/issues/1022)) ([362c5f5](https://github.com/linz/topo-processor/commit/362c5f5))
+* TDE-396 use survey ID instead of survey name in temp directory path ([#1021](https://github.com/linz/topo-processor/issues/1021)) ([2c1adce](https://github.com/linz/topo-processor/commit/2c1adce))
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/linz/topo-processor/compare/v0.7.0...v0.8.0) (2022-06-14)
 
