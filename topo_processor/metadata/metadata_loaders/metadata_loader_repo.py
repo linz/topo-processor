@@ -27,8 +27,10 @@ class MetadataLoaderRepository:
                     if not asset or not asset.is_valid:
                         break
                 except Exception as e:
+                    # TODO refactor to report errors in a better way
                     if asset:
                         asset.add_error(str(e), loader.name, e)
+                    get_log().error(f"Metadata Load Failed: {e}", loader=loader.name)
                     raise Exception(f"Metadata Load Failed: {e}")
                 get_log().debug(
                     "Metadata Loaded",
