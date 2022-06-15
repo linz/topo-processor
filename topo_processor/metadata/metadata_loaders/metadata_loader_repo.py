@@ -30,8 +30,8 @@ class MetadataLoaderRepository:
                     # TODO refactor to report errors in a better way
                     if asset:
                         asset.add_error(str(e), loader.name, e)
-                    get_log().error("Metadata Load Failed:", error=e, loader=loader.name)
-                    raise Exception("Metadata Load Failed:") from e
+                    get_log().error("Metadata Load Failed", error=e, loader=loader.name)
+                    raise Exception("Metadata Load Failed") from e
                 get_log().debug(
                     "Metadata Loaded",
                     loader=loader.name,
