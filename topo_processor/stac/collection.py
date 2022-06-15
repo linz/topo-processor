@@ -104,7 +104,7 @@ class Collection(Validity):
         if not TEMP_DIR:
             TEMP_DIR = mkdtemp()
             get_log().debug("Temp directory created", path=TEMP_DIR)
-        temp_dir = os.path.join(TEMP_DIR, self.title)
+        temp_dir = os.path.join(TEMP_DIR, self.survey)
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
         return temp_dir
