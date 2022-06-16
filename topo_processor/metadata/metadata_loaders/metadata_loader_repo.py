@@ -31,7 +31,7 @@ class MetadataLoaderRepository:
                     if asset:
                         asset.add_error(str(e), loader.name, e)
                     get_log().error("Metadata Load Failed", error=e, loader=loader.name)
-                    raise Exception("Metadata Load Failed") from e
+                    raise Exception(f"Metadata Load Failed: {e}")
                 get_log().debug(
                     "Metadata Loaded",
                     loader=loader.name,
