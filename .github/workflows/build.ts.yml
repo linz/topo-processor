@@ -21,19 +21,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: (Prod) Create tag
-        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
-        run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION}
-          git push --tags
-
-      - name: (Prod) Create github release
-        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
-        run: npx conventional-github-releaser -p angular
-        env:
-          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
       - name: (NonProd) Configure AWS Credentials
         if: github.ref == 'refs/heads/master'
         uses: aws-actions/configure-aws-credentials@v1
@@ -61,3 +48,16 @@ jobs:
           npx cdk deploy --all -y --require-approval never
         env:
           AWS_ORG_ID: ${{secrets.AWS_ORG_ID}}
+
+      - name: (Prod) Create tag
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION}
+          git push --tags
+
+      - name: (Prod) Create github release
+        if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
+        run: npx conventional-github-releaser -p angular
+        env:
+          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
