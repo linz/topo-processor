@@ -17,7 +17,7 @@ def create_cog(input_path: str, output_path: str) -> Command:
             os.environ["AWS_SECRET_ACCESS_KEY"] = credentials.secret_key
             os.environ["AWS_SESSION_TOKEN"] = credentials.token
     else:
-        cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-latest"})
+        cmd = Command("gdal_translate", {"container": "osgeo/gdal", "tag": "ubuntu-small-3.5.0"})
         if is_s3:
             cmd.env(f"AWS_ACCESS_KEY_ID={credentials.access_key}")
             cmd.env(f"AWS_SECRET_ACCESS_KEY={credentials.secret_key}")
