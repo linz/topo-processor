@@ -135,13 +135,12 @@ This command allows to add a survey to the [Geostore](https://github.com/linz/ge
 
 **_Prerequisites:_** The survey has to be processed by the `upload` command first. The output files of the `upload` is what will be exported to the `Geostore`.
 
-| Argument                |                                Description                                |
-| ----------------------- | :-----------------------------------------------------------------------: |
-| `-s`, `--source` TEXT   |              The s3 path to the survey to export [required]               |
-| `-d`, `--datatype` TEXT | Datatype _Only `imagery.historic` is available at the moment._ [required] |
-| `-r`, `--role` TEXT     |          The ARN role to access to the source bucket [required]           |
-| `-c`, `--commit`        |            Use this flag to commit the creation of the dataset            |
-| `-v`, `--verbose`       |                     Use verbose to display debug logs                     |
+| Argument              |                      Description                       |
+| --------------------- | :----------------------------------------------------: |
+| `-s`, `--source` TEXT |     The s3 path to the survey to export [required]     |
+| `-r`, `--role` TEXT   | The ARN role to access to the source bucket [required] |
+| `-c`, `--commit`      |  Use this flag to commit the creation of the dataset   |
+| `-v`, `--verbose`     |           Use verbose to display debug logs            |
 
 ```bash
 poetry run add -s "s3://bucket/survey-path/" -r "arn:aws:iam::123456789:role/read-role"
@@ -166,11 +165,11 @@ This is to follow the current upload status to the `Geostore` for a particular `
 
 It gives you the information for one or all the datasets created on the `Geostore`.
 
-| Argument                |                                Description                                |
-| ----------------------- | :-----------------------------------------------------------------------: |
-| `-s`, `--survey` TEXT   |                           The survey to filter                            |
-| `-d`, `--datatype` TEXT | Datatype _Only `imagery.historic` is available at the moment._ [required] |
-| `-v`, `--verbose`       |                     Use verbose to display debug logs                     |
+| Argument                |                                         Description                                          |
+| ----------------------- | :------------------------------------------------------------------------------------------: |
+| `-s`, `--survey` TEXT   |                                     The survey to filter                                     |
+| `-d`, `--datatype` TEXT | The datatype of the upload. _Only `imagery.historic` is available at the moment._ [required] |
+| `-v`, `--verbose`       |                              Use verbose to display debug logs                               |
 
 ```bash
 poetry run list [-s ID123ABC]
