@@ -9,7 +9,7 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda
-from topo_processor.metadata.data_type import DataType
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.util.aws_credentials import Credentials
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
@@ -24,13 +24,6 @@ from topo_processor.util.time import time_in_ms
     "--source",
     required=True,
     help="The s3 path to the survey to export",
-)
-@click.option(
-    "-d",
-    "--datatype",
-    required=True,
-    type=click.Choice([data_type for data_type in DataType], case_sensitive=True),
-    help="The datatype of the upload",
 )
 @click.option(
     "-r",
@@ -50,20 +43,14 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display debug logs",
 )
-def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> None:
+def main(source: str, role: str, commit: bool, verbose: bool) -> None:
     """Create or add a new version of an existing dataset to the Geostore for the source (survey) passed as argument."""
     start_time = time_in_ms()
-    data_type = DataType(datatype)
     logger = get_log()
     logger.info("geostore_add_started", source=source)
 
     if not verbose:
         set_level(LogLevel.info)
-
-    if data_type == DataType.IMAGERY_HISTORIC:
-        title_prefix = "historical-aerial-imagery-survey-"
-    else:
-        raise Exception("Data type not yet implemented")
 
     try:
         source_role_arn = role
@@ -89,11 +76,16 @@ def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> 
         with open(collection_local_path) as collection_file:
             collection_json: Dict[str, Any] = json.load(collection_file)
 
-        # Get survey id for dataset id and collection.title for Description
+        # Get survey id for dataset id, collection.title for Description, and datatype prefix if applicable
         survey_id = collection_json["summaries"]["mission"][0]
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
+        if StacExtensions.historical_imagery.value in collection_json["stac_extensions"]:
+            title_prefix = "historical-aerial-imagery-survey-"
+        if not title_prefix:
+            raise Exception("No match for data type in collection.json stac_extensions.")
         title = collection_json["title"]
+
         prefixed_survey_id = title_prefix + survey_id
 
         if commit:
