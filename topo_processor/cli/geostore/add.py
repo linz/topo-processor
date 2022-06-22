@@ -9,6 +9,7 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda
+from topo_processor.metadata.data_type import DataType
 from topo_processor.util.aws_credentials import Credentials
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
@@ -23,6 +24,13 @@ from topo_processor.util.time import time_in_ms
     "--source",
     required=True,
     help="The s3 path to the survey to export",
+)
+@click.option(
+    "-d",
+    "--data-type",
+    required=True,
+    type=click.Choice([data_type for data_type in DataType], case_sensitive=True),
+    help="The datatype of the upload",
 )
 @click.option(
     "-r",
@@ -42,14 +50,20 @@ from topo_processor.util.time import time_in_ms
     is_flag=True,
     help="Use verbose to display debug logs",
 )
-def main(source: str, role: str, commit: bool, verbose: bool) -> None:
+def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> None:
     """Create or add a new version of an existing dataset to the Geostore for the source (survey) passed as argument."""
     start_time = time_in_ms()
     logger = get_log()
     logger.info("geostore_add_started", source=source)
+    data_type = DataType(datatype)
 
     if not verbose:
         set_level(LogLevel.info)
+
+    if data_type == DataType.IMAGERY_HISTORIC:
+        title_prefix = "historical-aerial-imagery-survey-"
+    else:
+        raise Exception("Data type not yet implemented")
 
     try:
         source_role_arn = role
@@ -80,15 +94,16 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
         title = collection_json["title"]
+        prefixed_survey_id = title_prefix+survey_id
 
         if commit:
             # Check if a dataset for this survey already exists
-            list_parameters = {"title": survey_id}
+            list_parameters = {"title": prefixed_survey_id}
             dataset_list = invoke_lambda("datasets", "GET", list_parameters)
-            if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == survey_id:
+            if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == prefixed_survey_id:
                 # A dataset already exists
                 if click.confirm(
-                    f"A dataset for the survey {survey_id} already exist. A new version will be created. Do you want to continue?",
+                    f"A dataset for the survey {prefixed_survey_id} already exist. A new version will be created. Do you want to continue?",
                     abort=True,
                 ):
                     # Create a new version
@@ -96,8 +111,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                     click.echo("A new version will be created.")
             else:
                 # Create a dataset
-                logger.info("create_new_dataset", surveyId=survey_id, surveyTitle=title)
-                create_dataset_parameters = {"title": survey_id, "description": title}
+                logger.info("create_new_dataset", surveyId=prefixed_survey_id, surveyTitle=title)
+                create_dataset_parameters = {"title": prefixed_survey_id, "description": title}
                 dataset_response_payload = invoke_lambda("datasets", "POST", create_dataset_parameters)
                 dataset_id = dataset_response_payload["body"]["id"]
                 if not dataset_id:
@@ -146,8 +161,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             logger.info(
                 "The change won't be commit since the --commit flag has not been specified.",
                 sourceFiles=file_list,
-                surveyId=survey_id,
-                surveyTite=title,
+                surveyId=prefixed_survey_id,
+                surveyTitle=title,
             )
 
     except Exception as e:
