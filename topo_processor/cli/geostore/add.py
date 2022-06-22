@@ -76,13 +76,13 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
         with open(collection_local_path) as collection_file:
             collection_json: Dict[str, Any] = json.load(collection_file)
 
-        # Get survey id for dataset id, collection.title for Description, and datatype prefix if applicable
+        # Get survey id for dataset id, collection.title for Description, and datatype prefix
         survey_id = collection_json["summaries"]["mission"][0]
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
         if StacExtensions.historical_imagery.value in collection_json["stac_extensions"]:
             title_prefix = "historical-aerial-imagery-survey-"
-        if not title_prefix:
+        else:
             raise Exception("No match for data type in collection.json stac_extensions.")
         title = collection_json["title"]
 
