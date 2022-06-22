@@ -27,7 +27,7 @@ from topo_processor.util.time import time_in_ms
 )
 @click.option(
     "-d",
-    "--data-type",
+    "--datatype",
     required=True,
     type=click.Choice([data_type for data_type in DataType], case_sensitive=True),
     help="The datatype of the upload",
@@ -53,9 +53,9 @@ from topo_processor.util.time import time_in_ms
 def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> None:
     """Create or add a new version of an existing dataset to the Geostore for the source (survey) passed as argument."""
     start_time = time_in_ms()
+    data_type = DataType(datatype)
     logger = get_log()
     logger.info("geostore_add_started", source=source)
-    data_type = DataType(datatype)
 
     if not verbose:
         set_level(LogLevel.info)
@@ -94,7 +94,7 @@ def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> 
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
         title = collection_json["title"]
-        prefixed_survey_id = title_prefix+survey_id
+        prefixed_survey_id = title_prefix + survey_id
 
         if commit:
             # Check if a dataset for this survey already exists
@@ -103,7 +103,7 @@ def main(source: str, datatype: str, role: str, commit: bool, verbose: bool) -> 
             if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == prefixed_survey_id:
                 # A dataset already exists
                 if click.confirm(
-                    f"A dataset for the survey {prefixed_survey_id} already exist. A new version will be created. Do you want to continue?",
+                    f"A dataset for the survey {prefixed_survey_id} already exists. A new version will be created. Do you want to continue?",
                     abort=True,
                 ):
                     # Create a new version
