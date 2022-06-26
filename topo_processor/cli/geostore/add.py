@@ -9,6 +9,7 @@ import click
 from linz_logger import LogLevel, get_log, set_level
 
 from topo_processor.geostore.invoke import invoke_import_status, invoke_lambda
+from topo_processor.stac.stac_extensions import StacExtensions
 from topo_processor.util.aws_credentials import Credentials
 from topo_processor.util.aws_files import s3_download
 from topo_processor.util.configuration import temp_folder
@@ -75,20 +76,26 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
         with open(collection_local_path) as collection_file:
             collection_json: Dict[str, Any] = json.load(collection_file)
 
-        # Get survey id for dataset id and collection.title for Description
+        # Get survey id for dataset id, collection.title for Description, and datatype prefix
         survey_id = collection_json["summaries"]["mission"][0]
         if not survey_id:
             raise Exception("No survey ID found in collection.json")
+        if StacExtensions.historical_imagery.value in collection_json["stac_extensions"]:
+            title_prefix = "historical-aerial-imagery-survey-"
+        else:
+            raise Exception("No match for data type in collection.json stac_extensions.")
         title = collection_json["title"]
+
+        prefixed_survey_id = title_prefix + survey_id
 
         if commit:
             # Check if a dataset for this survey already exists
-            list_parameters = {"title": survey_id}
+            list_parameters = {"title": prefixed_survey_id}
             dataset_list = invoke_lambda("datasets", "GET", list_parameters)
-            if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == survey_id:
+            if len(dataset_list["body"]) == 1 and dataset_list["body"][0]["title"] == prefixed_survey_id:
                 # A dataset already exists
                 if click.confirm(
-                    f"A dataset for the survey {survey_id} already exist. A new version will be created. Do you want to continue?",
+                    f"A dataset for the survey {prefixed_survey_id} already exists. A new version will be created. Do you want to continue?",
                     abort=True,
                 ):
                     # Create a new version
@@ -96,8 +103,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
                     click.echo("A new version will be created.")
             else:
                 # Create a dataset
-                logger.info("create_new_dataset", surveyId=survey_id, surveyTitle=title)
-                create_dataset_parameters = {"title": survey_id, "description": title}
+                logger.info("create_new_dataset", surveyId=prefixed_survey_id, surveyTitle=title)
+                create_dataset_parameters = {"title": prefixed_survey_id, "description": title}
                 dataset_response_payload = invoke_lambda("datasets", "POST", create_dataset_parameters)
                 dataset_id = dataset_response_payload["body"]["id"]
                 if not dataset_id:
@@ -146,8 +153,8 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             logger.info(
                 "The change won't be commit since the --commit flag has not been specified.",
                 sourceFiles=file_list,
-                surveyId=survey_id,
-                surveyTite=title,
+                surveyId=prefixed_survey_id,
+                surveyTitle=title,
             )
 
     except Exception as e:
