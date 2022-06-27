@@ -7,7 +7,7 @@ from topo_processor.util.time import time_in_ms
 
 @click.command()
 @click.option(
-    "-s",
+    "-t",
     "--title",
     required=False,
     help="The Geostore title of the survey to filter",
