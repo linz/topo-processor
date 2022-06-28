@@ -165,11 +165,10 @@ This is to follow the current upload status to the `Geostore` for a particular `
 
 It gives you the information for one or all the datasets created on the `Geostore`.
 
-| Argument                |                                         Description                                          |
-| ----------------------- | :------------------------------------------------------------------------------------------: |
-| `-s`, `--survey` TEXT   |                                     The survey to filter                                     |
-| `-d`, `--datatype` TEXT | The datatype of the upload. _Only `imagery.historic` is available at the moment._ [required] |
-| `-v`, `--verbose`       |                              Use verbose to display debug logs                               |
+| Argument             |                                      Description                                      |
+| -------------------- | :-----------------------------------------------------------------------------------: |
+| `-t`, `--title` TEXT | The Geostore title of the survey to filter e.g. historical-aerial-imagery-survey-2660 |
+| `-v`, `--verbose`    |                           Use verbose to display debug logs                           |
 
 ```bash
 poetry run list [-s ID123ABC]

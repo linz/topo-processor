@@ -122,14 +122,18 @@ def main(source: str, role: str, commit: bool, verbose: bool) -> None:
             # Check import status
             import_status = invoke_import_status(execution_arn)
 
+            logger.info(
+                "geostore_add_invoked",
+                info=f"To check the import status, run the following command 'poetry run status -a {execution_arn}'",
+            )
+
             logger.debug(
-                "geostore_add_completed",
+                "geostore_add_details",
                 source=source,
                 datasetId=dataset_id,
                 executionArn=execution_arn,
                 currentImportStatus=import_status,
                 duration=time_in_ms() - start_time,
-                info=f"To check the export status, run the following command 'poetry run status -a {execution_arn}'",
             )
         else:
             source_parse = urlparse(source, allow_fragments=False)
