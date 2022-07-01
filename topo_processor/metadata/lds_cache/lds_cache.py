@@ -34,7 +34,7 @@ def get_latest_item(layer: str) -> pystac.Item:
 def get_metadata(
     data_type: str, criteria: Optional[Dict[str, str]] = None, metadata_path: str = "", save_filtered: bool = False
 ) -> Dict[str, Any]:
-    """Return a dictionnary containing the metadata"""
+    """Return a dictionary containing the metadata"""
     layer_id = get_layer_id(data_type)
 
     if not metadata_path:
