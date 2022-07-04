@@ -40,10 +40,11 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     return metadata
 
 
-def read_gpkg(metadata_file_path: str, key: str, alternative_key: str = "", columns: List[str] = []) -> Dict[str, Any]:
+def read_geopackage(metadata_file_path: str, key: Dict[str, str], alternative_key: str = "", columns: List[str] = []) -> Dict[str, Any]:
 
     #metadata_path = os.path.join(os.getcwd(), "test_data", "51002_338399.gpkg")
     metadata: Dict[str, Any] = {}
+    print(key)
 
     gpkg_path = os.path.join(os.getcwd(), metadata_file_path)
     if not os.path.isfile(gpkg_path):
@@ -58,23 +59,20 @@ def read_gpkg(metadata_file_path: str, key: str, alternative_key: str = "", colu
 
     if columns:
         #do stuff for survey footprint file
+        #gpkg_cursor.execute("SELECT * from 'historic_aerial_photos_survey_footprints_crown_1936_2005' LIMIT 100;")
         print("survey footprint")
+
     else:
         print("photo footprint")
-        gpkg_cursor.execute(f"SELECT * from 'nz_aerial_photo_footprints_mainland_nz_1936_2005_polygons' WHERE RAW_FILENAME = {key};")
+        gpkg_cursor.execute(f"SELECT * from 'nz_aerial_photo_footprints_mainland_nz_1936_2005_polygons' WHERE RAW_FILENAME = :raw_filename;", key)
         filtered_row = gpkg_cursor.fetchall()
-        if len(filtered_row) > 1:
-            raise Exception(f'Duplicate "{key}" found in "{metadata_file_path}"')
 
         column_names = [description[0] for description in gpkg_cursor.description]
+        if len(filtered_row) > 1:
+            raise Exception(f'Duplicate "{key}" found in "{metadata_file_path}"')
         metadata = dict(zip(column_names, filtered_row[0]))
+        #print(metadata)
 
-
-    #gpkg_cursor.execute("SELECT * from 'historic_aerial_photos_survey_footprints_crown_1936_2005' LIMIT 100;")
-
-
-
-
-
+    gpkg_connection.close
 
     return metadata

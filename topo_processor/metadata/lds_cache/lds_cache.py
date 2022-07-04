@@ -4,10 +4,11 @@ from typing import Any, Dict, Optional
 import pystac
 from linz_logger import get_log
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv
+from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_geopackage
 from topo_processor.metadata.data_type import DataType, get_layer_id
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
+from topo_processor.util.file_extension import is_csv, is_geopackage
 from topo_processor.util.gzip import decompress_file
 
 metadata_store: Dict[str, Dict[str, Any]] = {}
@@ -57,9 +58,15 @@ def get_metadata(
 
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
-            metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
+            if is_geopackage(metadata_path):
+                metadata_store[layer_id] = read_geopackage(metadata_path, criteria, "sufi")
+            elif is_csv(metadata_path):
+                metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
         elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
-            metadata_store[layer_id] = read_csv(metadata_path, "SURVEY", columns=["NAME"])
+            if is_geopackage(metadata_path):
+                metadata_store[layer_id] = read_geopackage(metadata_path, "SURVEY", columns=["NAME"])
+            elif is_csv(metadata_path):
+                metadata_store[layer_id] = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 
     if criteria:
         filtered_metadata = filter_metadata(metadata_store[layer_id], criteria)

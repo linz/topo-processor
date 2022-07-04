@@ -1,18 +1,29 @@
 import csv
 import os
 import tempfile
+from typing import Dict
 
 import pytest
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv
+from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_geopackage
 
 
 def test_read_csv() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
     metadata = read_csv(metadata_path, "raw_filename", "sufi")
+    print(metadata)
 
     assert len(metadata) == 5
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
+
+def test_read_geopackage() -> None:
+    metadata_key: Dict[str, str] = {"raw_filename": "CROWN_639_076"}
+    metadata_path = os.path.join(os.getcwd(), "test_data", "51002_338399.gpkg")
+    metadata = read_geopackage(metadata_path, metadata_key, "sufi")
+    print(metadata)
+
+    # assert len(metadata) == 5
+    # assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
 
 def test_error_on_wrong_file_name() -> None:
