@@ -37,13 +37,12 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
             else:
                 get_log().debug("read_csv_key_not_found", key=key, alternative_key=alternative_key)
 
-    #print(metadata)
     return metadata
 
 
 def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], columns: List[str] = []) -> Dict[str, Any]:
 
-    #metadata_path = os.path.join(os.getcwd(), "test_data", "51002_338399.gpkg")
+
     metadata: Dict[str, Any] = {}
     filtered_row: Dict[str, str] = {}
 
@@ -60,20 +59,34 @@ def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], columns: 
 
     filtered_row = gpkg_cursor.fetchall()
 
+    column_names = [description[0] for description in gpkg_cursor.description]
+    if len(filtered_row) > 1:
+        raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
+    filtered_column_names = dict(zip(column_names, [str(x) for x in filtered_row[0]]))
+    metadata[criteria["raw_filename"]] = filtered_column_names
+
+    # TO-DO do not hardcode this
+
+    # TO-DO fix up columns
+
+    # TO-DO check returning survey results
+
     if columns:
+        for col in columns:
+            print("do stuff")
         #do stuff for survey footprint file
         #gpkg_cursor.execute("SELECT * from 'historic_aerial_photos_survey_footprints_crown_1936_2005' LIMIT 100;")
         print("survey footprint")
 
     else:
         print("photo footprint")
-        gpkg_cursor.execute(sql_command, criteria)
-        filtered_row = gpkg_cursor.fetchall()
+        # gpkg_cursor.execute(sql_command, criteria)
+        # filtered_row = gpkg_cursor.fetchall()
 
-        column_names = [description[0] for description in gpkg_cursor.description]
-        if len(filtered_row) > 1:
-            raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
-        metadata = dict(zip(column_names, [str(x) for x in filtered_row[0]]))
+        # column_names = [description[0] for description in gpkg_cursor.description]
+        # if len(filtered_row) > 1:
+        #     raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
+        # metadata = dict(zip(column_names, [str(x) for x in filtered_row[0]]))
 
     gpkg_connection.close
 
