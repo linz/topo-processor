@@ -24,6 +24,22 @@ def test_filter_metadata() -> None:
 
     assert metadata_filtered == result
 
+def test_filter_metadata_asset() -> None:
+    metadata = {
+        "file_a": {"survey": "survey_1", "camera": "camera_a", "raw_filename": "file_a"},
+        "file_b": {"survey": "survey_3", "camera": "camera_b", "raw_filename": "file_b"},
+        "file_c": {"survey": "survey_1", "camera": "camera_b", "raw_filename": "file_c"},
+    }
+
+    criteria = {"raw_filename": "file_a"}
+
+    metadata_filtered = {
+        "file_a": {"survey": "survey_1", "camera": "camera_a", "raw_filename": "file_a"},
+    }
+
+    result = filter_metadata(metadata, criteria)
+
+    assert metadata_filtered == result
 
 def test_get_metadata() -> None:
     metadata = {

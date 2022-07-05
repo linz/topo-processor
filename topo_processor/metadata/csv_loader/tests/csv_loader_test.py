@@ -17,13 +17,13 @@ def test_read_csv() -> None:
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
 def test_read_geopackage() -> None:
-    metadata_key: Dict[str, str] = {"raw_filename": "CROWN_639_076"}
-    metadata_path = os.path.join(os.getcwd(), "test_data", "51002_338399.gpkg")
-    metadata = read_geopackage(metadata_path, metadata_key, "sufi")
+    metadata_key: Dict[str, str] = {"raw_filename": "CROWN_1082_044"}
+    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg")
+    metadata = read_geopackage(metadata_path, metadata_key)
     print(metadata)
 
-    # assert len(metadata) == 5
-    # assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
+    assert len(metadata) == 5
+    assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
 
 def test_error_on_wrong_file_name() -> None:
@@ -104,6 +104,7 @@ def test_error_on_duplicate_file() -> None:
 def test_read_csv_column_filter() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
+    print(metadata)
 
     assert len(metadata) == 4
     assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]

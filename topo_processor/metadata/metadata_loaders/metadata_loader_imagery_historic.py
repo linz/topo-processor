@@ -123,7 +123,9 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
         collection.add_provider(Providers.NZAM.value)
 
     def get_title(self, survey: str) -> str:
-        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC)
+
+        criteria = {"survey": survey}
+        survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, criteria)
         title: str = ""
 
         if len(survey_names) == 0:
