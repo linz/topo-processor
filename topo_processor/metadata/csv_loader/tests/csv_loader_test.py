@@ -5,7 +5,7 @@ from typing import Dict
 
 import pytest
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_geopackage
+from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_gpkg
 
 
 def test_read_csv() -> None:
@@ -15,12 +15,12 @@ def test_read_csv() -> None:
     assert len(metadata) == 5
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
-def test_read_geopackage() -> None:
+def test_read_gpkg() -> None:
 #    metadata_criteria: Dict[str, str] = {"raw_filename": "CROWN_1082_044"}
     metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg")
 #    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_1259.gpkg")
-    metadata = read_geopackage(metadata_path, metadata_criteria, "raw_filename")
+    metadata = read_gpkg(metadata_path, metadata_criteria, "raw_filename")
     print(metadata)
 
     assert len(metadata) == 1
@@ -114,7 +114,7 @@ def test_read_csv_column_filter() -> None:
 def test_read_csv_column_filter_gpkg() -> None:
     metadata_criteria: Dict[str, str] = {"SURVEY": "SURVEY_1"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")
-    metadata = read_geopackage(metadata_path, metadata_criteria, "SURVEY", columns=["NAME"])
+    metadata = read_gpkg(metadata_path, metadata_criteria, "SURVEY", columns=["NAME"])
     print(metadata)
 
     assert len(metadata) == 1

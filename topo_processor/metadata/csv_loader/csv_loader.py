@@ -40,7 +40,7 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     return metadata
 
 
-def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], key:str, columns: List[str] = []) -> Dict[str, Any]:
+def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key:str, columns: List[str] = []) -> Dict[str, Any]:
 
     metadata: Dict[str, Any] = {}
     selected_row: Dict[str, str] = {}

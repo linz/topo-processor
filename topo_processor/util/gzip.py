@@ -10,12 +10,12 @@ def is_gzip_file(file_path: str) -> bool:
         return file.read(2) == b"\x1f\x8b"
 
 
-def decompress_file(file_path: str) -> None:
+def decompress_file_csv(file_path: str) -> None:
     input: Optional[gzip.GzipFile] = None
 
     try:
         input = gzip.GzipFile(file_path, "rb")
-        s = input.read()
+        s = input.read().decode("utf-8-sig")
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -24,7 +24,7 @@ def decompress_file(file_path: str) -> None:
         if input:
             input.close()
 
-    output = open(file_path, "wb")
+    output = open(file_path, "w")
     output.write(s)
     output.close()
 
@@ -35,8 +35,7 @@ def decompress_file_gpkg(file_path: str) -> None:
     try:
         input = gzip.GzipFile(file_path, "rb")
         print(file_path)
-        #s = input.read().decode("utf-8-sig")
-        s = input.read().decode()
+        s = input.read()
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -44,6 +43,6 @@ def decompress_file_gpkg(file_path: str) -> None:
         if input:
             input.close()
 
-    output = open(file_path, "w")
+    output = open(file_path, "wb")
     output.write(s)
     output.close()

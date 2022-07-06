@@ -4,12 +4,12 @@ from typing import Any, Dict, Optional
 import pystac
 from linz_logger import get_log
 
-from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_geopackage
+from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_gpkg
 from topo_processor.metadata.data_type import DataType, get_layer_id
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 from topo_processor.util.file_extension import is_csv, is_geopackage
-from topo_processor.util.gzip import decompress_file
+from topo_processor.util.gzip import decompress_file_csv, decompress_file_gpkg
 
 metadata_store: Dict[str, Dict[str, Any]] = {}
 """Stores the metadata by layer id"""
@@ -52,20 +52,22 @@ def get_metadata(
 
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
-                    print(metadata_path)
-                    decompress_file(metadata_path)
+                    if is_csv(metadata_path):
+                        decompress_file_csv(metadata_path)
+                    if is_geopackage(metadata_path):
+                        decompress_file_gpkg(metadata_path)
             else:
                 raise Exception(f"{metadata_path} not found")
 
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
             if is_geopackage(metadata_path):
-                metadata_store[layer_id] = read_geopackage(metadata_path, criteria, "raw_filename")
+                metadata_store[layer_id] = read_gpkg(metadata_path, criteria, "raw_filename")
             elif is_csv(metadata_path):
                 metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
         elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
             if is_geopackage(metadata_path):
-                metadata_store[layer_id] = read_geopackage(metadata_path, criteria, "SURVEY", columns=["NAME"])
+                metadata_store[layer_id] = read_gpkg(metadata_path, criteria, "SURVEY", columns=["NAME"])
             elif is_csv(metadata_path):
                 metadata_store[layer_id] = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 
