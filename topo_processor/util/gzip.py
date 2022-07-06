@@ -15,7 +15,28 @@ def decompress_file(file_path: str) -> None:
 
     try:
         input = gzip.GzipFile(file_path, "rb")
-        s = input.read().decode("utf-8-sig")
+        s = input.read()
+    except gzip.BadGzipFile as e:
+        get_log().error("File decompression failed", file=file_path, error=e)
+        raise e
+    finally:
+
+        if input:
+            input.close()
+
+    output = open(file_path, "wb")
+    output.write(s)
+    output.close()
+
+
+def decompress_file_gpkg(file_path: str) -> None:
+    input: Optional[gzip.GzipFile] = None
+
+    try:
+        input = gzip.GzipFile(file_path, "rb")
+        print(file_path)
+        #s = input.read().decode("utf-8-sig")
+        s = input.read().decode()
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e

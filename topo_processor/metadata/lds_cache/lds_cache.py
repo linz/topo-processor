@@ -52,6 +52,7 @@ def get_metadata(
 
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
+                    print(metadata_path)
                     decompress_file(metadata_path)
             else:
                 raise Exception(f"{metadata_path} not found")
