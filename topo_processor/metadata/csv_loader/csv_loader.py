@@ -40,11 +40,11 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     return metadata
 
 
-def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], columns: List[str] = []) -> Dict[str, Any]:
-
+def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], key:str, columns: List[str] = []) -> Dict[str, Any]:
 
     metadata: Dict[str, Any] = {}
-    filtered_row: Dict[str, str] = {}
+    selected_row: Dict[str, str] = {}
+    new_row: Dict[str, str] = {}
 
     gpkg_path = os.path.join(os.getcwd(), metadata_file_path)
     if not os.path.isfile(gpkg_path):
@@ -54,39 +54,24 @@ def read_geopackage(metadata_file_path: str, criteria: Dict[str, str], columns: 
     gpkg_cursor = gpkg_connection.cursor()
     gpkg_cursor.execute("SELECT table_name FROM 'gpkg_contents'")
     table_name = gpkg_cursor.fetchone()[0]
-    sql_command = "SELECT * FROM " + table_name + " WHERE " + list(criteria)[0] + " = :" + list(criteria)[0] + ";"
+    sql_command = "SELECT * FROM " + table_name + " WHERE " + key + " = :" + key + ";"
     gpkg_cursor.execute(sql_command, criteria)
 
-    filtered_row = gpkg_cursor.fetchall()
+    selected_row = gpkg_cursor.fetchall()
 
     column_names = [description[0] for description in gpkg_cursor.description]
-    if len(filtered_row) > 1:
+    if len(selected_row) > 1:
         raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
-    filtered_column_names = dict(zip(column_names, [str(x) for x in filtered_row[0]]))
-    metadata[criteria["raw_filename"]] = filtered_column_names
 
-    # TO-DO do not hardcode this
-
-    # TO-DO fix up columns
-
-    # TO-DO check returning survey results
+    metadata_col_names = dict(zip(column_names, [str(x) for x in selected_row[0]]))
 
     if columns:
         for col in columns:
-            print("do stuff")
-        #do stuff for survey footprint file
-        #gpkg_cursor.execute("SELECT * from 'historic_aerial_photos_survey_footprints_crown_1936_2005' LIMIT 100;")
-        print("survey footprint")
+            new_row[col] = metadata_col_names[col]
+            metadata[criteria[key]] = new_row
 
     else:
-        print("photo footprint")
-        # gpkg_cursor.execute(sql_command, criteria)
-        # filtered_row = gpkg_cursor.fetchall()
-
-        # column_names = [description[0] for description in gpkg_cursor.description]
-        # if len(filtered_row) > 1:
-        #     raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
-        # metadata = dict(zip(column_names, [str(x) for x in filtered_row[0]]))
+        metadata[criteria[key]] = metadata_col_names
 
     gpkg_connection.close
 

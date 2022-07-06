@@ -11,19 +11,20 @@ from topo_processor.metadata.csv_loader.csv_loader import read_csv, read_geopack
 def test_read_csv() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.csv")
     metadata = read_csv(metadata_path, "raw_filename", "sufi")
-    print(metadata)
 
     assert len(metadata) == 5
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
 def test_read_geopackage() -> None:
-    metadata_key: Dict[str, str] = {"raw_filename": "CROWN_1082_044"}
+#    metadata_criteria: Dict[str, str] = {"raw_filename": "CROWN_1082_044"}
+    metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg")
-    metadata = read_geopackage(metadata_path, metadata_key)
+#    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_1259.gpkg")
+    metadata = read_geopackage(metadata_path, metadata_criteria, "raw_filename")
     print(metadata)
 
-    assert len(metadata) == 5
-    assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
+    assert len(metadata) == 1
+    assert list(metadata.keys()) == ["CONTROL"]
 
 
 def test_error_on_wrong_file_name() -> None:
@@ -104,8 +105,18 @@ def test_error_on_duplicate_file() -> None:
 def test_read_csv_column_filter() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
-    print(metadata)
+    #print(metadata)
 
     assert len(metadata) == 4
     assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]
     assert list(metadata.values()) == [{"NAME": "TE KUITI 1"}, {"NAME": "AUCKLAND 1"}, {"NAME": "WELLINGTON 2"}, {"NAME": ""}]
+
+def test_read_csv_column_filter_gpkg() -> None:
+    metadata_criteria: Dict[str, str] = {"SURVEY": "SURVEY_1"}
+    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")
+    metadata = read_geopackage(metadata_path, metadata_criteria, "SURVEY", columns=["NAME"])
+    print(metadata)
+
+    assert len(metadata) == 1
+    assert list(metadata.keys()) == ["SURVEY_1"]
+    assert list(metadata.values()) == [{"NAME": "TE KUITI 1"}]
