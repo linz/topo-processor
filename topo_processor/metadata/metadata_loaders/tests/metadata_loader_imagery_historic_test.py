@@ -32,7 +32,7 @@ def test_item_not_found_in_csv() -> None:
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     metadata_loader_imagery_historic.load_metadata(asset)
     error_msg = {
-        "msg": "Asset not found in CSV file",
+        "msg": "Asset not found in metadata file",
         "level": "error",
         "cause": "metadata.loader.imagery.historic",
         "error": None,

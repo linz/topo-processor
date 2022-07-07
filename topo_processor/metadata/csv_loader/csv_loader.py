@@ -54,6 +54,7 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key:str, column
     gpkg_cursor = gpkg_connection.cursor()
     gpkg_cursor.execute("SELECT table_name FROM 'gpkg_contents'")
     table_name = gpkg_cursor.fetchone()[0]
+    print(table_name)
     sql_command = "SELECT * FROM " + table_name + " WHERE " + key + " = :" + key + ";"
     gpkg_cursor.execute(sql_command, criteria)
 
@@ -62,6 +63,8 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key:str, column
     column_names = [description[0] for description in gpkg_cursor.description]
     if len(selected_row) > 1:
         raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
+    if len(selected_row) == 0:
+        return metadata
 
     metadata_col_names = dict(zip(column_names, [str(x) for x in selected_row[0]]))
 

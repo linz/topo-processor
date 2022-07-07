@@ -34,7 +34,7 @@ def decompress_file_gpkg(file_path: str) -> None:
 
     try:
         input = gzip.GzipFile(file_path, "rb")
-        print(file_path)
+        #print(file_path)
         s = input.read()
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)

@@ -57,8 +57,8 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
                 self.populate_item(metadata)
         elif asset:
 
-            if filename not in self.raw_metadata:
-                asset.add_error("Asset not found in CSV file", self.name)
+            if filename not in self.raw_metadata or not self.raw_metadata:
+                asset.add_error("Asset not found in metadata file", self.name)
                 return
             asset_metadata = self.raw_metadata[filename]
 

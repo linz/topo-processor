@@ -15,23 +15,29 @@ def test_read_csv() -> None:
     assert len(metadata) == 5
     assert list(metadata.keys()) == ["WRONG_PHOTO_TYPE", "MULTIPLE_ASSET", "CONTROL", "WRONG_SURVEY", "CONTROL_2"]
 
+
 def test_read_gpkg() -> None:
-#    metadata_criteria: Dict[str, str] = {"raw_filename": "CROWN_1082_044"}
     metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg")
-#    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_1259.gpkg")
     metadata = read_gpkg(metadata_path, metadata_criteria, "raw_filename")
-    print(metadata)
+    #print(metadata)
 
     assert len(metadata) == 1
     assert list(metadata.keys()) == ["CONTROL"]
 
 
-def test_error_on_wrong_file_name() -> None:
+def test_error_on_wrong_file_name_csv() -> None:
     metadata_path = "./data/historical_aerial_photos_metadata.csv"
 
     with pytest.raises(Exception, match=r"^Cannot find "):
         read_csv(metadata_path, "raw_filename", "sufi")
+
+
+# def test_error_on_wrong_file_name_gpkg() -> None:
+#     metadata_path = "./data/historical_aerial_photos_metadata.gpkg"
+
+#     with pytest.raises(Exception, match=r"^Cannot find "):
+#         read_csv(metadata_path, "raw_filename", "sufi")
 
 
 def test_error_on_duplicate_file() -> None:
@@ -115,7 +121,7 @@ def test_read_csv_column_filter_gpkg() -> None:
     metadata_criteria: Dict[str, str] = {"SURVEY": "SURVEY_1"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")
     metadata = read_gpkg(metadata_path, metadata_criteria, "SURVEY", columns=["NAME"])
-    print(metadata)
+    #print(metadata)
 
     assert len(metadata) == 1
     assert list(metadata.keys()) == ["SURVEY_1"]
