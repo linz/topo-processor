@@ -40,36 +40,38 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     return metadata
 
 
-def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], columns: List[str] = []) -> Dict[str, Any]:
+def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, columns: List[str] = []) -> Dict[str, Any]:
 
     metadata: Dict[str, Any] = {}
     new_row: Dict[str, str] = {}
     metadata_col_names: Dict[str, Any] = {}
 
-    key = list(criteria.keys())[0]
+    query_key = list(criteria.keys())[0]
 
     gpkg_path = os.path.join(os.getcwd(), metadata_file_path)
     if not os.path.isfile(gpkg_path):
         raise Exception(f'Cannot find "{gpkg_path}"')
-
     gpkg_connection = sqlite3.connect(gpkg_path)
     gpkg_cursor = gpkg_connection.cursor()
+
     gpkg_cursor.execute("SELECT table_name FROM 'gpkg_contents'")
     table_name = gpkg_cursor.fetchone()[0]
-    sql_command = "SELECT * FROM " + table_name + " WHERE " + key + " = :" + key + ";"
+
+    sql_command = "SELECT * FROM " + table_name + " WHERE " + query_key + " = :" + query_key + ";"
     gpkg_cursor.execute(sql_command, criteria)
 
     selected_rows = gpkg_cursor.fetchall()
 
     column_names = [description[0] for description in gpkg_cursor.description]
-    if len(selected_rows) > 1 and key == "raw_filename":
+
+    if len(selected_rows) > 1 and query_key == "raw_filename":
         raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
     if len(selected_rows) == 0:
         return metadata
 
     for row in selected_rows:
         temp_dict = dict(zip(column_names, [str(x) for x in row]))
-        metadata[temp_dict["raw_filename"]] = temp_dict
+        metadata[temp_dict[key]] = temp_dict
 
     print(metadata_col_names)
 
