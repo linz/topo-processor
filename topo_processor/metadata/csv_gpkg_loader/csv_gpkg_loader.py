@@ -40,11 +40,13 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     return metadata
 
 
-def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key:str, columns: List[str] = []) -> Dict[str, Any]:
+def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], columns: List[str] = []) -> Dict[str, Any]:
 
     metadata: Dict[str, Any] = {}
-    selected_row: Dict[str, str] = {}
     new_row: Dict[str, str] = {}
+    metadata_col_names: Dict[str, Any] = {}
+
+    key = list(criteria.keys())[0]
 
     gpkg_path = os.path.join(os.getcwd(), metadata_file_path)
     if not os.path.isfile(gpkg_path):
@@ -54,27 +56,30 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key:str, column
     gpkg_cursor = gpkg_connection.cursor()
     gpkg_cursor.execute("SELECT table_name FROM 'gpkg_contents'")
     table_name = gpkg_cursor.fetchone()[0]
-    print(table_name)
     sql_command = "SELECT * FROM " + table_name + " WHERE " + key + " = :" + key + ";"
     gpkg_cursor.execute(sql_command, criteria)
 
-    selected_row = gpkg_cursor.fetchall()
+    selected_rows = gpkg_cursor.fetchall()
 
     column_names = [description[0] for description in gpkg_cursor.description]
-    if len(selected_row) > 1:
+    if len(selected_rows) > 1 and key == "raw_filename":
         raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
-    if len(selected_row) == 0:
+    if len(selected_rows) == 0:
         return metadata
 
-    metadata_col_names = dict(zip(column_names, [str(x) for x in selected_row[0]]))
+    for row in selected_rows:
+        temp_dict = dict(zip(column_names, [str(x) for x in row]))
+        metadata[temp_dict["raw_filename"]] = temp_dict
+
+    print(metadata_col_names)
 
     if columns:
         for col in columns:
             new_row[col] = metadata_col_names[col]
             metadata[criteria[key]] = new_row
 
-    else:
-        metadata[criteria[key]] = metadata_col_names
+    # else:
+    #     metadata[criteria[key]] = metadata_col_names
 
     gpkg_connection.close
 

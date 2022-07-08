@@ -62,12 +62,12 @@ def get_metadata(
     if os.path.isfile(metadata_path):
         if data_type == DataType.IMAGERY_HISTORIC:
             if is_geopackage(metadata_path):
-                metadata_store[layer_id] = read_gpkg(metadata_path, criteria, "raw_filename")
+                metadata_store[layer_id] = read_gpkg(metadata_path, criteria)
             elif is_csv(metadata_path):
                 metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
         elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
             if is_geopackage(metadata_path):
-                metadata_store[layer_id] = read_gpkg(metadata_path, criteria, "SURVEY", columns=["NAME"])
+                metadata_store[layer_id] = read_gpkg(metadata_path, criteria, columns=["NAME"])
             elif is_csv(metadata_path):
                 metadata_store[layer_id] = read_csv(metadata_path, "SURVEY", columns=["NAME"])
 

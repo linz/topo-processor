@@ -20,7 +20,6 @@ def test_read_gpkg() -> None:
     metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg")
     metadata = read_gpkg(metadata_path, metadata_criteria, "raw_filename")
-    #print(metadata)
 
     assert len(metadata) == 1
     assert list(metadata.keys()) == ["CONTROL"]
@@ -111,7 +110,6 @@ def test_error_on_duplicate_file() -> None:
 def test_read_csv_column_filter() -> None:
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")
     metadata = read_csv(metadata_path, "SURVEY", columns=["NAME"])
-    #print(metadata)
 
     assert len(metadata) == 4
     assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]
@@ -121,7 +119,6 @@ def test_read_csv_column_filter_gpkg() -> None:
     metadata_criteria: Dict[str, str] = {"SURVEY": "SURVEY_1"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")
     metadata = read_gpkg(metadata_path, metadata_criteria, "SURVEY", columns=["NAME"])
-    #print(metadata)
 
     assert len(metadata) == 1
     assert list(metadata.keys()) == ["SURVEY_1"]
