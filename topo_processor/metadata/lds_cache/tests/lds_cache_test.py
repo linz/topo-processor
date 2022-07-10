@@ -24,6 +24,7 @@ def test_filter_metadata() -> None:
 
     assert metadata_filtered == result
 
+
 def test_filter_metadata_asset() -> None:
     metadata = {
         "file_a": {"survey": "survey_1", "camera": "camera_a", "raw_filename": "file_a"},
@@ -40,6 +41,7 @@ def test_filter_metadata_asset() -> None:
     result = filter_metadata(metadata, criteria)
 
     assert metadata_filtered == result
+
 
 def test_get_metadata() -> None:
     metadata = {

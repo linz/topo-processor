@@ -2,6 +2,7 @@ import csv
 import os
 import sqlite3
 from curses import meta
+from select import select
 from typing import Any, Dict, List
 
 from linz_logger import get_log
@@ -64,25 +65,22 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
 
     column_names = [description[0] for description in gpkg_cursor.description]
 
+    gpkg_connection.close
+
     if len(selected_rows) > 1 and query_key == "raw_filename":
         raise Exception(f'Duplicate "{criteria}" found in "{metadata_file_path}"')
     if len(selected_rows) == 0:
         return metadata
 
     for row in selected_rows:
-        temp_dict = dict(zip(column_names, [str(x) for x in row]))
+        temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in row]))
         metadata[temp_dict[key]] = temp_dict
 
-    print(metadata_col_names)
-
     if columns:
+        temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in selected_rows[0]]))
         for col in columns:
-            new_row[col] = metadata_col_names[col]
+            new_row[col] = temp_dict[col]
             metadata[criteria[key]] = new_row
-
-    # else:
-    #     metadata[criteria[key]] = metadata_col_names
-
-    gpkg_connection.close
+            print(metadata)
 
     return metadata

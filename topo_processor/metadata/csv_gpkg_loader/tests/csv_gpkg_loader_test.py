@@ -115,6 +115,7 @@ def test_read_csv_column_filter() -> None:
     assert list(metadata.keys()) == ["SURVEY_1", "SURVEY_3", "SURVEY_2", "SURVEY_NO_NAME"]
     assert list(metadata.values()) == [{"NAME": "TE KUITI 1"}, {"NAME": "AUCKLAND 1"}, {"NAME": "WELLINGTON 2"}, {"NAME": ""}]
 
+
 def test_read_csv_column_filter_gpkg() -> None:
     metadata_criteria: Dict[str, str] = {"SURVEY": "SURVEY_1"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")
