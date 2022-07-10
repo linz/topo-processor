@@ -77,9 +77,9 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
         metadata[temp_dict[key]] = temp_dict
 
     if columns:
-        temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in selected_rows[0]]))
+        col_temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in selected_rows[0]]))
         for col in columns:
-            new_row[col] = temp_dict[col]
+            new_row[col] = col_temp_dict[col]
             metadata[criteria[key]] = new_row
             print(metadata)
 
