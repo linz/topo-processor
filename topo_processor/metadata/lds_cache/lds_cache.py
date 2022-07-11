@@ -39,6 +39,7 @@ def get_metadata(
     layer_id = get_layer_id(data_type)
 
     if not metadata_path:
+        print("hello")
         if not metadata_store.get(layer_id):
             latest_item = get_latest_item(layer_id)
             exported_asset = latest_item.assets.get("export", None)
@@ -77,6 +78,8 @@ def get_metadata(
             metadata_store[layer_id] = filtered_metadata
         else:
             return filtered_metadata
+
+
 
     return metadata_store[layer_id]
 

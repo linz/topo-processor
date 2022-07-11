@@ -364,7 +364,7 @@ def test_provider_added() -> None:
     assert NZAM_provider.roles == ["producer"]
 
 
-def test_get_collection_title() -> None:
+def test_get_collection_title_csv() -> None:
     get_metadata(
         DataType.SURVEY_FOOTPRINT_HISTORIC,
         None,
@@ -374,10 +374,21 @@ def test_get_collection_title() -> None:
     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
     title = metadata_loader_imagery_historic.get_title("SURVEY_3")
 
-    assert title == "AUCKLAND 1"
+
+# def test_get_collection_title_gpkg() -> None:
+#     get_metadata(
+#         DataType.SURVEY_FOOTPRINT_HISTORIC,
+#         None,
+#         os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")),
+#     )
+
+#     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+#     title = metadata_loader_imagery_historic.get_title("SURVEY_3")
+
+#     assert title == "AUCKLAND 1"
 
 
-def test_get_collection_title_not_found() -> None:
+def test_get_collection_title_not_found_csv() -> None:
     get_metadata(
         DataType.SURVEY_FOOTPRINT_HISTORIC,
         None,
@@ -390,8 +401,21 @@ def test_get_collection_title_not_found() -> None:
         metadata_loader_imagery_historic.get_title("SURVEY_6")
         assert "No name found for survey SURVEY_6" in str(e.value)
 
+# def test_get_collection_title_not_found_gpkg() -> None:
+#     get_metadata(
+#         DataType.SURVEY_FOOTPRINT_HISTORIC,
+#         None,
+#         os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")),
+#     )
 
-def test_get_collection_title_empty() -> None:
+#     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+
+#     with pytest.raises(Exception) as e:
+#         metadata_loader_imagery_historic.get_title("SURVEY_6")
+#         assert "No name found for survey SURVEY_6" in str(e.value)
+
+
+def test_get_collection_title_empty_csv() -> None:
     get_metadata(
         DataType.SURVEY_FOOTPRINT_HISTORIC,
         None,
@@ -403,3 +427,16 @@ def test_get_collection_title_empty() -> None:
     with pytest.raises(Exception) as e:
         metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
         assert "No name found for survey SURVEY_NO_NAME" in str(e.value)
+
+# def test_get_collection_title_empty_gpkg() -> None:
+#     get_metadata(
+#         DataType.SURVEY_FOOTPRINT_HISTORIC,
+#         None,
+#         os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")),
+#     )
+
+#     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+
+#     with pytest.raises(Exception) as e:
+#         metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
+#         assert "No name found for survey SURVEY_NO_NAME" in str(e.value)

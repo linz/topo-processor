@@ -54,17 +54,12 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
         raise Exception(f'Cannot find "{gpkg_path}"')
     gpkg_connection = sqlite3.connect(gpkg_path)
     gpkg_cursor = gpkg_connection.cursor()
-
     gpkg_cursor.execute("SELECT table_name FROM 'gpkg_contents'")
     table_name = gpkg_cursor.fetchone()[0]
-
     sql_command = "SELECT * FROM " + table_name + " WHERE " + query_key + " = :" + query_key + ";"
     gpkg_cursor.execute(sql_command, criteria)
-
     selected_rows = gpkg_cursor.fetchall()
-
     column_names = [description[0] for description in gpkg_cursor.description]
-
     gpkg_connection.close
 
     if len(selected_rows) > 1 and query_key == "raw_filename":
