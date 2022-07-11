@@ -5,7 +5,7 @@ from typing import Dict
 
 import pytest
 
-from topo_processor.metadata.csv_gpkg_loader.csv_gpkg_loader import read_csv, read_gpkg
+from topo_processor.metadata.file_loader.file_loader import read_csv, read_gpkg
 
 
 def test_read_csv() -> None:
