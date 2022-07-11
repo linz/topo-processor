@@ -365,9 +365,12 @@ def test_provider_added() -> None:
 
 
 def test_get_collection_title_csv() -> None:
+
+    criteria = {"SURVEY": "SURVEY_3"}
+
     get_metadata(
         DataType.SURVEY_FOOTPRINT_HISTORIC,
-        None,
+        criteria,
         os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.csv")),
     )
 
@@ -375,17 +378,20 @@ def test_get_collection_title_csv() -> None:
     title = metadata_loader_imagery_historic.get_title("SURVEY_3")
 
 
-# def test_get_collection_title_gpkg() -> None:
-#     get_metadata(
-#         DataType.SURVEY_FOOTPRINT_HISTORIC,
-#         None,
-#         os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")),
-#     )
+def test_get_collection_title_gpkg() -> None:
 
-#     metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
-#     title = metadata_loader_imagery_historic.get_title("SURVEY_3")
+    criteria = {"SURVEY": "SURVEY_3"}
 
-#     assert title == "AUCKLAND 1"
+    get_metadata(
+        DataType.SURVEY_FOOTPRINT_HISTORIC,
+        criteria,
+        os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_survey_footprint_metadata.gpkg")),
+    )
+
+    metadata_loader_imagery_historic = MetadataLoaderImageryHistoric()
+    title = metadata_loader_imagery_historic.get_title("SURVEY_3")
+
+    assert title == "AUCKLAND 1"
 
 
 def test_get_collection_title_not_found_csv() -> None:

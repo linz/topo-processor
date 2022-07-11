@@ -124,7 +124,7 @@ class MetadataLoaderImageryHistoric(MetadataLoader):
 
     def get_title(self, survey: str) -> str:
 
-        criteria = {"survey": survey}
+        criteria = {"SURVEY": survey}
         survey_names = get_metadata(DataType.SURVEY_FOOTPRINT_HISTORIC, criteria)
         title: str = ""
 

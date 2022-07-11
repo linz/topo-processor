@@ -45,7 +45,7 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
 
     metadata: Dict[str, Any] = {}
     new_row: Dict[str, str] = {}
-    metadata_col_names: Dict[str, Any] = {}
+    metadata_no_cols: Dict[str, Any] = {}
 
     query_key = list(criteria.keys())[0]
 
@@ -69,13 +69,15 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
 
     for row in selected_rows:
         temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in row]))
-        metadata[temp_dict[key]] = temp_dict
+        metadata_no_cols[temp_dict[key]] = temp_dict
 
     if columns:
         col_temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in selected_rows[0]]))
         for col in columns:
             new_row[col] = col_temp_dict[col]
             metadata[criteria[key]] = new_row
-            print(metadata)
+
+    else:
+        metadata = metadata_no_cols
 
     return metadata
