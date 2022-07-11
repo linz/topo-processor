@@ -9,7 +9,7 @@ from topo_processor.metadata.file_loader.file_loader import read_csv, read_gpkg
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
 from topo_processor.util.file_extension import is_csv, is_geopackage
-from topo_processor.util.gzip import decompress_file_csv, decompress_file_gpkg
+from topo_processor.util.gzip import decompress_file
 
 metadata_store: Dict[str, Dict[str, Any]] = {}
 """Stores the metadata by layer id"""
@@ -53,9 +53,9 @@ def get_metadata(
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
                     if is_csv(metadata_path):
-                        decompress_file_csv(metadata_path)
+                        decompress_file(metadata_path, False)
                     if is_geopackage(metadata_path):
-                        decompress_file_gpkg(metadata_path)
+                        decompress_file(metadata_path, True)
             else:
                 raise Exception(f"{metadata_path} not found")
 
