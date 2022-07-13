@@ -1,5 +1,6 @@
 import gzip
-from typing import Optional
+from io import BufferedWriter, TextIOWrapper
+from typing import Any, Optional, Union
 
 from linz_logger.logger import get_log
 
@@ -16,9 +17,9 @@ def decompress_file(file_path: str, is_binary: bool) -> None:
     try:
         input = gzip.GzipFile(file_path, "rb")
         if is_binary:
-            s = input.read()
+            input_read = input.read()
         else:
-            s = input.read().decode("utf-8-sig")
+            input_read = input.read().decode("utf-8-sig")
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -32,5 +33,5 @@ def decompress_file(file_path: str, is_binary: bool) -> None:
     else:
         output = open(file_path, "w")
 
-    output.write(s)
+    output.write(input_read)
     output.close()

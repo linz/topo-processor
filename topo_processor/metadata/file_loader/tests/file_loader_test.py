@@ -1,5 +1,6 @@
 import csv
 import os
+import sqlite3
 import tempfile
 from typing import Dict
 
@@ -32,14 +33,15 @@ def test_error_on_wrong_file_name_csv() -> None:
         read_csv(metadata_path, "raw_filename", "sufi")
 
 
-# def test_error_on_wrong_file_name_gpkg() -> None:
-#     metadata_path = "./data/historical_aerial_photos_metadata.gpkg"
+def test_error_on_wrong_file_name_gpkg() -> None:
+    metadata_path = "./data/historical_aerial_photos_metadata.gpkg"
+    metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
 
-#     with pytest.raises(Exception, match=r"^Cannot find "):
-#         read_csv(metadata_path, "raw_filename", "sufi")
+    with pytest.raises(Exception, match=r"^Cannot find "):
+        read_gpkg(metadata_path, metadata_criteria, "raw_filename")
 
 
-def test_error_on_duplicate_file() -> None:
+def test_error_on_duplicate_file_csv() -> None:
     temp_file = tempfile.NamedTemporaryFile()
     header = [
         "WKT",
@@ -105,6 +107,15 @@ def test_error_on_duplicate_file() -> None:
 
     with pytest.raises(Exception, match=r'Duplicate "WRONG_PHOTO_TYPE" found in "' + temp_file.name + '"'):
         read_csv(temp_file.name, "raw_filename", "sufi")
+
+
+def test_error_on_duplicate_file_gpkg(mocker) -> None:
+
+    metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
+    metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_duplicate.gpkg")
+
+    with pytest.raises(Exception, match=r'Duplicate "CONTROL" found in "' + metadata_path + '"'):
+        read_gpkg(metadata_path, metadata_criteria, "raw_filename")
 
 
 def test_read_csv_column_filter() -> None:

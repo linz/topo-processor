@@ -407,6 +407,7 @@ def test_get_collection_title_not_found_csv() -> None:
         metadata_loader_imagery_historic.get_title("SURVEY_6")
         assert "No name found for survey SURVEY_6" in str(e.value)
 
+
 # def test_get_collection_title_not_found_gpkg() -> None:
 #     get_metadata(
 #         DataType.SURVEY_FOOTPRINT_HISTORIC,
@@ -433,6 +434,7 @@ def test_get_collection_title_empty_csv() -> None:
     with pytest.raises(Exception) as e:
         metadata_loader_imagery_historic.get_title("SURVEY_NO_NAME")
         assert "No name found for survey SURVEY_NO_NAME" in str(e.value)
+
 
 # def test_get_collection_title_empty_gpkg() -> None:
 #     get_metadata(
