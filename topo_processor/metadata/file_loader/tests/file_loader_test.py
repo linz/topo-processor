@@ -1,6 +1,5 @@
 import csv
 import os
-import sqlite3
 import tempfile
 from typing import Dict
 
@@ -109,7 +108,7 @@ def test_error_on_duplicate_file_csv() -> None:
         read_csv(temp_file.name, "raw_filename", "sufi")
 
 
-def test_error_on_duplicate_file_gpkg(mocker) -> None:
+def test_error_on_duplicate_file_gpkg() -> None:
 
     metadata_criteria: Dict[str, str] = {"raw_filename": "CONTROL"}
     metadata_path = os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata_duplicate.gpkg")
