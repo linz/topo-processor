@@ -19,7 +19,7 @@ def decompress_file(file_path: str, is_binary: bool) -> None:
         if is_binary:
             input_read = input.read()
         else:
-            input_read = input.read().decode("utf-8-sig")
+            input_read = input.read().decode("utf-8-sig") # type: ignore[assignment]
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -31,7 +31,7 @@ def decompress_file(file_path: str, is_binary: bool) -> None:
     if is_binary:
         output = open(file_path, "wb")
     else:
-        output = open(file_path, "w")
+        output = open(file_path, "w") # type: ignore[assignment]
 
     output.write(input_read)
     output.close()

@@ -80,4 +80,6 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
     else:
         metadata = metadata_no_cols
 
+    print(metadata)
+
     return metadata
