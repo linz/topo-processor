@@ -379,6 +379,7 @@ def test_get_collection_title_csv() -> None:
 
     assert title == "AUCKLAND 1"
 
+
 def test_get_collection_title_gpkg() -> None:
 
     criteria = {"SURVEY": "SURVEY_3"}
