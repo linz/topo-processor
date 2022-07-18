@@ -68,7 +68,7 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
         return metadata
 
     for row in selected_rows:
-        temp_dict: Dict[str, str] = dict(zip(column_names, [str(x) for x in row]))
+        temp_dict: Dict[str, str] = dict(zip(column_names, [str(x or "") for x in row]))
         metadata_no_cols[temp_dict[key]] = temp_dict
 
     if columns:
@@ -79,7 +79,5 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
 
     else:
         metadata = metadata_no_cols
-
-    print(metadata)
 
     return metadata
