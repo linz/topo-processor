@@ -35,6 +35,5 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
                 metadata[row[alternative_key]] = filtered_row
             else:
                 get_log().debug("read_csv_key_not_found", key=key, alternative_key=alternative_key)
-    print("csv_loader " + metadata_file_path)
 
     return metadata
