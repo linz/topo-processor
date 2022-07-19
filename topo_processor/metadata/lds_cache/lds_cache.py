@@ -58,10 +58,8 @@ def get_metadata(
                     if is_geopackage(metadata_path):
                         decompress_file(metadata_path, True)
                         new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
-                        print("lds_cache " + metadata_path)
                         geopackage_to_csv(metadata_path, new_metadata_path).run()
                         metadata_path = new_metadata_path
-                        print("lds_cache after geopackage conversion " + metadata_path)
             else:
                 raise Exception(f"{metadata_path} not found")
 
