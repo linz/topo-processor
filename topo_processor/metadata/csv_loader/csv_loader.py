@@ -16,6 +16,7 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
     with open(csv_path, "r") as csv_text:
         reader = csv.DictReader(csv_text, delimiter=",")
         for row in reader:
+            print(row)
             filtered_row: Dict[str, str] = {}
             if columns:
                 for col in columns:
@@ -35,5 +36,6 @@ def read_csv(metadata_file_path: str, key: str, alternative_key: str = "", colum
                 metadata[row[alternative_key]] = filtered_row
             else:
                 get_log().debug("read_csv_key_not_found", key=key, alternative_key=alternative_key)
-
+    print("csv_loader " + metadata_file_path)
+    print(metadata)
     return metadata

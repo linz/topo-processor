@@ -8,6 +8,8 @@ from topo_processor.metadata.csv_loader.csv_loader import read_csv
 from topo_processor.metadata.data_type import DataType, get_layer_id
 from topo_processor.util.aws_files import build_s3_path, load_file_content, s3_download
 from topo_processor.util.configuration import lds_cache_bucket, temp_folder
+from topo_processor.util.file_converter import geopackage_to_csv
+from topo_processor.util.file_extension import is_csv, is_geopackage
 from topo_processor.util.gzip import decompress_file
 
 metadata_store: Dict[str, Dict[str, Any]] = {}
@@ -34,7 +36,7 @@ def get_latest_item(layer: str) -> pystac.Item:
 def get_metadata(
     data_type: str, criteria: Optional[Dict[str, str]] = None, metadata_path: str = "", save_filtered: bool = False
 ) -> Dict[str, Any]:
-    """Return a dictionnary containing the metadata"""
+    """Return a dictionary containing the metadata"""
     layer_id = get_layer_id(data_type)
 
     if not metadata_path:
@@ -51,7 +53,15 @@ def get_metadata(
 
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
-                    decompress_file(metadata_path)
+                    if is_csv(metadata_path):
+                        decompress_file(metadata_path, False)
+                    if is_geopackage(metadata_path):
+                        decompress_file(metadata_path, True)
+                        new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
+                        print("lds_cache " + metadata_path)
+                        geopackage_to_csv(metadata_path, new_metadata_path).run()
+                        metadata_path = new_metadata_path
+                        print("lds_cache after geopackage conversion " + metadata_path)
             else:
                 raise Exception(f"{metadata_path} not found")
 
