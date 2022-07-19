@@ -55,11 +55,13 @@ def get_metadata(
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
                     if is_csv(metadata_path):
                         decompress_file(metadata_path, False)
-                    if is_geopackage(metadata_path):
+                    elif is_geopackage(metadata_path):
                         decompress_file(metadata_path, True)
                         new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
                         geopackage_to_csv(metadata_path, new_metadata_path).run()
                         metadata_path = new_metadata_path
+                    else:
+                        raise Exception(f"Unsupported file format. {metadata_path} must be .csv or .gpkg")
             else:
                 raise Exception(f"{metadata_path} not found")
 
