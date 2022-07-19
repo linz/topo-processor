@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@aws-cdk/aws-batch-alpha": "2.9.0-alpha.0",
-    "@linzjs/style": "^3.8.0",
+    "@linzjs/style": "^3.9.0",
     "aws-cdk-lib": "^2.25.0",
     "aws-sdk": "^2.1140.0",
     "constructs": "^10.1.15",
