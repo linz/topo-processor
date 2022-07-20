@@ -60,7 +60,7 @@ def read_gpkg(metadata_file_path: str, criteria: Dict[str, str], key: str, colum
     gpkg_cursor.execute(sql_command, criteria)
     selected_rows = gpkg_cursor.fetchall()
     column_names = [description[0] for description in gpkg_cursor.description]
-    gpkg_connection.close
+    gpkg_connection.close()
 
     if len(selected_rows) > 1 and query_key == "raw_filename":
         raise Exception(f'Duplicate "{criteria[key]}" found in "{metadata_file_path}"')
