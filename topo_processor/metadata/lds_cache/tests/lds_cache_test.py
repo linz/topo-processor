@@ -63,7 +63,6 @@ def test_get_metadata_csv() -> None:
     assert metadata == result
 
 
-
 def test_get_metadata_gpkg() -> None:
     metadata = {
         "WRONG_SURVEY": {
