@@ -108,7 +108,6 @@ def test_get_metadata_gpkg() -> None:
 
 
 def test_get_metadata_gpkg_overwrite_csv() -> None:
-
     metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg"))
     criteria = {"survey": "SURVEY_3"}
     with pytest.raises(Exception) as e:
