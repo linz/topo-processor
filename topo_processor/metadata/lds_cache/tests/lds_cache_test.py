@@ -1,4 +1,6 @@
 import os
+import shutil
+from tempfile import mkdtemp
 
 import pytest
 
@@ -94,8 +96,12 @@ def test_get_metadata_gpkg() -> None:
             "photo_version": "1",
         }
     }
-    metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg"))
+    temp_folder: str = mkdtemp()
+    source_metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg"))
+    dest_metadata_path = os.path.abspath(os.path.join(temp_folder, "historical_aerial_photos_metadata.gpkg"))
+    shutil.copyfile(source_metadata_path, dest_metadata_path)
     criteria = {"survey": "SURVEY_3"}
-    result = get_metadata(DataType.IMAGERY_HISTORIC, criteria, metadata_path)
+    result = get_metadata(DataType.IMAGERY_HISTORIC, criteria, dest_metadata_path)
+    shutil.rmtree(temp_folder)
 
     assert metadata == result
