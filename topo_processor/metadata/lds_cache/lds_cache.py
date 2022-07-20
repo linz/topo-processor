@@ -66,6 +66,14 @@ def get_metadata(
                 raise Exception(f"{metadata_path} not found")
 
     if os.path.isfile(metadata_path):
+        # This doesn't handle gzipped files
+        if is_geopackage(metadata_path):
+            new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
+            geopackage_to_csv(metadata_path, new_metadata_path).run()
+            metadata_path = new_metadata_path
+        elif not is_csv(metadata_path):
+            raise Exception(f"Unsupported file format. {metadata_path} must be .csv or .gpkg")
+
         if data_type == DataType.IMAGERY_HISTORIC:
             metadata_store[layer_id] = read_csv(metadata_path, "raw_filename", "sufi")
         elif data_type == DataType.SURVEY_FOOTPRINT_HISTORIC:
