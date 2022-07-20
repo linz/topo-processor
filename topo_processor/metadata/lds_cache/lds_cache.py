@@ -66,9 +66,13 @@ def get_metadata(
                 raise Exception(f"{metadata_path} not found")
 
     if os.path.isfile(metadata_path):
-        # This doesn't handle gzipped files
+        # This doesn't handle gzipped files as input on the command line
         if is_geopackage(metadata_path):
             new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
+            if os.path.isfile(new_metadata_path):
+                raise Exception(
+                    f"Conversion of gpkg file {metadata_path} will overwrite existing csv file {new_metadata_path}"
+                )
             geopackage_to_csv(metadata_path, new_metadata_path).run()
             metadata_path = new_metadata_path
         elif not is_csv(metadata_path):
