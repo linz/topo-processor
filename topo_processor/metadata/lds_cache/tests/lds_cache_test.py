@@ -105,11 +105,3 @@ def test_get_metadata_gpkg() -> None:
     shutil.rmtree(temp_folder)
 
     assert metadata == result
-
-
-def test_get_metadata_gpkg_overwrite_csv() -> None:
-    metadata_path = os.path.abspath(os.path.join(os.getcwd(), "test_data", "historical_aerial_photos_metadata.gpkg"))
-    criteria = {"survey": "SURVEY_3"}
-    with pytest.raises(Exception) as e:
-        get_metadata(DataType.IMAGERY_HISTORIC, criteria, metadata_path)
-        assert "will overwrite existing csv file" in str(e.value)
