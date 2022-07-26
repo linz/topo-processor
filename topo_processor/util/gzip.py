@@ -16,7 +16,7 @@ def decompress_file(file_path: str) -> None:
 
     try:
         input = gzip.GzipFile(file_path, "rb")
-        input_read = input.read()
+        s = input.read()
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -27,5 +27,5 @@ def decompress_file(file_path: str) -> None:
 
     output = open(file_path, "wb")
 
-    output.write(input_read)
+    output.write(s)
     output.close()
