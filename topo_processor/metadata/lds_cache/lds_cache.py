@@ -62,7 +62,6 @@ def get_metadata(
                 raise Exception(f"{metadata_path} not found")
 
     if os.path.isfile(metadata_path):
-        # This doesn't handle gzipped files as input on the command line
         if is_geopackage(metadata_path):
             new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
             if os.path.isfile(new_metadata_path):
