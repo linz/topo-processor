@@ -11,15 +11,12 @@ def is_gzip_file(file_path: str) -> bool:
         return file.read(2) == b"\x1f\x8b"
 
 
-def decompress_file(file_path: str, is_binary: bool) -> None:
+def decompress_file(file_path: str) -> None:
     input: Optional[gzip.GzipFile] = None
 
     try:
         input = gzip.GzipFile(file_path, "rb")
-        if is_binary:
-            input_read = input.read()
-        else:
-            input_read = input.read().decode("utf-8-sig")  # type: ignore[assignment]
+        input_read = input.read()
     except gzip.BadGzipFile as e:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
@@ -28,10 +25,7 @@ def decompress_file(file_path: str, is_binary: bool) -> None:
         if input:
             input.close()
 
-    if is_binary:
-        output = open(file_path, "wb")
-    else:
-        output = open(file_path, "w")  # type: ignore[assignment]
+    output = open(file_path, "wb")
 
     output.write(input_read)
     output.close()

@@ -54,7 +54,7 @@ def get_metadata(
 
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
-                    decompress_file(metadata_path, True)
+                    decompress_file(metadata_path)
                     new_metadata_path = os.path.splitext(metadata_path)[0] + "_" + time.strftime("%s") + ".csv"
                     geopackage_to_csv(metadata_path, new_metadata_path).run()
                     metadata_path = new_metadata_path
