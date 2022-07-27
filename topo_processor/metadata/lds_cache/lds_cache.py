@@ -55,19 +55,12 @@ def get_metadata(
             if os.path.isfile(metadata_path):
                 if exported_asset.extra_fields.get("encoding", None) == "gzip":
                     decompress_file(metadata_path)
-                    new_metadata_path = os.path.splitext(metadata_path)[0] + "_" + time.strftime("%s") + ".csv"
-                    geopackage_to_csv(metadata_path, new_metadata_path).run()
-                    metadata_path = new_metadata_path
             else:
                 raise Exception(f"{metadata_path} not found")
 
     if os.path.isfile(metadata_path):
         if is_geopackage(metadata_path):
-            new_metadata_path = os.path.splitext(metadata_path)[0] + ".csv"
-            if os.path.isfile(new_metadata_path):
-                raise Exception(
-                    f"Conversion of gpkg file {metadata_path} will overwrite existing csv file {new_metadata_path}"
-                )
+            new_metadata_path = os.path.splitext(metadata_path)[0] + "_" + time.strftime("%s") + ".csv"
             geopackage_to_csv(metadata_path, new_metadata_path).run()
             metadata_path = new_metadata_path
         elif not is_csv(metadata_path):
