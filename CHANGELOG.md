@@ -1,3 +1,15 @@
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/linz/topo-processor/compare/v0.11.0...v0.12.0) (2022-07-27)
+
+
+### Bug Fixes
+
+* TDE-404 geostore CLI logging changes and revert list data type search ([#1070](https://github.com/linz/topo-processor/issues/1070)) ([00a3736](https://github.com/linz/topo-processor/commit/00a3736))
+* TDE-405 geostore title change ([#1054](https://github.com/linz/topo-processor/issues/1054)) ([48f04a0](https://github.com/linz/topo-processor/commit/48f04a0))
+* TDE-410 LDS cache file convert geopackage to CSV ([#1153](https://github.com/linz/topo-processor/issues/1153)) ([49b3e76](https://github.com/linz/topo-processor/commit/49b3e76))
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/linz/topo-processor/compare/v0.10.0...v0.11.0) (2022-06-16)
 
