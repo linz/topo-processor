@@ -1,6 +1,6 @@
 import os
 
-from topo_processor.cog.command import Command
+from topo_processor.util.command import Command
 
 
 def geopackage_to_csv(input_path: str, output_path: str) -> Command:
