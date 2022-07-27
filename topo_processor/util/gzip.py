@@ -1,6 +1,5 @@
 import gzip
-from io import BufferedWriter, TextIOWrapper
-from typing import Any, Optional, Union
+from typing import Optional
 
 from linz_logger.logger import get_log
 
