@@ -1,7 +1,7 @@
 import os
 
-from topo_processor.cog.command import Command
 from topo_processor.util.aws_credentials import Credentials, get_credentials_from_bucket
+from topo_processor.util.command import Command
 from topo_processor.util.s3 import bucket_name_from_path, is_s3_path
 
 

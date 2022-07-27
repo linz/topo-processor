@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional, Tuple, TypedDict
 
-from topo_processor.cog.execution import ExecutionDocker, ExecutionLocal
+from topo_processor.util.execution import ExecutionDocker, ExecutionLocal
 
 
 class CommandDocker(TypedDict):
