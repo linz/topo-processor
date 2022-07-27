@@ -20,11 +20,9 @@ def decompress_file(file_path: str) -> None:
         get_log().error("File decompression failed", file=file_path, error=e)
         raise e
     finally:
-
         if input:
             input.close()
 
     output = open(file_path, "wb")
-
     output.write(s)
     output.close()
