@@ -13,6 +13,7 @@ def geopackage_to_csv(input_path: str, output_path: str) -> Command:
     cmd.mount(os.path.dirname(output_path))
     cmd.arg("-f", "CSV")
     cmd.arg("-lco", "GEOMETRY=AS_WKT")
+    cmd.arg("-nlt", "POLYGON")
     cmd.arg(output_path)
     cmd.arg(input_path)
     return cmd
