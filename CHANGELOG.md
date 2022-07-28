@@ -1,3 +1,13 @@
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/linz/topo-processor/compare/v0.12.0...v0.13.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* convert multipolygon to polygon ([#1188](https://github.com/linz/topo-processor/issues/1188)) ([92ddd4f](https://github.com/linz/topo-processor/commit/92ddd4f))
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/linz/topo-processor/compare/v0.11.0...v0.12.0) (2022-07-27)
 
