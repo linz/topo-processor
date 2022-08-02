@@ -45,7 +45,7 @@ export class AwsBatchStack extends Stack {
     const tempBucket = new Bucket(this, 'TempBucket', {
       removalPolicy: RemovalPolicy.RETAIN,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      lifecycleRules: [{ expiration: Duration.days(30) }],
+      lifecycleRules: [{ expiration: Duration.days(90) }],
     });
 
     const roRole = Role.fromRoleName(this, 'LINZReadRole', 'internal-user-read');
