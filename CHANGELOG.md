@@ -1,3 +1,14 @@
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/linz/topo-processor/compare/v0.14.0...v0.15.0) (2022-08-02)
+
+
+### Bug Fixes
+
+* ignore git tag failure to allow action re-run ([#1209](https://github.com/linz/topo-processor/issues/1209)) ([d55fa6e](https://github.com/linz/topo-processor/commit/d55fa6e))
+* TDE-429 change tempbucket retention period to 90 days ([#1208](https://github.com/linz/topo-processor/issues/1208)) ([137d1c9](https://github.com/linz/topo-processor/commit/137d1c9))
+
+
+
 <a name="0.14.0"></a>
 # [0.14.0](https://github.com/linz/topo-processor/compare/v0.13.0...v0.14.0) (2022-07-28)
 
