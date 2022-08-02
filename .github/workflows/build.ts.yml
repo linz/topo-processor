@@ -25,7 +25,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION}
+          git tag v${CURRENT_VERSION} -m v${CURRENT_VERSION} || true
           git push --tags
 
       - name: (Prod) Create github release
