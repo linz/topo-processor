@@ -31,7 +31,7 @@ rope = "^1.0.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.6.1"
 mypy = "*"
-moto = "^3.1.4"
+moto = "^3.1.17"
 mypy-boto3-lambda = "^1.24.0"
 
 [tool.poetry.scripts]
