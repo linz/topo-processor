@@ -22,7 +22,7 @@ aiohttp = "^3.8.1"
 python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
-black = "^22.3"
+black = "^23.1"
 boto3-stubs = {version = "*", extras = ["lambda","sts"]}
 isort = "^5.10.1"
 pylint = "^2.13.9"
