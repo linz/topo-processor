@@ -501,10 +501,10 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-constructs@^10.1.15:
-  version "10.1.15"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.15.tgz#b1e9ae3d2e96992ad4060a4581036f9a2f40811e"
-  integrity sha512-fvGJ3AXx4uf0W4PoDnHa7s6IwSGprGYO9lhTG0jlRMzUyW7QtKLUKaTMT0zK621tTiCuZnBk6m26x4AnVYqkNw==
+constructs@^10.2.7:
+  version "10.2.7"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.2.7.tgz#aea641e06338312ce1276a1fd9eaef0631cce20f"
+  integrity sha512-Cn8bZkZMK/jdeyoobnR/M48/+SSgCHe6nNTJXtbzu/dLaK+HiE6JSSjhtb9OO2jO/ZysZ1dPVUrzKs7HGZ7PUw==
 
 conventional-changelog-angular@^1.6.6:
   version "1.6.6"
