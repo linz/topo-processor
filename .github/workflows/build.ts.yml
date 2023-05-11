@@ -13,7 +13,7 @@ jobs:
       contents: write
     steps:
       - name: Build and test
-        uses: linz/action-typescript@v1
+        uses: linz/action-typescript@v3
 
       - name: (Prod) Setup git config
         if: github.ref == 'refs/heads/master' && startsWith(github.event.head_commit.message, 'release:')
