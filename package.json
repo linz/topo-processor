@@ -5,7 +5,7 @@
     "aws-cdk-lib": "^2.25.0",
     "aws-sdk": "^2.1140.0",
     "constructs": "^10.1.15",
-    "conventional-changelog-cli": "^2.1.1",
+    "conventional-changelog-cli": "^3.0.0",
     "ulid": "^2.3.0"
   },
   "devDependencies": {
