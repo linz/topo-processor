@@ -14,7 +14,7 @@ boto3 = "^1.23.5"
 python-ulid = "^1.1.0"
 fsspec = {extras = ["s3"], version = "^2022.5.0"}
 pystac = "^1.4.0"
-jsonschema = "^4.5.1"
+jsonschema = "^4.18.2"
 jsonschema-rs = "^0.13.1"
 Shapely = "^1.8.2"
 requests = "^2.26.0"
